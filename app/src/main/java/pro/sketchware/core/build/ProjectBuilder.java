@@ -88,7 +88,6 @@ import pro.sketchware.core.build.compiler.R8Compiler;
 import pro.sketchware.core.build.ViewBindingBuilder;
 import pro.sketchware.SketchApplication;
 import pro.sketchware.util.library.BuiltInLibraryManager;
-import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 import proguard.Configuration;
@@ -126,7 +125,6 @@ public class ProjectBuilder {
     private final Context context;
     public BuildSettings buildSettings;
     public ProjectFilePaths projectFilePaths;
-    public FilePathUtil filePathUtil;
     public ManageLocalLibrary localLibraryManager;
     public BuiltInLibraryManager builtInLibraryManager;
     public String androidJarPath;
@@ -180,7 +178,6 @@ public class ProjectBuilder {
         buildSettings = new BuildSettings(projectFilePaths.sc_id);
         this.context = context;
         this.projectFilePaths = projectFilePaths;
-        filePathUtil = new FilePathUtil();
         localLibraryManager = new ManageLocalLibrary(projectFilePaths.sc_id);
         builtInLibraryManager = new BuiltInLibraryManager(projectFilePaths.sc_id);
         File defaultAndroidJar = new File(BuiltInLibraries.EXTRACTED_COMPILE_ASSETS_PATH, "android.jar");
@@ -791,11 +788,11 @@ public class ProjectBuilder {
         List<String> paths = new ArrayList<>();
         paths.add(projectFilePaths.javaFilesPath);
         paths.add(projectFilePaths.rJavaDirectoryPath);
-        String pathJava = filePathUtil.getPathJava(projectFilePaths.sc_id);
+        String pathJava = SketchwarePaths.getProjectJavaPath(projectFilePaths.sc_id);
         if (FileUtil.isExistFile(pathJava)) paths.add(pathJava);
-        String pathBroadcast = filePathUtil.getPathBroadcast(projectFilePaths.sc_id);
+        String pathBroadcast = SketchwarePaths.getProjectBroadcastPath(projectFilePaths.sc_id);
         if (FileUtil.isExistFile(pathBroadcast)) paths.add(pathBroadcast);
-        String pathService = filePathUtil.getPathService(projectFilePaths.sc_id);
+        String pathService = SketchwarePaths.getProjectServicePath(projectFilePaths.sc_id);
         if (FileUtil.isExistFile(pathService)) paths.add(pathService);
         return paths;
     }
@@ -819,9 +816,9 @@ public class ProjectBuilder {
 
     private List<String> getCustomJavaDirectories() {
         List<String> dirs = new ArrayList<>();
-        dirs.add(filePathUtil.getPathJava(projectFilePaths.sc_id));
-        dirs.add(filePathUtil.getPathBroadcast(projectFilePaths.sc_id));
-        dirs.add(filePathUtil.getPathService(projectFilePaths.sc_id));
+        dirs.add(SketchwarePaths.getProjectJavaPath(projectFilePaths.sc_id));
+        dirs.add(SketchwarePaths.getProjectBroadcastPath(projectFilePaths.sc_id));
+        dirs.add(SketchwarePaths.getProjectServicePath(projectFilePaths.sc_id));
         return dirs;
     }
 
@@ -988,7 +985,7 @@ public class ProjectBuilder {
             }
 
             /* Add project's native libraries */
-            File nativeLibrariesDirectory = new File(filePathUtil.getPathNativelibs(projectFilePaths.sc_id));
+            File nativeLibrariesDirectory = new File(SketchwarePaths.getProjectNativeLibsPath(projectFilePaths.sc_id));
             if (nativeLibrariesDirectory.exists()) {
                 apkBuilder.addNativeLibraries(nativeLibrariesDirectory);
             }

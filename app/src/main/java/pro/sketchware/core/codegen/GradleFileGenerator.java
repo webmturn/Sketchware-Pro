@@ -15,7 +15,6 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.util.library.BuiltInLibraries;
 import pro.sketchware.util.library.ExcludeBuiltInLibrariesConfig;
 import pro.sketchware.core.project.ConstVarComponent;
-import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.core.codegen.CodeFormatter;
 
@@ -226,12 +225,12 @@ public class GradleFileGenerator {
     }
 
     private static File resolveCoordinateFile(String libraryName) {
-        File primaryCoordinateFile = new File(FilePathUtil.getLocalLibsDir(), libraryName + "/maven-coordinate");
+        File primaryCoordinateFile = new File(SketchwarePaths.getLocalLibsDir(), libraryName + "/maven-coordinate");
         if (primaryCoordinateFile.exists()) {
             return primaryCoordinateFile;
         }
 
-        File fallbackCoordinateFile = new File(FilePathUtil.getLocalLibsFallbackDir(), libraryName + "/maven-coordinate");
+        File fallbackCoordinateFile = new File(SketchwarePaths.getLocalLibsFallbackDir(), libraryName + "/maven-coordinate");
         if (fallbackCoordinateFile.exists()) {
             return fallbackCoordinateFile;
         }

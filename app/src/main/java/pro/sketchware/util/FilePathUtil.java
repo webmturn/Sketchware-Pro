@@ -2,21 +2,16 @@ package pro.sketchware.util;
 
 import java.io.File;
 
-import pro.sketchware.SketchApplication;
 import pro.sketchware.core.project.SketchwarePaths;
 
 public class FilePathUtil {
-
-    private static final File SKETCHWARE_DATA = new File(SketchwarePaths.getAbsolutePathOf(SketchwarePaths.DATA_PATH));
-    private static final File SKETCHWARE_LOCAL_LIBS = new File(SketchwarePaths.getLibsPath(), "local_libs");
-    private static volatile File sketchwareLocalLibsFallback;
 
     /**
      * Returns the primary local libs directory (shared external storage).
      * Libraries stored here survive app uninstall.
      */
     public static File getLocalLibsDir() {
-        return SKETCHWARE_LOCAL_LIBS;
+        return SketchwarePaths.getLocalLibsDir();
     }
 
     /**
@@ -26,123 +21,98 @@ public class FilePathUtil {
      * Note: files here are deleted when the app is uninstalled.
      */
     public static File getLocalLibsFallbackDir() {
-        if (sketchwareLocalLibsFallback == null) {
-            synchronized (FilePathUtil.class) {
-                if (sketchwareLocalLibsFallback == null) {
-                    File externalFilesDir = SketchApplication.getAppContext().getExternalFilesDir(null);
-                    sketchwareLocalLibsFallback = new File(externalFilesDir, "local_libs");
-                }
-            }
-        }
-        return sketchwareLocalLibsFallback;
+        return SketchwarePaths.getLocalLibsFallbackDir();
     }
 
     public static String getLastCompileLogPath(String sc_id) {
-        return new File(SKETCHWARE_DATA, sc_id + "/compile_log").getAbsolutePath();
+        return SketchwarePaths.getProjectCompileLogPath(sc_id);
     }
 
     public static String getPathPermission(String sc_id) {
-        return new File(SKETCHWARE_DATA, sc_id + "/permission").getAbsolutePath();
+        return SketchwarePaths.getProjectPermissionPath(sc_id);
     }
 
     public static String getPathImport(String sc_id) {
-        return new File(SKETCHWARE_DATA, sc_id + "/import").getAbsolutePath();
+        return SketchwarePaths.getProjectImportPath(sc_id);
     }
 
     public static String getPathBroadcast(String sc_id) {
-        return new File(SKETCHWARE_DATA, sc_id + "/files/broadcast").getAbsolutePath();
+        return SketchwarePaths.getProjectBroadcastPath(sc_id);
     }
 
     public static String getPathSvg(String sc_id) {
-        return new File(SKETCHWARE_DATA, sc_id + "/converted-vectors/").getAbsolutePath();
+        return SketchwarePaths.getProjectConvertedVectorsPath(sc_id);
     }
 
     public static String getSvgFullPath(String sc_id, String resName) {
-        return new File(getPathSvg(sc_id) + File.separator + resName + ".svg").getAbsolutePath();
+        return SketchwarePaths.getProjectConvertedVectorFilePath(sc_id, resName);
     }
 
     public static String getPathService(String sc_id) {
-        return new File(SKETCHWARE_DATA, sc_id + "/files/service").getAbsolutePath();
+        return SketchwarePaths.getProjectServicePath(sc_id);
     }
 
     public static String getPathAssets(String sc_id) {
-        return new File(SKETCHWARE_DATA, sc_id + "/files/assets").getAbsolutePath();
+        return SketchwarePaths.getProjectAssetsPath(sc_id);
     }
 
     public static String getPathJava(String sc_id) {
-        return new File(SKETCHWARE_DATA, sc_id + "/files/java").getAbsolutePath();
+        return SketchwarePaths.getProjectJavaPath(sc_id);
     }
 
     public static String getPathKotlinCompilerPlugins(String sc_id) {
-        return new File(SKETCHWARE_DATA, sc_id + "/files/kt_plugins").getAbsolutePath();
+        return SketchwarePaths.getProjectKotlinCompilerPluginsPath(sc_id);
     }
 
     public static String getPathResource(String sc_id) {
-        return new File(SKETCHWARE_DATA, sc_id + "/files/resource").getAbsolutePath();
+        return SketchwarePaths.getProjectResourcePath(sc_id);
     }
 
     public static String getPathProguard(String sc_id) {
-        return new File(SKETCHWARE_DATA, sc_id + "/proguard-rules.pro").getAbsolutePath();
+        return SketchwarePaths.getProjectProguardRulesPath(sc_id);
     }
 
     public static String getPathLocalLibrary(String sc_id) {
-        return new File(SKETCHWARE_DATA, sc_id + "/local_library").getAbsolutePath();
+        return SketchwarePaths.getProjectLocalLibraryPath(sc_id);
     }
 
     public static String getJarPathLocalLibrary(String libraryName) {
-        return resolveLocalLibFile(libraryName, "classes.jar").getAbsolutePath();
+        return SketchwarePaths.getLocalLibraryJarPath(libraryName);
     }
 
     public static String getDexPathLocalLibrary(String libraryName) {
-        return resolveLocalLibFile(libraryName, "classes.dex").getAbsolutePath();
+        return SketchwarePaths.getLocalLibraryDexPath(libraryName);
     }
 
     public static String getResPathLocalLibrary(String libraryName) {
-        return resolveLocalLibFile(libraryName, "res").getAbsolutePath();
-    }
-
-    /**
-     * Resolves a local library file, checking the primary shared storage path first,
-     * then falling back to the app-specific storage path.
-     */
-    private static File resolveLocalLibFile(String libraryName, String fileName) {
-        File primaryPath = new File(SKETCHWARE_LOCAL_LIBS, libraryName + "/" + fileName);
-        if (primaryPath.exists()) {
-            return primaryPath;
-        }
-        File fallbackPath = new File(getLocalLibsFallbackDir(), libraryName + "/" + fileName);
-        if (fallbackPath.exists()) {
-            return fallbackPath;
-        }
-        // Default to primary path
-        return primaryPath;
+        return SketchwarePaths.getLocalLibraryResPath(libraryName);
     }
 
     public static String getJarPathLocalLibraryUser(String sc_id) {
-        return new File(SKETCHWARE_DATA, sc_id + "/files/library/jar").getAbsolutePath();
+        return SketchwarePaths.getProjectLibraryJarPath(sc_id);
     }
 
     public static String getDexPathLocalLibraryUser(String sc_id) {
-        return new File(SKETCHWARE_DATA, sc_id + "/files/library/dex").getAbsolutePath();
+        return SketchwarePaths.getProjectLibraryDexPath(sc_id);
     }
 
     public static String getResPathLocalLibraryUser(String sc_id) {
-        return new File(SKETCHWARE_DATA, sc_id + "/files/library/res").getAbsolutePath();
+        return SketchwarePaths.getProjectLibraryResPath(sc_id);
     }
 
     public static String getManifestJava(String sc_id) {
-        return new File(SKETCHWARE_DATA, sc_id + "/java").getAbsolutePath();
+        return SketchwarePaths.getProjectJavaManifestPath(sc_id);
     }
 
     public static String getManifestBroadcast(String sc_id) {
-        return new File(SKETCHWARE_DATA, sc_id + "/broadcast").getAbsolutePath();
+        return SketchwarePaths.getProjectBroadcastManifestPath(sc_id);
     }
 
     public static String getPathNativelibs(String sc_id) {
-        return new File(SKETCHWARE_DATA, sc_id + "/files/native_libs").getAbsolutePath();
+        return SketchwarePaths.getProjectNativeLibsPath(sc_id);
     }
 
     public static String getManifestService(String sc_id) {
-        return new File(SKETCHWARE_DATA, sc_id + "/service").getAbsolutePath();
+        return SketchwarePaths.getProjectServiceManifestPath(sc_id);
     }
 }

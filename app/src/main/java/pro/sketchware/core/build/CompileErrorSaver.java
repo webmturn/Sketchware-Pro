@@ -5,7 +5,7 @@ import android.content.Intent;
 
 import pro.sketchware.activities.tools.CompileLogActivity;
 
-import pro.sketchware.util.FilePathUtil;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.FileUtil;
 
 public class CompileErrorSaver {
@@ -22,7 +22,7 @@ public class CompileErrorSaver {
      */
     public CompileErrorSaver(String sc_id) {
         this.sc_id = sc_id;
-        path = FilePathUtil.getLastCompileLogPath(sc_id);
+        path = SketchwarePaths.getProjectCompileLogPath(sc_id);
     }
 
     /**

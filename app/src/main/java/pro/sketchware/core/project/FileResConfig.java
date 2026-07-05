@@ -5,14 +5,12 @@ import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
 
-import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.LogUtil;
 
 public class FileResConfig {
 
-    public FilePathUtil fpu = new FilePathUtil();
     public ArrayList<String> listBroadcastManifest = new ArrayList<>();
     public ArrayList<String> listFileAssets = new ArrayList<>();
     public ArrayList<String> listFileBroadcast = new ArrayList<>();
@@ -31,7 +29,7 @@ public class FileResConfig {
         numProj = sc_id;
         if ((sc_id == null || sc_id.isEmpty())) return;
 
-        String permissions = FileUtil.readFile(fpu.getPathPermission(numProj));
+        String permissions = FileUtil.readFile(SketchwarePaths.getProjectPermissionPath(numProj));
         if (permissions.isEmpty()) return;
 
         try {
@@ -63,12 +61,12 @@ public class FileResConfig {
     }
 
     public ArrayList<String> getJavaFile() {
-        return listDir(new FilePathUtil().getPathJava(numProj), listFileJava);
+        return listDir(SketchwarePaths.getProjectJavaPath(numProj), listFileJava);
     }
 
     public ArrayList<String> getAssetsFile() {
         if (!assetsLoaded) {
-            listDir(new FilePathUtil().getPathAssets(numProj), listFileAssets);
+            listDir(SketchwarePaths.getProjectAssetsPath(numProj), listFileAssets);
             assetsLoaded = true;
         }
         return listFileAssets;
@@ -83,7 +81,7 @@ public class FileResConfig {
     }
 
     public ArrayList<String> getImportList() {
-        String readFile = FileUtil.readFile(fpu.getPathImport(numProj));
+        String readFile = FileUtil.readFile(SketchwarePaths.getProjectImportPath(numProj));
         if (readFile.isEmpty()) return listFileImport;
 
         try {
@@ -97,7 +95,7 @@ public class FileResConfig {
 
     public ArrayList<String> getBroadcastFile() {
         if (!broadcastLoaded) {
-            listDir(new FilePathUtil().getPathBroadcast(numProj), listFileBroadcast);
+            listDir(SketchwarePaths.getProjectBroadcastPath(numProj), listFileBroadcast);
             broadcastLoaded = true;
         }
         return listFileBroadcast;
@@ -105,14 +103,14 @@ public class FileResConfig {
 
     public ArrayList<String> getServiceFile() {
         if (!serviceLoaded) {
-            listDir(new FilePathUtil().getPathService(numProj), listFileService);
+            listDir(SketchwarePaths.getProjectServicePath(numProj), listFileService);
             serviceLoaded = true;
         }
         return listFileService;
     }
 
     public ArrayList<String> getJavaManifestList() {
-        String readFile = FileUtil.readFile(fpu.getManifestJava(numProj));
+        String readFile = FileUtil.readFile(SketchwarePaths.getProjectJavaManifestPath(numProj));
         if (readFile.isEmpty()) return listJavaManifest;
 
         try {
@@ -125,7 +123,7 @@ public class FileResConfig {
     }
 
     public ArrayList<String> getBroadcastManifestList() {
-        String readFile = FileUtil.readFile(fpu.getManifestBroadcast(numProj));
+        String readFile = FileUtil.readFile(SketchwarePaths.getProjectBroadcastManifestPath(numProj));
         if (readFile.isEmpty()) return listBroadcastManifest;
 
         try {
@@ -138,7 +136,7 @@ public class FileResConfig {
     }
 
     public ArrayList<String> getServiceManifestList() {
-        String readFile = FileUtil.readFile(fpu.getManifestService(numProj));
+        String readFile = FileUtil.readFile(SketchwarePaths.getProjectServiceManifestPath(numProj));
         if (readFile.isEmpty()) return listServiceManifest;
 
         try {

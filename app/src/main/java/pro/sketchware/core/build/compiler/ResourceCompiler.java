@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import pro.sketchware.core.project.BuiltInLibrary;
 import pro.sketchware.core.build.ProjectBuilder;
 import pro.sketchware.core.exception.SimpleException;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.library.ManageLocalLibrary;
 import pro.sketchware.core.build.BuildSettings;
 import pro.sketchware.core.project.ProjectSettings;
@@ -187,7 +188,7 @@ public class ResourceCompiler {
             args.add(buildHelper.projectFilePaths.assetsPath);
 
             /* Add imported assets */
-            String importedAssetsPath = buildHelper.filePathUtil.getPathAssets(buildHelper.projectFilePaths.sc_id);
+            String importedAssetsPath = SketchwarePaths.getProjectAssetsPath(buildHelper.projectFilePaths.sc_id);
             if (FileUtil.isExistFile(importedAssetsPath)) {
                 args.add("-A");
                 args.add(importedAssetsPath);
@@ -408,7 +409,7 @@ public class ResourceCompiler {
         }
 
         private void compileImportedResources(String outputPath) throws SimpleException {
-            String resourcePath = buildHelper.filePathUtil.getPathResource(buildHelper.projectFilePaths.sc_id);
+            String resourcePath = SketchwarePaths.getProjectResourcePath(buildHelper.projectFilePaths.sc_id);
             File importedArchive = new File(outputPath, "project-imported.zip");
             if (FileUtil.isExistFile(resourcePath)
                     && new File(resourcePath).length() != 0) {
@@ -417,7 +418,7 @@ public class ResourceCompiler {
                 commands.add(aapt2.getAbsolutePath());
                 commands.add("compile");
                 commands.add("--dir");
-                commands.add(buildHelper.filePathUtil.getPathResource(buildHelper.projectFilePaths.sc_id));
+                commands.add(resourcePath);
                 commands.add("-o");
                 commands.add(outputPath + File.separator + "project-imported.zip");
                 LogUtil.d(TAG + ":cIR", "Now executing: " + commands);

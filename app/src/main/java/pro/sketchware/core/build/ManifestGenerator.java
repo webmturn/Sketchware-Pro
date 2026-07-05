@@ -33,7 +33,6 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.core.codegen.AndroidManifestInjector;
 import pro.sketchware.util.library.BuiltInLibraries;
 import pro.sketchware.util.library.BuiltInLibraryManager;
-import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.core.project.FileResConfig;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.xml.XmlBuilder;
@@ -62,7 +61,6 @@ public class ManifestGenerator {
     public ArrayList<ProjectFileBean> projectFiles;
     public BuildSettings buildSettings;
     public BuildConfig buildConfig;
-    public FilePathUtil filePathUtil = new FilePathUtil();
     public FileResConfig fileResConfig;
     public ProjectSettings settings;
     private boolean targetsSdkVersion31OrHigher = false;
@@ -503,7 +501,7 @@ public class ManifestGenerator {
         if (buildConfig.isNotificationUsed) {
             writePermission(manifestXml, "android.permission.POST_NOTIFICATIONS");
         }
-        if (FileUtil.isExistFile(filePathUtil.getPathPermission(buildConfig.sc_id))) {
+        if (FileUtil.isExistFile(SketchwarePaths.getProjectPermissionPath(buildConfig.sc_id))) {
             for (String s : fileResConfig.getPermissionList()) {
                 writePermission(manifestXml, s);
             }
@@ -705,7 +703,7 @@ public class ManifestGenerator {
         if (buildConfig.constVarComponent.isFBGoogleUsed) {
             EditorManifest.manifestFBGoogleLogin(applicationTag);
         }
-        if (FileUtil.isExistFile(filePathUtil.getManifestJava(buildConfig.sc_id))) {
+        if (FileUtil.isExistFile(SketchwarePaths.getProjectJavaManifestPath(buildConfig.sc_id))) {
             ArrayList<HashMap<String, Object>> activityAttrs = getActivityAttrs();
             for (String activityName : fileResConfig.getJavaManifestList()) {
                 writeJava(applicationTag, activityName, activityAttrs);
@@ -715,12 +713,12 @@ public class ManifestGenerator {
                 .equals(BuildSettings.SETTING_GENERIC_VALUE_FALSE)) {
             writeLegacyLibrary(applicationTag);
         }
-        if (FileUtil.isExistFile(filePathUtil.getManifestService(buildConfig.sc_id))) {
+        if (FileUtil.isExistFile(SketchwarePaths.getProjectServiceManifestPath(buildConfig.sc_id))) {
             for (String serviceName : fileResConfig.getServiceManifestList()) {
                 writeService(applicationTag, serviceName);
             }
         }
-        if (FileUtil.isExistFile(filePathUtil.getManifestBroadcast(buildConfig.sc_id))) {
+        if (FileUtil.isExistFile(SketchwarePaths.getProjectBroadcastManifestPath(buildConfig.sc_id))) {
             for (String receiverName : fileResConfig.getBroadcastManifestList()) {
                 writeBroadcast(applicationTag, receiverName);
             }

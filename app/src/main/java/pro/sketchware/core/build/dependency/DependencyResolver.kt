@@ -17,7 +17,6 @@ import org.cosmic.ide.dependency.resolver.eventReciever
 import org.cosmic.ide.dependency.resolver.getArtifact
 import org.cosmic.ide.dependency.resolver.repositories
 import pro.sketchware.core.project.SketchwarePaths
-import pro.sketchware.util.FilePathUtil
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
@@ -96,7 +95,7 @@ class DependencyResolver(
         )
     }
 
-    private var downloadPath: String = FilePathUtil.getLocalLibsDir().absolutePath
+    private var downloadPath: String = SketchwarePaths.getLocalLibsDir().absolutePath
 
     private fun isStoragePermissionError(e: Throwable): Boolean {
         var current: Throwable? = e
@@ -111,7 +110,7 @@ class DependencyResolver(
     }
 
     private fun switchToFallbackPath() {
-        downloadPath = FilePathUtil.getLocalLibsFallbackDir().absolutePath
+        downloadPath = SketchwarePaths.getLocalLibsFallbackDir().absolutePath
     }
 
     /**
@@ -119,9 +118,9 @@ class DependencyResolver(
      * Returns the existing file, or null if not found in either location.
      */
     private fun resolveExistingLibFile(artifactId: String, version: String, filename: String): File? {
-        val primary = File(FilePathUtil.getLocalLibsDir(), "$artifactId-v$version/$filename")
+        val primary = File(SketchwarePaths.getLocalLibsDir(), "$artifactId-v$version/$filename")
         if (primary.exists() && primary.length() > 0) return primary
-        val fallback = File(FilePathUtil.getLocalLibsFallbackDir(), "$artifactId-v$version/$filename")
+        val fallback = File(SketchwarePaths.getLocalLibsFallbackDir(), "$artifactId-v$version/$filename")
         if (fallback.exists() && fallback.length() > 0) return fallback
         return null
     }
@@ -223,7 +222,7 @@ class DependencyResolver(
                         .apply { parentFile?.mkdirs() }
                 )
             } catch (e: Exception) {
-                if (isStoragePermissionError(e) && downloadPath == FilePathUtil.getLocalLibsDir().absolutePath) {
+                if (isStoragePermissionError(e) && downloadPath == SketchwarePaths.getLocalLibsDir().absolutePath) {
                     // Primary path blocked by FUSE, retry with app-specific fallback
                     switchToFallbackPath()
                     try {
@@ -366,7 +365,7 @@ class DependencyResolver(
                     Files.createDirectories(path.parent)
                     dep.downloadTo(File(path.toString()))
                 } catch (e: Exception) { 
-                    if (isStoragePermissionError(e) && downloadPath == FilePathUtil.getLocalLibsDir().absolutePath) {
+                    if (isStoragePermissionError(e) && downloadPath == SketchwarePaths.getLocalLibsDir().absolutePath) {
                         switchToFallbackPath()
                         path = Paths.get(
                             downloadPath,

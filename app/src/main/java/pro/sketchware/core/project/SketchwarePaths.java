@@ -42,6 +42,8 @@ public class SketchwarePaths {
     public static final String LOCALIZATION_PATH = "sketchware" + File.separator + "localization";
     public static final String LOCALIZATION_STRINGS_PATH = "sketchware" + File.separator + "localization" + File.separator + "strings.xml";
 
+    private static volatile File localLibsFallbackDir;
+
     public static final String EXTRA_SYSTEM_DATA = ".sketchware" + File.separator + "data" + File.separator + "system";
     public static final String CUSTOM_EVENTS_FILE = EXTRA_SYSTEM_DATA + File.separator + "events.json";
     public static final String CUSTOM_LISTENERS_FILE = EXTRA_SYSTEM_DATA + File.separator + "listeners.json";
@@ -320,6 +322,26 @@ public class SketchwarePaths {
         return getAbsolutePathOf(DATA_PATH + File.separator + sc_id);
     }
 
+    public static String getProjectCompileLogPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "compile_log";
+    }
+
+    public static String getProjectPermissionPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "permission";
+    }
+
+    public static String getProjectImportPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "import";
+    }
+
+    public static String getProjectBroadcastPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "files" + File.separator + "broadcast";
+    }
+
+    public static String getProjectServicePath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "files" + File.separator + "service";
+    }
+
     public static String getProjectAssetsPath(String sc_id) {
         return getDataPath(sc_id) + File.separator + "files" + File.separator + "assets";
     }
@@ -330,6 +352,22 @@ public class SketchwarePaths {
 
     public static String getProjectJavaPath(String sc_id) {
         return getDataPath(sc_id) + File.separator + "files" + File.separator + "java";
+    }
+
+    public static String getProjectKotlinCompilerPluginsPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "files" + File.separator + "kt_plugins";
+    }
+
+    public static String getProjectResourcePath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "files" + File.separator + "resource";
+    }
+
+    public static String getProjectConvertedVectorsPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "converted-vectors";
+    }
+
+    public static String getProjectConvertedVectorFilePath(String sc_id, String resName) {
+        return getProjectConvertedVectorsPath(sc_id) + File.separator + resName + ".svg";
     }
 
     public static String getProjectLayoutPath(String sc_id) {
@@ -361,6 +399,21 @@ public class SketchwarePaths {
         return getDataPath(sc_id) + File.separator + "local_library";
     }
 
+    public static String getProjectLibraryJarPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "files" + File.separator + "library"
+                + File.separator + "jar";
+    }
+
+    public static String getProjectLibraryDexPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "files" + File.separator + "library"
+                + File.separator + "dex";
+    }
+
+    public static String getProjectLibraryResPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "files" + File.separator + "library"
+                + File.separator + "res";
+    }
+
     public static String getProjectCustomBlocksPath(String sc_id) {
         return getDataPath(sc_id) + File.separator + "custom_blocks";
     }
@@ -379,6 +432,18 @@ public class SketchwarePaths {
 
     public static String getProjectProguardRulesPath(String sc_id) {
         return getDataPath(sc_id) + File.separator + "proguard-rules.pro";
+    }
+
+    public static String getProjectJavaManifestPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "java";
+    }
+
+    public static String getProjectBroadcastManifestPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "broadcast";
+    }
+
+    public static String getProjectServiceManifestPath(String sc_id) {
+        return getDataPath(sc_id) + File.separator + "service";
     }
 
     public static String getProjectResourceValuesFilePath(String sc_id, String fileName) {
@@ -493,6 +558,46 @@ public class SketchwarePaths {
 
     public static String getLibsPath() {
         return getAbsolutePathOf(LIBS_PATH);
+    }
+
+    public static File getLocalLibsDir() {
+        return new File(getLibsPath(), "local_libs");
+    }
+
+    public static File getLocalLibsFallbackDir() {
+        if (localLibsFallbackDir == null) {
+            synchronized (SketchwarePaths.class) {
+                if (localLibsFallbackDir == null) {
+                    File externalFilesDir = SketchApplication.getAppContext().getExternalFilesDir(null);
+                    localLibsFallbackDir = new File(externalFilesDir, "local_libs");
+                }
+            }
+        }
+        return localLibsFallbackDir;
+    }
+
+    public static String getLocalLibraryJarPath(String libraryName) {
+        return resolveLocalLibFile(libraryName, "classes.jar").getAbsolutePath();
+    }
+
+    public static String getLocalLibraryDexPath(String libraryName) {
+        return resolveLocalLibFile(libraryName, "classes.dex").getAbsolutePath();
+    }
+
+    public static String getLocalLibraryResPath(String libraryName) {
+        return resolveLocalLibFile(libraryName, "res").getAbsolutePath();
+    }
+
+    private static File resolveLocalLibFile(String libraryName, String fileName) {
+        File primaryPath = new File(getLocalLibsDir(), libraryName + File.separator + fileName);
+        if (primaryPath.exists()) {
+            return primaryPath;
+        }
+        File fallbackPath = new File(getLocalLibsFallbackDir(), libraryName + File.separator + fileName);
+        if (fallbackPath.exists()) {
+            return fallbackPath;
+        }
+        return primaryPath;
     }
 
     public static String getAndroidProguardRulesPath() {

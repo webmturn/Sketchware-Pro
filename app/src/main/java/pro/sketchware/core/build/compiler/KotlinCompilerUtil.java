@@ -8,7 +8,7 @@ import java.util.List;
 
 import pro.sketchware.core.build.ProjectBuilder;
 import pro.sketchware.core.build.ProjectFilePaths;
-import pro.sketchware.util.FilePathUtil;
+import pro.sketchware.core.project.SketchwarePaths;
 
 public class KotlinCompilerUtil {
 
@@ -53,7 +53,7 @@ public class KotlinCompilerUtil {
 
         // .sketchware/data/xxx/files/java
         mFilesToCompile.addAll(getSourceFiles(
-                new File(new FilePathUtil().getPathJava(scId))
+                new File(SketchwarePaths.getProjectJavaPath(scId))
         ));
 
         return mFilesToCompile;
@@ -66,7 +66,7 @@ public class KotlinCompilerUtil {
     static List<File> getCompilerPlugins(ProjectFilePaths workspace) {
         String scId = workspace.sc_id;
 
-        File pluginDir = new File(new FilePathUtil().getPathKotlinCompilerPlugins(scId));
+        File pluginDir = new File(SketchwarePaths.getProjectKotlinCompilerPluginsPath(scId));
         if (!pluginDir.exists()) {
             return Collections.emptyList();
         }

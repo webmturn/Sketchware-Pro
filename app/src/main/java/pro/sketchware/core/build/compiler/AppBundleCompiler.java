@@ -22,10 +22,10 @@ import java.util.zip.ZipOutputStream;
 import pro.sketchware.core.build.ProjectBuilder;
 import pro.sketchware.core.build.ProjectFilePaths;
 import pro.sketchware.core.exception.SimpleException;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.library.ManageLocalLibrary;
 import pro.sketchware.util.library.BuiltInLibraries;
 import pro.sketchware.util.LogUtil;
-import pro.sketchware.util.FilePathUtil;
 
 public class AppBundleCompiler {
     private static final String MODULE_ARCHIVE_FILE_NAME = "module-main.zip";
@@ -171,7 +171,7 @@ public class AppBundleCompiler {
                 moduleMain.flush();
             }
 
-            var nativeLibrariesDirectory = new File(new FilePathUtil().getPathNativelibs(builder.projectFilePaths.sc_id));
+            var nativeLibrariesDirectory = new File(SketchwarePaths.getProjectNativeLibsPath(builder.projectFilePaths.sc_id));
             var architectures = nativeLibrariesDirectory.listFiles();
 
             if (architectures != null) {
