@@ -6,7 +6,7 @@ import android.view.View;
 
 import pro.sketchware.activities.editor.LogicEditorActivity;
 
-import pro.sketchware.core.ui.FieldBlockView;
+import pro.sketchware.core.block.view.FieldBlockView;
 import io.github.rosemoe.sora.widget.CodeEditor;
 
 public class AsdHandlerCodeEditor implements View.OnClickListener {

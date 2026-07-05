@@ -1,8 +1,9 @@
 package pro.sketchware.activities.editor.logic;
 
 import pro.sketchware.core.project.ClassInfo;
-import pro.sketchware.core.ui.BlockView;
-import pro.sketchware.core.ui.BaseBlockView;
+import pro.sketchware.core.block.view.BlockView;
+import pro.sketchware.core.block.view.BaseBlockView;
+import pro.sketchware.core.block.view.BlockViewContainer;
 import pro.sketchware.core.codegen.ComponentTypeMapper;
 import pro.sketchware.util.ViewUtil;
 import android.content.Context;
@@ -16,7 +17,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class BlockPane extends RelativeLayout {
+public class BlockPane extends RelativeLayout implements BlockViewContainer {
   public Context context;
   
   public int[] locationBuffer = new int[2];
@@ -35,6 +36,7 @@ public class BlockPane extends RelativeLayout {
 
   private final HashMap<Integer, BlockView> blockIndex = new HashMap<>();
 
+  @Override
   public BlockView getBlockByTag(int id) {
     return blockIndex.get(id);
   }
@@ -84,7 +86,7 @@ public class BlockPane extends RelativeLayout {
   }
 
   /**
-   * Adds a block without triggering layout — for batch loading.
+   * Adds a block without triggering layout 鈥?for batch loading.
    * Call requestLayout() once after all blocks are added.
    */
   public void addBlockNoLayout(BlockView blockView) {
@@ -215,7 +217,7 @@ public class BlockPane extends RelativeLayout {
         for (int b = 0; b < blockView.childViews.size(); b++) {
           View view = blockView.childViews.get(b);
           boolean isBlockView = view instanceof BlockView;
-          if ((isBlockView || view instanceof pro.sketchware.core.ui.FieldBlockView) && (!isBlockView || !view.getTag().toString().equals(excludeBlockId))) {
+          if ((isBlockView || view instanceof pro.sketchware.core.block.view.FieldBlockView) && (!isBlockView || !view.getTag().toString().equals(excludeBlockId))) {
             int[] intValues = new int[2];
             view.getLocationOnScreen(intValues);
             addSnapPoint(intValues, view, 0);
@@ -546,7 +548,7 @@ public class BlockPane extends RelativeLayout {
       if (blockView.isParameter) {
         if (view instanceof BlockView)
           this.activeBlock.copyBlockDimensions((BaseBlockView)view, true, false, 0); 
-        if (view instanceof pro.sketchware.core.ui.FieldBlockView)
+        if (view instanceof pro.sketchware.core.block.view.FieldBlockView)
           this.activeBlock.copyBlockDimensions((BaseBlockView)view, true, false, 0); 
       } else {
         end = ((Integer)this.currentSnapPoint[2]).intValue();
@@ -614,8 +616,8 @@ public class BlockPane extends RelativeLayout {
         result = ((Integer) ((BlockView) target[1]).getTag()).intValue();
       }
     }
-    if (view instanceof pro.sketchware.core.ui.FieldBlockView) {
-      result = ((Integer) ((pro.sketchware.core.ui.FieldBlockView) view).parentBlock.getTag()).intValue();
+    if (view instanceof pro.sketchware.core.block.view.FieldBlockView) {
+      result = ((Integer) ((pro.sketchware.core.block.view.FieldBlockView) view).parentBlock.getTag()).intValue();
     }
     return result;
   }

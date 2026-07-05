@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import pro.sketchware.core.ui.BlockView;
+import pro.sketchware.core.block.view.BlockView;
 import pro.sketchware.util.ViewUtil;
 import pro.sketchware.R;
 

@@ -36,7 +36,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import pro.sketchware.core.codegen.BlockTypeUtils;
-import pro.sketchware.core.ui.BlockView;
+import pro.sketchware.core.block.view.BlockView;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.PCP;
 import pro.sketchware.util.LogUtil;

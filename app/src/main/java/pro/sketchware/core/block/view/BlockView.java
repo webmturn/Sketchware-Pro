@@ -1,4 +1,4 @@
-package pro.sketchware.core.ui;
+package pro.sketchware.core.block.view;
 
 import pro.sketchware.core.codegen.BlockColorMapper;
 import pro.sketchware.util.format.FormatUtil;
@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import pro.sketchware.beans.BlockBean;
-import pro.sketchware.activities.editor.logic.BlockPane;
 import com.google.gson.Gson;
 import java.util.ArrayList;
 import pro.sketchware.core.codegen.ExtraBlockInfo;
@@ -67,7 +66,7 @@ public class BlockView extends BaseBlockView {
   
   public int blockTypeInt = 0;
   
-  public BlockPane blockPane = null;
+  public BlockViewContainer blockPane = null;
   
   public String blockTypeStr;
   

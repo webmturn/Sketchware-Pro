@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import pro.sketchware.core.async.BackgroundTasks;
-import pro.sketchware.core.ui.BlockView;
+import pro.sketchware.core.block.view.BlockView;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.codegen.ExtraBlockInfo;

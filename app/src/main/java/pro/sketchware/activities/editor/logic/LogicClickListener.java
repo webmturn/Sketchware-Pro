@@ -32,7 +32,7 @@ import pro.sketchware.core.validation.IdentifierValidator;
 import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.BlockConstants;
-import pro.sketchware.core.ui.BlockView;
+import pro.sketchware.core.block.view.BlockView;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.AddCustomListBinding;

@@ -18,8 +18,8 @@ import com.google.android.material.card.MaterialCardView;
 import java.util.Locale;
 
 import pro.sketchware.R;
-import pro.sketchware.core.ui.BaseBlockView;
-import pro.sketchware.core.ui.BlockView;
+import pro.sketchware.core.block.view.BaseBlockView;
+import pro.sketchware.core.block.view.BlockView;
 import pro.sketchware.util.ViewUtil;
 import pro.sketchware.databinding.PaletteBlockBinding;
 

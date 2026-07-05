@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import pro.sketchware.core.ui.FieldBlockView;
+import pro.sketchware.core.block.view.FieldBlockView;
 import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.BlockConstants;

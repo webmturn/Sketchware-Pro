@@ -33,10 +33,10 @@ import pro.sketchware.util.SketchwareUtil;
 public class BlockLoader {
 
     private static ArrayList<ExtraBlockInfo> blocks;
-    /** Fast name → ExtraBlockInfo lookup, built alongside {@link #blocks}. */
+    /** Fast name to ExtraBlockInfo lookup, built alongside {@link #blocks}. */
     private static HashMap<String, ExtraBlockInfo> blocksByName;
 
-    /** Per-project custom block cache: sc_id → (block_name → ExtraBlockInfo). */
+    /** Per-project custom block cache: sc_id to (block_name to ExtraBlockInfo). */
     private static String cachedProjectId;
     private static HashMap<String, ExtraBlockInfo> projectBlockCache;
 
@@ -223,7 +223,7 @@ public class BlockLoader {
     }
 
     /**
-     * Still used in {@link pro.sketchware.core.ui.BlockView}, so it must exist (for now).
+     * Still used in {@link pro.sketchware.core.block.view.BlockView}, so it must exist (for now).
      */
     public static void log(String message) {
         LogUtil.d("BlockLoader", message);

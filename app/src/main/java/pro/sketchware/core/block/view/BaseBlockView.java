@@ -1,4 +1,4 @@
-package pro.sketchware.core.ui;
+package pro.sketchware.core.block.view;
 
 import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.codegen.ComponentTypeMapper;

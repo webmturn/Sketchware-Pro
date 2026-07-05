@@ -15,7 +15,7 @@ import android.view.WindowManager;
 import pro.sketchware.activities.editor.LogicEditorActivity;
 
 import pro.sketchware.core.codegen.ComponentCodeGenerator;
-import pro.sketchware.core.ui.FieldBlockView;
+import pro.sketchware.core.block.view.FieldBlockView;
 import io.github.rosemoe.sora.widget.component.EditorAutoCompletion;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
