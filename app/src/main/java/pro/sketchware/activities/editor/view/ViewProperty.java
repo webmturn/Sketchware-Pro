@@ -70,6 +70,7 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
     private ObjectAnimator showAllShower;
     private ObjectAnimator showAllHider;
     private boolean showAllVisible = true;
+    private Runnable pendingPropertyContentRefresh;
 
     public ViewProperty(Context context) {
         super(context);
@@ -154,25 +155,76 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
                 item.animate().scaleX(0.8f).scaleY(0.8f).start();
             }
         }
-        if (idsAdapter.getSelectedItemPosition() < projectActivityViews.size()) {
-            ViewBean viewBean = projectActivityViews.get(idsAdapter.getSelectedItemPosition());
-            if (selectedGroupId == 0) {
-                propertyLayout.setVisibility(VISIBLE);
-                layoutPropertySeeAll.setVisibility(VISIBLE);
-                viewPropertyItems.setProjectFileBean(projectFile);
-                viewPropertyItems.initializeProperties(sc_id, viewBean);
-                updateSeeAllView(viewBean);
-                viewEvent.setVisibility(GONE);
-            } else if (selectedGroupId == 1) {
-                propertyLayout.setVisibility(VISIBLE);
-                viewPropertyItems.setupRecentProperties(viewBean);
-                layoutPropertySeeAll.setVisibility(GONE);
-            } else if (selectedGroupId == 2) {
-                propertyLayout.setVisibility(GONE);
-                viewEvent.setVisibility(VISIBLE);
-                viewEvent.setData(sc_id, projectFile, viewBean);
-            }
+
+        ViewBean viewBean = getSelectedView();
+        if (viewBean == null) {
+            return;
         }
+
+        if (selectedGroupId == 0) {
+            propertyLayout.setVisibility(VISIBLE);
+            layoutPropertySeeAll.setVisibility(VISIBLE);
+            viewEvent.setVisibility(GONE);
+        } else if (selectedGroupId == 1) {
+            propertyLayout.setVisibility(VISIBLE);
+            layoutPropertySeeAll.setVisibility(GONE);
+            viewEvent.setVisibility(GONE);
+        } else if (selectedGroupId == 2) {
+            propertyLayout.setVisibility(GONE);
+            layoutPropertySeeAll.setVisibility(GONE);
+            viewEvent.setVisibility(VISIBLE);
+        }
+
+        schedulePropertyContentRefresh(selectedGroupId, viewBean.id);
+    }
+
+    private ViewBean getSelectedView() {
+        int selectedPosition = idsAdapter.getSelectedItemPosition();
+        if (selectedPosition < 0 || selectedPosition >= projectActivityViews.size()) {
+            return null;
+        }
+        return projectActivityViews.get(selectedPosition);
+    }
+
+    private void schedulePropertyContentRefresh(int groupId, String viewId) {
+        if (pendingPropertyContentRefresh != null) {
+            removeCallbacks(pendingPropertyContentRefresh);
+        }
+
+        pendingPropertyContentRefresh = () -> {
+            pendingPropertyContentRefresh = null;
+            ViewBean selectedView = getSelectedView();
+            if (selectedView == null || selectedGroupId != groupId || !isSameViewId(selectedView.id, viewId)) {
+                return;
+            }
+            renderPropertyContent(groupId, selectedView);
+        };
+        post(pendingPropertyContentRefresh);
+    }
+
+    private boolean isSameViewId(String firstId, String secondId) {
+        return firstId == null ? secondId == null : firstId.equals(secondId);
+    }
+
+    private void renderPropertyContent(int groupId, ViewBean viewBean) {
+        if (groupId == 0) {
+            viewPropertyItems.setProjectFileBean(projectFile);
+            viewPropertyItems.initializeProperties(sc_id, viewBean);
+            updateSeeAllView(viewBean);
+        } else if (groupId == 1) {
+            viewPropertyItems.setupRecentProperties(viewBean);
+        } else if (groupId == 2) {
+            viewEvent.setData(sc_id, projectFile, viewBean);
+        }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        if (pendingPropertyContentRefresh != null) {
+            removeCallbacks(pendingPropertyContentRefresh);
+            pendingPropertyContentRefresh = null;
+        }
+        super.onDetachedFromWindow();
     }
 
     private void showSaveToCollectionDialog() {
@@ -328,16 +380,22 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
     public void initialize(String sc_id, ProjectFileBean projectFileBean) {
         this.sc_id = sc_id;
         projectFile = projectFileBean;
+        viewPropertyItems.setProjectId(sc_id);
         viewPropertyItems.setProjectSettings(new ProjectSettings(sc_id));
     }
 
-    public void selectWidgetById(String widgetId) {
+    public boolean selectWidgetById(String widgetId) {
         for (int i = 0; i < projectActivityViews.size(); i++) {
-            if (projectActivityViews.get(i).id.equals(widgetId)) {
-                spnWidget.setSelection(i);
-                return;
+            if (isSameViewId(projectActivityViews.get(i).id, widgetId)) {
+                if (idsAdapter.getSelectedItemPosition() == i) {
+                    selectView(projectActivityViews.get(i));
+                } else {
+                    spnWidget.setSelection(i);
+                }
+                return true;
             }
         }
+        return false;
     }
 
     public void addActivityViews(ArrayList<ViewBean> activityViews, ViewBean fab) {
@@ -347,6 +405,24 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
             projectActivityViews.add(0, fab);
         }
         idsAdapter.notifyDataSetChanged();
+    }
+
+    public void warmUpPropertyContent() {
+        ViewBean warmUpView = getWarmUpView();
+        if (warmUpView == null || sc_id == null || projectFile == null) {
+            return;
+        }
+        viewPropertyItems.setProjectFileBean(projectFile);
+        viewPropertyItems.initializeProperties(sc_id, warmUpView);
+    }
+
+    private ViewBean getWarmUpView() {
+        for (ViewBean viewBean : projectActivityViews) {
+            if (!"_fab".equals(viewBean.id)) {
+                return viewBean;
+            }
+        }
+        return projectActivityViews.isEmpty() ? null : projectActivityViews.get(0);
     }
 
     private void initializeGroups() {

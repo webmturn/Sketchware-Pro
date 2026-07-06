@@ -52,6 +52,17 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
         RecentHistoryManager.getInstance().initialize(context);
     }
 
+    public void setProjectId(String scId) {
+        if (!isSameProject(sc_id, scId)) {
+            propertyViewCache.clear();
+            sc_id = scId;
+        }
+    }
+
+    private boolean isSameProject(String firstId, String secondId) {
+        return firstId == null ? secondId == null : firstId.equals(secondId);
+    }
+
     private void setupViews() {
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
@@ -229,11 +240,10 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     }
 
     public void initializeProperties(String scId, ViewBean bean) {
-        sc_id = scId;
+        setProjectId(scId);
         viewBean = bean;
         RecentHistoryManager.getInstance().loadFromDatabase(viewBean.getClassInfo().getClassName());
         removeAllViews();
-        propertyViewCache.clear();
         if (bean.id.equals("_fab")) {
             addFabProperties(bean);
         } else {
@@ -481,7 +491,6 @@ public class ViewPropertyItems extends LinearLayout implements PropertyChangedCa
     public void setupRecentProperties(ViewBean bean) {
         viewBean = bean;
         removeAllViews();
-        propertyViewCache.clear();
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
         params.gravity = Gravity.LEFT;

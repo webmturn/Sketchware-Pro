@@ -141,7 +141,7 @@
                             android:layout_height="20dp"
                             android:layout_marginStart="4dp"
                             android:layout_marginEnd="8dp"
-                            android:src="@drawable/ic_mtrl_screen"
+                            android:src="@drawable/ic_mtrl_devices"
                             app:tint="?attr/colorControlNormal" />
 
                         <TextView

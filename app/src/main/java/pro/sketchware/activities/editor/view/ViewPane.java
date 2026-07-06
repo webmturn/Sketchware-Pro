@@ -137,6 +137,8 @@ public class ViewPane extends RelativeLayout {
     private Material3LibraryManager material3LibraryManager;
     private HashMap<String, String> xmlStringCache = null;
     private String xmlStringCacheScId = null;
+    private HashMap<String, String> importedFontPathCache = null;
+    private String importedFontPathCacheScId = null;
 
     public ViewPane(Context context) {
         super(context);
@@ -156,6 +158,12 @@ public class ViewPane extends RelativeLayout {
 
     public void setResourceManager(ResourceManager resourcesManager) {
         this.resourcesManager = resourcesManager;
+        invalidateImportedFontPathCache();
+    }
+
+    private void invalidateImportedFontPathCache() {
+        importedFontPathCache = null;
+        importedFontPathCacheScId = sc_id;
     }
 
     private void initTextView() {
@@ -231,6 +239,9 @@ public class ViewPane extends RelativeLayout {
 
     public void initialize(String sc_id, boolean isPreviewMode) {
         this.sc_id = sc_id;
+        if (importedFontPathCacheScId == null || !importedFontPathCacheScId.equals(sc_id)) {
+            invalidateImportedFontPathCache();
+        }
         material3LibraryManager = new Material3LibraryManager(getContext(), sc_id);
         colorResourceResolver = new ColorResourceResolver(sc_id);
         int viewEditorThemeOverlay = material3LibraryManager.getViewEditorThemeOverlay();
@@ -1375,6 +1386,28 @@ public class ViewPane extends RelativeLayout {
         }
     }
 
+    private String getImportedFontPath(String fontName) {
+        if (importedFontPathCache == null) {
+            importedFontPathCache = loadImportedFontPaths();
+        }
+        return importedFontPathCache.getOrDefault(fontName, "");
+    }
+
+    private HashMap<String, String> loadImportedFontPaths() {
+        HashMap<String, String> fontPaths = new HashMap<>();
+        File fontDirectory = new File(SketchwarePaths.getProjectResourcePath(sc_id), "font");
+        File[] fontFiles = fontDirectory.listFiles();
+        if (fontFiles == null) {
+            return fontPaths;
+        }
+        for (File fontFile : fontFiles) {
+            if (fontFile.isFile()) {
+                fontPaths.put(FileUtil.getFileNameNoExtension(fontFile.getName()), fontFile.getAbsolutePath());
+            }
+        }
+        return fontPaths;
+    }
+
     private void updateTextView(TextView textView, ViewBean viewBean) {
         String textContent = viewBean.text.text;
         if (textContent != null && textContent.contains("\\n")) {
@@ -1385,7 +1418,7 @@ public class ViewPane extends RelativeLayout {
         if (textFont != null && !textFont.isEmpty()) {
             if (textFont.startsWith("@font/")) {
                 textFont = textFont.substring(6);
-                String textFontPath = resourcesManager != null ? resourcesManager.getFontPath(textFont) : "";
+                String textFontPath = getImportedFontPath(textFont);
                 textView.setTypeface(
                         textFontPath != null
                                 && !textFontPath.isEmpty()

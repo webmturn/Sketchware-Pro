@@ -265,19 +265,24 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             }
             fileName.setText(currentJavaFileName);
         }
+        updateFileSelectorIcon();
+    }
+
+    private void updateFileSelectorIcon() {
+        if (xmlLayoutOrientation == null || viewPager == null) {
+            return;
+        }
+        if (viewPager.getCurrentItem() != 0 || projectFile == null) {
+            xmlLayoutOrientation.setImageResource(R.drawable.ic_mtrl_code);
+            return;
+        }
+        xmlLayoutOrientation.setImageResource(R.drawable.ic_mtrl_devices);
     }
 
     private void refreshViewTabAdapter() {
         lastViewTabProjectFile = projectFile;
         if (viewTabAdapter != null && projectFile != null) {
-            int orientation = projectFile.orientation;
-            if (orientation == ProjectFileBean.ORIENTATION_PORTRAIT) {
-                xmlLayoutOrientation.setImageResource(R.drawable.ic_screen_portrait_grey600_24dp);
-            } else if (orientation == ProjectFileBean.ORIENTATION_LANDSCAPE) {
-                xmlLayoutOrientation.setImageResource(R.drawable.ic_screen_landscape_grey600_24dp);
-            } else {
-                xmlLayoutOrientation.setImageResource(R.drawable.ic_screen_rotation_grey600_24dp);
-            }
+            updateFileSelectorIcon();
             viewTabAdapter.initialize(projectFile);
         }
     }
@@ -582,7 +587,6 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                     bottomMenu.findItem(8).setVisible(true);
                     if (viewTabAdapter != null) {
                         viewTabAdapter.showHidePropertyView(true);
-                        xmlLayoutOrientation.setImageResource(R.drawable.ic_mtrl_screen);
                     }
                 } else if (position == 1) {
                     bottomMenu.findItem(7).setVisible(false);

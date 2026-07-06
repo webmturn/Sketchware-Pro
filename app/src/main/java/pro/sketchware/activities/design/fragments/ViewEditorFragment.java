@@ -72,6 +72,8 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
     private boolean isPropertyViewVisible;
     private boolean isDragging = false;
     private String sc_id;
+    private Runnable propertyPanelWarmUpRunnable;
+    private boolean propertyViewsDirty = true;
 
     private WidgetsCreatorManager widgetsCreatorManager;
 
@@ -99,7 +101,6 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         });
         viewProperty.setOnPropertyValueChangedListener(viewBean -> {
             refreshView(viewBean.id);
-            viewProperty.refreshPropertyGroups();
             invalidateOptionsMenu();
         });
         viewProperty.setOnPropertyDeleted(viewBean -> {
@@ -120,16 +121,13 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
 
             @Override
             public void onViewSelected(String viewId) {
-                updatePropertyViews();
-                viewProperty.selectWidgetById(viewId);
+                selectPropertyWidget(viewId);
             }
 
             @Override
             public void onViewSelectedWithProperty(boolean showProperty, String viewId) {
                 if (!viewId.isEmpty()) {
-                    updatePropertyViews();
-                    viewProperty.selectWidgetById(viewId);
-                    viewProperty.refreshPropertyGroups();
+                    selectPropertyWidget(viewId);
                 }
 
                 ViewEditorFragment.this.togglePropertyView(showProperty);
@@ -158,7 +156,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
                 ((DesignActivity) requireActivity()).setTouchEventEnabled(true);
             }
         });
-        viewEditor.setOnHistoryChangeListener(this::invalidateOptionsMenu);
+        viewEditor.setOnHistoryChangeListener(this::onViewHistoryChanged);
         viewEditor.setFavoriteData(WidgetCollectionManager.getInstance().getWidgets());
     }
 
@@ -170,6 +168,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         viewProperty.initialize(sc_id, this.projectFileBean);
         setupPalette();
         refreshAllViews();
+        schedulePropertyPanelWarmUp();
         invalidateOptionsMenu();
     }
 
@@ -236,6 +235,39 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
     private void cancelAnimations() {
         if (showPropertyViewAnimator != null && showPropertyViewAnimator.isRunning()) showPropertyViewAnimator.cancel();
         if (hidePropertyViewAnimator != null && hidePropertyViewAnimator.isRunning()) hidePropertyViewAnimator.cancel();
+    }
+
+    private void selectPropertyWidget(String viewId) {
+        if (propertyViewsDirty) {
+            updatePropertyViews();
+        }
+        if (!viewProperty.selectWidgetById(viewId)) {
+            updatePropertyViews();
+            viewProperty.selectWidgetById(viewId);
+        }
+    }
+
+    private void schedulePropertyPanelWarmUp() {
+        if (propertyPanelWarmUpRunnable != null) {
+            viewProperty.removeCallbacks(propertyPanelWarmUpRunnable);
+        }
+        propertyPanelWarmUpRunnable = () -> {
+            propertyPanelWarmUpRunnable = null;
+            if (!isAdded() || projectFileBean == null || isPropertyViewVisible) {
+                return;
+            }
+            if (propertyViewsDirty) {
+                updatePropertyViews();
+            }
+            startAnimation();
+            viewProperty.warmUpPropertyContent();
+        };
+        viewProperty.postDelayed(propertyPanelWarmUpRunnable, 250L);
+    }
+
+    private void onViewHistoryChanged() {
+        propertyViewsDirty = true;
+        invalidateOptionsMenu();
     }
 
     public void updateViewDisplay(ViewBean viewBean) {
@@ -331,10 +363,22 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
 
         if (hidePropertyViewAnimator == null) {
             if (getActivity() == null) return;
-            hidePropertyViewAnimator = ObjectAnimator.ofFloat(viewProperty, View.TRANSLATION_Y, ViewUtil.dpToPx(requireActivity(), (float) viewProperty.getHeight()));
+            hidePropertyViewAnimator = ObjectAnimator.ofFloat(viewProperty, View.TRANSLATION_Y, getPropertyPanelHiddenTranslationY());
             hidePropertyViewAnimator.setDuration(300L);
             hidePropertyViewAnimator.setInterpolator(new DecelerateInterpolator());
         }
+    }
+
+    private float getPropertyPanelHiddenTranslationY() {
+        int height = viewProperty.getHeight();
+        if (height > 0) {
+            return height;
+        }
+        ViewGroup.LayoutParams layoutParams = viewProperty.getLayoutParams();
+        if (layoutParams != null && layoutParams.height > 0) {
+            return layoutParams.height;
+        }
+        return ViewUtil.dpToPx(requireActivity(), 170.0f);
     }
 
     public boolean isPropertyViewVisible() {
@@ -345,6 +389,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         if (!isDragging) {
             HistoryViewBean historyViewBean = ViewHistoryManager.getInstance(sc_id).redo(projectFileBean.getXmlName());
             if (historyViewBean != null) {
+                propertyViewsDirty = true;
                 int actionType = historyViewBean.getActionType();
                 if (actionType == HistoryViewBean.ACTION_TYPE_ADD) {
                     for (ViewBean viewBean : historyViewBean.getAddedData()) {
@@ -391,6 +436,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         if (projectFileBean != null) {
             clearAndLoadViews(ProjectDataManager.getProjectDataManager(sc_id).getViews(projectFileBean.getXmlName()));
             updateFab(ProjectDataManager.getProjectDataManager(sc_id).getFabView(projectFileBean.getXmlName()));
+            updatePropertyViews();
         }
     }
 
@@ -412,6 +458,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
         if (!isDragging) {
             HistoryViewBean historyViewBean = ViewHistoryManager.getInstance(sc_id).undo(projectFileBean.getXmlName());
             if (historyViewBean != null) {
+                propertyViewsDirty = true;
                 int actionType = historyViewBean.getActionType();
                 if (actionType == HistoryViewBean.ACTION_TYPE_ADD) {
                     for (ViewBean view : historyViewBean.getAddedData()) {
@@ -464,6 +511,7 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
             viewBean = null;
         }
         viewProperty.addActivityViews(viewBeanArrayList, viewBean);
+        propertyViewsDirty = false;
     }
 
     @Override
@@ -662,6 +710,10 @@ public class ViewEditorFragment extends BaseFragment implements MenuProvider {
     @Override
     public void onStop() {
         super.onStop();
+        if (propertyPanelWarmUpRunnable != null && viewProperty != null) {
+            viewProperty.removeCallbacks(propertyPanelWarmUpRunnable);
+            propertyPanelWarmUpRunnable = null;
+        }
         if (viewProperty != null) {
             viewProperty.saveProperties();
         }
