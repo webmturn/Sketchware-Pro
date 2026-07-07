@@ -447,8 +447,31 @@ public class SketchwarePaths {
     }
 
     public static String getProjectResourceValuesFilePath(String sc_id, String fileName) {
-        return getDataPath(sc_id) + File.separator + "files" + File.separator + "resource"
-                + File.separator + "values" + File.separator + fileName;
+        return getProjectResourceValuesFilePath(sc_id, "", fileName);
+    }
+
+    public static String getProjectResourceValuesFilePath(String sc_id, String variant, String fileName) {
+        return getProjectResourceValuesPath(sc_id, variant) + File.separator + fileName;
+    }
+
+    public static String getProjectResourceValuesPath(String sc_id) {
+        return getProjectResourceValuesPath(sc_id, "");
+    }
+
+    public static String getProjectResourceValuesPath(String sc_id, String variant) {
+        String valuesDirectory = getValuesDirectoryName(variant);
+        return getProjectResourcePath(sc_id) + File.separator + valuesDirectory;
+    }
+
+    private static String getValuesDirectoryName(String variant) {
+        if (variant == null || variant.isEmpty()) {
+            return "values";
+        }
+        if (!variant.startsWith("-") || variant.contains("..")
+                || variant.contains(File.separator) || variant.contains("/") || variant.contains("\\")) {
+            throw new IllegalArgumentException("Resource values variant must be empty or a suffix like -night.");
+        }
+        return "values" + variant;
     }
 
     public static String getAndroidManifestInjectionPath(String sc_id) {

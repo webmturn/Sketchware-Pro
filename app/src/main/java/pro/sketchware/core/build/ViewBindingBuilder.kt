@@ -1,8 +1,8 @@
 package pro.sketchware.core.build
 
 import org.w3c.dom.Node
+import pro.sketchware.util.XmlUtil
 import java.io.File
-import javax.xml.parsers.DocumentBuilderFactory
 
 class ViewBindingBuilder(
     private val inputFiles: List<File>,
@@ -122,7 +122,7 @@ ${
     }
 
     private fun getTopLevelView(layoutFile: File): View {
-        val document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(layoutFile)
+        val document = XmlUtil.newSecureDocumentBuilderFactory().newDocumentBuilder().parse(layoutFile)
         val element = document.documentElement
         return View(
             element.nodeName.substringAfterLast("."),
@@ -134,7 +134,7 @@ ${
 
     private fun parseViews(layoutFile: File): List<View> {
         val views = mutableListOf<View>()
-        val document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(layoutFile)
+        val document = XmlUtil.newSecureDocumentBuilderFactory().newDocumentBuilder().parse(layoutFile)
         parseNode(document.documentElement, views)
         return (views.filterNot { it.isInclude } + views.filter { it.isInclude })
     }

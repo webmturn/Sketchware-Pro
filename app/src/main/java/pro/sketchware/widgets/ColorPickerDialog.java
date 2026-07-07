@@ -570,7 +570,7 @@ public class ColorPickerDialog extends PopupWindow {
     private void initializeResColors() {
         if (sc_id == null || projectFilePaths == null)
             return;
-        String fileNightPath = SketchwarePaths.getDataPath(sc_id) + "/files/resource/values-night/colors.xml";
+        String fileNightPath = SketchwarePaths.getProjectResourceValuesFilePath(sc_id, "-night", "colors.xml");
 
         ArrayList<ColorModel> colorList = new ArrayList<>();
         ArrayList<ColorModel> colorNightList = new ArrayList<>();

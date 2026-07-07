@@ -30,7 +30,7 @@ public class StringResourceResolver {
         try {
             listMap.clear();
             notesMap.clear();
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilderFactory factory = XmlUtil.newSecureDocumentBuilderFactory();
             DocumentBuilder builder = factory.newDocumentBuilder();
             ByteArrayInputStream input = new ByteArrayInputStream(safeXmlString.getBytes(StandardCharsets.UTF_8));
             Document doc = builder.parse(new InputSource(input));

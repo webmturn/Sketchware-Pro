@@ -14,6 +14,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import pro.sketchware.activities.resourceseditor.components.models.DimenModel;
+import pro.sketchware.util.XmlUtil;
 
 public class DimensEditorManager {
 
@@ -27,7 +28,7 @@ public class DimensEditorManager {
             dimenList.clear();
             notesMap.clear();
 
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilderFactory factory = XmlUtil.newSecureDocumentBuilderFactory();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(new InputSource(new StringReader(dimenXml)));
             document.getDocumentElement().normalize();

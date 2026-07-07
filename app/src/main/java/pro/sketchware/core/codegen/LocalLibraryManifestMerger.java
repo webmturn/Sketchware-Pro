@@ -24,6 +24,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import pro.sketchware.util.library.ManageLocalLibrary;
 import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.XmlUtil;
 
 public class LocalLibraryManifestMerger {
     private static final String TAG = "LocalLibraryManifestMerger";
@@ -558,7 +559,7 @@ public class LocalLibraryManifestMerger {
     }
 
     private static DocumentBuilder newDocumentBuilder() throws Exception {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilderFactory factory = XmlUtil.newSecureDocumentBuilderFactory();
         factory.setNamespaceAware(true);
         return factory.newDocumentBuilder();
     }

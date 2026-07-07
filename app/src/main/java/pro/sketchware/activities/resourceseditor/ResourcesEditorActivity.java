@@ -119,13 +119,12 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
 
     private void initializeBackgroundTask(String variant) {
         this.variant = variant;
-        String baseDir = String.format("%s/files/resource/values%s/", SketchwarePaths.getDataPath(sc_id), variant);
-        stringsFilePath = baseDir + "strings.xml";
-        colorsFilePath = baseDir + "colors.xml";
-        stylesFilePath = baseDir + "styles.xml";
-        themesFilePath = baseDir + "themes.xml";
-        arrayFilePath = baseDir + "arrays.xml";
-        dimensFilePath = baseDir + "dimens.xml";
+        stringsFilePath = SketchwarePaths.getProjectResourceValuesFilePath(sc_id, variant, "strings.xml");
+        colorsFilePath = SketchwarePaths.getProjectResourceValuesFilePath(sc_id, variant, "colors.xml");
+        stylesFilePath = SketchwarePaths.getProjectResourceValuesFilePath(sc_id, variant, "styles.xml");
+        themesFilePath = SketchwarePaths.getProjectResourceValuesFilePath(sc_id, variant, "themes.xml");
+        arrayFilePath = SketchwarePaths.getProjectResourceValuesFilePath(sc_id, variant, "arrays.xml");
+        dimensFilePath = SketchwarePaths.getProjectResourceValuesFilePath(sc_id, variant, "dimens.xml");
 
         setupViewPager();
         startBackgroundTask();

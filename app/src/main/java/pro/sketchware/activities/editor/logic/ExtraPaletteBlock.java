@@ -1007,7 +1007,7 @@ public class ExtraPaletteBlock {
                 StringResourceResolver stringResourceResolver = new StringResourceResolver();
                 if (cachedStringsListMap == null) {
                     cachedStringsListMap = new ArrayList<>();
-                    String filePath = SketchwarePaths.getDataPath(sc_id) + "/files/resource/values/strings.xml";
+                    String filePath = SketchwarePaths.getProjectResourceValuesFilePath(sc_id, "strings.xml");
                     stringResourceResolver.convertXmlStringsToListMap(FileUtil.readFileIfExist(filePath), cachedStringsListMap);
                 }
 

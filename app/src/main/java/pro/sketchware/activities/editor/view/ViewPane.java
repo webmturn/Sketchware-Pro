@@ -1454,7 +1454,7 @@ public class ViewPane extends RelativeLayout {
         if (xmlStringCache == null || !sc_id.equals(xmlStringCacheScId)) {
             xmlStringCache = new HashMap<>();
             xmlStringCacheScId = sc_id;
-            String filePath = SketchwarePaths.getDataPath(sc_id) + "/files/resource/values/strings.xml";
+            String filePath = SketchwarePaths.getProjectResourceValuesFilePath(sc_id, "strings.xml");
             ArrayList<HashMap<String, Object>> stringsListMap = new ArrayList<>();
             StringResourceResolver stringResourceResolver = new StringResourceResolver();
             stringResourceResolver.convertXmlStringsToListMap(FileUtil.readFileIfExist(filePath), stringsListMap);

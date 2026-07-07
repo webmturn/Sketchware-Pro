@@ -63,6 +63,7 @@ import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.ThemeUtils;
 import pro.sketchware.util.UI;
+import pro.sketchware.util.XmlUtil;
 
 public class SrcCodeEditor extends BaseAppCompatActivity {
     public static final String FLAG_FROM_ANDROID_MANIFEST = "from_android_manifest";
@@ -103,7 +104,7 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
         if (xml == null || xml.trim().isEmpty()) return xml;
 
         try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilderFactory factory = XmlUtil.newSecureDocumentBuilderFactory();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(new InputSource(
                     new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))));

@@ -6,6 +6,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -15,6 +16,7 @@ import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.SketchApplication;
 import pro.sketchware.core.resources.ColorResourceResolver;
 import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.XmlUtil;
 
 public class VectorDrawableParser {
 
@@ -123,12 +125,14 @@ public class VectorDrawableParser {
         }
     }
 
-    public class Path {
+    public static class Path {
         private String name = "";
         private String pathData = "";
         private String fillColor = "";
+        private String resolvedFillColor = "";
         private String fillAlpha = "";
         private String strokeColor = "";
+        private String resolvedStrokeColor = "";
         private String strokeAlpha = "";
         private String strokeWidth = "";
         private String strokeLineCap = "";
@@ -163,6 +167,14 @@ public class VectorDrawableParser {
             fillColor = value == null ? "" : value;
         }
 
+        public String getResolvedFillColor() {
+            return resolvedFillColor;
+        }
+
+        public void setResolvedFillColor(String value) {
+            resolvedFillColor = value == null ? "" : value;
+        }
+
         public String getFillAlpha() {
             return fillAlpha;
         }
@@ -177,6 +189,14 @@ public class VectorDrawableParser {
 
         public void setStrokeColor(String value) {
             strokeColor = value == null ? "" : value;
+        }
+
+        public String getResolvedStrokeColor() {
+            return resolvedStrokeColor;
+        }
+
+        public void setResolvedStrokeColor(String value) {
+            resolvedStrokeColor = value == null ? "" : value;
         }
 
         public String getStrokeAlpha() {
@@ -251,22 +271,18 @@ public class VectorDrawableParser {
             trimPathOffset = value == null ? "" : value;
         }
 
-        public String getResolvedFillColor() {
-            return resolveColorForSvg(fillColor);
-        }
-
-        public String getResolvedStrokeColor() {
-            return resolveColorForSvg(strokeColor);
-        }
-
         public boolean hasFill() {
             String f = getResolvedFillColor();
-            return !isEmpty(f) && !"none".equalsIgnoreCase(f);
+            return !isEmptyValue(f) && !"none".equalsIgnoreCase(f);
         }
 
         public boolean hasStroke() {
             String s = getResolvedStrokeColor();
-            return !isEmpty(s) && !"none".equalsIgnoreCase(s);
+            return !isEmptyValue(s) && !"none".equalsIgnoreCase(s);
+        }
+
+        private static boolean isEmptyValue(String s) {
+            return s == null || s.isEmpty();
         }
     }
 
@@ -319,9 +335,9 @@ public class VectorDrawableParser {
         clipPaths.clear();
 
         try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilderFactory factory = XmlUtil.newSecureDocumentBuilderFactory();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(new ByteArrayInputStream(xml.getBytes()));
+            Document doc = builder.parse(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
             Element root = doc.getDocumentElement();
             if (root == null) return;
             if (!"vector".equals(root.getTagName())) return;
@@ -338,7 +354,7 @@ public class VectorDrawableParser {
             walk(root);
 
         } catch (Exception e) {
-            throw new IllegalArgumentException("VectorDrawable" + e.getMessage());
+            throw new IllegalArgumentException("VectorDrawable: " + e.getMessage(), e);
         }
     }
 
@@ -361,8 +377,10 @@ public class VectorDrawableParser {
             p.setName(el.getAttribute("android:name"));
             p.setPathData(el.getAttribute("android:pathData"));
             p.setFillColor(el.getAttribute("android:fillColor"));
+            p.setResolvedFillColor(resolveColorForSvg(p.getFillColor()));
             p.setFillAlpha(el.getAttribute("android:fillAlpha"));
             p.setStrokeColor(el.getAttribute("android:strokeColor"));
+            p.setResolvedStrokeColor(resolveColorForSvg(p.getStrokeColor()));
             p.setStrokeAlpha(el.getAttribute("android:strokeAlpha"));
             p.setStrokeWidth(el.getAttribute("android:strokeWidth"));
             p.setStrokeLineCap(el.getAttribute("android:strokeLineCap"));
@@ -403,7 +421,7 @@ public class VectorDrawableParser {
     private void ensureColorsXmlPath() {
         if (!isEmpty(colorsXmlPath) || isEmpty(projectId)) return;
 
-        String p1 = SketchwarePaths.getDataPath(projectId) + "/files/resource/values/colors.xml";
+        String p1 = SketchwarePaths.getProjectResourceValuesFilePath(projectId, "colors.xml");
         if (FileUtil.isExistFile(p1)) {
             colorsXmlPath = p1;
             return;
@@ -540,9 +558,9 @@ public class VectorDrawableParser {
 
     public boolean isValidVector(String xml) {
         try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilderFactory factory = XmlUtil.newSecureDocumentBuilderFactory();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(new ByteArrayInputStream(xml.getBytes()));
+            Document doc = builder.parse(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
             Element root = doc.getDocumentElement();
             return root != null && "vector".equals(root.getTagName());
         } catch (Exception e) {

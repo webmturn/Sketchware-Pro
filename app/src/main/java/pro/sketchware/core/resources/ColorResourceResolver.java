@@ -26,6 +26,7 @@ import pro.sketchware.R;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.PropertiesUtil;
+import pro.sketchware.util.XmlUtil;
 import pro.sketchware.util.library.Material3LibraryManager;
 
 @SuppressLint("DiscouragedApi")
@@ -54,8 +55,8 @@ public class ColorResourceResolver {
             resColorsNightList.clear();
             return;
         }
-        loadColorsFromPath(SketchwarePaths.getDataPath(projectId) + "/files/resource/values/colors.xml", false);
-        loadColorsFromPath(SketchwarePaths.getDataPath(projectId) + "/files/resource/values-night/colors.xml", true);
+        loadColorsFromPath(SketchwarePaths.getProjectResourceValuesFilePath(projectId, "colors.xml"), false);
+        loadColorsFromPath(SketchwarePaths.getProjectResourceValuesFilePath(projectId, "-night", "colors.xml"), true);
     }
 
     public void loadColorsFromPath(String filePath, boolean isNightVariant) {
@@ -144,7 +145,7 @@ public class ColorResourceResolver {
     private void parseColorElements(ArrayList<ColorModel> colorList, String colorXml) {
         try {
             colorList.clear();
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilderFactory factory = XmlUtil.newSecureDocumentBuilderFactory();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(new InputSource(new StringReader(colorXml)));
             document.getDocumentElement().normalize();

@@ -27,6 +27,6 @@ public class StringsEditorManager extends StringResourceResolver {
         map.put("key", "app_name");
         map.put("text", MapValueHelper.getString(ProjectListManager.getProjectById(sc_id), "my_app_name"));
         listMap.add(0, map);
-        XmlUtil.saveXml(SketchwarePaths.getDataPath(sc_id) + "/files/resource/values/strings.xml", convertListMapToXmlStrings(listMap, notesMap));
+        XmlUtil.saveXml(SketchwarePaths.getProjectResourceValuesFilePath(sc_id, "strings.xml"), convertListMapToXmlStrings(listMap, notesMap));
     }
 }

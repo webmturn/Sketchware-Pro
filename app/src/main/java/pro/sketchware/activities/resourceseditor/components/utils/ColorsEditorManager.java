@@ -55,7 +55,7 @@ public class ColorsEditorManager extends ColorResourceResolver {
             colorList.clear();
             notesMap.clear();
             // Parse the XML using DocumentBuilder
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilderFactory factory = XmlUtil.newSecureDocumentBuilderFactory();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(new InputSource(new StringReader(safeColorXml)));
             document.getDocumentElement().normalize();
@@ -114,7 +114,7 @@ public class ColorsEditorManager extends ColorResourceResolver {
 
             // Save the updated XML if changes are detected
             if (hasChanges && getProjectId() != null) {
-                XmlUtil.saveXml(SketchwarePaths.getDataPath(getProjectId()) + "/files/resource/values/colors.xml", convertListToXml(colorList, notesMap));
+                XmlUtil.saveXml(SketchwarePaths.getProjectResourceValuesFilePath(getProjectId(), "colors.xml"), convertListToXml(colorList, notesMap));
             }
 
         } catch (Exception e) {

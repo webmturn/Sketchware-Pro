@@ -559,9 +559,8 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
         private void updateProjectResourcesContents(HashMap<String, Object> data) {
             var activity = this.activity.get();
             if (activity == null) return;
-            String baseDir = SketchwarePaths.getDataPath(activity.sc_id) + "/files/resource/values/";
-            String stringsFilePath = baseDir + "strings.xml";
-            String colorsFilePath = baseDir + "colors.xml";
+            String stringsFilePath = SketchwarePaths.getProjectResourceValuesFilePath(activity.sc_id, "strings.xml");
+            String colorsFilePath = SketchwarePaths.getProjectResourceValuesFilePath(activity.sc_id, "colors.xml");
             Object appNameValue = data.get("my_app_name");
             String newAppName = appNameValue != null ? appNameValue.toString() : "";
 

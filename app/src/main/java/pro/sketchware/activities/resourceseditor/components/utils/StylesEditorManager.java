@@ -71,7 +71,7 @@ public class StylesEditorManager {
         notesMap.clear();
 
         try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilderFactory factory = XmlUtil.newSecureDocumentBuilderFactory();
             DocumentBuilder builder = factory.newDocumentBuilder();
             InputSource inputSource = new InputSource(new StringReader(content));
             Document document = builder.parse(inputSource);
