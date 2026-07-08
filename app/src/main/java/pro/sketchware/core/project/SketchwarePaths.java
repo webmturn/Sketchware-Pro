@@ -362,6 +362,18 @@ public class SketchwarePaths {
         return getDataPath(sc_id) + File.separator + "files" + File.separator + "resource";
     }
 
+    public static String getProjectResourceDirectoryPath(String sc_id, String directoryName) {
+        return getProjectResourcePath(sc_id) + File.separator + directoryName;
+    }
+
+    public static String getProjectResourceDrawablePath(String sc_id) {
+        return getProjectResourceDirectoryPath(sc_id, "drawable");
+    }
+
+    public static String getProjectResourceDrawableXmlFilePath(String sc_id, String fileName) {
+        return getProjectResourceDrawablePath(sc_id) + File.separator + fileName + ".xml";
+    }
+
     public static String getProjectConvertedVectorsPath(String sc_id) {
         return getDataPath(sc_id) + File.separator + "converted-vectors";
     }
@@ -461,6 +473,15 @@ public class SketchwarePaths {
     public static String getProjectResourceValuesPath(String sc_id, String variant) {
         String valuesDirectory = getValuesDirectoryName(variant);
         return getProjectResourcePath(sc_id) + File.separator + valuesDirectory;
+    }
+
+    public static String getCompiledProjectMainResPath(String sc_id) {
+        return getMyscPath(sc_id) + File.separator + "app" + File.separator + "src"
+                + File.separator + "main" + File.separator + "res";
+    }
+
+    public static String getCompiledProjectResourceValuesFilePath(String sc_id, String fileName) {
+        return getCompiledProjectMainResPath(sc_id) + File.separator + "values" + File.separator + fileName;
     }
 
     private static String getValuesDirectoryName(String variant) {
@@ -633,6 +654,18 @@ public class SketchwarePaths {
 
     public static String getSoundsPath() {
         return getAbsolutePathOf(RESOURCES_SOUNDS_PATH);
+    }
+
+    public static String getWidgetResourcesPath() {
+        return getAbsolutePathOf(RESOURCES_PATH + File.separator + "widgets");
+    }
+
+    public static String getWidgetsJsonFilePath() {
+        return getWidgetResourcesPath() + File.separator + "widgets.json";
+    }
+
+    public static String getWidgetResourcesExportPath() {
+        return getWidgetResourcesPath() + File.separator + "export";
     }
 
     public static String getTempFontsPath(String sc_id) {

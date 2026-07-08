@@ -189,7 +189,7 @@ public class DefaultExtraMenuBean {
     }
 
     private String getPath(String sc_id, String name) {
-        return SketchwarePaths.getDataPath(sc_id) + "/files/resource/" + name + "/";
+        return SketchwarePaths.getProjectResourceDirectoryPath(sc_id, name);
     }
 
     private String getFilename(String filePath, String filenameExtensionToCutOff) {
