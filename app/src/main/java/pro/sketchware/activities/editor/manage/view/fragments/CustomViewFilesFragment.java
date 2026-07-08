@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.R;
+import pro.sketchware.beans.EventBean;
 import pro.sketchware.beans.SelectableBean;
 import pro.sketchware.beans.ViewBean;
 import java.util.ArrayList;
@@ -174,8 +175,10 @@ public class CustomViewFilesFragment extends BaseFragment {
       for (ViewBean viewBean : ProjectDataStore.getSortedRootViews(existingViews)) {
         viewBean.id = generateUniqueViewId(viewBean.type, projectFileBean.getXmlName());
         ProjectDataManager.getProjectDataManager(projectId).addView(projectFileBean.getXmlName(), viewBean);
-        if (viewBean.type == 3 && projectFileBean.fileType == 0)
-          ProjectDataManager.getProjectDataManager(projectId).addEvent(projectFileBean.getJavaName(), 1, viewBean.type, viewBean.id, "onClick"); 
+        if (viewBean.type == ViewBean.VIEW_TYPE_WIDGET_BUTTON
+            && projectFileBean.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY)
+          ProjectDataManager.getProjectDataManager(projectId).addEvent(projectFileBean.getJavaName(),
+              EventBean.EVENT_TYPE_VIEW, viewBean.type, viewBean.id, "onClick");
       } 
       FileListAdapter fileListAdapter = adapter;
       fileListAdapter.notifyItemChanged(fileListAdapter.selectedPosition);

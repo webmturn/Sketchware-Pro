@@ -81,7 +81,7 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
             }
         }
 
-        if (viewBean.type == 6 && !imageNames.contains(viewBean.image.resName)) {
+        if (viewBean.type == ViewBean.VIEW_TYPE_WIDGET_IMAGEVIEW && !imageNames.contains(viewBean.image.resName)) {
             viewBean.image.resName = "default_image";
             resourceProperty = content.findViewWithTag("property_image");
             if (resourceProperty != null) {
@@ -91,7 +91,7 @@ public class PropertyActivity extends BaseAppCompatActivity implements PropertyC
 
         for (String fileName : ProjectDataManager.getFileManager(sc_id).getXmlNames()) {
             for (ViewBean bean : ProjectDataManager.getProjectDataManager(sc_id).getViews(fileName)) {
-                if (bean.type == 6 && !imageNames.contains(bean.image.resName)) {
+                if (bean.type == ViewBean.VIEW_TYPE_WIDGET_IMAGEVIEW && !imageNames.contains(bean.image.resName)) {
                     bean.image.resName = "default_image";
                     isImageEdited = true;
                 }

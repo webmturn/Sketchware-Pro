@@ -10,6 +10,7 @@ import pro.sketchware.beans.LayoutBean;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ProjectLibraryBean;
 import pro.sketchware.beans.ViewBean;
+import pro.sketchware.beans.ViewBeans;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -69,6 +70,14 @@ public class ProjectDataStore {
     this.projectId = projectId;
     fileUtil = new EncryptedFileUtil();
     buildConfig = new BuildConfig();
+  }
+
+  private static boolean usesCustomViewLayout(int viewType) {
+    return viewType == ViewBean.VIEW_TYPE_WIDGET_LISTVIEW
+        || viewType == ViewBean.VIEW_TYPE_WIDGET_SPINNER
+        || viewType == ViewBeans.VIEW_TYPE_WIDGET_GRIDVIEW
+        || viewType == ViewBeans.VIEW_TYPE_WIDGET_RECYCLERVIEW
+        || viewType == ViewBeans.VIEW_TYPE_LAYOUT_VIEWPAGER;
   }
   
   /**
@@ -253,7 +262,7 @@ public class ProjectDataStore {
         continue;
       } 
       for (ViewBean viewBean : entry.getValue()) {
-        if (viewBean.type == 9 || viewBean.type == 10 || viewBean.type == 25 || viewBean.type == 48 || viewBean.type == 31) {
+        if (usesCustomViewLayout(viewBean.type)) {
           String customViewName = viewBean.customView;
           if (customViewName != null && customViewName.length() > 0 && !customViewName.equals("none")) {
             boolean found = false;
@@ -340,14 +349,14 @@ public class ProjectDataStore {
       }
     }
     int fileType = fileBean.fileType;
-    if (fileType == 0) {
+    if (fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
       removeEventsByTarget(fileBean.getJavaName(), targetBean.id);
       removeBlockReferences(fileBean.getJavaName(), targetBean.getClassInfo(), targetBean.id, true);
-    } else if (fileType == 1) {
+    } else if (fileType == ProjectFileBean.PROJECT_FILE_TYPE_CUSTOM_VIEW) {
       ArrayList<Pair<String, String>> customViewPairs = new ArrayList<>();
       for (Map.Entry<String, ArrayList<ViewBean>> entry : viewMap.entrySet()) {
         for (ViewBean viewBean : entry.getValue()) {
-          if ((viewBean.type == 9 || viewBean.type == 10 || viewBean.type == 25 || viewBean.type == 48 || viewBean.type == 31) && viewBean.customView.equals(fileBean.fileName)) {
+          if (usesCustomViewLayout(viewBean.type) && viewBean.customView.equals(fileBean.fileName)) {
             String eventName = viewBean.id + "_onBindCustomView";
             String xmlKey = entry.getKey();
             customViewPairs.add(new Pair<>(ProjectFileBean.getJavaName(xmlKey.substring(0, xmlKey.lastIndexOf(".xml"))), eventName));
@@ -380,7 +389,7 @@ public class ProjectDataStore {
           }
         }
       } 
-    } else if (fileType == 2) {
+    } else if (fileType == ProjectFileBean.PROJECT_FILE_TYPE_DRAWER) {
       removeViewEventsByTarget(fileBean.getDrawersJavaName(), targetBean.id);
     } 
   }
@@ -389,9 +398,9 @@ public class ProjectDataStore {
     if (libraryBean.useYn.equals("Y"))
       return; 
     for (String key : new ArrayList<>(componentMap.keySet())) {
-      removeComponentsByType(key, 6);
-      removeComponentsByType(key, 12);
-      removeComponentsByType(key, 14);
+      removeComponentsByType(key, ComponentBean.COMPONENT_TYPE_FIREBASE);
+      removeComponentsByType(key, ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH);
+      removeComponentsByType(key, ComponentBean.COMPONENT_TYPE_FIREBASE_STORAGE);
     } 
   }
   
@@ -401,7 +410,7 @@ public class ProjectDataStore {
     for (ProjectFileBean projectFileBean : fileManager.getActivities()) {
       ArrayList<ViewBean> toRemove = new ArrayList<>();
       for (ViewBean viewBean : getViews(projectFileBean.getXmlName())) {
-        if (viewBean.type == 17)
+        if (viewBean.type == ViewBean.VIEW_TYPE_WIDGET_ADVIEW)
           toRemove.add(viewBean); 
       } 
       for (ViewBean viewBean : toRemove)
@@ -410,14 +419,14 @@ public class ProjectDataStore {
     for (ProjectFileBean projectFileBean : fileManager.getCustomViews()) {
       ArrayList<ViewBean> toRemove = new ArrayList<>();
       for (ViewBean viewBean : getViews(projectFileBean.getXmlName())) {
-        if (viewBean.type == 17)
+        if (viewBean.type == ViewBean.VIEW_TYPE_WIDGET_ADVIEW)
           toRemove.add(viewBean); 
       } 
       for (ViewBean viewBean : toRemove)
         removeView(projectFileBean, viewBean); 
     } 
     for (String key : new ArrayList<>(componentMap.keySet()))
-      removeComponentsByType(key, 13); 
+      removeComponentsByType(key, ComponentBean.COMPONENT_TYPE_INTERSTITIAL_AD);
   }
   
   /**
@@ -785,7 +794,7 @@ public void removeMapViews(ProjectLibraryBean libraryBean, ProjectFileManager fi
       return; 
     for (ProjectFileBean projectFileBean : fileManager.getActivities()) {
       for (ViewBean viewBean : getViews(projectFileBean.getXmlName())) {
-        if (viewBean.type == 18)
+        if (viewBean.type == ViewBean.VIEW_TYPE_WIDGET_MAPVIEW)
           removeView(projectFileBean, viewBean); 
       } 
     } 
@@ -1176,7 +1185,7 @@ public void readViewData(BufferedReader reader) throws IOException {
     if (viewBeans == null)
       return customViews; 
     for (ViewBean viewBean : viewBeans) {
-      if (viewBean.type == 9 || viewBean.type == 10 || viewBean.type == 25 || viewBean.type == 48 || viewBean.type == 31) {
+      if (usesCustomViewLayout(viewBean.type)) {
         String customViewName = viewBean.customView;
         if (customViewName != null && customViewName.length() > 0 && !viewBean.customView.equals("none"))
           customViews.add(viewBean); 

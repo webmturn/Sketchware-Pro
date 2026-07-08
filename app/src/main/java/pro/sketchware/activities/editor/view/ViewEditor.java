@@ -29,6 +29,7 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 
 import pro.sketchware.util.Helper;
+import pro.sketchware.beans.EventBean;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ProjectResourceBean;
 import pro.sketchware.beans.ViewBean;
@@ -416,8 +417,9 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
                         bean.id = generateWidgetId(bean);
                         viewPane.updateViewBeanProperties(bean, (int) motionEvent.getRawX(), (int) motionEvent.getRawY());
                         ProjectDataManager.getProjectDataManager(scId).addView(xmlName, bean);
-                        if (bean.type == 3 && projectFileBean.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
-                            ProjectDataManager.getProjectDataManager(scId).addEvent(projectFileBean.getJavaName(), 1, bean.type, bean.id, "onClick");
+                        if (bean.type == ViewBean.VIEW_TYPE_WIDGET_BUTTON && projectFileBean.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
+                            ProjectDataManager.getProjectDataManager(scId).addEvent(projectFileBean.getJavaName(),
+                                    EventBean.EVENT_TYPE_VIEW, bean.type, bean.id, "onClick");
                         }
                         setSelectedItem(addView(bean, true), true);
                     } else if (currentTouchedView instanceof ItemView sy) {
