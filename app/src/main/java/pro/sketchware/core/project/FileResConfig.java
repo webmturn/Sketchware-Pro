@@ -23,7 +23,6 @@ public class FileResConfig {
     public ArrayList<String> listJavaManifest = new ArrayList<>();
     public ArrayList<String> listServiceManifest = new ArrayList<>();
     public String numProj;
-    private boolean assetsLoaded, broadcastLoaded, serviceLoaded;
 
     public FileResConfig(String sc_id) {
         numProj = sc_id;
@@ -65,11 +64,7 @@ public class FileResConfig {
     }
 
     public ArrayList<String> getAssetsFile() {
-        if (!assetsLoaded) {
-            listDir(SketchwarePaths.getProjectAssetsPath(numProj), listFileAssets);
-            assetsLoaded = true;
-        }
-        return listFileAssets;
+        return listDir(SketchwarePaths.getProjectAssetsPath(numProj), listFileAssets);
     }
 
     public ArrayList<String> getResourceFile(String dirPath) {
@@ -94,19 +89,11 @@ public class FileResConfig {
     }
 
     public ArrayList<String> getBroadcastFile() {
-        if (!broadcastLoaded) {
-            listDir(SketchwarePaths.getProjectBroadcastPath(numProj), listFileBroadcast);
-            broadcastLoaded = true;
-        }
-        return listFileBroadcast;
+        return listDir(SketchwarePaths.getProjectBroadcastPath(numProj), listFileBroadcast);
     }
 
     public ArrayList<String> getServiceFile() {
-        if (!serviceLoaded) {
-            listDir(SketchwarePaths.getProjectServicePath(numProj), listFileService);
-            serviceLoaded = true;
-        }
-        return listFileService;
+        return listDir(SketchwarePaths.getProjectServicePath(numProj), listFileService);
     }
 
     public ArrayList<String> getJavaManifestList() {
