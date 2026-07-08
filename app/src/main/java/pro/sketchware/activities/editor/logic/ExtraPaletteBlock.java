@@ -328,7 +328,8 @@ public class ExtraPaletteBlock {
                     ProjectDataManager.getProjectDataManager(sc_id).hasComponent(javaName, ComponentBean.COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE, componentName);
             case "datepicker" ->
                     ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_DATEPICKER, componentName);
-            case "customVar" -> ProjectDataManager.getProjectDataManager(sc_id).hasVariable(xmlName, 5, componentName);
+            case "customVar" -> ProjectDataManager.getProjectDataManager(sc_id)
+                    .hasVariable(xmlName, ExtraMenuBean.VARIABLE_TYPE_CUSTOM_LEGACY, componentName);
             case "timepicker" ->
                     ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_TIMEPICKER, componentName);
             case "swiperefreshlayout" ->
@@ -345,35 +346,40 @@ public class ExtraPaletteBlock {
     }
 
     private void variables() {
-        ArrayList<String> booleanVariables = ProjectDataManager.getProjectDataManager(sc_id).getVariableNamesByType(javaName, 0);
+        ArrayList<String> booleanVariables = ProjectDataManager.getProjectDataManager(sc_id)
+                .getVariableNamesByType(javaName, ExtraMenuBean.VARIABLE_TYPE_BOOLEAN);
         for (int i = 0; i < booleanVariables.size(); i++) {
             if (i == 0) logicEditor.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_boolean), getTitleBgColor());
 
             logicEditor.createPaletteBlockWithSpec(booleanVariables.get(i), "b", "getVar").setTag(booleanVariables.get(i));
         }
 
-        ArrayList<String> numberVariables = ProjectDataManager.getProjectDataManager(sc_id).getVariableNamesByType(javaName, 1);
+        ArrayList<String> numberVariables = ProjectDataManager.getProjectDataManager(sc_id)
+                .getVariableNamesByType(javaName, ExtraMenuBean.VARIABLE_TYPE_NUMBER);
         for (int i = 0; i < numberVariables.size(); i++) {
             if (i == 0) logicEditor.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_number), getTitleBgColor());
 
             logicEditor.createPaletteBlockWithSpec(numberVariables.get(i), "d", "getVar").setTag(numberVariables.get(i));
         }
 
-        ArrayList<String> stringVariables = ProjectDataManager.getProjectDataManager(sc_id).getVariableNamesByType(javaName, 2);
+        ArrayList<String> stringVariables = ProjectDataManager.getProjectDataManager(sc_id)
+                .getVariableNamesByType(javaName, ExtraMenuBean.VARIABLE_TYPE_STRING);
         for (int i = 0; i < stringVariables.size(); i++) {
             if (i == 0) logicEditor.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_string), getTitleBgColor());
 
             logicEditor.createPaletteBlockWithSpec(stringVariables.get(i), "s", "getVar").setTag(stringVariables.get(i));
         }
 
-        ArrayList<String> mapVariables = ProjectDataManager.getProjectDataManager(sc_id).getVariableNamesByType(javaName, 3);
+        ArrayList<String> mapVariables = ProjectDataManager.getProjectDataManager(sc_id)
+                .getVariableNamesByType(javaName, ExtraMenuBean.VARIABLE_TYPE_MAP);
         for (int i = 0; i < mapVariables.size(); i++) {
             if (i == 0) logicEditor.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_map), getTitleBgColor());
 
             logicEditor.createPaletteBlockWithSpec(mapVariables.get(i), "a", "getVar").setTag(mapVariables.get(i));
         }
 
-        ArrayList<String> customVariables = ProjectDataManager.getProjectDataManager(sc_id).getVariableNamesByType(javaName, 5);
+        ArrayList<String> customVariables = ProjectDataManager.getProjectDataManager(sc_id)
+                .getVariableNamesByType(javaName, ExtraMenuBean.VARIABLE_TYPE_CUSTOM_LEGACY);
         for (int i = 0; i < customVariables.size(); i++) {
             if (i == 0) logicEditor.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_custom_variable), getTitleBgColor());
 
@@ -385,7 +391,8 @@ public class ExtraPaletteBlock {
             }
         }
 
-        ArrayList<String> customVariables2 = ProjectDataManager.getProjectDataManager(sc_id).getVariableNamesByType(javaName, 6);
+        ArrayList<String> customVariables2 = ProjectDataManager.getProjectDataManager(sc_id)
+                .getVariableNamesByType(javaName, ExtraMenuBean.VARIABLE_TYPE_CUSTOM_DECLARATION);
         for (int i = 0; i < customVariables2.size(); i++) {
             if (i == 0) logicEditor.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_custom_variable), getTitleBgColor());
 
@@ -407,10 +414,10 @@ public class ExtraPaletteBlock {
         }
         PrimaryPaletteBlocks.primaryBlocksA(
                 logicEditor,
-                extraBlocks.isVariableUsed(0),
-                extraBlocks.isVariableUsed(1),
-                extraBlocks.isVariableUsed(2),
-                extraBlocks.isVariableUsed(3)
+                extraBlocks.isVariableUsed(ExtraMenuBean.VARIABLE_TYPE_BOOLEAN),
+                extraBlocks.isVariableUsed(ExtraMenuBean.VARIABLE_TYPE_NUMBER),
+                extraBlocks.isVariableUsed(ExtraMenuBean.VARIABLE_TYPE_STRING),
+                extraBlocks.isVariableUsed(ExtraMenuBean.VARIABLE_TYPE_MAP)
         );
         blockCustomViews();
         blockDrawer();
@@ -549,7 +556,8 @@ public class ExtraPaletteBlock {
             String name = list.second;
 
             switch (type) {
-                case 1, 2, 3 -> logicEditor.createPaletteBlockWithComponent(name, "l", BlockColorMapper.getListTypeName(type), "getVar").setTag(name);
+                case ExtraMenuBean.LIST_TYPE_NUMBER, ExtraMenuBean.LIST_TYPE_STRING, ExtraMenuBean.LIST_TYPE_MAP ->
+                        logicEditor.createPaletteBlockWithComponent(name, "l", BlockColorMapper.getListTypeName(type), "getVar").setTag(name);
                 default -> {
                     String variableName = CustomVariableUtil.getVariableName(name);
                     if (variableName != null) {
@@ -563,9 +571,9 @@ public class ExtraPaletteBlock {
 
         PrimaryPaletteBlocks.primaryBlocksB(
                 logicEditor,
-                extraBlocks.isListUsed(1),
-                extraBlocks.isListUsed(2),
-                extraBlocks.isListUsed(3)
+                extraBlocks.isListUsed(ExtraMenuBean.LIST_TYPE_NUMBER),
+                extraBlocks.isListUsed(ExtraMenuBean.LIST_TYPE_STRING),
+                extraBlocks.isListUsed(ExtraMenuBean.LIST_TYPE_MAP)
         );
     }
 

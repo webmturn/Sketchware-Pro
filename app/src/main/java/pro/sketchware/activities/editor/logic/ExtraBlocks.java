@@ -58,7 +58,7 @@ public class ExtraBlocks {
         }
         if (customVarTypesCache == null) {
             customVarTypesCache = new HashSet<>();
-            for (String variableName : projectDataManager.getVariableNamesByType(javaName, 5)) {
+            for (String variableName : projectDataManager.getVariableNamesByType(javaName, ExtraMenuBean.VARIABLE_TYPE_CUSTOM_LEGACY)) {
                 Matcher matcher = CUSTOM_VAR_PATTERN.matcher(variableName);
                 if (matcher.find()) {
                     customVarTypesCache.add(matcher.group(1));

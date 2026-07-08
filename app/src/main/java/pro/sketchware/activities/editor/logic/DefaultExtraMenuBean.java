@@ -47,7 +47,7 @@ public class DefaultExtraMenuBean {
         Pair<String, String[]> menuPair = BlockMenu.getMenu(menuName);
         title = menuPair.first;
         menus = new ArrayList<>(Arrays.asList(menuPair.second));
-        for (String s : projectDataManager.getVariableNamesByType(javaName, 5)) {
+        for (String s : projectDataManager.getVariableNamesByType(javaName, ExtraMenuBean.VARIABLE_TYPE_CUSTOM_LEGACY)) {
             Matcher matcher2 = Pattern.compile("^(\\w+)[\\s]+(\\w+)").matcher(s);
             while (matcher2.find()) {
                 if (menuName.equals(matcher2.group(1))) {
@@ -56,7 +56,7 @@ public class DefaultExtraMenuBean {
                 }
             }
         }
-        for (String variable : projectDataManager.getVariableNamesByType(javaName, 6)) {
+        for (String variable : projectDataManager.getVariableNamesByType(javaName, ExtraMenuBean.VARIABLE_TYPE_CUSTOM_DECLARATION)) {
             String variableType = CustomVariableUtil.getVariableType(variable);
             String variableName = CustomVariableUtil.getVariableName(variable);
             if (menuName.equals(variableType)) {
