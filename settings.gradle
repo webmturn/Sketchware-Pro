@@ -11,4 +11,5 @@ dependencyResolutionManagement {
 rootProject.name = "Sketchware Pro"
 include(":app")
 include(":resolver")
-include(":vendor-dx")
+// NOTE: vendor-dx has been removed and replaced with official Google R8 compiler (8.15.71)
+// which includes integrated D8/R8 functionality for modern DEX compilation
