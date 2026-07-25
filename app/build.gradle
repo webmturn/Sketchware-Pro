@@ -176,4 +176,6 @@ tasks.register('printBuildConfig') {
     }
 }
 
-tasks.named('preBuild').dependsOn(printBuildConfig)
+tasks.named('preBuild') {
+    dependsOn(printBuildConfig)
+}
