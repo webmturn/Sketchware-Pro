@@ -19,8 +19,10 @@ android {
         versionName = "v7.0.0-beta9"
 
         buildConfigField("String", "GIT_HASH", "\"${gitCommitHash}\"")
+        buildConfigField("String", "SKETCHUB_API_KEY", "\"${System.getenv("SKETCHUB_API_KEY") ?: ""}\"")
 
-        buildConfigField("String", "SKETCHUB_API_KEY", "\"${System.getenv("SKETCHUB_API_KEY")}\"")
+        // Keeps debug builds fast to install/iterate on real devices
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
@@ -30,7 +32,6 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.debug
 
-            // R8 optimization rules for better performance
             postprocessing {
                 removeUnusedCode = true
                 removeUnusedResources = true
@@ -42,6 +43,8 @@ android {
         debug {
             minifyEnabled = false
             debuggable = true
+            // Speeds up debug assembly noticeably on multi-module/large projects
+            crunchPngs = false
         }
     }
 
@@ -49,6 +52,7 @@ android {
         resources {
             excludes += "license/*"
             excludes += "META-INF/DEPENDENCIES"
+            excludes += "META-INF/*.version"
             pickFirsts += "api_database/*"
         }
     }
@@ -57,27 +61,21 @@ android {
         coreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-
-        // Enable incremental Java compilation
         incremental = true
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-        
-        // Enable incremental Kotlin compilation
-        useIR = true
-        useFirExtensionRegistrarExtension = false
-        
-        // Optimization flags for Kotlin compiler
-        freeCompilerArgs = [
-            "-Xno-param-assertions",
-            "-Xno-call-assertions",
-            "-Xno-receiver-assertions",
-            "-Xno-inline",
-            "-Xopt-in=kotlin.RequiresOptIn",
-            "-Xjvm-default=all"
-        ]
+    // Modern DSL replacing the deprecated `kotlinOptions {}` block.
+    kotlin {
+        compilerOptions {
+            jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+            freeCompilerArgs.addAll(
+                "-Xno-param-assertions",
+                "-Xno-call-assertions",
+                "-Xno-receiver-assertions",
+                "-Xopt-in=kotlin.RequiresOptIn",
+                "-Xjvm-default=all"
+            )
+        }
     }
 
     androidResources {
@@ -110,7 +108,6 @@ android {
         exclude group: "org.jetbrains.kotlin", module: "kotlin-script-runtime"
     }
 
-    // Lint configuration for better error handling
     lint {
         warningsAsErrors = false
         abortOnError = false
@@ -122,7 +119,6 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"])
 
     implementation libs.bundles.ui
-
     implementation libs.bundles.image
 
     implementation platform(libs.sora.editor)
@@ -148,11 +144,9 @@ dependencies {
     implementation libs.ecj
     implementation libs.stax.api
 
-    // Modern Kotlin compiler - official release from JetBrains
     implementation libs.bundles.kotlin.compiler
 
     implementation project(':resolver')
-    // REMOVED: vendor-dx module - now using R8 directly via com.android.tools:r8 dependency
     implementation libs.filepicker
 
     implementation libs.libsu
@@ -168,7 +162,6 @@ dependencies {
     coreLibraryDesugaring libs.desugar.jdk.libs.nio
 }
 
-// Task to print build configuration info
 tasks.register('printBuildConfig') {
     doLast {
         println "\n=== Sketchware Pro Build Configuration ==="
@@ -183,5 +176,4 @@ tasks.register('printBuildConfig') {
     }
 }
 
-// Ensure printBuildConfig runs before build
 tasks.named('preBuild').dependsOn(printBuildConfig)
