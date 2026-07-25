@@ -149,7 +149,7 @@ dependencies {
     implementation libs.stax.api
 
     // Modern Kotlin compiler - official release from JetBrains
-    implementation libs.bundles.kotlin_compiler
+    implementation libs.bundles.kotlin.compiler
 
     implementation project(':resolver')
     // REMOVED: vendor-dx module - now using R8 directly via com.android.tools:r8 dependency
