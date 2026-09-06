@@ -79,6 +79,8 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"])
 
+    testImplementation libs.junit
+
     implementation libs.bundles.ui
 
     implementation libs.bundles.image

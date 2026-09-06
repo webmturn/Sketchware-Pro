@@ -6,6 +6,7 @@ on:
       - '.github/workflows/android.yml'
       - 'app/**'
       - 'resolver/**'
+      - 'vendor-dx/**'
       - 'gradle/**'
       - 'build.gradle'
       - 'gradle.properties'
@@ -35,6 +36,12 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+
+      - name: Verify package boundaries
+        run: ./gradlew checkPackageBoundaries
+
+      - name: Run unit tests
+        run: ./gradlew :app:testDebugUnitTest
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug

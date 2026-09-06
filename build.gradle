@@ -15,3 +15,51 @@ buildscript {
 tasks.register("clean", Delete) {
     delete rootProject.layout.buildDirectory
 }
+
+tasks.register("checkPackageBoundaries") {
+    group = "verification"
+    description = "Rejects retired package roots and direct global data access from design tabs."
+
+    doLast {
+        def sourceRoot = file("app/src/main/java")
+        def violations = [] as Set
+
+        ["a/a/a", "com/besome/sketch", "dev", "mod"].each { retiredRoot ->
+            def retiredDirectory = new File(sourceRoot, retiredRoot)
+            if (retiredDirectory.exists()) {
+                violations.addAll(fileTree(retiredDirectory) {
+                    include "**/*.java"
+                    include "**/*.kt"
+                }.files)
+            }
+        }
+
+        def coreRoot = new File(sourceRoot, "pro/sketchware/core")
+        if (coreRoot.exists()) {
+            violations.addAll(fileTree(coreRoot) {
+                include "*.java"
+                include "*.kt"
+            }.files)
+        }
+
+        def designFragmentsRoot = new File(
+                sourceRoot, "pro/sketchware/activities/design/fragments")
+        if (designFragmentsRoot.exists()) {
+            violations.addAll(fileTree(designFragmentsRoot) {
+                include "*.java"
+                exclude "DesignProjectFragment.java"
+            }.files.findAll { sourceFile ->
+                sourceFile.getText("UTF-8").contains("ProjectDataManager")
+            })
+        }
+
+        if (!violations.isEmpty()) {
+            def paths = violations
+                    .collect { rootProject.relativePath(it) }
+                    .sort()
+                    .collect { " - ${it}" }
+                    .join(System.lineSeparator())
+            throw new GradleException("Package boundary violations found:${System.lineSeparator()}${paths}")
+        }
+    }
+}
