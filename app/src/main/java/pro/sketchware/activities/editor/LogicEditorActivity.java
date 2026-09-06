@@ -393,13 +393,13 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         dialog.setView(dialogView);
         dialog.setPositiveButton(R.string.common_word_add, (v, which) -> {
             if (listNameValidator.isValid()) {
-                int listType = 1;
+                int listType = ExtraMenuBean.LIST_TYPE_NUMBER;
                 int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
                 if (checkedRadioButtonId != R.id.rb_int) {
                     if (checkedRadioButtonId == R.id.rb_string) {
-                        listType = 2;
+                        listType = ExtraMenuBean.LIST_TYPE_STRING;
                     } else if (checkedRadioButtonId == R.id.rb_map) {
-                        listType = 3;
+                        listType = ExtraMenuBean.LIST_TYPE_MAP;
                     }
                 }
 
@@ -421,14 +421,14 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         IdentifierValidator nameValidator = new IdentifierValidator(getContext(), customView.findViewById(R.id.ti_input), BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, ProjectDataManager.getProjectDataManager(scId).getAllIdentifiers(projectFile));
         dialog.setView(customView);
         dialog.setPositiveButton(R.string.common_word_add, (v, which) -> {
-            int variableType = 1;
+            int variableType = ExtraMenuBean.VARIABLE_TYPE_NUMBER;
             if (radioGroup.getCheckedRadioButtonId() == R.id.rb_boolean) {
-                variableType = 0;
+                variableType = ExtraMenuBean.VARIABLE_TYPE_BOOLEAN;
             } else if (radioGroup.getCheckedRadioButtonId() != R.id.rb_int) {
                 if (radioGroup.getCheckedRadioButtonId() == R.id.rb_string) {
-                    variableType = 2;
+                    variableType = ExtraMenuBean.VARIABLE_TYPE_STRING;
                 } else if (radioGroup.getCheckedRadioButtonId() == R.id.rb_map) {
-                    variableType = 3;
+                    variableType = ExtraMenuBean.VARIABLE_TYPE_MAP;
                 }
             }
 

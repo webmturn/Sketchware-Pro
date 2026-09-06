@@ -54,8 +54,10 @@ public class ExtraMenuBean {
 
     public static final int VARIABLE_TYPE_BOOLEAN = 0;
     public static final int VARIABLE_TYPE_NUMBER = 1;
-    public static final int VARIABLE_TYPE_MAP = 3;
     public static final int VARIABLE_TYPE_STRING = 2;
+    public static final int VARIABLE_TYPE_MAP = 3;
+    public static final int VARIABLE_TYPE_CUSTOM_LEGACY = 5;
+    public static final int VARIABLE_TYPE_CUSTOM_DECLARATION = 6;
 
     public static final int LIST_TYPE_NUMBER = 1;
     public static final int LIST_TYPE_MAP = 3;
@@ -680,13 +682,13 @@ public class ExtraMenuBean {
 
             case "CustomVar":
                 title = Helper.getResString(R.string.logic_editor_title_select_custom_variable);
-                for (String s : projectDataManager.getVariableNamesByType(javaName, 5)) {
+                for (String s : projectDataManager.getVariableNamesByType(javaName, VARIABLE_TYPE_CUSTOM_LEGACY)) {
                     Matcher matcher = Pattern.compile("^(\\w+)[\\s]+(\\w+)").matcher(s);
                     while (matcher.find()) {
                         menus.add(matcher.group(2));
                     }
                 }
-                for (String variable : projectDataManager.getVariableNamesByType(javaName, 6)) {
+                for (String variable : projectDataManager.getVariableNamesByType(javaName, VARIABLE_TYPE_CUSTOM_DECLARATION)) {
                     String variableName = CustomVariableUtil.getVariableName(variable);
                     menus.add(variableName != null ? variableName : variable);
                 }
