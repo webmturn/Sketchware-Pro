@@ -3,8 +3,6 @@ package pro.sketchware.dialogs;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,7 +29,7 @@ public class AsdDialog extends Dialog implements DialogInterface.OnDismissListen
     private String content;
 
     public AsdDialog(Activity activity) {
-        super(activity);
+        super(activity, R.style.AsdEditorDialogTheme);
         act = activity;
     }
 
@@ -45,7 +43,6 @@ public class AsdDialog extends Dialog implements DialogInterface.OnDismissListen
         Window window = getWindow();
         if (window != null) {
             window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         }
 
