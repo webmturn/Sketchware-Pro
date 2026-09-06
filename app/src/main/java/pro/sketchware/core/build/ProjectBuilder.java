@@ -1057,6 +1057,8 @@ public class ProjectBuilder {
             File dexFile = BuiltInLibraries.getLibraryDexFile(builtInLibrary.getName());
             if (dexFile.exists()) {
                 dexes.add(dexFile);
+            } else {
+                Log.w(TAG, "Skipping missing DEX for built-in library: " + builtInLibrary.getName());
             }
         }
 
