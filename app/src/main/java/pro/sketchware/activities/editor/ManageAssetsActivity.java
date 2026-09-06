@@ -143,19 +143,42 @@ public class ManageAssetsActivity extends BaseAppCompatActivity {
                     return;
                 }
 
+                boolean isFolder;
                 int checkedChipId = dialogBinding.chipGroupTypes.getCheckedChipId();
                 if (checkedChipId == R.id.chip_file) {
-                    FileUtil.writeFile(new File(current_path, editable).getAbsolutePath(), "");
+                    isFolder = false;
                 } else if (checkedChipId == R.id.chip_folder) {
-                    FileUtil.makeDir(new File(current_path, editable).getAbsolutePath());
+                    isFolder = true;
                 } else {
                     SketchwareUtil.toast(Helper.getResString(R.string.toast_select_file_type));
                     return;
                 }
 
-                refresh();
-                SketchwareUtil.toast(Helper.getResString(R.string.toast_file_created));
-                dialogInterface.dismiss();
+                String targetPath = new File(current_path, editable).getAbsolutePath();
+                if (FileUtil.isExistFile(targetPath)) {
+                    SketchwareUtil.toastError(Helper.getResString(isFolder
+                            ? R.string.error_folder_already_exists
+                            : R.string.error_file_exists));
+                    return;
+                }
+
+                if (isFolder) {
+                    FileUtil.makeDir(targetPath);
+                } else {
+                    FileUtil.writeFile(targetPath, "");
+                }
+
+                if (FileUtil.isExistFile(targetPath)) {
+                    refresh();
+                    SketchwareUtil.toast(Helper.getResString(isFolder
+                            ? R.string.toast_folder_created
+                            : R.string.toast_file_created));
+                    dialogInterface.dismiss();
+                } else {
+                    SketchwareUtil.toastError(Helper.getResString(isFolder
+                            ? R.string.toast_failed_to_create_folder
+                            : R.string.toast_failed_to_create_file));
+                }
             });
         });
 
