@@ -59,6 +59,7 @@ import pro.sketchware.beans.HistoryBlockBean;
 import pro.sketchware.beans.MoreBlockCollectionBean;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ViewBean;
+import pro.sketchware.beans.ViewBeans;
 import pro.sketchware.activities.editor.component.AddComponentBottomSheet;
 import pro.sketchware.activities.editor.logic.BlockPane;
 import pro.sketchware.activities.editor.logic.LogicTopMenu;
@@ -1170,55 +1171,55 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                                             break;
 
                                         case "radiobutton":
-                                            projectDataStore.hasViewOfType(xmlName, 19, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_RADIOBUTTON, parameter);
                                             break;
 
                                         case "ratingbar":
-                                            projectDataStore.hasViewOfType(xmlName, 20, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_RATINGBAR, parameter);
                                             break;
 
                                         case "videoview":
-                                            projectDataStore.hasViewOfType(xmlName, 21, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_VIDEOVIEW, parameter);
                                             break;
 
                                         case "searchview":
-                                            projectDataStore.hasViewOfType(xmlName, 22, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_SEARCHVIEW, parameter);
                                             break;
 
                                         case "actv":
-                                            projectDataStore.hasViewOfType(xmlName, 23, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_AUTOCOMPLETETEXTVIEW, parameter);
                                             break;
 
                                         case "mactv":
-                                            projectDataStore.hasViewOfType(xmlName, 24, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_MULTIAUTOCOMPLETETEXTVIEW, parameter);
                                             break;
 
                                         case "gridview":
-                                            projectDataStore.hasViewOfType(xmlName, 25, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_GRIDVIEW, parameter);
                                             break;
 
                                         case "tablayout":
-                                            projectDataStore.hasViewOfType(xmlName, 30, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_LAYOUT_TABLAYOUT, parameter);
                                             break;
 
                                         case "viewpager":
-                                            projectDataStore.hasViewOfType(xmlName, 31, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_LAYOUT_VIEWPAGER, parameter);
                                             break;
 
                                         case "bottomnavigation":
-                                            projectDataStore.hasViewOfType(xmlName, 32, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_LAYOUT_BOTTOMNAVIGATIONVIEW, parameter);
                                             break;
 
                                         case "badgeview":
-                                            projectDataStore.hasViewOfType(xmlName, 33, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_BADGEVIEW, parameter);
                                             break;
 
                                         case "patternview":
-                                            projectDataStore.hasViewOfType(xmlName, 34, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_PATTERNLOCKVIEW, parameter);
                                             break;
 
                                         case "sidebar":
-                                            projectDataStore.hasViewOfType(xmlName, 35, parameter);
+                                            projectDataStore.hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_WAVESIDEBAR, parameter);
                                             break;
 
                                         default:

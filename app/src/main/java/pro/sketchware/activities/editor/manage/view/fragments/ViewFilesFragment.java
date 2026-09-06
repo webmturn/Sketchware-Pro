@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageViewListItemBinding;
 import pro.sketchware.activities.editor.manage.view.PresetLayoutFactory;
+import pro.sketchware.beans.EventBean;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.core.project.SketchwarePaths;
@@ -132,8 +133,10 @@ public class ViewFilesFragment extends BaseFragment {
         for (ViewBean viewBean : ProjectDataStore.getSortedRootViews(presetViews)) {
             viewBean.id = generateWidgetId(viewBean.type, projectFileBean.getXmlName());
             ProjectDataManager.getProjectDataManager(sc_id).addView(projectFileBean.getXmlName(), viewBean);
-            if (viewBean.type == 3 && projectFileBean.fileType == 0) {
-                ProjectDataManager.getProjectDataManager(sc_id).addEvent(projectFileBean.getJavaName(), 1, viewBean.type, viewBean.id, "onClick");
+            if (viewBean.type == ViewBean.VIEW_TYPE_WIDGET_BUTTON
+                    && projectFileBean.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
+                ProjectDataManager.getProjectDataManager(sc_id).addEvent(projectFileBean.getJavaName(),
+                        EventBean.EVENT_TYPE_VIEW, viewBean.type, viewBean.id, "onClick");
             }
         }
     }

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import pro.sketchware.beans.LayoutBean;
 import pro.sketchware.beans.ViewBean;
+import pro.sketchware.beans.ViewBeans;
 import pro.sketchware.activities.editor.view.palette.IconBase;
 
 import java.util.HashMap;
@@ -57,25 +58,37 @@ public class IconCustomWidget extends IconBase {
         viewBean.convert = nameValue != null ? nameValue.toString() : "";
 
         switch (viewBean.type) {
-            case 0, 1, 2:
+            case ViewBean.VIEW_TYPE_LAYOUT_LINEAR,
+                    ViewBean.VIEW_TYPE_LAYOUT_RELATIVE,
+                    ViewBean.VIEW_TYPE_LAYOUT_HSCROLLVIEW:
                 layoutBean.width = ViewGroup.LayoutParams.MATCH_PARENT;
                 viewBean.layout.orientation = VERTICAL;
                 break;
-            case 3, 13, 4, 11, 19, 41:
+            case ViewBean.VIEW_TYPE_WIDGET_BUTTON,
+                    ViewBean.VIEW_TYPE_WIDGET_SWITCH,
+                    ViewBean.VIEW_TYPE_WIDGET_TEXTVIEW,
+                    ViewBean.VIEW_TYPE_WIDGET_CHECKBOX,
+                    ViewBeans.VIEW_TYPE_WIDGET_RADIOBUTTON,
+                    ViewBeans.VIEW_TYPE_WIDGET_MATERIALBUTTON:
                 viewBean.text.text = Title;
                 break;
-            case 5:
+            case ViewBean.VIEW_TYPE_WIDGET_EDITTEXT:
                 viewBean.text.hint = Title;
                 break;
-            case 6:
+            case ViewBean.VIEW_TYPE_WIDGET_IMAGEVIEW:
                 viewBean.image.resName = "";
                 break;
-            case 7, 10, 12, 14, 36, 39:
+            case ViewBean.VIEW_TYPE_WIDGET_WEBVIEW,
+                    ViewBean.VIEW_TYPE_WIDGET_SPINNER,
+                    ViewBean.VIEW_TYPE_LAYOUT_VSCROLLVIEW,
+                    ViewBean.VIEW_TYPE_WIDGET_SEEKBAR,
+                    ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW,
+                    ViewBeans.VIEW_TYPE_LAYOUT_SWIPEREFRESHLAYOUT:
                 viewBean.layout.width = ViewGroup.LayoutParams.MATCH_PARENT;
                 break;
-            case 8:
+            case ViewBean.VIEW_TYPE_WIDGET_PROGRESSBAR:
                 viewBean.text.text = Title;
-                layoutBean.width = -1;
+                layoutBean.width = ViewGroup.LayoutParams.MATCH_PARENT;
                 break;
         }
         Object injectValue = widgetMap.get("inject");

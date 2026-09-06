@@ -128,7 +128,7 @@ public class AddViewActivity extends BaseAppCompatActivity {
     private void disableDrawer() {
         for (int i = 0; i < featureItems.size(); i++) {
             FeatureItem item = featureItems.get(i);
-            if (item.type == 2) {
+            if (item.type == FEATURE_TYPE_DRAWER) {
                 item.isEnabled = false;
                 featuresAdapter.notifyItemChanged(i);
                 break;
@@ -139,7 +139,7 @@ public class AddViewActivity extends BaseAppCompatActivity {
     private void enableToolbar() {
         for (int i = 0; i < featureItems.size(); i++) {
             FeatureItem item = featureItems.get(i);
-            if (item.type == 1) {
+            if (item.type == FEATURE_TYPE_TOOLBAR) {
                 item.isEnabled = true;
                 featuresAdapter.notifyItemChanged(i);
                 break;
@@ -168,10 +168,10 @@ public class AddViewActivity extends BaseAppCompatActivity {
 
     private void initializeItems() {
         featureItems = new ArrayList<>();
-        featureItems.add(new FeatureItem(0, R.drawable.ic_statusbar_color_48dp, Helper.getResString(R.string.editor_preview_statusbar), featureStatusBar));
-        featureItems.add(new FeatureItem(1, R.drawable.ic_toolbar_color_48dp, Helper.getResString(R.string.editor_preview_toolbar), featureToolbar));
-        featureItems.add(new FeatureItem(2, R.drawable.ic_drawer_color_48dp, Helper.getResString(R.string.editor_preview_drawer), featureDrawer));
-        featureItems.add(new FeatureItem(3, R.drawable.fab_color, Helper.getResString(R.string.editor_preview_fab), featureFab));
+        featureItems.add(new FeatureItem(FEATURE_TYPE_STATUS_BAR, R.drawable.ic_statusbar_color_48dp, Helper.getResString(R.string.editor_preview_statusbar), featureStatusBar));
+        featureItems.add(new FeatureItem(FEATURE_TYPE_TOOLBAR, R.drawable.ic_toolbar_color_48dp, Helper.getResString(R.string.editor_preview_toolbar), featureToolbar));
+        featureItems.add(new FeatureItem(FEATURE_TYPE_DRAWER, R.drawable.ic_drawer_color_48dp, Helper.getResString(R.string.editor_preview_drawer), featureDrawer));
+        featureItems.add(new FeatureItem(FEATURE_TYPE_FAB, R.drawable.fab_color, Helper.getResString(R.string.editor_preview_fab), featureFab));
         featuresAdapter.notifyDataSetChanged();
     }
 
