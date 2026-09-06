@@ -301,7 +301,8 @@ public class ExtraPaletteBlock {
         return switch (componentType) {
             case "circleimageview" ->
                     ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_CIRCLEIMAGEVIEW, componentName);
-            case "asynctask" -> ProjectDataManager.getProjectDataManager(sc_id).hasComponent(javaName, 36, componentName);
+            case "asynctask" -> ProjectDataManager.getProjectDataManager(sc_id)
+                    .hasComponent(javaName, ComponentBean.COMPONENT_TYPE_ASYNC_TASK, componentName);
             case "otpview" -> ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_OTPVIEW, componentName);
             case "lottie" ->
                     ProjectDataManager.getProjectDataManager(sc_id).hasViewOfType(xmlName, ViewBeans.VIEW_TYPE_WIDGET_LOTTIEANIMATIONVIEW, componentName);
@@ -427,7 +428,7 @@ public class ExtraPaletteBlock {
                 logicEditor.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_components), getTitleBgColor());
             }
 
-            if (component.type != 27) {
+            if (component.type != ComponentBean.COMPONENT_TYPE_FRAGMENT_ADAPTER) {
                 logicEditor.createPaletteBlockWithComponent(component.componentId, "p", ComponentBean.getComponentTypeName(component.type), "getVar").setTag(component.componentId);
             }
         }
@@ -1621,7 +1622,7 @@ public class ExtraPaletteBlock {
                     logicEditor.createPaletteBlock("c", "timerEvery");
                     logicEditor.createPaletteBlock(" ", "timerCancel");
                 }
-                if (extraBlocks.isComponentUsed(36)) {
+                if (extraBlocks.isComponentUsed(ComponentBean.COMPONENT_TYPE_ASYNC_TASK)) {
                     logicEditor.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_async_task), getTitleBgColor());
                     logicEditor.createPaletteBlock(" ", "AsyncTaskExecute");
                     logicEditor.createPaletteBlock(" ", "AsyncTaskPublishProgress");
