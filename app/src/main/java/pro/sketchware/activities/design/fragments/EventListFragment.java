@@ -21,6 +21,7 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,7 +31,7 @@ import pro.sketchware.beans.EventBean;
 import pro.sketchware.beans.MoreBlockCollectionBean;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ViewBean;
-import pro.sketchware.activities.base.BaseFragment;
+import pro.sketchware.activities.design.DesignEditorViewModel;
 import pro.sketchware.activities.editor.LogicEditorActivity;
 import pro.sketchware.activities.editor.event.AddEventActivity;
 import pro.sketchware.activities.editor.event.CollapsibleEventLayout;
@@ -59,7 +60,6 @@ import pro.sketchware.core.codegen.EventRegistry;
 import pro.sketchware.core.project.FontCollectionManager;
 import pro.sketchware.core.project.ImageCollectionManager;
 import pro.sketchware.core.project.MoreBlockCollectionManager;
-import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.util.SketchToast;
 import pro.sketchware.core.project.SoundCollectionManager;
@@ -67,7 +67,7 @@ import pro.sketchware.util.UIHelper;
 import pro.sketchware.core.validation.UniqueNameValidator;
 import pro.sketchware.util.ViewUtil;
 
-public class EventListFragment extends BaseFragment implements View.OnClickListener, MoreblockImporterDialog.CallBack {
+public class EventListFragment extends DesignProjectFragment implements View.OnClickListener, MoreblockImporterDialog.CallBack {
 
     private ProjectFileBean currentActivity;
     private NavigationRailView paletteView;
@@ -85,6 +85,13 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
     private EditText searchInput;
     private ImageView sortMenuIcon;
     private View searchContainer;
+
+    public static EventListFragment newInstance(String projectId) {
+        EventListFragment fragment = new EventListFragment();
+        fragment.setArguments(projectArguments(projectId));
+        return fragment;
+    }
+
     private final ActivityResultLauncher<Intent> addEventLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (isAdded()) {
@@ -152,27 +159,27 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        sc_id = requireProjectId();
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.fr_logic_list, container, false);
         initialize(view);
-        if (savedInstanceState != null) {
-            sc_id = savedInstanceState.getString("sc_id");
-        } else {
-            sc_id = requireActivity().getIntent().getStringExtra("sc_id");
-        }
         return view;
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putString("sc_id", sc_id);
-        super.onSaveInstanceState(outState);
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        new ViewModelProvider(requireActivity())
+                .get(DesignEditorViewModel.class)
+                .activeProjectFile()
+                .observe(getViewLifecycleOwner(), projectFile -> {
+                    if (projectFile != null) {
+                        setCurrentActivity(projectFile);
+                        refreshEvents();
+                    }
+                });
     }
 
-    public ProjectFileBean getCurrentActivity() {
-        return currentActivity;
-    }
-
-    public void setCurrentActivity(ProjectFileBean projectFileBean) {
+    private void setCurrentActivity(ProjectFileBean projectFileBean) {
         currentActivity = projectFileBean;
     }
 
@@ -183,7 +190,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
             componentEvents.clear();
             activityEvents.clear();
             drawerViewEvents.clear();
-            for (Pair<String, String> moreBlock : ProjectDataManager.getProjectDataManager(sc_id).getMoreBlocks(currentActivity.getJavaName())) {
+            for (Pair<String, String> moreBlock : projectData().getMoreBlocks(currentActivity.getJavaName())) {
                 EventBean eventBean = new EventBean(EventBean.EVENT_TYPE_ETC, -1, moreBlock.first, "moreBlock");
                 eventBean.initValue();
                 moreBlocks.add(eventBean);
@@ -191,7 +198,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
             EventBean initLogicEvent = new EventBean(EventBean.EVENT_TYPE_ACTIVITY, -1, "onCreate", "initializeLogic");
             initLogicEvent.initValue();
             activityEvents.add(initLogicEvent);
-            for (EventBean eventBean : ProjectDataManager.getProjectDataManager(sc_id).getEvents(currentActivity.getJavaName())) {
+            for (EventBean eventBean : projectData().getEvents(currentActivity.getJavaName())) {
                 eventBean.initValue();
                 int eventType = eventBean.eventType;
                 if (eventType == EventBean.EVENT_TYPE_VIEW) {
@@ -240,10 +247,10 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
         if (currentActivity == null) {
             return;
         }
-        if (ProjectDataManager.getProjectDataManager(sc_id).isMoreBlockUsed(currentActivity.getJavaName(), moreBlock.targetId)) {
+        if (projectData().isMoreBlockUsed(currentActivity.getJavaName(), moreBlock.targetId)) {
             SketchToast.warning(requireContext(), Helper.getResString(R.string.logic_editor_message_currently_used_block), 0).show();
         } else {
-            ProjectDataManager.getProjectDataManager(sc_id).removeMoreBlock(currentActivity.getJavaName(), moreBlock.targetId);
+            projectData().removeMoreBlock(currentActivity.getJavaName(), moreBlock.targetId);
             SketchToast.toast(requireContext(), Helper.getResString(R.string.common_message_complete_delete), 0).show();
             int paletteIndex = getPaletteIndex();
             ArrayList<EventBean> paletteEvents = paletteIndex >= 0 ? events.get(paletteIndex) : null;
@@ -389,7 +396,7 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
     }
 
     private void resetEvent(EventBean event) {
-        ProjectDataStore projectDataStore = ProjectDataManager.getProjectDataManager(sc_id);
+        ProjectDataStore projectDataStore = projectData();
         String javaName = currentActivity.getJavaName();
         projectDataStore.putBlocks(javaName, event.targetId + "_" + event.eventName, new ArrayList<>());
         SketchToast.toast(requireContext(), Helper.getResString(R.string.common_message_complete_reset), 0).show();
@@ -432,8 +439,8 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
     }
 
     private void saveMoreBlockToCollection(String moreBlockName, EventBean moreBlock) {
-        String moreBlockSpec = ProjectDataManager.getProjectDataManager(sc_id).getMoreBlockSpec(currentActivity.getJavaName(), moreBlock.targetId);
-        ProjectDataStore projectDataStore = ProjectDataManager.getProjectDataManager(sc_id);
+        String moreBlockSpec = projectData().getMoreBlockSpec(currentActivity.getJavaName(), moreBlock.targetId);
+        ProjectDataStore projectDataStore = projectData();
         String javaName = currentActivity.getJavaName();
         ArrayList<BlockBean> moreBlockBlocks = projectDataStore.getBlocks(javaName, moreBlock.targetId + "_" + moreBlock.eventName);
 
@@ -447,25 +454,25 @@ public class EventListFragment extends BaseFragment implements View.OnClickListe
                     String parameter = next.parameters.get(i);
 
                     if (paramType.isExactType("resource") || paramType.isExactType("resource_bg")) {
-                        if (ProjectDataManager.getResourceManager(sc_id).hasImage(parameter) && !ImageCollectionManager.getInstance().hasResource(parameter)) {
+                        if (projectResources().hasImage(parameter) && !ImageCollectionManager.getInstance().hasResource(parameter)) {
                             try {
-                                ImageCollectionManager.getInstance().addResource(sc_id, ProjectDataManager.getResourceManager(sc_id).getImageBean(parameter));
+                                ImageCollectionManager.getInstance().addResource(sc_id, projectResources().getImageBean(parameter));
                             } catch (CompileException unused) {
                                 failedToAddResourceToCollections = true;
                             }
                         }
                     } else if (paramType.isExactType("sound")) {
-                        if (ProjectDataManager.getResourceManager(sc_id).hasSound(parameter) && !SoundCollectionManager.getInstance().hasResource(parameter)) {
+                        if (projectResources().hasSound(parameter) && !SoundCollectionManager.getInstance().hasResource(parameter)) {
                             try {
-                                SoundCollectionManager.getInstance().addResource(sc_id, ProjectDataManager.getResourceManager(sc_id).getSoundBean(parameter));
+                                SoundCollectionManager.getInstance().addResource(sc_id, projectResources().getSoundBean(parameter));
                             } catch (Exception unused) {
                                 failedToAddResourceToCollections = true;
                             }
                         }
                     } else if (paramType.isExactType("font")) {
-                        if (ProjectDataManager.getResourceManager(sc_id).hasFont(parameter) && !FontCollectionManager.getInstance().hasResource(parameter)) {
+                        if (projectResources().hasFont(parameter) && !FontCollectionManager.getInstance().hasResource(parameter)) {
                             try {
-                                FontCollectionManager.getInstance().addResource(sc_id, ProjectDataManager.getResourceManager(sc_id).getFontBean(parameter));
+                                FontCollectionManager.getInstance().addResource(sc_id, projectResources().getFontBean(parameter));
                             } catch (CompileException unused) {
                                 failedToAddResourceToCollections = true;
                             }

@@ -1,25 +1,18 @@
 package pro.sketchware.activities.design;
 
 import android.app.Activity;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
@@ -28,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,7 +31,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.view.GravityCompat;
@@ -48,6 +39,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -66,14 +58,12 @@ import pro.sketchware.widgets.CustomViewPager;
 import pro.sketchware.activities.tools.CompileLogActivity;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.topjohnwu.superuser.Shell;
 
 import java.io.File;
-import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -82,7 +72,6 @@ import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.util.io.SharedPrefsHelper;
 import pro.sketchware.util.DeviceUtil;
 import pro.sketchware.core.codegen.LayoutGenerator;
-import pro.sketchware.core.build.ProjectBuilder;
 import pro.sketchware.activities.design.fragments.ViewEditorFragment;
 import pro.sketchware.util.SketchToast;
 import pro.sketchware.core.project.BlockHistoryManager;
@@ -98,23 +87,16 @@ import pro.sketchware.activities.design.fragments.EventListFragment;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.MapValueHelper;
 import pro.sketchware.core.build.ProjectFilePaths;
-import pro.sketchware.core.exception.SimpleException;
 import pro.sketchware.util.UI;
 import pro.sketchware.activities.editor.ManagePermissionActivity;
 import pro.sketchware.activities.editor.ManageResourceActivity;
 import pro.sketchware.activities.editor.ManageAssetsActivity;
 import pro.sketchware.activities.editor.ManageJavaActivity;
-import pro.sketchware.core.build.compiler.KotlinCompilerBridge;
-import pro.sketchware.core.project.ProguardHandler;
-import pro.sketchware.core.project.StringfogHandler;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.SystemLogPrinter;
 import pro.sketchware.activities.editor.manifest.AndroidManifestInjection;
 import pro.sketchware.activities.settings.ConfigActivity;
-import pro.sketchware.core.build.BuildProgressReceiver;
-import pro.sketchware.util.library.BuiltInLibraries;
 import pro.sketchware.core.build.CompileErrorSaver;
-import pro.sketchware.core.exception.MissingFileException;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.activities.editor.LogReaderActivity;
 import pro.sketchware.R;
@@ -126,17 +108,16 @@ import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
 import pro.sketchware.dialogs.BuildSettingsBottomSheet;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
-import pro.sketchware.util.ThemeUtils;
 import pro.sketchware.util.apk.ApkSignatures;
 
 public class DesignActivity extends BaseAppCompatActivity implements View.OnClickListener {
-    public static String sc_id;
+    private String sc_id;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final FirebaseCrashlytics crashlytics = getFirebaseCrashlytics();
+    private DesignProjectController projectController;
     private ImageView xmlLayoutOrientation;
     private boolean isRestoringData;
     private int currentTabNumber;
-    private ProjectFileBean lastViewTabProjectFile;
     private CustomViewPager viewPager;
     private CoordinatorLayout coordinatorLayout;
     private DrawerLayout drawer;
@@ -147,7 +128,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     private PopupMenu bottomPopupMenu;
     private MaterialButton btnRun;
     private MaterialButton btnOptions;
-    private ProjectFileBean projectFile;
+    private DesignEditorViewModel editorViewModel;
     private TextView fileName;
     private String currentJavaFileName;
     private ViewEditorFragment viewTabAdapter;
@@ -162,7 +143,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         if (result.getResultCode() == RESULT_OK) {
             if (viewTabAdapter != null && viewPager.getCurrentItem() == 0) {
                 viewTabAdapter.refreshAllViews();
-                refreshViewTabAdapter();
+                editorViewModel.refreshActiveProjectFile();
             }
         }
     });
@@ -184,8 +165,11 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         if (result.getResultCode() == Activity.RESULT_OK) {
             var data = result.getData();
             if (data == null) return;
-            projectFile = data.getParcelableExtra("project_file");
-            refresh();
+            ProjectFileBean selectedFile = data.getParcelableExtra("project_file");
+            if (selectedFile != null) {
+                editorViewModel.selectProjectFile(selectedFile);
+                refresh();
+            }
         }
     });
     private final ActivityResultLauncher<Intent> openLibraryManager = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -201,13 +185,13 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             refresh();
         }
     });
-    private BuildTask currentBuildTask;
+    private DesignBuildController currentBuildController;
     private final BroadcastReceiver buildCancelReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (BuildTask.ACTION_CANCEL_BUILD.equals(intent.getAction())) {
-                if (currentBuildTask != null) {
-                    currentBuildTask.cancelBuild();
+            if (DesignBuildController.ACTION_CANCEL_BUILD.equals(intent.getAction())) {
+                if (currentBuildController != null) {
+                    currentBuildController.cancelBuild();
                 }
             }
         }
@@ -216,7 +200,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     /**
      * Saves the app's version information to the currently opened Sketchware project file.
      */
-    private void saveVersionCodeInformationToProject() {
+    void saveVersionCodeInformationToProject() {
         HashMap<String, Object> projectMetadata = ProjectListManager.getProjectById(sc_id);
         if (projectMetadata != null) {
             projectMetadata.put("sketchware_ver", DeviceUtil.getVersionCode(getApplicationContext()));
@@ -224,12 +208,11 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         }
     }
 
-    private void loadProject(boolean haveSavedState) {
+    void loadProject(boolean haveSavedState) {
         ProjectDataManager.getProjectDataManager(sc_id, haveSavedState);
         ProjectDataManager.getFileManager(sc_id, haveSavedState);
         ResourceManager resourceManager = ProjectDataManager.getResourceManager(sc_id, haveSavedState);
         ProjectDataManager.getLibraryManager(sc_id, haveSavedState);
-        projectFile = getDefaultProjectFile();
         ViewHistoryManager.getInstance(sc_id);
         BlockHistoryManager.getInstance(sc_id);
         // Resource backup is now lazy �?ensureBackedUp() is called
@@ -240,9 +223,16 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         return ProjectDataManager.getFileManager(sc_id).getFileByXmlName(ProjectFileBean.DEFAULT_XML_NAME);
     }
 
-    private void refreshFileSelector() {
+    private boolean refreshFileSelector() {
+        boolean projectFileChanged = false;
+        ProjectFileBean projectFile = editorViewModel.getActiveProjectFile();
         if (projectFile == null) {
             projectFile = getDefaultProjectFile();
+            if (projectFile == null) {
+                return false;
+            }
+            editorViewModel.selectProjectFile(projectFile);
+            projectFileChanged = true;
         }
 
         String javaFileName = projectFile.getJavaName();
@@ -255,59 +245,44 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         if (viewPager.getCurrentItem() == 0) {
             if (!ProjectFileBean.DEFAULT_XML_NAME.equals(xmlFileName) && ProjectDataManager.getFileManager(sc_id).getFileByXmlName(xmlFileName) == null) {
                 projectFile = getDefaultProjectFile();
+                if (projectFile == null) {
+                    return false;
+                }
+                editorViewModel.selectProjectFile(projectFile);
+                projectFileChanged = true;
                 xmlFileName = ProjectFileBean.DEFAULT_XML_NAME;
             }
             fileName.setText(xmlFileName);
         } else {
             if (!ProjectFileBean.DEFAULT_JAVA_NAME.equals(currentJavaFileName) && ProjectDataManager.getFileManager(sc_id).getActivityByJavaName(currentJavaFileName) == null) {
                 projectFile = getDefaultProjectFile();
+                if (projectFile == null) {
+                    return false;
+                }
+                editorViewModel.selectProjectFile(projectFile);
+                projectFileChanged = true;
                 currentJavaFileName = ProjectFileBean.DEFAULT_JAVA_NAME;
             }
             fileName.setText(currentJavaFileName);
         }
         updateFileSelectorIcon();
+        return projectFileChanged;
     }
 
     private void updateFileSelectorIcon() {
         if (xmlLayoutOrientation == null || viewPager == null) {
             return;
         }
-        if (viewPager.getCurrentItem() != 0 || projectFile == null) {
+        if (viewPager.getCurrentItem() != 0 || editorViewModel.getActiveProjectFile() == null) {
             xmlLayoutOrientation.setImageResource(R.drawable.ic_mtrl_code);
             return;
         }
         xmlLayoutOrientation.setImageResource(R.drawable.ic_mtrl_devices);
     }
 
-    private void refreshViewTabAdapter() {
-        lastViewTabProjectFile = projectFile;
-        if (viewTabAdapter != null && projectFile != null) {
-            updateFileSelectorIcon();
-            viewTabAdapter.initialize(projectFile);
-        }
-    }
-
-    private void refreshEventTabAdapter() {
-        if (eventTabAdapter != null && projectFile != null) {
-            eventTabAdapter.setCurrentActivity(projectFile);
-            eventTabAdapter.refreshEvents();
-        }
-    }
-
-    private void refreshComponentTabAdapter() {
-        if (componentTabAdapter != null && projectFile != null) {
-            componentTabAdapter.setProjectFile(projectFile);
-            componentTabAdapter.refreshData();
-        }
-    }
-
-    private void refresh() {
-        refreshFileSelector();
-        if (viewPager.getCurrentItem() == 0) {
-            refreshViewTabAdapter();
-        } else {
-            refreshEventTabAdapter();
-            refreshComponentTabAdapter();
+    void refresh() {
+        if (!refreshFileSelector()) {
+            editorViewModel.refreshActiveProjectFile();
         }
     }
 
@@ -324,7 +299,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
      *
      * @param error The error, to be later displayed as text in {@link CompileLogActivity}
      */
-    private void indicateCompileErrorOccurred(String error) {
+    void indicateCompileErrorOccurred(String error) {
         new CompileErrorSaver(sc_id).writeLogsToFile(error);
         Snackbar snackbar = Snackbar.make(coordinatorLayout, Helper.getResString(R.string.snackbar_show_compile_log), Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction(Helper.getResString(R.string.common_word_show), v -> {
@@ -349,7 +324,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         super.finish();
     }
 
-    private void checkForUnsavedProjectData() {
+    void checkForUnsavedProjectData() {
         if (ProjectDataManager.getLibraryManager(sc_id).hasBackup() || ProjectDataManager.getFileManager(sc_id).hasBackup() || ProjectDataManager.getResourceManager(sc_id).hasBackup() || ProjectDataManager.getProjectDataManager(sc_id).hasViewBackup() || ProjectDataManager.getProjectDataManager(sc_id).hasLogicBackup()) {
             askIfToRestoreOldUnsavedProjectData();
         }
@@ -358,7 +333,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     /**
      * Opens the debug APK to install.
      */
-    private void installBuiltApk() {
+    void installBuiltApk() {
         TaskHost taskHost = TaskHost.of(this);
         taskHost.postToUi(() -> {
             if (!ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_ROOT_AUTO_INSTALL_PROJECTS)) {
@@ -419,14 +394,42 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
 
     private void saveChangesAndCloseProject() {
         showLoadingDialog();
-        SaveChangesProjectCloser saveChangesProjectCloser = new SaveChangesProjectCloser(this);
-        saveChangesProjectCloser.execute();
+        projectController.saveAndClose();
     }
 
     private void saveProject() {
         showLoadingDialog();
-        ProjectSaver projectSaver = new ProjectSaver(this);
-        projectSaver.execute();
+        projectController.save();
+    }
+
+    void showProjectLoadingDialog() {
+        showLoadingDialog();
+    }
+
+    void dismissProjectLoadingDialog() {
+        dismissLoadingDialog();
+    }
+
+    void recordProjectControllerFailure(String message, RuntimeException error) {
+        if (crashlytics != null) {
+            crashlytics.log(message);
+            crashlytics.recordException(error);
+        }
+    }
+
+    ProjectFilePaths getProjectFilePaths() {
+        return projectFilePaths;
+    }
+
+    void onBuildControllerStarted() {
+        prefP1.put("P1I10", true);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    void onBuildControllerFinished(DesignBuildController controller) {
+        if (currentBuildController == controller) {
+            currentBuildController = null;
+        }
     }
 
     @Override
@@ -469,6 +472,9 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             return;
         }
 
+        editorViewModel = new ViewModelProvider(this).get(DesignEditorViewModel.class);
+        projectController = new DesignProjectController(this, sc_id);
+
         prefP1 = new SharedPrefsHelper(getApplicationContext(), "P1");
         prefP12 = new SharedPrefsHelper(getApplicationContext(), "P12");
 
@@ -489,9 +495,9 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
 
         btnRun = findViewById(R.id.btn_run);
         btnRun.setOnClickListener(v -> {
-            if (currentBuildTask != null && !currentBuildTask.isBuildFinished) {
-                if (!currentBuildTask.canceled) {
-                    currentBuildTask.cancelBuild();
+            if (currentBuildController != null && !currentBuildController.isFinished()) {
+                if (!currentBuildController.isCanceled()) {
+                    currentBuildController.cancelBuild();
                 }
                 return;
             }
@@ -501,9 +507,9 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1001);
             }
 
-            BuildTask buildTask = new BuildTask(this);
-            currentBuildTask = buildTask;
-            buildTask.execute();
+            DesignBuildController buildController = new DesignBuildController(this, sc_id);
+            currentBuildController = buildController;
+            buildController.execute();
         });
 
         btnOptions = findViewById(R.id.btn_options);
@@ -611,21 +617,13 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 }
                 currentTabNumber = position;
                 refreshFileSelector();
-                if (position == 0) {
-                    if (projectFile != lastViewTabProjectFile) {
-                        refreshViewTabAdapter();
-                    }
-                } else {
-                    refreshEventTabAdapter();
-                    refreshComponentTabAdapter();
-                }
                 invalidateOptionsMenu();
             }
         });
         viewPager.getAdapter().notifyDataSetChanged();
         ((TabLayout) findViewById(R.id.tab_layout)).setupWithViewPager(viewPager);
 
-        IntentFilter filter = new IntentFilter(BuildTask.ACTION_CANCEL_BUILD);
+        IntentFilter filter = new IntentFilter(DesignBuildController.ACTION_CANCEL_BUILD);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(buildCancelReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
         } else {
@@ -641,7 +639,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         return false;
     }
 
-    private void updateBottomMenu() {
+    void updateBottomMenu() {
         if (bottomMenu != null) {
             handler.post(() -> {
                 bottomMenu.findItem(2).setVisible(projectFilePaths != null && FileUtil.isExistFile(projectFilePaths.projectMyscPath));
@@ -701,8 +699,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         projectFilePaths = new ProjectFilePaths(getApplicationContext(), SketchwarePaths.getMyscPath(sc_id), projectInfo);
 
         try {
-            ProjectLoader projectLoader = new ProjectLoader(this, savedInstanceState);
-            projectLoader.execute();
+            projectController.load(savedInstanceState);
         } catch (RuntimeException e) {
             if (crashlytics != null) {
                 crashlytics.log("ProjectLoader failed");
@@ -735,8 +732,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         }
 
         if (!isRestoringData) {
-            UnsavedChangesSaver unsavedChangesSaver = new UnsavedChangesSaver(this);
-            unsavedChangesSaver.execute();
+            projectController.saveUnsavedChanges();
         }
     }
 
@@ -775,8 +771,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 v.dismiss();
                 try {
                     showLoadingDialog();
-                    DiscardChangesProjectCloser discardChangesProjectCloser = new DiscardChangesProjectCloser(this);
-                    discardChangesProjectCloser.execute();
+                    projectController.discardAndClose();
                 } catch (RuntimeException e) {
                     if (crashlytics != null) crashlytics.recordException(e);
                     dismissLoadingDialog();
@@ -854,7 +849,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     }
 
     private void showCurrentActivitySrcCode() {
-        if (projectFile == null) return;
+        if (editorViewModel.getActiveProjectFile() == null) return;
         showLoadingDialog();
         String filename = Helper.getText(fileName);
         BackgroundTasks.callIoIfAlive(TaskHost.of(this), "DesignActivity", () ->
@@ -886,10 +881,8 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false));
         var adapter = new JavaFileAdapter(sc_id);
         adapter.setOnItemClickListener(projectFileBean -> {
-            projectFile = projectFileBean;
+            editorViewModel.selectProjectFile(projectFileBean);
             refreshFileSelector();
-            refreshEventTabAdapter();
-            refreshComponentTabAdapter();
             dialog.dismiss();
         });
         recyclerView.setAdapter(adapter);
@@ -898,6 +891,8 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     }
 
     private void showAvailableViews() {
+        ProjectFileBean projectFile = editorViewModel.getActiveProjectFile();
+        if (projectFile == null) return;
         Intent intent = new Intent(getApplicationContext(), ViewSelectorActivity.class);
         intent.putExtra("sc_id", sc_id);
         intent.putExtra("current_xml", projectFile.getXmlName());
@@ -909,6 +904,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
      * Opens {@link ViewCodeEditorActivity}.
      */
     void toViewCodeEditor() {
+        ProjectFileBean projectFile = editorViewModel.getActiveProjectFile();
         if (projectFile == null) return;
         showLoadingDialog();
         String filename = Helper.getText(fileName);
@@ -952,7 +948,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
      * Opens {@link AndroidManifestInjection}.
      */
     void toAndroidManifestManager() {
-        if (projectFile == null) return;
+        if (editorViewModel.getActiveProjectFile() == null) return;
         launchActivity(AndroidManifestInjection.class, null, new Pair<>("file_name", currentJavaFileName));
     }
 
@@ -960,6 +956,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
      * Opens {@link ManageAppCompatActivity}.
      */
     void toAppCompatInjectionManager() {
+        ProjectFileBean projectFile = editorViewModel.getActiveProjectFile();
         if (projectFile == null) return;
         launchActivity(ManageAppCompatActivity.class, null, new Pair<>("file_name", projectFile.getXmlName()));
     }
@@ -1089,646 +1086,6 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         }
     }
 
-    private abstract static class BaseTask {
-        protected final WeakReference<DesignActivity> activityRef;
-
-        protected BaseTask(DesignActivity activity) {
-            activityRef = new WeakReference<>(activity);
-        }
-
-        protected DesignActivity getActivity() {
-            return activityRef.get();
-        }
-
-        /**
-         * Persists all project data (views, logic, files, resources, libraries) in parallel.
-         *
-         * @return {@code true} if data was saved successfully
-         */
-        protected static boolean saveProjectDataToFiles(String sc_id) {
-            ProjectDataManager.getResourceManager(sc_id).cleanupAllResources();
-            ExecutorService pool = Executors.newFixedThreadPool(4);
-            CompletableFuture<Boolean> fileFuture = CompletableFuture.supplyAsync(
-                () -> ProjectDataManager.getFileManager(sc_id).saveToData(), pool);
-            CompletableFuture<Boolean> dataFuture = CompletableFuture.supplyAsync(
-                () -> ProjectDataManager.getProjectDataManager(sc_id).saveAllData(), pool);
-            CompletableFuture<Boolean> resourceFuture = CompletableFuture.supplyAsync(
-                () -> ProjectDataManager.getResourceManager(sc_id).saveToData(), pool);
-            CompletableFuture<Boolean> libraryFuture = CompletableFuture.supplyAsync(
-                () -> ProjectDataManager.getLibraryManager(sc_id).saveToData(), pool);
-            CompletableFuture.allOf(fileFuture, dataFuture, resourceFuture, libraryFuture).join();
-            pool.shutdown();
-            return fileFuture.join() && dataFuture.join() && resourceFuture.join() && libraryFuture.join();
-        }
-    }
-
-    private static class BuildTask extends BaseTask implements BuildProgressReceiver {
-        public static final String ACTION_CANCEL_BUILD = "pro.sketchware.activities.design.ACTION_CANCEL_BUILD";
-        private static final String CHANNEL_ID = "build_notification_channel";
-        private final ExecutorService executorService = BackgroundTasks.createSingleThreadExecutor("DesignBuild");
-        private final NotificationManager notificationManager;
-        private final int notificationId = 1;
-        private final MaterialButton btnRun;
-        private final MaterialButton btnOptions;
-        private final LinearLayout progressContainer;
-        private final TextView progressText;
-        private final TextView stepInfoText;
-        private final LinearProgressIndicator progressBar;
-        public volatile boolean canceled;
-        private volatile boolean isBuildFinished;
-        private boolean isShowingNotification = false;
-        private long buildStartTime;
-
-        public BuildTask(DesignActivity activity) {
-            super(activity);
-            notificationManager = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
-            btnRun = activity.btnRun;
-            btnOptions = activity.btnOptions;
-            progressContainer = activity.findViewById(R.id.progress_container);
-            progressText = activity.findViewById(R.id.progress_text);
-            stepInfoText = activity.findViewById(R.id.progress_step_info);
-            progressBar = activity.findViewById(R.id.progress);
-        }
-
-        public void execute() {
-            onPreExecute();
-            executorService.execute(this::doInBackground);
-        }
-
-        private void onPreExecute() {
-            DesignActivity activity = getActivity();
-            if (activity == null) return;
-
-            postToUi(activity, () -> {
-                buildStartTime = System.currentTimeMillis();
-                updateRunButton(activity, true);
-                activity.prefP1.put("P1I10", true);
-                activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-                maybeShowNotification();
-            });
-        }
-
-        private void doInBackground() {
-            DesignActivity activity = getActivity();
-
-            try {
-                if (activity == null) return;
-                var q = activity.projectFilePaths;
-                var sc_id = DesignActivity.sc_id;
-                onProgress("Deleting temporary files...", 1);
-                FileUtil.deleteFile(q.generatedFilesPath);
-
-                q.createBuildDirectories(activity.getApplicationContext());
-                q.deleteValuesV21Directory();
-                q.extractAssetsToRes(activity.getApplicationContext(), SketchwarePaths.getResourceZipPath("600"));
-                if (MapValueHelper.get(ProjectListManager.getProjectById(sc_id), "custom_icon")) {
-                    q.copyMipmapFolder(SketchwarePaths.getIconsPath() + File.separator + sc_id + File.separator + "mipmaps");
-                    if (MapValueHelper.get(ProjectListManager.getProjectById(sc_id), "isIconAdaptive", false)) {
-                        q.createLauncherIconXml("""
-                                <?xml version="1.0" encoding="utf-8"?>
-                                <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android" >
-                                <background android:drawable="@mipmap/ic_launcher_background"/>
-                                <foreground android:drawable="@mipmap/ic_launcher_foreground"/>
-                                <monochrome android:drawable="@mipmap/ic_launcher_monochrome"/>
-                                </adaptive-icon>""");
-                    } else {
-                        q.copyAppIcon(SketchwarePaths.getIconsPath() + File.separator + sc_id + File.separator + "icon.png");
-                    }
-                }
-
-                onProgress("Generating source code...", 2);
-                long generateSourceStepStarted = System.currentTimeMillis();
-                long copyImagesStarted = System.currentTimeMillis();
-                ResourceManager resourceManager = ProjectDataManager.getResourceManager(sc_id);
-                resourceManager.copyImagesToDir(q.resDirectoryPath + File.separator + "drawable-xhdpi");
-                long copyImagesDuration = System.currentTimeMillis() - copyImagesStarted;
-                long copySoundsStarted = System.currentTimeMillis();
-                resourceManager = ProjectDataManager.getResourceManager(sc_id);
-                resourceManager.copySoundsToDir(q.resDirectoryPath + File.separator + "raw");
-                long copySoundsDuration = System.currentTimeMillis() - copySoundsStarted;
-                long copyFontsStarted = System.currentTimeMillis();
-                resourceManager = ProjectDataManager.getResourceManager(sc_id);
-                resourceManager.copyFontsToDir(q.assetsPath + File.separator + "fonts");
-                long copyFontsDuration = System.currentTimeMillis() - copyFontsStarted;
-                Log.d("DesignActivity$BuildTask", "Step 2 timing: copied resources (images=" + copyImagesDuration
-                        + " ms, sounds=" + copySoundsDuration
-                        + " ms, fonts=" + copyFontsDuration + " ms)");
-                long builderInitializationStarted = System.currentTimeMillis();
-                ProjectBuilder builder = new ProjectBuilder(this, activity.getApplicationContext(), q);
-                long builderInitializationDuration = System.currentTimeMillis() - builderInitializationStarted;
-                Log.d("DesignActivity$BuildTask", "Step 2 timing: ProjectBuilder initialization took "
-                        + builderInitializationDuration + " ms");
-
-                var fileManager = ProjectDataManager.getFileManager(sc_id);
-                var dataManager = ProjectDataManager.getProjectDataManager(sc_id);
-                var libraryManager = ProjectDataManager.getLibraryManager(sc_id);
-                long metadataInitializationStarted = System.currentTimeMillis();
-                q.initializeMetadata(libraryManager, fileManager, dataManager);
-                long metadataInitializationDuration = System.currentTimeMillis() - metadataInitializationStarted;
-                Log.d("DesignActivity$BuildTask", "Step 2 timing: initializeMetadata took "
-                        + metadataInitializationDuration + " ms");
-                long builtInLibraryInformationStarted = System.currentTimeMillis();
-                builder.buildBuiltInLibraryInformation();
-                long builtInLibraryInformationDuration = System.currentTimeMillis() - builtInLibraryInformationStarted;
-                Log.d("DesignActivity$BuildTask", "Step 2 timing: buildBuiltInLibraryInformation took "
-                        + builtInLibraryInformationDuration + " ms, builtInLibraryCount="
-                        + builder.getBuiltInLibraryManager().getLibraries().size());
-                long generateProjectFilesStarted = System.currentTimeMillis();
-                q.generateProjectFiles(fileManager, dataManager, libraryManager, builder.getBuiltInLibraryManager());
-                long generateProjectFilesDuration = System.currentTimeMillis() - generateProjectFilesStarted;
-                Log.d("DesignActivity$BuildTask", "Step 2 timing: generateProjectFiles took "
-                        + generateProjectFilesDuration + " ms");
-                long incrementalPrecheckStarted = System.currentTimeMillis();
-                pro.sketchware.core.build.IncrementalBuildCache buildCache =
-                        new pro.sketchware.core.build.IncrementalBuildCache(q.binDirectoryPath);
-                buildCache.load();
-                String buildClasspath = builder.getClasspath();
-                boolean compiledClassesAvailable = new File(q.compiledClassesPath).exists()
-                        && !FileUtil.listFilesRecursively(new File(q.compiledClassesPath), ".class").isEmpty();
-                boolean cacheFileExists = buildCache.hasCacheFile();
-                boolean proguardShrinkingEnabled = builder.proguard.isShrinkingEnabled();
-                boolean classpathChanged = buildCache.isClasspathChanged(buildClasspath);
-                boolean cacheMigrationRequired = buildCache.requiresFullRebuildMigration();
-                boolean incrementalMode = compiledClassesAvailable
-                        && cacheFileExists
-                        && !proguardShrinkingEnabled
-                        && !classpathChanged
-                        && !cacheMigrationRequired;
-                Log.d("DesignActivity$BuildTask", "Incremental build precheck: mode=" + incrementalMode
-                        + ", compiledClassesAvailable=" + compiledClassesAvailable
-                        + ", cacheFileExists=" + cacheFileExists
-                        + ", proguardShrinkingEnabled=" + proguardShrinkingEnabled
-                        + ", classpathChanged=" + classpathChanged
-                        + ", cacheMigrationRequired=" + cacheMigrationRequired
-                        + ", classpathHash=" + Integer.toHexString(buildClasspath.hashCode())
-                        + ", classpathLength=" + buildClasspath.length());
-                Log.d("DesignActivity$BuildTask", "Step 2 timing: build cache load + classpath + incremental precheck took "
-                        + (System.currentTimeMillis() - incrementalPrecheckStarted) + " ms");
-                builder.preloadedBuildCache = buildCache;
-                long prepareBuildDirectoriesStarted = System.currentTimeMillis();
-                if (incrementalMode) {
-                    Log.d("DesignActivity$BuildTask", "Build cache strategy: incremental mode, cleaning only R.java directory");
-                    q.cleanRJavaOnly();
-                } else {
-                    Log.d("DesignActivity$BuildTask", "Build cache strategy: full rebuild, cleaning bin and R.java directories");
-                    q.cleanBuildCache();
-                }
-                q.prepareBuildDirectories();
-                Log.d("DesignActivity$BuildTask", "Step 2 timing: cache cleanup + prepareBuildDirectories took "
-                        + (System.currentTimeMillis() - prepareBuildDirectoriesStarted) + " ms");
-                Log.d("DesignActivity$BuildTask", "Step 2 total timing: "
-                        + (System.currentTimeMillis() - generateSourceStepStarted) + " ms");
-                builder.maybeExtractAapt2();
-                if (canceled) {
-                    return;
-                }
-
-                onProgress("Extracting built-in libraries...", 3);
-                BuiltInLibraries.extractCompileAssets(this);
-                if (canceled) {
-                    return;
-                }
-
-                onProgress("AAPT2 is running...", 8);
-                builder.compileResources();
-                if (canceled) {
-                    return;
-                }
-
-                onProgress("Generating view binding...", 11);
-                builder.generateViewBinding();
-                if (canceled) {
-                    return;
-                }
-
-                KotlinCompilerBridge.compileKotlinCodeIfPossible(this, builder);
-                if (canceled) {
-                    return;
-                }
-
-                onProgress("Java is compiling...", 13);
-                builder.compileJavaCode();
-                if (canceled) {
-                    return;
-                }
-
-                StringfogHandler stringfogHandler = new StringfogHandler(sc_id);
-                stringfogHandler.start(this, builder);
-                if (canceled) {
-                    return;
-                }
-
-                ProguardHandler proguardHandler = new ProguardHandler(sc_id);
-                proguardHandler.start(this, builder);
-                if (canceled) {
-                    return;
-                }
-
-                onProgress(builder.getDxRunningText(), 17);
-                builder.createDexFilesFromClasses();
-                if (canceled) {
-                    return;
-                }
-
-                onProgress("Merging DEX files...", 18);
-                builder.getDexFilesReady();
-                if (canceled) {
-                    return;
-                }
-
-                onProgress("Building APK...", 19);
-                builder.buildApk();
-                if (canceled) {
-                    return;
-                }
-
-                onProgress("Signing APK...", 20);
-                builder.signDebugApk();
-                if (canceled) {
-                    return;
-                }
-
-                postToUi(activity, activity::installBuiltApk);
-            } catch (MissingFileException e) {
-                postToUi(activity, () -> {
-                    boolean isMissingDirectory = e.isMissingDirectory();
-
-                    MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(activity);
-                    if (isMissingDirectory) {
-                        dialog.setTitle(R.string.build_error_missing_directory_title);
-                        dialog.setMessage(String.format(Helper.getResString(R.string.build_error_missing_directory_msg), e.getMissingFile().getAbsolutePath()));
-                        dialog.setNeutralButton(R.string.common_word_create, (v, which) -> {
-                            v.dismiss();
-                            if (!e.getMissingFile().mkdirs()) {
-                                SketchwareUtil.toastError(Helper.getResString(R.string.build_error_failed_create_directory));
-                            }
-                        });
-                    } else {
-                        dialog.setTitle(R.string.build_error_missing_file_title);
-                        dialog.setMessage(String.format(Helper.getResString(R.string.build_error_missing_file_msg), e.getMissingFile().getAbsolutePath()));
-                    }
-                    dialog.setPositiveButton(R.string.common_word_dismiss, null);
-                    dialog.show();
-                });
-            } catch (SimpleException simpleException) {
-                postToUi(activity, () -> activity.indicateCompileErrorOccurred(simpleException.getMessage()));
-            } catch (Throwable tr) {
-                LogUtil.e("DesignActivity$BuildTask", "Failed to build project", tr);
-                postToUi(activity, () -> activity.indicateCompileErrorOccurred(Log.getStackTraceString(tr)));
-            } finally {
-                onPostExecute(activity);
-            }
-        }
-
-        @Override
-        public void onProgress(String progress, int step) {
-            int totalSteps = 20;
-
-            DesignActivity activity = getActivity();
-            if (activity == null) return;
-
-            postToUi(activity, () -> {
-                progressBar.setIndeterminate(step == -1);
-                if (!canceled) {
-                    updateNotification(progress + " (" + step + " / " + totalSteps + ")");
-                }
-                progressText.setText(progress);
-                var progressInt = (step * 100) / totalSteps;
-                progressBar.setProgress(progressInt, true);
-
-                long elapsed = (System.currentTimeMillis() - buildStartTime) / 1000;
-                String elapsedStr = String.format("%d:%02d", elapsed / 60, elapsed % 60);
-                if (step >= 1) {
-                    stepInfoText.setText(step + "/" + totalSteps + " · " + elapsedStr);
-                } else {
-                    stepInfoText.setText(elapsedStr);
-                }
-
-                Log.d("DesignActivity$BuildTask", step + " / " + totalSteps);
-            });
-        }
-
-        private void onPostExecute(DesignActivity activity) {
-            isBuildFinished = true;
-            executorService.shutdown();
-            if (isShowingNotification) {
-                notificationManager.cancel(notificationId);
-                isShowingNotification = false;
-            }
-            if (activity == null) return;
-
-            postToUi(activity, () -> {
-                if (activity.currentBuildTask == this) {
-                    activity.currentBuildTask = null;
-                }
-                updateRunButton(activity, false);
-                activity.updateBottomMenu();
-                activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            });
-        }
-
-        public void cancelBuild() {
-            canceled = true;
-            onProgress("Canceling build...", -1);
-            if (isShowingNotification) {
-                notificationManager.cancel(notificationId);
-                isShowingNotification = false;
-            }
-            DesignActivity activity = getActivity();
-            if (activity != null) {
-                postToUi(activity, () -> activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON));
-            }
-        }
-
-        private boolean hasNotificationPermission() {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                DesignActivity activity = getActivity();
-                return activity != null
-                        && ContextCompat.checkSelfPermission(activity, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
-            }
-            return true;
-        }
-
-        private void maybeShowNotification() {
-            DesignActivity activity = getActivity();
-            if (activity == null) return;
-            if (!hasNotificationPermission()) return;
-
-            if (!isShowingNotification) {
-                createNotificationChannelIfNeeded();
-
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(activity, CHANNEL_ID)
-                        .setSmallIcon(R.drawable.ic_mtrl_code)
-                        .setContentTitle(Helper.getResString(R.string.notification_building_project))
-                        .setContentText(Helper.getResString(R.string.notification_starting_build))
-                        .setOngoing(true)
-                        .setProgress(0, 0, true)
-                        .addAction(R.drawable.ic_cancel_white_96dp, Helper.getResString(R.string.notification_cancel_build), getCancelPendingIntent());
-
-                notificationManager.notify(notificationId, builder.build());
-                isShowingNotification = true;
-            }
-        }
-
-        private void updateNotification(String progress) {
-            DesignActivity activity = getActivity();
-            if (activity == null) return;
-            if (!hasNotificationPermission()) return;
-
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(activity, CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_mtrl_code)
-                    .setContentTitle(Helper.getResString(R.string.notification_building_project))
-                    .setContentText(progress)
-                    .setOngoing(true)
-                    .setProgress(0, 0, true)
-                    .addAction(R.drawable.ic_cancel_white_96dp, Helper.getResString(R.string.notification_cancel_build), getCancelPendingIntent());
-
-            notificationManager.notify(notificationId, builder.build());
-        }
-
-        private PendingIntent getCancelPendingIntent() {
-            DesignActivity activity = getActivity();
-            if (activity == null) return null;
-
-            Intent cancelIntent = new Intent(BuildTask.ACTION_CANCEL_BUILD);
-            return PendingIntent.getBroadcast(activity, 0, cancelIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-        }
-
-        private void createNotificationChannelIfNeeded() {
-            DesignActivity activity = getActivity();
-            if (activity == null) return;
-
-            CharSequence name = Helper.getResString(R.string.notification_channel_build);
-            String description = Helper.getResString(R.string.notification_channel_build_description);
-            int importance = NotificationManager.IMPORTANCE_LOW;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            notificationManager.createNotificationChannel(channel);
-        }
-
-        private void postToUi(DesignActivity activity, Runnable action) {
-            if (activity == null || action == null) {
-                return;
-            }
-            TaskHost.of(activity).postToUi(action);
-        }
-
-        private void updateRunButton(Context context, boolean isRunning) {
-            btnRun.setBackgroundTintList(ColorStateList.valueOf(ThemeUtils.getColor(context, isRunning ? R.attr.colorErrorContainer : R.attr.colorPrimary)));
-            btnRun.setIcon(ContextCompat.getDrawable(context, isRunning ? R.drawable.ic_mtrl_stop : R.drawable.ic_mtrl_run));
-            btnRun.setIconTint(ColorStateList.valueOf(ThemeUtils.getColor(context, isRunning ? R.attr.colorOnErrorContainer : R.attr.colorSurfaceContainerLowest)));
-            btnRun.setTextColor(ColorStateList.valueOf(ThemeUtils.getColor(context, isRunning ? R.attr.colorOnErrorContainer : R.attr.colorSurfaceContainerLowest)));
-            btnRun.setText(isRunning ? "Stop" : "Run");
-            btnOptions.setEnabled(!isRunning);
-            progressContainer.setVisibility(isRunning ? View.VISIBLE : View.GONE);
-        }
-    }
-
-    private static class ProjectLoader extends BaseTask {
-        private final Bundle savedInstanceState;
-
-        public ProjectLoader(DesignActivity activity, Bundle savedInstanceState) {
-            super(activity);
-            this.savedInstanceState = savedInstanceState;
-        }
-
-        public void execute() {
-            DesignActivity activity = getActivity();
-            if (activity == null) {
-                return;
-            }
-            activity.showLoadingDialog();
-            BackgroundTasks.runIoIfAlive(TaskHost.of(activity), "DesignActivity$ProjectLoader", this::doInBackground, () -> {
-                DesignActivity currentActivity = getActivity();
-                if (currentActivity == null) {
-                    return;
-                }
-                currentActivity.updateBottomMenu();
-                currentActivity.refresh();
-                currentActivity.dismissLoadingDialog();
-                if (savedInstanceState == null) {
-                    currentActivity.checkForUnsavedProjectData();
-                }
-            }, error -> {
-                DesignActivity currentActivity = getActivity();
-                if (currentActivity != null) {
-                    currentActivity.dismissLoadingDialog();
-                }
-            });
-        }
-
-        private void doInBackground() {
-            DesignActivity activity = getActivity();
-            if (activity != null) {
-                activity.loadProject(savedInstanceState != null);
-            }
-        }
-    }
-
-    private static class DiscardChangesProjectCloser extends BaseTask {
-
-        public DiscardChangesProjectCloser(DesignActivity activity) {
-            super(activity);
-        }
-
-        public void execute() {
-            DesignActivity activity = getActivity();
-            if (activity == null) {
-                return;
-            }
-            activity.showLoadingDialog();
-            BackgroundTasks.runIo(TaskHost.of(activity), "DesignActivity$DiscardChangesProjectCloser", this::doInBackground, () -> {
-                DesignActivity currentActivity = getActivity();
-                if (currentActivity != null) {
-                    currentActivity.dismissLoadingDialog();
-                    currentActivity.finish();
-                }
-            }, error -> {
-                DesignActivity currentActivity = getActivity();
-                if (currentActivity != null) {
-                    currentActivity.dismissLoadingDialog();
-                    currentActivity.finish();
-                }
-            });
-        }
-
-        private void doInBackground() {
-            DesignActivity activity = getActivity();
-            if (activity != null) {
-                try {
-                    var sc_id = DesignActivity.sc_id;
-                    ResourceManager rm = ProjectDataManager.getResourceManager(sc_id);
-                    if (rm.hasLazyBackup()) {
-                        rm.restoreImagesFromTemp();
-                        rm.restoreSoundsFromTemp();
-                        rm.restoreFontsFromTemp();
-                    }
-                    ProjectDataManager.discardAll();
-                } catch (RuntimeException e) {
-                    if (activity.crashlytics != null) {
-                        activity.crashlytics.log("DiscardChangesProjectCloser cleanup failed");
-                        activity.crashlytics.recordException(e);
-                    }
-                }
-            }
-        }
-    }
-
-    private static class ProjectSaver extends BaseTask {
-
-        public ProjectSaver(DesignActivity activity) {
-            super(activity);
-        }
-
-        public void execute() {
-            DesignActivity activity = getActivity();
-            if (activity == null) {
-                return;
-            }
-            activity.showLoadingDialog();
-            BackgroundTasks.callIo(TaskHost.of(activity), "DesignActivity$ProjectSaver", this::doInBackground, dataSaved -> {
-                DesignActivity currentActivity = getActivity();
-                if (currentActivity == null) {
-                    return;
-                }
-                if (dataSaved) {
-                    SketchToast.toast(currentActivity.getApplicationContext(), Helper.getResString(R.string.common_message_complete_save), SketchToast.TOAST_NORMAL).show();
-                    currentActivity.saveVersionCodeInformationToProject();
-                } else {
-                    SketchToast.toast(currentActivity.getApplicationContext(), Helper.getResString(R.string.common_message_save_failed), SketchToast.TOAST_WARNING).show();
-                }
-                currentActivity.dismissLoadingDialog();
-            }, error -> {
-                DesignActivity currentActivity = getActivity();
-                if (currentActivity != null) {
-                    SketchToast.toast(currentActivity.getApplicationContext(), Helper.getResString(R.string.common_message_save_failed), SketchToast.TOAST_WARNING).show();
-                    currentActivity.dismissLoadingDialog();
-                }
-            });
-        }
-
-        private boolean doInBackground() {
-            var currentScId = DesignActivity.sc_id;
-            boolean dataSaved = saveProjectDataToFiles(currentScId);
-            if (dataSaved) {
-                ProjectDataManager.getResourceManager(currentScId).deleteTempDirs();
-            }
-            return dataSaved;
-        }
-    }
-
-    private static class SaveChangesProjectCloser extends BaseTask {
-
-        public SaveChangesProjectCloser(DesignActivity activity) {
-            super(activity);
-        }
-
-        public void execute() {
-            DesignActivity activity = getActivity();
-            if (activity == null) {
-                return;
-            }
-            activity.showLoadingDialog();
-            BackgroundTasks.callIo(TaskHost.of(activity), "DesignActivity$SaveChangesProjectCloser", this::doInBackground, dataSaved -> {
-                DesignActivity currentActivity = getActivity();
-                if (currentActivity == null) {
-                    return;
-                }
-                if (dataSaved) {
-                    SketchToast.toast(currentActivity.getApplicationContext(), Helper.getResString(R.string.common_message_complete_save), SketchToast.TOAST_NORMAL).show();
-                    currentActivity.saveVersionCodeInformationToProject();
-                    currentActivity.dismissLoadingDialog();
-                    currentActivity.finish();
-                } else {
-                    SketchToast.toast(currentActivity.getApplicationContext(), Helper.getResString(R.string.common_message_save_failed), SketchToast.TOAST_WARNING).show();
-                    currentActivity.dismissLoadingDialog();
-                }
-            }, error -> {
-                DesignActivity currentActivity = getActivity();
-                if (currentActivity != null) {
-                    SketchToast.toast(currentActivity.getApplicationContext(), Helper.getResString(R.string.common_message_save_failed), SketchToast.TOAST_WARNING).show();
-                    currentActivity.dismissLoadingDialog();
-                }
-            });
-        }
-
-        private boolean doInBackground() {
-            var currentScId = DesignActivity.sc_id;
-            boolean dataSaved = saveProjectDataToFiles(currentScId);
-            if (dataSaved) {
-                ProjectDataManager.getResourceManager(currentScId).deleteTempDirs();
-            }
-            return dataSaved;
-        }
-    }
-
-    private static class UnsavedChangesSaver extends BaseTask {
-
-        public UnsavedChangesSaver(DesignActivity activity) {
-            super(activity);
-        }
-
-        public void execute() {
-            DesignActivity activity = getActivity();
-            if (activity == null) {
-                return;
-            }
-            BackgroundTasks.runIo(TaskHost.of(activity), "DesignActivity$UnsavedChangesSaver", this::doInBackground, null, null);
-        }
-
-        private void doInBackground() {
-            DesignActivity activity = getActivity();
-            if (activity != null) {
-                var currentScId = DesignActivity.sc_id;
-                ProjectDataStore ecInstance = ProjectDataManager.getProjectDataManager(currentScId);
-                synchronized (ecInstance) {
-                    ecInstance.saveAllBackup();
-                }
-            }
-        }
-    }
-
     private class ViewPagerAdapter extends FragmentPagerAdapter {
         private final String[] labels;
 
@@ -1769,9 +1126,11 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         @NonNull
         public Fragment getItem(int position) {
             if (position == 0) {
-                return new ViewEditorFragment();
+                return ViewEditorFragment.newInstance(sc_id);
             } else {
-                return position == 1 ? new EventListFragment() : new ComponentListFragment();
+                return position == 1
+                        ? EventListFragment.newInstance(sc_id)
+                        : ComponentListFragment.newInstance(sc_id);
             }
         }
     }

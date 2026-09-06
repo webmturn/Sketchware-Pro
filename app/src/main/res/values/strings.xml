@@ -2109,6 +2109,7 @@ Choosing a theme mode lets you personalize the app\'s appearance, notes:\n
     <string name="design_restore_data_message_confirm">Something went wrong and previous data was not saved. Would you like to recover it?</string>
     <string name="design_restore_data_title">Restore project data</string>
     <string name="design_run">Run</string>
+    <string name="design_stop">Stop</string>
     <string name="design_run_message_invalid_forever_block">Stop block does not exist in forever block</string>
     <string name="design_run_message_usage_break_block">Break block can only be used inside the repeat or forever blocks</string>
     <string name="design_run_title_ready_to_build">Getting ready to build</string>

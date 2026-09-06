@@ -1,6 +1,8 @@
 [versions]
 activity = "1.11.0"
 appcompat = "1.7.1"
+junit = "4.13.2"
+lifecycle = "2.6.2"
 desugar_jdk_libs_nio = "2.1.5"
 firebaseBom = "34.3.0"
 sora-editor = "0.24.4"
@@ -44,6 +46,9 @@ zipalignJava = "1.2.2"
 [libraries]
 androidx-activity = { module = "androidx.activity:activity", version.ref = "activity" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+androidx-lifecycle-livedata = { module = "androidx.lifecycle:lifecycle-livedata", version.ref = "lifecycle" }
+androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycle" }
+junit = { module = "junit:junit", version.ref = "junit" }
 androidx-cardview = { module = "androidx.cardview:cardview", version.ref = "cardview" }
 androidx-exifinterface = { module = "androidx.exifinterface:exifinterface", version.ref = "exifinterface" }
 androidx-preference = { module = "androidx.preference:preference", version.ref = "preference" }
@@ -110,7 +115,7 @@ woodstox-core = { module = "com.fasterxml.woodstox:woodstox-core", version.ref =
 zipalign-java = { module = "com.github.Iyxan23:zipalign-java", version.ref = "zipalignJava" }
 
 [bundles]
-ui = ["androidx-activity", "androidx-appcompat", "androidx-splashscreen", "androidx-recyclerview",
+ui = ["androidx-activity", "androidx-appcompat", "androidx-lifecycle-livedata", "androidx-lifecycle-viewmodel", "androidx-splashscreen", "androidx-recyclerview",
     "androidx-cardview", "androidx-viewpager", "androidx-swiperefreshlayout", "material", "lottie",
     "flexbox", "androidx-exifinterface", "androidx-preference"]
 image = ["glide", "circleimageview"]

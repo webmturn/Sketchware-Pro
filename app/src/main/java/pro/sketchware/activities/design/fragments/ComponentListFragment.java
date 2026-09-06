@@ -18,11 +18,12 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.lifecycle.ViewModelProvider;
 
 import pro.sketchware.beans.ComponentBean;
 import pro.sketchware.beans.EventBean;
 import pro.sketchware.beans.ProjectFileBean;
-import pro.sketchware.activities.base.BaseFragment;
+import pro.sketchware.activities.design.DesignEditorViewModel;
 import pro.sketchware.activities.editor.LogicEditorActivity;
 import pro.sketchware.activities.editor.component.AddComponentBottomSheet;
 import pro.sketchware.activities.editor.component.ComponentEventButton;
@@ -38,12 +39,11 @@ import pro.sketchware.databinding.FrComponentListBinding;
 import pro.sketchware.databinding.FrLogicListItemComponentBinding;
 import pro.sketchware.databinding.FrLogicListItemEventPreviewBinding;
 import pro.sketchware.core.codegen.EventRegistry;
-import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.util.SketchToast;
 import pro.sketchware.util.UIHelper;
 import pro.sketchware.util.ViewUtil;
 
-public class ComponentListFragment extends BaseFragment implements View.OnClickListener {
+public class ComponentListFragment extends DesignProjectFragment implements View.OnClickListener {
 
     private ProjectFileBean projectFile;
     private Adapter adapter;
@@ -52,9 +52,15 @@ public class ComponentListFragment extends BaseFragment implements View.OnClickL
 
     private FrComponentListBinding binding;
 
+    public static ComponentListFragment newInstance(String projectId) {
+        ComponentListFragment fragment = new ComponentListFragment();
+        fragment.setArguments(projectArguments(projectId));
+        return fragment;
+    }
+
     public void refreshData() {
         if (projectFile != null && adapter != null) {
-            components = ProjectDataManager.getProjectDataManager(sc_id).getComponents(projectFile.getJavaName());
+            components = projectData().getComponents(projectFile.getJavaName());
             adapter.notifyDataSetChanged();
         }
     }
@@ -69,25 +75,29 @@ public class ComponentListFragment extends BaseFragment implements View.OnClickL
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        sc_id = requireProjectId();
         binding = FrComponentListBinding.inflate(inflater, container, false);
         initialize();
-        if (savedInstanceState != null) {
-            sc_id = savedInstanceState.getString("sc_id");
-        } else {
-            sc_id = requireActivity().getIntent().getStringExtra("sc_id");
-        }
         return binding.getRoot();
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putString("sc_id", sc_id);
-        super.onSaveInstanceState(outState);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        new ViewModelProvider(requireActivity())
+                .get(DesignEditorViewModel.class)
+                .activeProjectFile()
+                .observe(getViewLifecycleOwner(), projectFile -> {
+                    if (projectFile != null) {
+                        setProjectFile(projectFile);
+                        refreshData();
+                    }
+                });
     }
 
     public void unselectAll() {
         if (projectFile != null) {
-            for (ComponentBean component : ProjectDataManager.getProjectDataManager(sc_id).getComponents(projectFile.getJavaName())) {
+            for (ComponentBean component : projectData().getComponents(projectFile.getJavaName())) {
                 component.initValue();
             }
             adapter.notifyDataSetChanged();
@@ -104,7 +114,7 @@ public class ComponentListFragment extends BaseFragment implements View.OnClickL
         binding.fab.setOnClickListener(this);
     }
 
-    public void setProjectFile(ProjectFileBean projectFileBean) {
+    private void setProjectFile(ProjectFileBean projectFileBean) {
         projectFile = projectFileBean;
     }
 
@@ -166,7 +176,7 @@ public class ComponentListFragment extends BaseFragment implements View.OnClickL
                     int lastSelectedItem = getLayoutPosition();
                     if (lastSelectedItem == RecyclerView.NO_POSITION) return;
                     ComponentBean bean =
-                            ProjectDataManager.getProjectDataManager(sc_id).getComponent(projectFile.getJavaName(), lastSelectedItem);
+                            projectData().getComponent(projectFile.getJavaName(), lastSelectedItem);
                     if (v instanceof CollapsibleButton) {
                         bean.isConfirmation = true;
                         setAnimateNextTransformation(true);
@@ -178,7 +188,7 @@ public class ComponentListFragment extends BaseFragment implements View.OnClickL
                             setAnimateNextTransformation(true);
                             notifyItemChanged(lastSelectedItem);
                         } else if (id == R.id.confirm_yes) {
-                            ProjectDataManager.getProjectDataManager(sc_id).removeComponent(projectFile.getJavaName(), bean);
+                            projectData().removeComponent(projectFile.getJavaName(), bean);
                             bean.isConfirmation = false;
                             notifyItemRemoved(lastSelectedItem);
                             notifyItemRangeChanged(lastSelectedItem, getItemCount());
@@ -228,7 +238,7 @@ public class ComponentListFragment extends BaseFragment implements View.OnClickL
                 }
 
                 ArrayList<EventBean> addedEvents =
-                        ProjectDataManager.getProjectDataManager(sc_id).getComponentEvents(projectFile.getJavaName(), componentBean);
+                        projectData().getComponentEvents(projectFile.getJavaName(), componentBean);
                 ArrayList<String> availableEvents =
                         new ArrayList<>(Arrays.asList(EventRegistry.getComponentEventsForClass(componentBean.getClassInfo())));
 
@@ -439,7 +449,7 @@ public class ComponentListFragment extends BaseFragment implements View.OnClickL
                             if (componentPos == RecyclerView.NO_POSITION) return;
                             var component = components.get(componentPos);
                             var event = new EventBean(EventBean.EVENT_TYPE_COMPONENT, component.type, component.componentId, eventName);
-                            ProjectDataManager.getProjectDataManager(sc_id).addEventBean(projectFile.getJavaName(), event);
+                            projectData().addEventBean(projectFile.getJavaName(), event);
                             SketchToast.toast(requireContext(), Helper.getResString(R.string.event_message_new_event), 0).show();
                             holder.button.onEventAdded();
                             if (listener != null) {

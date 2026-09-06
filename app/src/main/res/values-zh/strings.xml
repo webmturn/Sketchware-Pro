@@ -166,6 +166,7 @@
     <string name="design_restore_data_message_confirm">出现问题，之前的数据未保存。是否要恢复？</string>
     <string name="design_restore_data_title">恢复项目数据</string>
     <string name="design_run">运行</string>
+    <string name="design_stop">停止</string>
     <string name="design_run_message_invalid_forever_block">永久循环块中缺少停止块</string>
     <string name="design_run_message_usage_break_block">中断块只能在重复或永久循环块内使用</string>
     <string name="design_run_title_ready_to_build">准备构建</string>
