@@ -426,7 +426,7 @@ public class VectorDrawableParser {
             colorsXmlPath = p1;
             return;
         }
-        String p2 = SketchwarePaths.getMyscPath(projectId) + "/app/src/main/res/values/colors.xml";
+        String p2 = SketchwarePaths.getCompiledProjectResourceValuesFilePath(projectId, "colors.xml");
         if (FileUtil.isExistFile(p2)) {
             colorsXmlPath = p2;
         }

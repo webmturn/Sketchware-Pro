@@ -492,7 +492,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         }
 
         ArrayList<String> resourcesDir = new ArrayList<>();
-        FileUtil.listDir(SketchwarePaths.getDataPath(sc_id) + "/files/resource/", resourcesDir);
+        FileUtil.listDir(SketchwarePaths.getProjectResourcePath(sc_id), resourcesDir);
 
         ArrayList<String> variants = extractVariants(resourcesDir);
         AtomicInteger selectedChoice = new AtomicInteger(variants.indexOf("values" + variant));

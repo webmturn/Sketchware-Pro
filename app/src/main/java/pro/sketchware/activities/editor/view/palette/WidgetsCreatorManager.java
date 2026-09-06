@@ -52,9 +52,8 @@ import pro.sketchware.util.SketchwareUtil;
 
 public class WidgetsCreatorManager {
 
-    private final String widgetResourcesDirectoryPath = SketchwarePaths.getAbsolutePathOf(".sketchware/resources/widgets") + "/";
-    private final String widgetsJsonFilePath = widgetResourcesDirectoryPath + "widgets.json";
-    private final String widgetExportDirectoryPath = widgetResourcesDirectoryPath + "export/";
+    private final String widgetsJsonFilePath = SketchwarePaths.getWidgetsJsonFilePath();
+    private final String widgetExportDirectoryPath = SketchwarePaths.getWidgetResourcesExportPath() + File.separator;
     private final ArrayList<String> allCategories = new ArrayList<>();
     private final ArrayList<String> mainCategories = new ArrayList<>(Arrays.asList(
             "Layouts", "AndroidX", "Widgets", "List", "Library", "Google", "Date & Time"
