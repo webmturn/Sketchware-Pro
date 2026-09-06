@@ -199,16 +199,17 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
 
             Button positiveButton = ((androidx.appcompat.app.AlertDialog) dialogInterface).getButton(DialogInterface.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(view -> {
-                if (Helper.getText(inputText).isEmpty()) {
+                String name = Helper.getText(inputText);
+                if (name.isEmpty()) {
                     SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_file_name));
                     return;
                 }
 
-                String name = Helper.getText(inputText);
                 String packageName = getCurrentPkgName();
 
                 String extension;
                 String newFileContent;
+                boolean isFolder = false;
                 int checkedChipId = dialogBinding.chipGroupTypes.getCheckedChipId();
                 if (checkedChipId == R.id.chip_java_class) {
                     newFileContent = String.format(CLASS_TEMPLATE, packageName, name);
@@ -223,20 +224,39 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
                     newFileContent = String.format(KT_ACTIVITY_TEMPLATE, packageName, name);
                     extension = ".kt";
                 } else if (checkedChipId == R.id.chip_folder) {
-                    FileUtil.makeDir(new File(current_path, name).getAbsolutePath());
-                    refresh();
-                    SketchwareUtil.toast(Helper.getResString(R.string.toast_folder_created));
-                    dialog.dismiss();
-                    return;
+                    isFolder = true;
+                    extension = "";
+                    newFileContent = "";
                 } else {
                     SketchwareUtil.toast(Helper.getResString(R.string.toast_select_file_type));
                     return;
                 }
 
-                FileUtil.writeFile(new File(current_path, name + extension).getAbsolutePath(), newFileContent);
-                refresh();
-                SketchwareUtil.toast(Helper.getResString(R.string.toast_file_created));
-                dialog.dismiss();
+                String targetPath = new File(current_path, name + extension).getAbsolutePath();
+                if (FileUtil.isExistFile(targetPath)) {
+                    SketchwareUtil.toastError(Helper.getResString(isFolder
+                            ? R.string.error_folder_already_exists
+                            : R.string.error_file_exists));
+                    return;
+                }
+
+                if (isFolder) {
+                    FileUtil.makeDir(targetPath);
+                } else {
+                    FileUtil.writeFile(targetPath, newFileContent);
+                }
+
+                if (FileUtil.isExistFile(targetPath)) {
+                    refresh();
+                    SketchwareUtil.toast(Helper.getResString(isFolder
+                            ? R.string.toast_folder_created
+                            : R.string.toast_file_created));
+                    dialog.dismiss();
+                } else {
+                    SketchwareUtil.toastError(Helper.getResString(isFolder
+                            ? R.string.toast_failed_to_create_folder
+                            : R.string.toast_failed_to_create_file));
+                }
             });
 
              dialogBinding.chipFolder.setVisibility(View.VISIBLE);

@@ -1696,6 +1696,8 @@ Please click on Settings to allow permission for Storage. Without this permissio
     <string name="toast_events_exported">Successfully exported events to:\n/Internal storage/.sketchware/data/system/export/events</string>
     <string name="toast_events_imported">Successfully imported events</string>
     <string name="toast_exported_in">Exported in %s</string>
+    <string name="toast_failed_to_create_file">Failed to create file</string>
+    <string name="toast_failed_to_create_folder">Failed to create folder</string>
     <string name="toast_file_created">File was created successfully</string>
     <string name="toast_folder_created">Folder was created successfully</string>
     <string name="toast_imported">Imported!</string>
