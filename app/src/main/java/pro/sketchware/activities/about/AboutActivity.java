@@ -121,6 +121,7 @@ public class AboutActivity extends BaseAppCompatActivity {
             Gson gson = new Gson();
             try {
                 AboutResponseModel aboutResponseModel = gson.fromJson(response, AboutResponseModel.class);
+                if (aboutResponseModel == null) return;
                 aboutAppData.setDiscordInviteLink(aboutResponseModel.getDiscordInviteLink());
                 aboutAppData.setTeamMembers(aboutResponseModel.getTeam());
                 aboutAppData.setChangelog(aboutResponseModel.getChangelog());
