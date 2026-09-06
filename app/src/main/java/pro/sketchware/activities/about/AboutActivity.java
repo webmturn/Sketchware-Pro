@@ -21,6 +21,7 @@ import pro.sketchware.activities.tools.CollectErrorActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -118,10 +119,13 @@ public class AboutActivity extends BaseAppCompatActivity {
             if (response == null) return;
 
             Gson gson = new Gson();
-            AboutResponseModel aboutResponseModel = gson.fromJson(response, AboutResponseModel.class);
-            aboutAppData.setDiscordInviteLink(aboutResponseModel.getDiscordInviteLink());
-            aboutAppData.setTeamMembers(aboutResponseModel.getTeam());
-            aboutAppData.setChangelog(aboutResponseModel.getChangelog());
+            try {
+                AboutResponseModel aboutResponseModel = gson.fromJson(response, AboutResponseModel.class);
+                aboutAppData.setDiscordInviteLink(aboutResponseModel.getDiscordInviteLink());
+                aboutAppData.setTeamMembers(aboutResponseModel.getTeam());
+                aboutAppData.setChangelog(aboutResponseModel.getChangelog());
+            } catch (JsonSyntaxException ignored) {
+            }
         });
     }
 
