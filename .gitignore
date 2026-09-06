@@ -74,6 +74,9 @@ run_x/
 /refactoring-method-naming.md
 jar_list.txt
 
+# Local backup archive of retired docs (recoverable from git history; not for VCS)
+docs/docs.zip
+
 # Test scripts and project data
 scripts/
 
