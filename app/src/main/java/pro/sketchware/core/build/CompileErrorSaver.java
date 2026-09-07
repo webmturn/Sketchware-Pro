@@ -1,10 +1,5 @@
 package pro.sketchware.core.build;
 
-import android.content.Context;
-import android.content.Intent;
-
-import pro.sketchware.activities.tools.CompileLogActivity;
-
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.FileUtil;
 
@@ -33,17 +28,6 @@ public class CompileErrorSaver {
     public void writeLogsToFile(String errorText) {
         if (logFileExists()) FileUtil.deleteFile(path);
         FileUtil.writeFile(path, errorText);
-    }
-
-    /**
-     * Opens {@link CompileLogActivity} and shows the user the last compile error.
-     */
-    public void showLastErrors(Context context) {
-        Intent intent = new Intent(context, CompileLogActivity.class);
-        intent.putExtra("sc_id", sc_id);
-        intent.putExtra("showingLastError", true);
-        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        context.startActivity(intent);
     }
 
     /**

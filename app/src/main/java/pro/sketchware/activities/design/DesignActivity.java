@@ -530,7 +530,11 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             return true;
         });
         bottomMenu.add(Menu.NONE, 3, Menu.NONE, Helper.getResString(R.string.design_menu_show_last_error)).setOnMenuItemClickListener(item -> {
-            new CompileErrorSaver(sc_id).showLastErrors(this);
+            Intent intent = new Intent(this, CompileLogActivity.class);
+            intent.putExtra("sc_id", sc_id);
+            intent.putExtra("showingLastError", true);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
             return true;
         });
         bottomMenu.add(Menu.NONE, 5, Menu.NONE, Helper.getResString(R.string.design_menu_show_source)).setOnMenuItemClickListener(item -> {
