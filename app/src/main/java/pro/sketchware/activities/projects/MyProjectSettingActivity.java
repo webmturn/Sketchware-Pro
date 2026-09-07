@@ -241,7 +241,10 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
             }
         } else if (id == R.id.ver_code_holder || id == R.id.ver_name_holder) {
             if (ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_USE_NEW_VERSION_CONTROL)) {
-                new VersionDialog(this).show();
+                new VersionDialog(this, Helper.getText(binding.verCode), Helper.getText(binding.verName), (versionCode, versionName) -> {
+                    binding.verCode.setText(versionCode);
+                    binding.verName.setText(versionName);
+                }).show();
             } else {
                 showOldVersionControlDialog();
             }
