@@ -62,12 +62,6 @@ final class DesignBuildController implements BuildProgressReceiver {
     private final ExecutorService executorService = BackgroundTasks.createSingleThreadExecutor("DesignBuild");
     private final NotificationManager notificationManager;
     private final int notificationId = 1;
-    private final MaterialButton btnRun;
-    private final MaterialButton btnOptions;
-    private final LinearLayout progressContainer;
-    private final TextView progressText;
-    private final TextView stepInfoText;
-    private final LinearProgressIndicator progressBar;
     public volatile boolean canceled;
     private volatile boolean isBuildFinished;
     private boolean isShowingNotification = false;
@@ -77,12 +71,6 @@ final class DesignBuildController implements BuildProgressReceiver {
         activityRef = new WeakReference<>(activity);
         this.projectId = projectId;
         notificationManager = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
-        btnRun = activity.findViewById(R.id.btn_run);
-        btnOptions = activity.findViewById(R.id.btn_options);
-        progressContainer = activity.findViewById(R.id.progress_container);
-        progressText = activity.findViewById(R.id.progress_text);
-        stepInfoText = activity.findViewById(R.id.progress_step_info);
-        progressBar = activity.findViewById(R.id.progress);
     }
 
     private DesignActivity getActivity() {
@@ -327,6 +315,9 @@ final class DesignBuildController implements BuildProgressReceiver {
         if (activity == null) return;
 
         postToUi(activity, () -> {
+            TextView progressText = activity.findViewById(R.id.progress_text);
+            TextView stepInfoText = activity.findViewById(R.id.progress_step_info);
+            LinearProgressIndicator progressBar = activity.findViewById(R.id.progress);
             progressBar.setIndeterminate(step == -1);
             if (!canceled) {
                 updateNotification(progress + " (" + step + " / " + totalSteps + ")");
@@ -458,7 +449,11 @@ final class DesignBuildController implements BuildProgressReceiver {
         TaskHost.of(activity).postToUi(action);
     }
 
-    private void updateRunButton(Context context, boolean isRunning) {
+    private void updateRunButton(DesignActivity activity, boolean isRunning) {
+        Context context = activity;
+        MaterialButton btnRun = activity.findViewById(R.id.btn_run);
+        MaterialButton btnOptions = activity.findViewById(R.id.btn_options);
+        LinearLayout progressContainer = activity.findViewById(R.id.progress_container);
         btnRun.setBackgroundTintList(ColorStateList.valueOf(ThemeUtils.getColor(context, isRunning ? R.attr.colorErrorContainer : R.attr.colorPrimary)));
         btnRun.setIcon(ContextCompat.getDrawable(context, isRunning ? R.drawable.ic_mtrl_stop : R.drawable.ic_mtrl_run));
         btnRun.setIconTint(ColorStateList.valueOf(ThemeUtils.getColor(context, isRunning ? R.attr.colorOnErrorContainer : R.attr.colorSurfaceContainerLowest)));
