@@ -4,8 +4,6 @@ package pro.sketchware.dialogs;
 import android.util.Log;
 import android.view.View;
 
-import pro.sketchware.activities.editor.LogicEditorActivity;
-
 import pro.sketchware.core.block.view.FieldBlockView;
 import io.github.rosemoe.sora.widget.CodeEditor;
 
@@ -13,12 +11,12 @@ public class AsdHandlerCodeEditor implements View.OnClickListener {
 
     private final boolean enteringNumber;
     private final AsdDialog asdDialog;
-    private final LogicEditorActivity logicEditorActivity;
+    private final FieldValueSetter fieldValueSetter;
     private final CodeEditor codeEditor;
     private final FieldBlockView fieldBlockView;
 
-    public AsdHandlerCodeEditor(LogicEditorActivity logicEditorActivity, boolean enteringNumber, FieldBlockView fieldBlockView, AsdDialog asdDialog, CodeEditor codeEditor) {
-        this.logicEditorActivity = logicEditorActivity;
+    public AsdHandlerCodeEditor(FieldValueSetter fieldValueSetter, boolean enteringNumber, FieldBlockView fieldBlockView, AsdDialog asdDialog, CodeEditor codeEditor) {
+        this.fieldValueSetter = fieldValueSetter;
         this.enteringNumber = enteringNumber;
         this.fieldBlockView = fieldBlockView;
         this.asdDialog = asdDialog;
@@ -41,7 +39,7 @@ public class AsdHandlerCodeEditor implements View.OnClickListener {
         } else if (!content.isEmpty() && content.charAt(0) == '@') {
             content = " " + content;
         }
-        logicEditorActivity.setFieldValue(fieldBlockView, content);
+        fieldValueSetter.setFieldValue(fieldBlockView, content);
         asdDialog.dismiss();
     }
 }

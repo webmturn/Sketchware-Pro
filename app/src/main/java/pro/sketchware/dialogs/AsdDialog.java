@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
-import pro.sketchware.activities.editor.LogicEditorActivity;
-
 import pro.sketchware.core.codegen.ComponentCodeGenerator;
 import pro.sketchware.core.block.view.FieldBlockView;
 import io.github.rosemoe.sora.widget.component.EditorAutoCompletion;
@@ -118,8 +116,8 @@ public class AsdDialog extends Dialog implements DialogInterface.OnDismissListen
         act = null;
     }
 
-    public void setOnSaveClickListener(LogicEditorActivity logicEditorActivity, boolean enteringNumber, FieldBlockView ss, AsdDialog asdDialog) {
-        binding.btnSave.setOnClickListener(new AsdHandlerCodeEditor(logicEditorActivity, enteringNumber, ss, asdDialog, binding.editor));
+    public void setOnSaveClickListener(FieldValueSetter fieldValueSetter, boolean enteringNumber, FieldBlockView ss, AsdDialog asdDialog) {
+        binding.btnSave.setOnClickListener(new AsdHandlerCodeEditor(fieldValueSetter, enteringNumber, ss, asdDialog, binding.editor));
     }
 
     public void setOnCancelClickListener(AsdDialog asdDialog) {

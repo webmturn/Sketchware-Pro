@@ -134,11 +134,12 @@ import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
 import pro.sketchware.databinding.ImagePickerItemBinding;
 import pro.sketchware.databinding.SearchWithRecyclerViewBinding;
 import pro.sketchware.activities.editor.logic.ExtraMenuBean;
+import pro.sketchware.dialogs.FieldValueSetter;
 import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.util.SvgUtils;
 
 @SuppressLint({"ClickableViewAccessibility", "RtlHardcoded", "SetTextI18n", "DefaultLocale"})
-public class LogicEditorActivity extends BaseAppCompatActivity implements View.OnClickListener, BlockSizeListener, View.OnTouchListener, MoreblockImporterDialog.CallBack {
+public class LogicEditorActivity extends BaseAppCompatActivity implements View.OnClickListener, BlockSizeListener, View.OnTouchListener, MoreblockImporterDialog.CallBack, FieldValueSetter {
 
     /** Blocks per chunk when loading; larger = fewer frames but more jank per frame. */
     private static final int BLOCK_LOAD_CHUNK_SIZE = 80;
