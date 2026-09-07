@@ -9,11 +9,10 @@ import pro.sketchware.util.format.FormatUtil;
 import pro.sketchware.core.block.view.BlockView;
 import pro.sketchware.core.block.view.BaseBlockView;
 import pro.sketchware.core.codegen.BlockColorMapper;
-import pro.sketchware.activities.editor.makeblock.ReturnMoreblockManager;
 
 public class BlockUtil {
     public static void loadMoreblockPreview(ViewGroup blockArea, String spec) {
-        var moreblock = new BlockView(blockArea.getContext(), 0, ReturnMoreblockManager.getMbName(spec), ReturnMoreblockManager.getMoreblockType(spec), "definedFunc");
+        var moreblock = new BlockView(blockArea.getContext(), 0, MoreblockSpecUtils.getMbName(spec), MoreblockSpecUtils.getMoreblockType(spec), "definedFunc");
         blockArea.addView(moreblock);
 
         loadPreviewBlockVariables(blockArea, moreblock, spec);

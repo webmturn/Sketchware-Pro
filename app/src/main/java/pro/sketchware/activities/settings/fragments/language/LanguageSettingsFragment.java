@@ -1,5 +1,7 @@
 package pro.sketchware.activities.settings.fragments.language;
 
+import pro.sketchware.util.locale.LanguageOverrideManager;
+
 import android.content.res.Resources;
 import android.util.Log;
 import android.os.Bundle;

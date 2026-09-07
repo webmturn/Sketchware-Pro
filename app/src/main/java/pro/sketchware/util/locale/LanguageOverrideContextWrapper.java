@@ -1,4 +1,4 @@
-package pro.sketchware.activities.settings.fragments.language;
+package pro.sketchware.util.locale;
 
 import android.content.Context;
 import android.content.ContextWrapper;

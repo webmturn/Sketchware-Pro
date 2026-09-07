@@ -192,6 +192,10 @@ public class MainActivity extends BasePermissionAppCompatActivity {
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         DataResetter.resetData(this, result.getData().getBooleanExtra("onlyConfig", true));
+                        Intent intent = new Intent(this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finishAffinity();
                     }
                 });
         enableEdgeToEdgeNoContrast();

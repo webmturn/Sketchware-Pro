@@ -1,8 +1,6 @@
 package pro.sketchware.util;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 
 import java.util.HashMap;
 
@@ -15,7 +13,6 @@ import pro.sketchware.util.MapValueHelper;
 import pro.sketchware.util.Helper;
 import pro.sketchware.core.library.BuiltInLibraries;
 import pro.sketchware.R;
-import pro.sketchware.activities.main.activities.MainActivity;
 
 public class DataResetter {
     public static void resetData(Context context, boolean resetOnlySettings) {
@@ -49,12 +46,5 @@ public class DataResetter {
 
         SketchToast.toast(context, Helper.getResString(R.string.program_information_reset_system_complete_initialize), SketchToast.TOAST_NORMAL).show();
         ProjectListManager.initializeDb(context, true);
-
-        Intent intent = new Intent(context, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        context.startActivity(intent);
-        if (context instanceof Activity activity) {
-            activity.finishAffinity();
-        }
     }
 }
