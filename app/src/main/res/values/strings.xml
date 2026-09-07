@@ -194,7 +194,7 @@
     <string name="block_equal_body_1">=</string>
     <string name="block_equal_head" />
     <string name="block_equal_tail" />
-    <string name="block_error_get_custom">Failed to get Custom Blocks for project %s: %s</string>
+    <string name="block_error_get_custom">Failed to get Custom Blocks for project %1$s: %2$s</string>
     <string name="block_error_invalid_color">Invalid color in Custom Block #%d</string>
     <string name="block_error_invalid_name">Invalid name entry in Custom Block #%d</string>
     <string name="block_error_invalid_palette_color">Invalid color in Custom Block palette #%d</string>
@@ -3359,7 +3359,6 @@ ACTION_VIEW
     <string name="menu_import_xml_success">Imported %d views</string>
     <string name="menu_import_xml_error">XML parse error: %s</string>
     <string name="menu_import_xml_empty">No views found in XML</string>
-    <string name="menu_import_xml_id_conflict">ID conflict: \'%s\' already exists, renamed to \'%s\'</string>
     <string name="menu_variables">Variables</string>
     <string name="menu_views">Views</string>
     <string name="menu_word_wrap">Word wrap</string>
@@ -3656,7 +3655,7 @@ Please try again later"</string>
     <string name="link_about_team">https://sketchware-pro.github.io/Sketchware-Pro/about.json</string>
     <string name="link_discord_invite">https://discord.gg/kq39yhT4rX</string>
     <string name="link_docs_url">https://docs.sketchware.pro</string>
-    <string name="link_github_commits_url"><![CDATA[https://api.github.com/repos/Sketchware-Pro/Sketchware-Pro/commits?per_page=%s&page=%s]]></string>
+    <string name="link_github_commits_url"><![CDATA[https://api.github.com/repos/Sketchware-Pro/Sketchware-Pro/commits?per_page=%1$s&page=%2$s]]></string>
     <string name="link_github_release">https://github.com/Sketchware-Pro/Sketchware-Pro/releases</string>
     <string name="link_github_url">https://github.com/Sketchware-Pro/Sketchware-Pro</string>
     <string name="link_ideas_url">https://discord.gg/4uxhMwCt</string>
