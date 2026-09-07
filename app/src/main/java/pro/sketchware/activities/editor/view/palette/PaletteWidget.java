@@ -48,7 +48,6 @@ import pro.sketchware.activities.editor.view.palette.IconTimePicker;
 import pro.sketchware.activities.editor.view.palette.IconVideoView;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
-import pro.sketchware.widgets.IconCustomWidget;
 
 public class PaletteWidget extends LinearLayout {
 

@@ -1,4 +1,4 @@
-package pro.sketchware.activities.editor.view;
+package pro.sketchware.widgets;
 
 import android.content.Context;
 import android.widget.ImageView;

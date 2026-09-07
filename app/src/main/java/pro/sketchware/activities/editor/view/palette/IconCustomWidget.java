@@ -1,4 +1,4 @@
-package pro.sketchware.widgets;
+package pro.sketchware.activities.editor.view.palette;
 
 import static pro.sketchware.beans.ViewBean.getViewTypeResId;
 
@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import pro.sketchware.beans.LayoutBean;
 import pro.sketchware.beans.ViewBean;
 import pro.sketchware.beans.ViewBeans;
-import pro.sketchware.activities.editor.view.palette.IconBase;
 
 import java.util.HashMap;
 import java.util.Objects;

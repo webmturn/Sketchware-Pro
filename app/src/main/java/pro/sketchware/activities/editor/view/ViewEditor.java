@@ -69,7 +69,7 @@ import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.util.ThemeUtils;
 import pro.sketchware.util.UI;
-import pro.sketchware.widgets.IconCustomWidget;
+import pro.sketchware.activities.editor.view.palette.IconCustomWidget;
 import pro.sketchware.activities.editor.view.palette.WidgetsCreatorManager;
 
 @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
