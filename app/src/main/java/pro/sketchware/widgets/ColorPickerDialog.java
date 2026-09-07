@@ -48,7 +48,7 @@ import pro.sketchware.util.SketchwareUtil;
 
 public class ColorPickerDialog extends PopupWindow {
 
-    private static String sc_id;
+    private String sc_id;
     private final ArrayList<ColorBean> colorList = new ArrayList<>();
     private final ArrayList<ColorBean[]> colorGroups = new ArrayList<>();
     private final ArrayList<ResColor> resColors = new ArrayList<>();
