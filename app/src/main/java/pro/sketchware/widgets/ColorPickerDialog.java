@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import pro.sketchware.beans.ColorBean;
-import pro.sketchware.util.library.Material3LibraryManager;
+import pro.sketchware.core.library.Material3LibraryManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;

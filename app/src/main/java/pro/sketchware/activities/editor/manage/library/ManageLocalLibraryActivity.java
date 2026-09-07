@@ -1,11 +1,11 @@
 package pro.sketchware.activities.editor.manage.library;
 
-import static pro.sketchware.util.library.LocalLibrariesUtil.createLibraryMap;
-import static pro.sketchware.util.library.LocalLibrariesUtil.deleteSelectedLocalLibraries;
-import static pro.sketchware.util.library.LocalLibrariesUtil.getAllLocalLibraries;
-import static pro.sketchware.util.library.LocalLibrariesUtil.getLocalLibFile;
-import static pro.sketchware.util.library.LocalLibrariesUtil.getLocalLibraries;
-import static pro.sketchware.util.library.LocalLibrariesUtil.rewriteLocalLibFile;
+import static pro.sketchware.core.library.LocalLibrariesUtil.createLibraryMap;
+import static pro.sketchware.core.library.LocalLibrariesUtil.deleteSelectedLocalLibraries;
+import static pro.sketchware.core.library.LocalLibrariesUtil.getAllLocalLibraries;
+import static pro.sketchware.core.library.LocalLibrariesUtil.getLocalLibFile;
+import static pro.sketchware.core.library.LocalLibrariesUtil.getLocalLibraries;
+import static pro.sketchware.core.library.LocalLibrariesUtil.rewriteLocalLibFile;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -58,9 +58,9 @@ import pro.sketchware.R;
 import pro.sketchware.databinding.ManageLocallibrariesBinding;
 import pro.sketchware.databinding.ViewItemLocalLibBinding;
 import pro.sketchware.databinding.ViewItemLocalLibSearchBinding;
-import pro.sketchware.util.library.LocalLibrariesUtil;
-import pro.sketchware.util.library.LocalLibrary;
-import pro.sketchware.util.library.LocalLibraryImportPackageIndex;
+import pro.sketchware.core.library.LocalLibrariesUtil;
+import pro.sketchware.core.library.LocalLibrary;
+import pro.sketchware.core.library.LocalLibraryImportPackageIndex;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.UI;
 

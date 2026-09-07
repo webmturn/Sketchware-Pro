@@ -12,8 +12,8 @@ import java.util.List;
 
 import pro.sketchware.core.build.BuildSettings;
 import pro.sketchware.util.Helper;
-import pro.sketchware.util.library.BuiltInLibraries;
-import pro.sketchware.util.library.ExcludeBuiltInLibrariesConfig;
+import pro.sketchware.core.library.BuiltInLibraries;
+import pro.sketchware.core.library.ExcludeBuiltInLibrariesConfig;
 import pro.sketchware.core.project.ConstVarComponent;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.core.codegen.CodeFormatter;

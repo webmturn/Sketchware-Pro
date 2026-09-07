@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.TransitionManager;
 
 import pro.sketchware.activities.base.BaseAppCompatActivity;
-import pro.sketchware.util.library.ExcludeBuiltInLibrariesConfig;
+import pro.sketchware.core.library.ExcludeBuiltInLibrariesConfig;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.transition.MaterialFadeThrough;
 
@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
 import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.util.Helper;
-import pro.sketchware.util.library.BuiltInLibraries;
+import pro.sketchware.core.library.BuiltInLibraries;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.DialogSelectLibrariesBinding;

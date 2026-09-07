@@ -6,11 +6,11 @@ import androidx.annotation.Nullable;
 
 import pro.sketchware.beans.ProjectLibraryBean;
 import pro.sketchware.activities.editor.manage.library.LibraryItemView;
-import pro.sketchware.util.library.ExcludeBuiltInLibrariesConfig;
+import pro.sketchware.core.library.ExcludeBuiltInLibrariesConfig;
 
 import java.util.List;
 
-import pro.sketchware.util.library.BuiltInLibraries;
+import pro.sketchware.core.library.BuiltInLibraries;
 
 public class ExcludeBuiltInLibrariesLibraryItemView extends LibraryItemView {
     private final String sc_id;

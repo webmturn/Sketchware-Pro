@@ -12,7 +12,7 @@ import pro.sketchware.beans.BlockBean;
 import pro.sketchware.beans.ComponentBean;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ViewBean;
-import pro.sketchware.util.library.Material3LibraryManager;
+import pro.sketchware.core.library.Material3LibraryManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,7 +22,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import pro.sketchware.beans.ViewBeans;
-import pro.sketchware.util.library.ManageLocalLibrary;
+import pro.sketchware.core.library.ManageLocalLibrary;
 import pro.sketchware.core.project.ConstVarComponent;
 import pro.sketchware.core.build.BuildSettings;
 import pro.sketchware.core.project.ProjectSettings;

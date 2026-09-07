@@ -3,7 +3,7 @@ import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.util.format.FormatUtil;
 
 import pro.sketchware.beans.ComponentBean;
-import pro.sketchware.util.library.Material3LibraryManager;
+import pro.sketchware.core.library.Material3LibraryManager;
 
 import java.util.ArrayList;
 

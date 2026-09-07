@@ -23,8 +23,8 @@ import pro.sketchware.core.build.ProjectBuilder;
 import pro.sketchware.core.build.ProjectFilePaths;
 import pro.sketchware.core.exception.SimpleException;
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.util.library.ManageLocalLibrary;
-import pro.sketchware.util.library.BuiltInLibraries;
+import pro.sketchware.core.library.ManageLocalLibrary;
+import pro.sketchware.core.library.BuiltInLibraries;
 import pro.sketchware.util.LogUtil;
 
 public class AppBundleCompiler {

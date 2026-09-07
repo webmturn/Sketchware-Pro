@@ -5,8 +5,8 @@ import java.io.File;
 import pro.sketchware.core.build.ProjectBuilder;
 import pro.sketchware.core.build.ProjectFilePaths;
 import pro.sketchware.core.build.BuildProgressReceiver;
-import pro.sketchware.util.library.BuiltInLibraries;
-import pro.sketchware.util.library.BuiltInLibraryManager;
+import pro.sketchware.core.library.BuiltInLibraries;
+import pro.sketchware.core.library.BuiltInLibraryManager;
 import pro.sketchware.util.FileUtil;
 
 public class KotlinCompilerBridge {

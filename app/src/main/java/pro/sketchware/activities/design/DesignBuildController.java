@@ -46,7 +46,7 @@ import pro.sketchware.util.LogUtil;
 import pro.sketchware.util.MapValueHelper;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.ThemeUtils;
-import pro.sketchware.util.library.BuiltInLibraries;
+import pro.sketchware.core.library.BuiltInLibraries;
 
 /**
  * Runs the device-side project build and owns its progress UI, notification, and cancellation.

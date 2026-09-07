@@ -27,7 +27,7 @@ import pro.sketchware.core.project.ProguardHandler;
 import pro.sketchware.core.project.StringfogHandler;
 import pro.sketchware.util.Helper;
 import pro.sketchware.core.build.BuildProgressReceiver;
-import pro.sketchware.util.library.BuiltInLibraries;
+import pro.sketchware.core.library.BuiltInLibraries;
 import pro.sketchware.core.build.compiler.AppBundleCompiler;
 import pro.sketchware.dialogs.GetKeyStoreCredentialsDialog;
 import pro.sketchware.util.TestkeySignBridge;

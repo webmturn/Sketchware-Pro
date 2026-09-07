@@ -1,4 +1,4 @@
-package pro.sketchware.util.library;
+package pro.sketchware.core.library;
 
 import pro.sketchware.core.project.ConstVarComponent;
 

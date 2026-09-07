@@ -27,7 +27,7 @@ import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.PropertiesUtil;
 import pro.sketchware.util.XmlUtil;
-import pro.sketchware.util.library.Material3LibraryManager;
+import pro.sketchware.core.library.Material3LibraryManager;
 
 @SuppressLint("DiscouragedApi")
 public class ColorResourceResolver {

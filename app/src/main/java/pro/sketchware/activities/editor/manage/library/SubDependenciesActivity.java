@@ -1,9 +1,9 @@
 package pro.sketchware.activities.editor.manage.library;
 
-import static pro.sketchware.util.library.LocalLibrariesUtil.buildEnabledRootDependencyState;
-import static pro.sketchware.util.library.LocalLibrariesUtil.createLibraryMap;
-import static pro.sketchware.util.library.LocalLibrariesUtil.getLocalLibraries;
-import static pro.sketchware.util.library.LocalLibrariesUtil.rewriteLocalLibFile;
+import static pro.sketchware.core.library.LocalLibrariesUtil.buildEnabledRootDependencyState;
+import static pro.sketchware.core.library.LocalLibrariesUtil.createLibraryMap;
+import static pro.sketchware.core.library.LocalLibrariesUtil.getLocalLibraries;
+import static pro.sketchware.core.library.LocalLibrariesUtil.rewriteLocalLibFile;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,8 +31,8 @@ import java.util.concurrent.Executors;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ActivitySubDependenciesBinding;
 import pro.sketchware.databinding.ViewItemLocalLibBinding;
-import pro.sketchware.util.library.LocalLibrariesUtil;
-import pro.sketchware.util.library.LocalLibrary;
+import pro.sketchware.core.library.LocalLibrariesUtil;
+import pro.sketchware.core.library.LocalLibrary;
 import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.util.UI;
 

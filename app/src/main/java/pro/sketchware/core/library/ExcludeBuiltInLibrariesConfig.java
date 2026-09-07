@@ -1,4 +1,4 @@
-package pro.sketchware.util.library;
+package pro.sketchware.core.library;
 
 import android.util.Log;
 import android.util.Pair;
@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.util.library.BuiltInLibraries;
+import pro.sketchware.core.library.BuiltInLibraries;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.LogUtil;
 

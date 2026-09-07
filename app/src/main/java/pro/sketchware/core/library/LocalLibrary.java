@@ -1,4 +1,4 @@
-package pro.sketchware.util.library;
+package pro.sketchware.core.library;
 
 import static pro.sketchware.util.FileUtil.formatFileSize;
 import static pro.sketchware.util.FileUtil.getFileSize;
