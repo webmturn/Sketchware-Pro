@@ -291,8 +291,7 @@ public class XmlLayoutParser {
             }
         }
 
-        String inject = injectBuilder.toString();
-        viewBean.inject = inject.isEmpty() ? null : inject;
+        viewBean.inject = injectBuilder.toString();
     }
 
     // ====================== Layout Attributes ======================
