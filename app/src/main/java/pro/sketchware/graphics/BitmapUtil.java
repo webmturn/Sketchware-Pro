@@ -35,10 +35,10 @@ public class BitmapUtil {
   }
   
   public static int getExifRotation(String filePath) throws IOException {
-    int orientation = (new ExifInterface(filePath)).getAttributeInt("Orientation", -1);
-    if (orientation != 3) {
-      if (orientation != 6) {
-        if (orientation != 8) {
+    int orientation = (new ExifInterface(filePath)).getAttributeInt(ExifInterface.TAG_ORIENTATION, -1);
+    if (orientation != ExifInterface.ORIENTATION_ROTATE_180) {
+      if (orientation != ExifInterface.ORIENTATION_ROTATE_90) {
+        if (orientation != ExifInterface.ORIENTATION_ROTATE_270) {
           orientation = 0;
         } else {
           orientation = 270;
