@@ -12,25 +12,16 @@ import java.io.IOException;
 
 public class BitmapUtil {
   public static int calculateSampleSize(BitmapFactory.Options options, int targetWidth, int targetHeight) {
-    int outWidth = options.outWidth;
-    int outHeight = options.outHeight;
+    int imageWidth = options.outWidth;
+    int imageHeight = options.outHeight;
     int sampleSize = 1;
-    int candidate = 1;
-    if (outHeight > targetHeight || outWidth > targetWidth) {
-      outHeight /= 2;
-      outWidth /= 2;
-      while (true) {
-        sampleSize = candidate;
-        if (outHeight / candidate >= targetHeight) {
-          sampleSize = candidate;
-          if (outWidth / candidate >= targetWidth) {
-            candidate *= 2;
-            continue;
-          } 
-        } 
-        break;
-      } 
-    } 
+    if (imageHeight > targetHeight || imageWidth > targetWidth) {
+      int halfHeight = imageHeight / 2;
+      int halfWidth = imageWidth / 2;
+      while (halfHeight / sampleSize >= targetHeight && halfWidth / sampleSize >= targetWidth) {
+        sampleSize *= 2;
+      }
+    }
     return sampleSize;
   }
   
