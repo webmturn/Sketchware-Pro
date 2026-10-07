@@ -503,13 +503,13 @@ public class ProjectDataStore {
   public void initFab(String fileName) {
     if (fabMap.containsKey(fileName))
       return; 
-    ViewBean viewBean = new ViewBean("_fab", 16);
+    ViewBean viewBean = new ViewBean("_fab", ViewBean.VIEW_TYPE_WIDGET_FAB);
     LayoutBean layoutBean = viewBean.layout;
     layoutBean.marginLeft = 16;
     layoutBean.marginTop = 16;
     layoutBean.marginRight = 16;
     layoutBean.marginBottom = 16;
-    layoutBean.layoutGravity = 85;
+    layoutBean.layoutGravity = LayoutBean.GRAVITY_BOTTOM | LayoutBean.GRAVITY_RIGHT;
     fabMap.put(fileName, viewBean);
   }
   

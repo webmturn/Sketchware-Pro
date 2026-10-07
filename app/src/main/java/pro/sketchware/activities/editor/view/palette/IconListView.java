@@ -21,9 +21,9 @@ public class IconListView extends IconBase {
     @Override
     public ViewBean getBean() {
         ViewBean viewBean = new ViewBean();
-        viewBean.type = 9;
+        viewBean.type = ViewBean.VIEW_TYPE_WIDGET_LISTVIEW;
         LayoutBean layoutBean = viewBean.layout;
-        layoutBean.width = -1;
+        layoutBean.width = LayoutBean.LAYOUT_MATCH_PARENT;
         layoutBean.paddingLeft = 8;
         layoutBean.paddingTop = 8;
         layoutBean.paddingRight = 8;

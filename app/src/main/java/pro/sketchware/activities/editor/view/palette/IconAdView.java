@@ -21,14 +21,14 @@ public class IconAdView extends IconBase {
     @Override
     public ViewBean getBean() {
         ViewBean viewBean = new ViewBean();
-        viewBean.type = 17;
+        viewBean.type = ViewBean.VIEW_TYPE_WIDGET_ADVIEW;
         LayoutBean layoutBean = viewBean.layout;
         layoutBean.paddingLeft = 0;
         layoutBean.paddingTop = 0;
         layoutBean.paddingRight = 0;
         layoutBean.paddingBottom = 0;
-        layoutBean.width = -1;
-        layoutBean.height = -2;
+        layoutBean.width = LayoutBean.LAYOUT_MATCH_PARENT;
+        layoutBean.height = LayoutBean.LAYOUT_WRAP_CONTENT;
         viewBean.adSize = "SMART_BANNER";
         viewBean.adUnitId = "debug : ca-app-pub-3940256099942544/6300978111";
         viewBean.convert = "com.google.android.gms.ads.AdView";

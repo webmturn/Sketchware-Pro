@@ -40,7 +40,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
     private ActivityResultLauncher<Intent> addCustomViewLauncher;
     private ActivityResultLauncher<Intent> presetLauncher;
     private int lastPresetRequestCode;
-    private final int[] widgetTypeCounts = new int[19];
+    private final int[] widgetTypeCounts = new int[ViewBean.VIEW_TYPE_COUNT];
     private final int TAB_ACTIVITY = ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY;
     private final int TAB_CUSTOM_VIEW = ProjectFileBean.PROJECT_FILE_TYPE_CUSTOM_VIEW;
     private ViewSelectorAdapter viewSelectorAdapter;

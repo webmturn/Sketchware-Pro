@@ -58,7 +58,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
 
     private ActivityResultLauncher<Intent> addViewLauncher;
 
-    private final int[] widgetTypeCounts = new int[19];
+    private final int[] widgetTypeCounts = new int[ViewBean.VIEW_TYPE_COUNT];
     public FloatingActionButton fab;
     private MaterialCardView actionButtonsContainer;
     private boolean selecting = false;

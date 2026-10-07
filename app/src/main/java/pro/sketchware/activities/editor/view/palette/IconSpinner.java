@@ -26,9 +26,9 @@ public class IconSpinner extends IconBase {
         layoutBean.paddingTop = 8;
         layoutBean.paddingRight = 8;
         layoutBean.paddingBottom = 8;
-        viewBean.type = 10;
-        layoutBean.width = -1;
-        layoutBean.height = -2;
+        viewBean.type = ViewBean.VIEW_TYPE_WIDGET_SPINNER;
+        layoutBean.width = LayoutBean.LAYOUT_MATCH_PARENT;
+        layoutBean.height = LayoutBean.LAYOUT_WRAP_CONTENT;
         viewBean.convert = "Spinner";
         return viewBean;
     }

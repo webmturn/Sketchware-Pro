@@ -12,10 +12,10 @@ public class PresetLayoutFactory {
   }
   
   public static ViewBean createDefaultTextView() {
-    ViewBean viewBean = new ViewBean("textview1", 4);
+    ViewBean viewBean = new ViewBean("textview1", ViewBean.VIEW_TYPE_WIDGET_TEXTVIEW);
     viewBean.parent = "root";
     viewBean.index = 0;
-    viewBean.preParentType = 0;
+    viewBean.preParentType = ViewBean.VIEW_TYPE_LAYOUT_LINEAR;
     viewBean.name = "textview1";
     viewBean.text.text = "TextView";
     LayoutBean layoutBean = viewBean.layout;
@@ -71,7 +71,8 @@ public class PresetLayoutFactory {
   }
   
   public static ProjectFileBean createBasicActivityFile() {
-    return new ProjectFileBean(0, null, "Basic Activity", 0, 0, true, false, false, false);
+    return new ProjectFileBean(ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY, null, "Basic Activity",
+        ProjectFileBean.ORIENTATION_PORTRAIT, ProjectFileBean.KEYBOARD_STATE_UNSPECIFIED, true, false, false, false);
   }
   
   public static ArrayList<ViewBean> createBasicActivityViews() {
@@ -92,7 +93,7 @@ public class PresetLayoutFactory {
   }
   
   public static ProjectFileBean createBasicDrawerFile() {
-    return new ProjectFileBean(2, null, "Basic Drawer");
+    return new ProjectFileBean(ProjectFileBean.PROJECT_FILE_TYPE_DRAWER, null, "Basic Drawer");
   }
   
   public static ArrayList<ViewBean> createBasicDrawerViews() {
@@ -108,7 +109,7 @@ public class PresetLayoutFactory {
   }
   
   public static ProjectFileBean createBasicListItemFile() {
-    return new ProjectFileBean(1, null, "Basic List Item");
+    return new ProjectFileBean(ProjectFileBean.PROJECT_FILE_TYPE_CUSTOM_VIEW, null, "Basic List Item");
   }
   
   public static ArrayList<ViewBean> createBasicListItemViews() {
@@ -124,7 +125,8 @@ public class PresetLayoutFactory {
   }
   
   public static ProjectFileBean createEmptyActivityFile() {
-    return new ProjectFileBean(0, null, "Empty Activity", 0, 0, false, true, false, false);
+    return new ProjectFileBean(ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY, null, "Empty Activity",
+        ProjectFileBean.ORIENTATION_PORTRAIT, ProjectFileBean.KEYBOARD_STATE_UNSPECIFIED, false, true, false, false);
   }
   
   public static ArrayList<ViewBean> createEmptyActivityViews() {
@@ -132,7 +134,8 @@ public class PresetLayoutFactory {
   }
   
   public static ProjectFileBean createTextActivityFile() {
-    return new ProjectFileBean(0, null, "Text Activity", 0, 0, true, false, false, false);
+    return new ProjectFileBean(ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY, null, "Text Activity",
+        ProjectFileBean.ORIENTATION_PORTRAIT, ProjectFileBean.KEYBOARD_STATE_UNSPECIFIED, true, false, false, false);
   }
   
   public static ArrayList<ViewBean> createTextActivityViews() {

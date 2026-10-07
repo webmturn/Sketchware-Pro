@@ -44,7 +44,7 @@ public class ViewFilesFragment extends BaseFragment {
     private static final int REQUEST_CODE_ADD_VIEW_ACTIVITY = 265;
     private ActivityResultLauncher<Intent> addViewLauncher;
     private ActivityResultLauncher<Intent> presetLauncher;
-    private final int[] widgetIdCounters = new int[19];
+    private final int[] widgetIdCounters = new int[ViewBean.VIEW_TYPE_COUNT];
     private RecyclerView activitiesList;
     private Boolean isSelectionMode = false;
     private TextView tvGuide;
@@ -157,7 +157,7 @@ public class ViewFilesFragment extends BaseFragment {
                 }
             }
             if (!isMainActivityFile) {
-                activitiesFiles.add(0, new ProjectFileBean(0, "main"));
+                activitiesFiles.add(0, new ProjectFileBean(ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY, "main"));
             }
         }
     }

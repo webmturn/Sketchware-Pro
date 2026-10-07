@@ -86,7 +86,7 @@ public class ProjectFileManager {
 
   public void addFile(int fileType, String fileName) {
     ProjectFileBean projectFileBean = new ProjectFileBean(fileType, fileName);
-    if (fileType == 0) {
+    if (fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
       activities.add(projectFileBean);
     } else {
       customViews.add(projectFileBean);
@@ -109,7 +109,7 @@ public class ProjectFileManager {
   }
   
   public void addProjectFile(ProjectFileBean fileBean) {
-    if (fileBean.fileType == 0) {
+    if (fileBean.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
       activities.add(fileBean);
     } else {
       customViews.add(fileBean);
@@ -119,7 +119,7 @@ public class ProjectFileManager {
   public void parseFileData(BufferedReader reader) throws IOException {
     ArrayList<ProjectFileBean> parsedActivities = new ArrayList<>();
     ArrayList<ProjectFileBean> parsedCustomViews = new ArrayList<>();
-    parsedActivities.add(new ProjectFileBean(0, "main"));
+    parsedActivities.add(new ProjectFileBean(ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY, "main"));
     StringBuilder contentBuffer = new StringBuilder();
     String sectionName = "";
     String line;
@@ -237,7 +237,7 @@ public class ProjectFileManager {
   }
   
   public void removeFile(int fileType, String fileName) {
-    if (fileType == 0) {
+    if (fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
       for (ProjectFileBean projectFileBean : activities) {
         if (projectFileBean.fileType == fileType && projectFileBean.fileName.equals(fileName)) {
           activities.remove(projectFileBean);
@@ -335,7 +335,7 @@ public class ProjectFileManager {
     xmlNames.clear();
     javaNames.clear();
     for (ProjectFileBean projectFileBean : activities) {
-      if (projectFileBean.fileType == 0) {
+      if (projectFileBean.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY) {
         if (projectFileBean.fileName.equals("main")) {
           xmlNames.add(0, projectFileBean.getXmlName());
           javaNames.add(0, projectFileBean.getJavaName());
@@ -348,7 +348,7 @@ public class ProjectFileManager {
     if (customViews != null)
       for (ProjectFileBean projectFileBean : customViews) {
         int fileType = projectFileBean.fileType;
-        if (fileType == 1 || fileType == 2)
+        if (fileType == ProjectFileBean.PROJECT_FILE_TYPE_CUSTOM_VIEW || fileType == ProjectFileBean.PROJECT_FILE_TYPE_DRAWER)
           xmlNames.add(projectFileBean.getXmlName()); 
       }  
   }

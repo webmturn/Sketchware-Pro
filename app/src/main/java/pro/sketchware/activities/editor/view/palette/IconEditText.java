@@ -21,7 +21,7 @@ public class IconEditText extends IconBase {
     @Override
     public ViewBean getBean() {
         ViewBean viewBean = new ViewBean();
-        viewBean.type = 5;
+        viewBean.type = ViewBean.VIEW_TYPE_WIDGET_EDITTEXT;
         LayoutBean layoutBean = viewBean.layout;
         layoutBean.paddingLeft = 8;
         layoutBean.paddingTop = 8;

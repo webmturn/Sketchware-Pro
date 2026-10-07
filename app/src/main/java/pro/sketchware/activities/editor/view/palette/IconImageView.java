@@ -22,7 +22,7 @@ public class IconImageView extends IconBase {
     @Override
     public ViewBean getBean() {
         ViewBean viewBean = new ViewBean();
-        viewBean.type = 6;
+        viewBean.type = ViewBean.VIEW_TYPE_WIDGET_IMAGEVIEW;
         viewBean.convert = "ImageView";
         viewBean.image.resName = resourceName;
         return viewBean;

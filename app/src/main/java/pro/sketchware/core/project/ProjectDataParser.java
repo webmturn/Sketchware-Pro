@@ -113,7 +113,7 @@ public class ProjectDataParser {
   }
   
   public ViewBean parseFabViewBean(String sectionContent) {
-    return (sectionContent.trim().length() <= 0 || sectionContent.trim().charAt(0) != '{') ? new ViewBean("_fab", 16) : gson.fromJson(sectionContent, ViewBean.class);
+    return (sectionContent.trim().length() <= 0 || sectionContent.trim().charAt(0) != '{') ? new ViewBean("_fab", ViewBean.VIEW_TYPE_WIDGET_FAB) : gson.fromJson(sectionContent, ViewBean.class);
   }
   
   public ArrayList<Pair<String, String>> parseMoreBlockFunctions(String sectionContent) {

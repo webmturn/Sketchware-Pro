@@ -29,7 +29,7 @@ public class ViewFileEditClickListener implements View.OnClickListener {
     if (pos == RecyclerView.NO_POSITION) return;
     holder.adapterRef.selectedPosition = pos;
     Intent intent = new Intent(viewHolder.adapterRef.outerAdapter.getActivity(), PresetSettingActivity.class);
-    if (((ProjectFileBean)viewHolder.adapterRef.outerAdapter.projectFiles.get(viewHolder.adapterRef.selectedPosition)).fileType == 1) {
+    if (((ProjectFileBean)viewHolder.adapterRef.outerAdapter.projectFiles.get(viewHolder.adapterRef.selectedPosition)).fileType == ProjectFileBean.PROJECT_FILE_TYPE_CUSTOM_VIEW) {
       c = 'ĕ';
     } else {
       c = 'Ė';

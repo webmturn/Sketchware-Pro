@@ -46,6 +46,7 @@ public class ProjectFileBean extends SelectableBean implements Parcelable {
 
     public static final String DEFAULT_XML_NAME = "main.xml";
     public static final String DEFAULT_JAVA_NAME = "MainActivity.java";
+    private static final String DRAWER_FILE_PREFIX = "_drawer_";
 
     public static final int KEYBOARD_STATE_HIDDEN = 2;
     public static final int KEYBOARD_STATE_UNSPECIFIED = 0;
@@ -92,18 +93,18 @@ public class ProjectFileBean extends SelectableBean implements Parcelable {
     public ProjectFileBean(int fileType, String filename) {
         this.fileType = fileType;
         fileName = filename;
-        if (fileType == THEME_NOACTIONBAR) {
+        if (fileType == PROJECT_FILE_TYPE_CUSTOM_VIEW) {
             presetName = "Basic List Item";
         } else {
             presetName = "Basic Drawer";
         }
         if (fileType == PROJECT_FILE_TYPE_ACTIVITY) {
             options |= OPTION_ACTIVITY_TOOLBAR;
-            orientation = THEME_DEFAULT;
+            orientation = ORIENTATION_PORTRAIT;
         } else {
-            orientation = THEME_FULLSCREEN;
+            orientation = ORIENTATION_BOTH;
         }
-        keyboardSetting = THEME_DEFAULT;
+        keyboardSetting = KEYBOARD_STATE_UNSPECIFIED;
         theme = THEME_NONE;
     }
 
@@ -144,11 +145,11 @@ public class ProjectFileBean extends SelectableBean implements Parcelable {
         this.presetName = presetName;
         if (fileType == PROJECT_FILE_TYPE_ACTIVITY) {
             options |= OPTION_ACTIVITY_TOOLBAR;
-            orientation = THEME_DEFAULT;
+            orientation = ORIENTATION_PORTRAIT;
         } else {
-            orientation = THEME_FULLSCREEN;
+            orientation = ORIENTATION_BOTH;
         }
-        keyboardSetting = THEME_DEFAULT;
+        keyboardSetting = KEYBOARD_STATE_UNSPECIFIED;
         theme = THEME_NONE;
     }
 
@@ -204,7 +205,7 @@ public class ProjectFileBean extends SelectableBean implements Parcelable {
     }
 
     public static String getDrawerName(String filename) {
-        return "_drawer_" + filename;
+        return DRAWER_FILE_PREFIX + filename;
     }
 
     public static String getJavaName(String filename) {
@@ -251,8 +252,8 @@ public class ProjectFileBean extends SelectableBean implements Parcelable {
     }
 
     public String getDrawersJavaName() {
-        return fileType != THEME_FULLSCREEN ? "" : !fileName.contains("_drawer_") ? "" :
-                getJavaName(fileName.substring(OPTION_ACTIVITY_FAB));
+        return fileType != PROJECT_FILE_TYPE_DRAWER ? "" : !fileName.contains(DRAWER_FILE_PREFIX) ? "" :
+                getJavaName(fileName.substring(DRAWER_FILE_PREFIX.length()));
     }
 
     public String getJavaName() {

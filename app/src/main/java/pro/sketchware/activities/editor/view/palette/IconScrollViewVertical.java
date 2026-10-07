@@ -21,9 +21,9 @@ public class IconScrollViewVertical extends IconBase {
     @Override
     public ViewBean getBean() {
         ViewBean viewBean = new ViewBean();
-        viewBean.type = 12;
+        viewBean.type = ViewBean.VIEW_TYPE_LAYOUT_VSCROLLVIEW;
         LayoutBean layoutBean = viewBean.layout;
-        layoutBean.height = -1;
+        layoutBean.height = LayoutBean.LAYOUT_MATCH_PARENT;
         layoutBean.paddingLeft = 8;
         layoutBean.paddingTop = 8;
         layoutBean.paddingRight = 8;

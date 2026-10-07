@@ -21,10 +21,10 @@ public class IconLinearVertical extends IconBase {
     @Override
     public ViewBean getBean() {
         ViewBean viewBean = new ViewBean();
-        viewBean.type = 0;
+        viewBean.type = ViewBean.VIEW_TYPE_LAYOUT_LINEAR;
         LayoutBean layoutBean = viewBean.layout;
-        layoutBean.orientation = 1;
-        layoutBean.height = -1;
+        layoutBean.orientation = LayoutBean.ORIENTATION_VERTICAL;
+        layoutBean.height = LayoutBean.LAYOUT_MATCH_PARENT;
         layoutBean.paddingLeft = 8;
         layoutBean.paddingTop = 8;
         layoutBean.paddingRight = 8;

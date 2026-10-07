@@ -22,7 +22,7 @@ public class IconSwitch extends IconBase {
     @Override
     public ViewBean getBean() {
         ViewBean viewBean = new ViewBean();
-        viewBean.type = 13;
+        viewBean.type = ViewBean.VIEW_TYPE_WIDGET_SWITCH;
         LayoutBean layoutBean = viewBean.layout;
         layoutBean.paddingLeft = 8;
         layoutBean.paddingTop = 8;

@@ -67,10 +67,10 @@ public class LibraryManager {
   }
 
   private static final class LibraryState {
-    private ProjectLibraryBean firebaseDB = new ProjectLibraryBean(0);
-    private ProjectLibraryBean compat = new ProjectLibraryBean(1);
-    private ProjectLibraryBean admob = new ProjectLibraryBean(2);
-    private ProjectLibraryBean googleMap = new ProjectLibraryBean(3);
+    private ProjectLibraryBean firebaseDB = new ProjectLibraryBean(ProjectLibraryBean.PROJECT_LIB_TYPE_FIREBASE);
+    private ProjectLibraryBean compat = new ProjectLibraryBean(ProjectLibraryBean.PROJECT_LIB_TYPE_COMPAT);
+    private ProjectLibraryBean admob = new ProjectLibraryBean(ProjectLibraryBean.PROJECT_LIB_TYPE_ADMOB);
+    private ProjectLibraryBean googleMap = new ProjectLibraryBean(ProjectLibraryBean.PROJECT_LIB_TYPE_GOOGLE_MAP);
   }
   
   public void setAdmob(ProjectLibraryBean libraryBean) {
@@ -212,10 +212,10 @@ public class LibraryManager {
   }
   
   public final void initializeDefaults() {
-    firebaseDB = new ProjectLibraryBean(0);
-    compat = new ProjectLibraryBean(1);
-    admob = new ProjectLibraryBean(2);
-    googleMap = new ProjectLibraryBean(3);
+    firebaseDB = new ProjectLibraryBean(ProjectLibraryBean.PROJECT_LIB_TYPE_FIREBASE);
+    compat = new ProjectLibraryBean(ProjectLibraryBean.PROJECT_LIB_TYPE_COMPAT);
+    admob = new ProjectLibraryBean(ProjectLibraryBean.PROJECT_LIB_TYPE_ADMOB);
+    googleMap = new ProjectLibraryBean(ProjectLibraryBean.PROJECT_LIB_TYPE_GOOGLE_MAP);
   }
   
   public boolean hasBackup() {

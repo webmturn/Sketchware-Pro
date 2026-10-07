@@ -41,7 +41,7 @@ public class ShowWidgetCollectionActivity extends BaseAppCompatActivity implemen
         for (ViewBean view : views) {
             if (views.indexOf(view) == 0) {
                 view.parent = "root";
-                view.parentType = 0;
+                view.parentType = ViewBean.VIEW_TYPE_LAYOUT_LINEAR;
                 view.preParent = null;
                 view.preParentType = -1;
                 selectedItemView = loadView(view);

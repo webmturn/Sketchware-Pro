@@ -21,13 +21,13 @@ public class IconProgressBar extends IconBase {
     @Override
     public ViewBean getBean() {
         ViewBean viewBean = new ViewBean();
-        viewBean.type = 8;
+        viewBean.type = ViewBean.VIEW_TYPE_WIDGET_PROGRESSBAR;
         LayoutBean layoutBean = viewBean.layout;
         layoutBean.paddingLeft = 8;
         layoutBean.paddingTop = 8;
         layoutBean.paddingRight = 8;
         layoutBean.paddingBottom = 8;
-        layoutBean.width = -1;
+        layoutBean.width = LayoutBean.LAYOUT_MATCH_PARENT;
         viewBean.text.text = getName();
         viewBean.convert = "ProgressBar";
         return viewBean;

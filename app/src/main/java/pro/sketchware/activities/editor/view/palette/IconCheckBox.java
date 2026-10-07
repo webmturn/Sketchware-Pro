@@ -21,7 +21,7 @@ public class IconCheckBox extends IconBase {
     @Override
     public ViewBean getBean() {
         ViewBean viewBean = new ViewBean();
-        viewBean.type = 11;
+        viewBean.type = ViewBean.VIEW_TYPE_WIDGET_CHECKBOX;
         LayoutBean layoutBean = viewBean.layout;
         layoutBean.paddingLeft = 8;
         layoutBean.paddingTop = 8;

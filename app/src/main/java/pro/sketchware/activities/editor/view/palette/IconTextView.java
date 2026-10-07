@@ -21,7 +21,7 @@ public class IconTextView extends IconBase {
     @Override
     public ViewBean getBean() {
         ViewBean viewBean = new ViewBean();
-        viewBean.type = 4;
+        viewBean.type = ViewBean.VIEW_TYPE_WIDGET_TEXTVIEW;
         LayoutBean layoutBean = viewBean.layout;
         layoutBean.paddingLeft = 8;
         layoutBean.paddingTop = 8;

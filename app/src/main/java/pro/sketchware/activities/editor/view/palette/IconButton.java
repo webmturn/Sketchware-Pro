@@ -22,7 +22,7 @@ public class IconButton extends IconBase {
     @Override
     public ViewBean getBean() {
         ViewBean viewBean = new ViewBean();
-        viewBean.type = 3;
+        viewBean.type = ViewBean.VIEW_TYPE_WIDGET_BUTTON;
         LayoutBean layoutBean = viewBean.layout;
         layoutBean.paddingLeft = 8;
         layoutBean.paddingTop = 8;

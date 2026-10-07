@@ -21,10 +21,10 @@ public class IconLinearHorizontal extends IconBase {
     @Override
     public ViewBean getBean() {
         ViewBean viewBean = new ViewBean();
-        viewBean.type = 0;
+        viewBean.type = ViewBean.VIEW_TYPE_LAYOUT_LINEAR;
         LayoutBean layoutBean = viewBean.layout;
-        layoutBean.orientation = 0;
-        layoutBean.width = -1;
+        layoutBean.orientation = LayoutBean.ORIENTATION_HORIZONTAL;
+        layoutBean.width = LayoutBean.LAYOUT_MATCH_PARENT;
         layoutBean.paddingLeft = 8;
         layoutBean.paddingTop = 8;
         layoutBean.paddingRight = 8;

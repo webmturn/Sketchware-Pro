@@ -38,7 +38,7 @@ public class CustomViewFilesFragment extends BaseFragment {
   
   public TextView emptyText;
   
-  public int[] viewCounters = new int[19];
+  public int[] viewCounters = new int[ViewBean.VIEW_TYPE_COUNT];
   
   public final String generateUniqueViewId(int position, String xmlName) {
     String prefix = ViewTypeNames.getIdPrefix(position);
@@ -85,13 +85,13 @@ public class CustomViewFilesFragment extends BaseFragment {
   public void addCustomView(String fileName) {
     boolean found = false;
     for (ProjectFileBean bean : projectFiles) {
-      if (bean.fileType == 2 && bean.fileName.equals(fileName)) {
+      if (bean.fileType == ProjectFileBean.PROJECT_FILE_TYPE_DRAWER && bean.fileName.equals(fileName)) {
         found = true;
         break;
       }
     }
     if (!found) {
-      projectFiles.add(new ProjectFileBean(2, fileName));
+      projectFiles.add(new ProjectFileBean(ProjectFileBean.PROJECT_FILE_TYPE_DRAWER, fileName));
       adapter.notifyDataSetChanged();
     }
   }
@@ -104,7 +104,7 @@ public class CustomViewFilesFragment extends BaseFragment {
   
   public void removeCustomView(String fileName) {
     for (ProjectFileBean projectFileBean : projectFiles) {
-      if (projectFileBean.fileType == 2 && projectFileBean.fileName.equals(fileName)) {
+      if (projectFileBean.fileType == ProjectFileBean.PROJECT_FILE_TYPE_DRAWER && projectFileBean.fileName.equals(fileName)) {
         projectFiles.remove(projectFileBean);
         break;
       } 
