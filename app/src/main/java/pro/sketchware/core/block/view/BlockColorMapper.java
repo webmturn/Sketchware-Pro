@@ -21,6 +21,9 @@ import pro.sketchware.core.codegen.BlockCodeRegistry;
  * @see BlockCodeRegistry
  */
 public class BlockColorMapper {
+    /** Unregistered opCodes use this color to trigger custom-block lookup. */
+    public static final int CUSTOM_BLOCK_FALLBACK_COLOR = 0xff8a55d7;
+
     /**
      * Returns the harmonized color for a block, using the application context.
      *
@@ -171,7 +174,7 @@ public class BlockColorMapper {
                  "skewBitmapFile", "setBitmapFileColorFilter", "setBitmapFileBrightness",
                  "setBitmapFileContrast", "getJpegRotate" ->
                     harmonizeWithPrimary(context, 0xffa1887f);
-            default -> 0xff8a55d7;
+            default -> CUSTOM_BLOCK_FALLBACK_COLOR;
         };
     }
 

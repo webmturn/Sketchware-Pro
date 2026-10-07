@@ -11,6 +11,7 @@ import pro.sketchware.core.build.ProjectBuilder;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.Helper;
 import pro.sketchware.core.build.BuildProgressReceiver;
+import pro.sketchware.core.build.BuildStage;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.util.FileUtil;
 
@@ -239,10 +240,10 @@ public class ProguardHandler {
     public void start(BuildProgressReceiver progressReceiver, ProjectBuilder builder) throws IOException {
         if (isShrinkingEnabled()) {
             if (isR8Enabled()) {
-                progressReceiver.onProgress("Running R8 on classes...", 15);
+                progressReceiver.onProgress("Running R8 on classes...", BuildStage.SHRINK_WITH_R8);
                 builder.runR8();
             } else {
-                progressReceiver.onProgress("ProGuarding classes...", 16);
+                progressReceiver.onProgress("ProGuarding classes...", BuildStage.SHRINK_WITH_PROGUARD);
                 builder.runProguard();
             }
         }

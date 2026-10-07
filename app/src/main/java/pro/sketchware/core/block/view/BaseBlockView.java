@@ -14,6 +14,18 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 public class BaseBlockView extends RelativeLayout {
+  private static final int SHAPE_RECTANGULAR = 1;
+  private static final int SHAPE_BOOLEAN = 2;
+  private static final int SHAPE_NUMBER = 3;
+  private static final int SHAPE_STATEMENT = 4;
+  private static final int SHAPE_END_CAP = 5;
+  private static final int SHAPE_HAT = 7;
+  private static final int SHAPE_PARAMETER = 9;
+  private static final int SHAPE_SINGLE_SUBSTACK = 10;
+  // ID 11 is rendered as a single substack but is not assigned by constructors.
+  private static final int SHAPE_SINGLE_SUBSTACK_ALTERNATE = 11;
+  private static final int SHAPE_DOUBLE_SUBSTACK = 12;
+
   private static Paint disabledOverlayPaint;
   private static Paint disabledStripePaint;
 
@@ -151,20 +163,20 @@ public class BaseBlockView extends RelativeLayout {
     initClassInfo();
     String type = this.blockType;
     switch (type) {
-      case " ": topSpacing = 4; shapeType = 4; break;
-      case "b": leftIndent = 8; rightIndent = 5; shapeType = 2; break;
-      case "d": shapeType = 3; leftIndent = 4; break;
-      case "n": shapeType = 3; break;
-      case "c": topSpacing = 4; shapeType = 10; break;
-      case "e": topSpacing = 4; shapeType = 12; break;
-      case "f": topSpacing = 4; shapeType = 5; break;
-      case "h": topSpacing = 8; shapeType = 7; break;
-      case "m": shapeType = 9; break;
+      case " ": topSpacing = 4; shapeType = SHAPE_STATEMENT; break;
+      case "b": leftIndent = 8; rightIndent = 5; shapeType = SHAPE_BOOLEAN; break;
+      case "d": shapeType = SHAPE_NUMBER; leftIndent = 4; break;
+      case "n": shapeType = SHAPE_NUMBER; break;
+      case "c": topSpacing = 4; shapeType = SHAPE_SINGLE_SUBSTACK; break;
+      case "e": topSpacing = 4; shapeType = SHAPE_DOUBLE_SUBSTACK; break;
+      case "f": topSpacing = 4; shapeType = SHAPE_END_CAP; break;
+      case "h": topSpacing = 8; shapeType = SHAPE_HAT; break;
+      case "m": shapeType = SHAPE_PARAMETER; break;
       case "s":
       case "v":
       case "p":
       case "l":
-      case "a": shapeType = 1; break;
+      case "a": shapeType = SHAPE_RECTANGULAR; break;
     }
     blockColor = defaultBlockColor;
     this.isEditable = isEditable;
@@ -228,7 +240,7 @@ public class BaseBlockView extends RelativeLayout {
   }
   
   public void setBlockSize(float x, float y, boolean flag) {
-    if (shapeType == 9) {
+    if (shapeType == SHAPE_PARAMETER) {
       blockWidth = (int)x + spacing;
     } else {
       blockWidth = (int)x;
@@ -247,7 +259,7 @@ public class BaseBlockView extends RelativeLayout {
     innerHeight = targetBlock.innerHeight;
     if (!isParameter)
       if (showNotch) {
-        shapeType = 4;
+        shapeType = SHAPE_STATEMENT;
         blockHeight = (int)(density * 6.0F);
       } else if (index > 0) {
         contentHeight = index - borderWidth;
@@ -471,19 +483,19 @@ public class BaseBlockView extends RelativeLayout {
     Path path = new Path();
     drawTopPath(path);
     int i = blockHeight;
-    boolean hasBottomNotch = (shapeType != 5);
+    boolean hasBottomNotch = (shapeType != SHAPE_END_CAP);
     drawBottomPath(path, i, hasBottomNotch, 0);
     canvas.drawPath(path, fillPaint);
     if (drawShadow) {
       canvas.drawLines(getRightSideShadowLines(0, blockHeight), outlinePaint);
-      canvas.drawLines(getBottomShadowLines(blockHeight, (shapeType != 5), 0), outlinePaint);
+      canvas.drawLines(getBottomShadowLines(blockHeight, (shapeType != SHAPE_END_CAP), 0), outlinePaint);
     } 
     if (drawReflection)
       canvas.drawLines(getTopReflectionLines(blockHeight), reflectionPaint); 
   }
   
   public boolean hasSubstack() {
-    return shapeType >= 10;
+    return shapeType >= SHAPE_SINGLE_SUBSTACK;
   }
   
   public final float[] getRightSideShadowLines(int start, int end) {
@@ -511,7 +523,7 @@ public class BaseBlockView extends RelativeLayout {
   }
   
   public boolean hasDoubleSubstack() {
-    return shapeType == 12;
+    return shapeType == SHAPE_DOUBLE_SUBSTACK;
   }
   
   public final float[] getSubstackReflectionLines(int start, int end) {
@@ -583,7 +595,7 @@ public class BaseBlockView extends RelativeLayout {
     drawTopPath(path);
     drawBottomPath(path, blockHeight, true, cornerRadius);
     drawSubstackBottomPath(path, i);
-    boolean isEndCap = (shapeType == 10);
+    boolean isEndCap = (shapeType == SHAPE_SINGLE_SUBSTACK);
     drawBottomPath(path, topPadding + i, isEndCap, 0);
     canvas.drawPath(path, fillPaint);
     if (drawShadow) {
@@ -591,7 +603,7 @@ public class BaseBlockView extends RelativeLayout {
       canvas.drawLines(getBottomShadowLines(blockHeight, true, cornerRadius), outlinePaint);
       canvas.drawLines(getLeftSideShadowLines(blockHeight, i), outlinePaint);
       canvas.drawLines(getRightSideShadowLines(i, topPadding + i), outlinePaint);
-      canvas.drawLines(getBottomShadowLines(topPadding + i, (shapeType == 10), 0), outlinePaint);
+      canvas.drawLines(getBottomShadowLines(topPadding + i, (shapeType == SHAPE_SINGLE_SUBSTACK), 0), outlinePaint);
     } 
     if (drawReflection) {
       canvas.drawLines(getTopReflectionLines(topPadding + i), reflectionPaint);
@@ -661,9 +673,9 @@ public class BaseBlockView extends RelativeLayout {
     if (hasDoubleSubstack())
       i = k + topPadding + innerHeight - borderWidth; 
     int j = shapeType;
-    if (j != 4 && j != 7 && j != 10) {
+    if (j != SHAPE_STATEMENT && j != SHAPE_HAT && j != SHAPE_SINGLE_SUBSTACK) {
       k = i;
-      return (j == 12) ? (i + borderWidth) : k;
+      return (j == SHAPE_DOUBLE_SUBSTACK) ? (i + borderWidth) : k;
     } 
     return i + borderWidth;
   }
@@ -687,30 +699,30 @@ public class BaseBlockView extends RelativeLayout {
   public void onDraw(Canvas canvas) {
     fillPaint.setColor(blockColor);
     switch (shapeType) {
-      case 12:
+      case SHAPE_DOUBLE_SUBSTACK:
         drawDoubleSubstackShape(canvas);
         break;
-      case 10:
-      case 11:
+      case SHAPE_SINGLE_SUBSTACK:
+      case SHAPE_SINGLE_SUBSTACK_ALTERNATE:
         drawSingleSubstackShape(canvas);
         break;
-      case 9:
+      case SHAPE_PARAMETER:
         drawParameterShape(canvas);
         break;
-      case 7:
+      case SHAPE_HAT:
         drawHatShape(canvas);
         break;
-      case 4:
-      case 5:
+      case SHAPE_STATEMENT:
+      case SHAPE_END_CAP:
         drawStatementShape(canvas);
         break;
-      case 3:
+      case SHAPE_NUMBER:
         drawNumberShape(canvas);
         break;
-      case 2:
+      case SHAPE_BOOLEAN:
         drawBooleanShape(canvas);
         break;
-      case 1:
+      case SHAPE_RECTANGULAR:
         drawRectShape(canvas);
         break;
     }

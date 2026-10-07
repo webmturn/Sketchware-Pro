@@ -962,11 +962,11 @@ public class ExtraPaletteBlock {
         int color = BlockColorMapper.getBlockColor(opCode, blockType);
         boolean isDefinitionBlock = "h".equals(blockType);
         if (!isDefinitionBlock && !opCode.equals("definedFunc") && !opCode.equals("getVar")
-                && !opCode.equals("getResStr") && !opCode.equals("getArg") && color != -7711273) {
+                && !opCode.equals("getResStr") && !opCode.equals("getArg") && color != BlockColorMapper.CUSTOM_BLOCK_FALLBACK_COLOR) {
             return StringResource.getInstance().getEventTranslation(logicEditor, opCode);
         }
 
-        if (color == -7711273) {
+        if (color == BlockColorMapper.CUSTOM_BLOCK_FALLBACK_COLOR) {
             if (spec != null && !spec.isEmpty()) {
                 return spec;
             }

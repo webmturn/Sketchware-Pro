@@ -8,6 +8,7 @@ import pro.sketchware.core.build.ProjectBuilder;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.Helper;
 import pro.sketchware.core.build.BuildProgressReceiver;
+import pro.sketchware.core.build.BuildStage;
 import pro.sketchware.util.FileUtil;
 
 public class StringfogHandler {
@@ -66,7 +67,7 @@ public class StringfogHandler {
      */
     public void start(BuildProgressReceiver progressReceiver, ProjectBuilder builder) {
         if (isStringfogEnabled()) {
-            progressReceiver.onProgress("Running StringFog...", 14);
+            progressReceiver.onProgress("Running StringFog...", BuildStage.OBFUSCATE_STRINGS);
             builder.runStringfog();
         }
     }

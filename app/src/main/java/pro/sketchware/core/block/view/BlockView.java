@@ -19,6 +19,10 @@ import pro.sketchware.core.codegen.BlockLoader;
 import pro.sketchware.core.project.ProjectTracker;
 
 public class BlockView extends BaseBlockView {
+  private static final int CHAIN_TRAVERSAL_LIMIT = 200;
+  private static final int DEPTH_TRAVERSAL_LIMIT = 500;
+  private static final int LAYOUT_CHAIN_TRAVERSAL_LIMIT = 1000;
+
   public String spec;
   
   public String opCode;
@@ -272,7 +276,7 @@ public class BlockView extends BaseBlockView {
   public ArrayList<BlockView> getAllChildren() {
     ArrayList<BlockView> children = new ArrayList<>();
     BlockView rs = this;
-    int limit = 200;
+    int limit = CHAIN_TRAVERSAL_LIMIT;
     while (true) {
       children.add(rs);
       for (View view : rs.specViews) {
@@ -363,7 +367,7 @@ public class BlockView extends BaseBlockView {
   public int getDepth() {
     int b = 0;
     BlockView rs = this;
-    int limit = 500;
+    int limit = DEPTH_TRAVERSAL_LIMIT;
     while (true) {
       rs = rs.parentBlock;
       if (rs != null && --limit > 0) {
@@ -376,7 +380,7 @@ public class BlockView extends BaseBlockView {
   public int getHeightSum() {
     int i = 0;
     BlockView rs = this;
-    int limit = 200;
+    int limit = CHAIN_TRAVERSAL_LIMIT;
     while (true) {
       int j = i;
       if (i != 0)
@@ -397,7 +401,7 @@ public class BlockView extends BaseBlockView {
   public int getWidthSum() {
     int i = 0;
     BlockView rs = this;
-    int limit = 200;
+    int limit = CHAIN_TRAVERSAL_LIMIT;
     while (true) {
       i = Math.max(i, rs.getW());
       int j = i;
@@ -438,7 +442,7 @@ public class BlockView extends BaseBlockView {
   
   public BlockView getLastInChain() {
     BlockView rs = this;
-    int limit = 200;
+    int limit = CHAIN_TRAVERSAL_LIMIT;
     while (true) {
       int i = rs.nextBlock;
       if (i != -1 && --limit > 0) {
@@ -470,7 +474,7 @@ public class BlockView extends BaseBlockView {
   
   public void layoutChain() {
     BlockView current = this;
-    int limit = 1000;
+    int limit = LAYOUT_CHAIN_TRAVERSAL_LIMIT;
     while (current != null && --limit > 0) {
       current.layoutSingle();
       int next = current.nextBlock;
@@ -625,10 +629,10 @@ public class BlockView extends BaseBlockView {
     }
     int color = BlockColorMapper.getBlockColor(opCode, blockType);
     if (!isDefinitionBlock && !opCode.equals("definedFunc") && !opCode.equals("getVar")
-        && !opCode.equals("getResStr") && !opCode.equals("getArg") && color != -7711273) {
+        && !opCode.equals("getResStr") && !opCode.equals("getArg") && color != BlockColorMapper.CUSTOM_BLOCK_FALLBACK_COLOR) {
       spec = StringResource.getInstance().getEventTranslation(getContext(), opCode);
     }
-    if (color == -7711273) {
+    if (color == BlockColorMapper.CUSTOM_BLOCK_FALLBACK_COLOR) {
       ExtraBlockInfo info = BlockLoader.getBlockInfo(opCode);
       ExtraBlockInfo blockInfo = info;
       if (ProjectTracker.SC_ID != null && info.isMissing
@@ -729,7 +733,7 @@ public class BlockView extends BaseBlockView {
   
   public void recalculateDepthChain() {
     BlockView rs = this;
-    int limit = 200;
+    int limit = CHAIN_TRAVERSAL_LIMIT;
     while (rs != null && --limit > 0) {
       int i = 0;
       for (View view : rs.childViews) {
@@ -748,7 +752,7 @@ public class BlockView extends BaseBlockView {
   
   public BlockView getRootBlock() {
     BlockView rs = this;
-    int limit = 200;
+    int limit = CHAIN_TRAVERSAL_LIMIT;
     while (true) {
       BlockView parent = rs.parentBlock;
       if (parent != null && --limit > 0) {
@@ -762,7 +766,7 @@ public class BlockView extends BaseBlockView {
   public int countBlocksInChain(int tag) {
     int count = 0;
     BlockView rs = blockPane.getBlockByTag(tag);
-    int limit = 200;
+    int limit = CHAIN_TRAVERSAL_LIMIT;
     while (rs != null && --limit > 0) {
       count++;
       for (View view : rs.specViews) {
@@ -852,7 +856,7 @@ public class BlockView extends BaseBlockView {
   
   private void setChainVisibility(int tag, int visibility) {
     BlockView rs = blockPane.getBlockByTag(tag);
-    int limit = 200;
+    int limit = CHAIN_TRAVERSAL_LIMIT;
     while (rs != null && --limit > 0) {
       rs.setVisibility(visibility);
       for (View view : rs.specViews) {

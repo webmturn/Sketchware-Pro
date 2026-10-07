@@ -1,5 +1,6 @@
 package pro.sketchware.core.codegen;
 
+import android.os.Build;
 import pro.sketchware.beans.BlockBean;
 
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public class PermissionManager {
     }
 
     private static void addSystemPermissions(ArrayList<PermissionEntry> permissions, int permissionFlags) {
-        String targetsSdk33OrHigher = "(getApplicationInfo().targetSdkVersion >= 33)";
+        String targetsSdk33OrHigher = "(getApplicationInfo().targetSdkVersion >= " + Build.VERSION_CODES.TIRAMISU + ")";
         if ((permissionFlags & BuildConfig.PERMISSION_CALL_PHONE) == BuildConfig.PERMISSION_CALL_PHONE) {
             permissions.add(new PermissionEntry("Manifest.permission.CALL_PHONE", null));
         }
@@ -76,10 +77,10 @@ public class PermissionManager {
             permissions.add(new PermissionEntry("Manifest.permission.CAMERA", null));
         }
         if ((permissionFlags & BuildConfig.PERMISSION_READ_EXTERNAL_STORAGE) == BuildConfig.PERMISSION_READ_EXTERNAL_STORAGE) {
-            permissions.add(new PermissionEntry("Manifest.permission.READ_EXTERNAL_STORAGE", "Build.VERSION.SDK_INT < 33 || !" + targetsSdk33OrHigher));
+            permissions.add(new PermissionEntry("Manifest.permission.READ_EXTERNAL_STORAGE", "Build.VERSION.SDK_INT < " + Build.VERSION_CODES.TIRAMISU + " || !" + targetsSdk33OrHigher));
         }
         if ((permissionFlags & BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE) == BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE) {
-            permissions.add(new PermissionEntry("Manifest.permission.WRITE_EXTERNAL_STORAGE", "Build.VERSION.SDK_INT < 30"));
+            permissions.add(new PermissionEntry("Manifest.permission.WRITE_EXTERNAL_STORAGE", "Build.VERSION.SDK_INT < " + Build.VERSION_CODES.R));
         }
         if ((permissionFlags & BuildConfig.PERMISSION_RECORD_AUDIO) == BuildConfig.PERMISSION_RECORD_AUDIO) {
             permissions.add(new PermissionEntry("Manifest.permission.RECORD_AUDIO", null));
@@ -88,16 +89,16 @@ public class PermissionManager {
             permissions.add(new PermissionEntry("Manifest.permission.ACCESS_FINE_LOCATION", null));
         }
         if ((permissionFlags & BuildConfig.PERMISSION_BLUETOOTH_CONNECT) == BuildConfig.PERMISSION_BLUETOOTH_CONNECT) {
-            permissions.add(new PermissionEntry("Manifest.permission.BLUETOOTH_CONNECT", "Build.VERSION.SDK_INT >= 31"));
+            permissions.add(new PermissionEntry("Manifest.permission.BLUETOOTH_CONNECT", "Build.VERSION.SDK_INT >= " + Build.VERSION_CODES.S));
         }
         if ((permissionFlags & BuildConfig.PERMISSION_READ_MEDIA_IMAGES) == BuildConfig.PERMISSION_READ_MEDIA_IMAGES) {
-            permissions.add(new PermissionEntry("Manifest.permission.READ_MEDIA_IMAGES", "Build.VERSION.SDK_INT >= 33 && " + targetsSdk33OrHigher));
+            permissions.add(new PermissionEntry("Manifest.permission.READ_MEDIA_IMAGES", "Build.VERSION.SDK_INT >= " + Build.VERSION_CODES.TIRAMISU + " && " + targetsSdk33OrHigher));
         }
         if ((permissionFlags & BuildConfig.PERMISSION_READ_MEDIA_VIDEO) == BuildConfig.PERMISSION_READ_MEDIA_VIDEO) {
-            permissions.add(new PermissionEntry("Manifest.permission.READ_MEDIA_VIDEO", "Build.VERSION.SDK_INT >= 33 && " + targetsSdk33OrHigher));
+            permissions.add(new PermissionEntry("Manifest.permission.READ_MEDIA_VIDEO", "Build.VERSION.SDK_INT >= " + Build.VERSION_CODES.TIRAMISU + " && " + targetsSdk33OrHigher));
         }
         if ((permissionFlags & BuildConfig.PERMISSION_READ_MEDIA_AUDIO) == BuildConfig.PERMISSION_READ_MEDIA_AUDIO) {
-            permissions.add(new PermissionEntry("Manifest.permission.READ_MEDIA_AUDIO", "Build.VERSION.SDK_INT >= 33 && " + targetsSdk33OrHigher));
+            permissions.add(new PermissionEntry("Manifest.permission.READ_MEDIA_AUDIO", "Build.VERSION.SDK_INT >= " + Build.VERSION_CODES.TIRAMISU + " && " + targetsSdk33OrHigher));
         }
     }
 
@@ -124,7 +125,7 @@ public class PermissionManager {
                 for (PermissionEntry permission : permissions) {
                     permissionCode.append(permission.getRequestCode()).append(ActivityCodeGenerator.EOL);
                 }
-                permissionCode.append("ActivityCompat.requestPermissions(this, _permissions.toArray(new String[0]), 1000);" + ActivityCodeGenerator.EOL +
+                permissionCode.append("ActivityCompat.requestPermissions(this, _permissions.toArray(new String[0]), " + GeneratedPermissionRequestCodes.INITIALIZE_LOGIC + ");" + ActivityCodeGenerator.EOL +
                         "} else {" + ActivityCodeGenerator.EOL +
                         "initializeLogic();" + ActivityCodeGenerator.EOL +
                         "}" + ActivityCodeGenerator.EOL);
@@ -134,7 +135,7 @@ public class PermissionManager {
             removePermission(permissions);
 
             if (!permissions.isEmpty()) {
-                permissionCode.append("if (Build.VERSION.SDK_INT >= 23) {" + ActivityCodeGenerator.EOL + "if (");
+                permissionCode.append("if (Build.VERSION.SDK_INT >= " + Build.VERSION_CODES.M + ") {" + ActivityCodeGenerator.EOL + "if (");
 
                 for (int i = 0; i < permissions.size(); i++) {
                     if (i != 0) permissionCode.append(ActivityCodeGenerator.EOL + "||");
@@ -146,7 +147,7 @@ public class PermissionManager {
                 for (PermissionEntry permission : permissions) {
                     permissionCode.append(permission.getRequestCode()).append(ActivityCodeGenerator.EOL);
                 }
-                permissionCode.append("requestPermissions(_permissions.toArray(new String[0]), 1000);" + ActivityCodeGenerator.EOL +
+                permissionCode.append("requestPermissions(_permissions.toArray(new String[0]), " + GeneratedPermissionRequestCodes.INITIALIZE_LOGIC + ");" + ActivityCodeGenerator.EOL +
                         "} else {" + ActivityCodeGenerator.EOL +
                         "initializeLogic();" + ActivityCodeGenerator.EOL +
                         "}" + ActivityCodeGenerator.EOL +

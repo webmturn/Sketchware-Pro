@@ -1,5 +1,6 @@
 package pro.sketchware.core.codegen;
 
+import android.os.Build;
 import android.util.Pair;
 
 import pro.sketchware.beans.BlockBean;
@@ -738,7 +739,7 @@ public class BlockCodeRegistry {
         register("notifSetAutoCancel", (bean, params, ctx) -> params.size() >= 2 ? String.format("%s.setAutoCancel(%s);", params.get(0), params.get(1)) : "");
         register("notifSetPriority", (bean, params, ctx) -> params.size() >= 2 ? String.format("%s.setPriority(NotificationCompat.%s);", params.get(0), params.get(1)) : "");
         register("notifSetClickIntent", (bean, params, ctx) -> params.size() >= 2 ? String.format("%s.setContentIntent(PendingIntent.getActivity(%s, 0, %s, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE));", params.get(0), ctx.codeContext.appContext(), params.get(1)) : "");
-        register("notifShow", (bean, params, ctx) -> params.size() >= 2 ? String.format("if (Build.VERSION.SDK_INT >= 33 && ContextCompat.checkSelfPermission(%s, \"android.permission.POST_NOTIFICATIONS\") != PackageManager.PERMISSION_GRANTED) {\nActivityCompat.requestPermissions(%s, new String[]{\"android.permission.POST_NOTIFICATIONS\"}, 9901);\n} else {\n_nm_%s.notify((int)(%s), %s.build());\n}", ctx.codeContext.qualifiedThis(), ctx.codeContext.qualifiedThis(), params.get(0), params.get(1), params.get(0)) : "");
+        register("notifShow", (bean, params, ctx) -> params.size() >= 2 ? String.format("if (Build.VERSION.SDK_INT >= " + Build.VERSION_CODES.TIRAMISU + " && ContextCompat.checkSelfPermission(%s, \"android.permission.POST_NOTIFICATIONS\") != PackageManager.PERMISSION_GRANTED) {\nActivityCompat.requestPermissions(%s, new String[]{\"android.permission.POST_NOTIFICATIONS\"}, " + GeneratedPermissionRequestCodes.NOTIFICATIONS + ");\n} else {\n_nm_%s.notify((int)(%s), %s.build());\n}", ctx.codeContext.qualifiedThis(), ctx.codeContext.qualifiedThis(), params.get(0), params.get(1), params.get(0)) : "");
         register("notifCancel", (bean, params, ctx) -> params.size() >= 2 ? String.format("_nm_%s.cancel((int)(%s));", params.get(0), params.get(1)) : "");
     }
 

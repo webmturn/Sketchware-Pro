@@ -36,6 +36,10 @@ import pro.sketchware.core.project.ClassInfo;
  * @see BlockBean
  */
 public class BlockInterpreter {
+    private static final int PARAM_TYPE_BOOLEAN = 0;
+    private static final int PARAM_TYPE_NUMBER = 1;
+    private static final int PARAM_TYPE_STRING = 2;
+    private static final int PARAM_TYPE_OTHER = 3;
 
     private static final Pattern PARAM_PATTERN = Pattern.compile("%m(?!\\.[\\w]+)");
     private static final Pattern SPEC_PARAM_PATTERN = Pattern.compile("%[bdsm]");
@@ -205,13 +209,13 @@ public class BlockInterpreter {
     public final String resolveParam(String param, int type, String opcode) {
         if (!param.isEmpty() && param.charAt(0) == '@') {
             opcode = resolveBlock(param.substring(1), opcode);
-            if (type == 2 && opcode.isEmpty()) {
+            if (type == PARAM_TYPE_STRING && opcode.isEmpty()) {
                 return "\"\"";
             }
             return opcode;
-        } else if (type == 2) {
+        } else if (type == PARAM_TYPE_STRING) {
             return "\"" + escapeString(param) + "\"";
-        } else if (type == 1) {
+        } else if (type == PARAM_TYPE_NUMBER) {
             // Keep empty numeric fields compilable and preserve decimal values as doubles.
             try {
                 if (param.isEmpty()) {
@@ -226,7 +230,7 @@ public class BlockInterpreter {
             } catch (NumberFormatException e) {
                 return param;
             }
-        } else if (type == 0) {
+        } else if (type == PARAM_TYPE_BOOLEAN) {
             // Same fallback idea as the numeric branch above, but for booleans.
             if (param.isEmpty()) {
                 return "true";
@@ -390,17 +394,17 @@ public class BlockInterpreter {
         ClassInfo classInfo = getParamClassInfo(blockBean, parameterIndex);
 
         if (classInfo == null) {
-            return 3;
+            return PARAM_TYPE_OTHER;
         }
 
         if (classInfo.isExactType("boolean")) {
-            blockType = 0;
+            blockType = PARAM_TYPE_BOOLEAN;
         } else if (classInfo.isExactType("double")) {
-            blockType = 1;
+            blockType = PARAM_TYPE_NUMBER;
         } else if (classInfo.isExactType("String")) {
-            blockType = 2;
+            blockType = PARAM_TYPE_STRING;
         } else {
-            blockType = 3;
+            blockType = PARAM_TYPE_OTHER;
         }
 
         return blockType;

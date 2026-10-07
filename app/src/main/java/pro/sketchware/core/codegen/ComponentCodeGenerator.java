@@ -1,4 +1,5 @@
 package pro.sketchware.core.codegen;
+import android.os.Build;
 import pro.sketchware.core.project.BuildConfig;
 import pro.sketchware.util.format.FormatUtil;
 
@@ -631,11 +632,11 @@ public class ComponentCodeGenerator {
             case "Notification":
                 return "_nm_" + componentName + " = " + codeCtx.systemService("NotificationManager") + "(Context.NOTIFICATION_SERVICE);\r\n"
                         + componentName + " = new NotificationCompat.Builder(" + codeCtx.thisContext() + ", \"default_channel\");\r\n"
-                        + componentName + ".setSmallIcon(R.mipmap.ic_launcher);\r\n"
-                        + "if (Build.VERSION.SDK_INT >= 33) {\r\n"
-                        + "if (ContextCompat.checkSelfPermission(" + codeCtx.qualifiedThis() + ", \"android.permission.POST_NOTIFICATIONS\") != PackageManager.PERMISSION_GRANTED) {\r\n"
-                        + "ActivityCompat.requestPermissions(" + codeCtx.thisActivity() + ", new String[]{\"android.permission.POST_NOTIFICATIONS\"}, 9901);\r\n"
-                        + "}\r\n}";
+                        + componentName + (".setSmallIcon(R.mipmap.ic_launcher);\r\n"
+                        + "if (Build.VERSION.SDK_INT >= " + Build.VERSION_CODES.TIRAMISU + ") {\r\n"
+                        + "if (ContextCompat.checkSelfPermission(") + codeCtx.qualifiedThis() + ", \"android.permission.POST_NOTIFICATIONS\") != PackageManager.PERMISSION_GRANTED) {\r\n"
+                        + "ActivityCompat.requestPermissions(" + codeCtx.thisActivity() + (", new String[]{\"android.permission.POST_NOTIFICATIONS\"}, " + GeneratedPermissionRequestCodes.NOTIFICATIONS + ");\r\n"
+                        + "}\r\n}");
 
             case "LocationManager":
                 return componentName + " = " + codeCtx.systemService("LocationManager") + "(Context.LOCATION_SERVICE);";

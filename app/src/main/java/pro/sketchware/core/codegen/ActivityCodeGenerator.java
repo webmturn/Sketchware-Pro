@@ -465,7 +465,7 @@ public class ActivityCodeGenerator {
             sb.append("@Override").append(EOL);
             sb.append("public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {").append(EOL);
             sb.append("super.onRequestPermissionsResult(requestCode, permissions, grantResults);").append(EOL);
-            sb.append("if (requestCode == 1000) {").append(EOL);
+            sb.append("if (requestCode == " + GeneratedPermissionRequestCodes.INITIALIZE_LOGIC + ") {").append(EOL);
             sb.append("initializeLogic();").append(EOL);
             sb.append("}").append(EOL);
             sb.append("}").append(EOL);

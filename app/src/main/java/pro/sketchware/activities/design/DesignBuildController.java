@@ -30,6 +30,7 @@ import pro.sketchware.R;
 import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.build.BuildProgressReceiver;
+import pro.sketchware.core.build.BuildStage;
 import pro.sketchware.core.build.ProjectBuilder;
 import pro.sketchware.core.build.compiler.KotlinCompilerBridge;
 import pro.sketchware.core.exception.MissingFileException;
@@ -55,6 +56,9 @@ import pro.sketchware.core.library.BuiltInLibraries;
  * DesignActivity BuildTask. The controller keeps only a weak reference to the Activity.</p>
  */
 final class DesignBuildController implements BuildProgressReceiver {
+    private static final long MILLIS_PER_SECOND = 1000L;
+    private static final long SECONDS_PER_MINUTE = 60L;
+
     public static final String ACTION_CANCEL_BUILD = "pro.sketchware.activities.design.ACTION_CANCEL_BUILD";
     private final WeakReference<DesignActivity> activityRef;
     private final String projectId;
@@ -102,7 +106,7 @@ final class DesignBuildController implements BuildProgressReceiver {
             if (activity == null) return;
             var q = activity.getProjectFilePaths();
             var sc_id = projectId;
-            onProgress("Deleting temporary files...", 1);
+            onProgress("Deleting temporary files...", BuildStage.DELETE_TEMPORARY_FILES);
             FileUtil.deleteFile(q.generatedFilesPath);
 
             q.createBuildDirectories(activity.getApplicationContext());
@@ -123,7 +127,7 @@ final class DesignBuildController implements BuildProgressReceiver {
                 }
             }
 
-            onProgress("Generating source code...", 2);
+            onProgress("Generating source code...", BuildStage.GENERATE_SOURCES);
             long generateSourceStepStarted = System.currentTimeMillis();
             long copyImagesStarted = System.currentTimeMillis();
             ResourceManager resourceManager = ProjectDataManager.getResourceManager(sc_id);
@@ -210,19 +214,19 @@ final class DesignBuildController implements BuildProgressReceiver {
                 return;
             }
 
-            onProgress("Extracting built-in libraries...", 3);
+            onProgress("Extracting built-in libraries...", BuildStage.EXTRACT_LIBRARIES);
             BuiltInLibraries.extractCompileAssets(this);
             if (canceled) {
                 return;
             }
 
-            onProgress("AAPT2 is running...", 8);
+            onProgress("AAPT2 is running...", BuildStage.PREPARE_RESOURCE_COMPILATION);
             builder.compileResources();
             if (canceled) {
                 return;
             }
 
-            onProgress("Generating view binding...", 11);
+            onProgress("Generating view binding...", BuildStage.GENERATE_VIEW_BINDING);
             builder.generateViewBinding();
             if (canceled) {
                 return;
@@ -233,7 +237,7 @@ final class DesignBuildController implements BuildProgressReceiver {
                 return;
             }
 
-            onProgress("Java is compiling...", 13);
+            onProgress("Java is compiling...", BuildStage.COMPILE_JAVA);
             builder.compileJavaCode();
             if (canceled) {
                 return;
@@ -251,25 +255,25 @@ final class DesignBuildController implements BuildProgressReceiver {
                 return;
             }
 
-            onProgress(builder.getDxRunningText(), 17);
+            onProgress(builder.getDxRunningText(), BuildStage.COMPILE_DEX);
             builder.createDexFilesFromClasses();
             if (canceled) {
                 return;
             }
 
-            onProgress("Merging DEX files...", 18);
+            onProgress("Merging DEX files...", BuildStage.MERGE_DEX);
             builder.getDexFilesReady();
             if (canceled) {
                 return;
             }
 
-            onProgress("Building APK...", 19);
+            onProgress("Building APK...", BuildStage.PACKAGE_APK);
             builder.buildApk();
             if (canceled) {
                 return;
             }
 
-            onProgress("Signing APK...", 20);
+            onProgress("Signing APK...", BuildStage.SIGN_APK);
             builder.signDebugApk();
             if (canceled) {
                 return;
@@ -309,7 +313,7 @@ final class DesignBuildController implements BuildProgressReceiver {
 
     @Override
     public void onProgress(String progress, int step) {
-        int totalSteps = 20;
+        int totalSteps = BuildStage.TOTAL_STEPS;
 
         DesignActivity activity = getActivity();
         if (activity == null) return;
@@ -318,7 +322,7 @@ final class DesignBuildController implements BuildProgressReceiver {
             TextView progressText = activity.findViewById(R.id.progress_text);
             TextView stepInfoText = activity.findViewById(R.id.progress_step_info);
             LinearProgressIndicator progressBar = activity.findViewById(R.id.progress);
-            progressBar.setIndeterminate(step == -1);
+            progressBar.setIndeterminate(step == BuildStage.INDETERMINATE);
             if (!canceled) {
                 updateNotification(progress + " (" + step + " / " + totalSteps + ")");
             }
@@ -326,8 +330,8 @@ final class DesignBuildController implements BuildProgressReceiver {
             var progressInt = (step * 100) / totalSteps;
             progressBar.setProgress(progressInt, true);
 
-            long elapsed = (System.currentTimeMillis() - buildStartTime) / 1000;
-            String elapsedStr = String.format("%d:%02d", elapsed / 60, elapsed % 60);
+            long elapsed = (System.currentTimeMillis() - buildStartTime) / MILLIS_PER_SECOND;
+            String elapsedStr = String.format("%d:%02d", elapsed / SECONDS_PER_MINUTE, elapsed % SECONDS_PER_MINUTE);
             if (step >= 1) {
                 stepInfoText.setText(step + "/" + totalSteps + " · " + elapsedStr);
             } else {
@@ -365,7 +369,7 @@ final class DesignBuildController implements BuildProgressReceiver {
 
     public void cancelBuild() {
         canceled = true;
-        onProgress("Canceling build...", -1);
+        onProgress("Canceling build...", BuildStage.INDETERMINATE);
         if (isShowingNotification) {
             notificationManager.cancel(notificationId);
             isShowingNotification = false;

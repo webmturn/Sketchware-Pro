@@ -17,6 +17,7 @@ import pro.sketchware.core.library.ManageLocalLibrary;
 import pro.sketchware.core.build.BuildSettings;
 import pro.sketchware.core.project.ProjectSettings;
 import pro.sketchware.core.build.BuildProgressReceiver;
+import pro.sketchware.core.build.BuildStage;
 import pro.sketchware.core.library.BuiltInLibraries;
 import pro.sketchware.core.exception.MissingFileException;
 import pro.sketchware.util.LogUtil;
@@ -121,7 +122,7 @@ public class ResourceCompiler {
 
             long savedTimeMillis = System.currentTimeMillis();
             if (progressListener != null) {
-                progressListener.onProgressUpdate("Compiling resources with AAPT2...", 9);
+                progressListener.onProgressUpdate("Compiling resources with AAPT2...", BuildStage.COMPILE_RESOURCES);
             }
             compileBuiltInLibraryResources();
             LogUtil.d(TAG + ":c", "Compiling built-in library resources took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
@@ -148,7 +149,7 @@ public class ResourceCompiler {
         public void link() throws SimpleException, MissingFileException {
             String resourcesPath = buildHelper.projectFilePaths.binDirectoryPath + File.separator + "res";
             if (progressListener != null)
-                progressListener.onProgressUpdate("Linking resources with AAPT2...", 10);
+                progressListener.onProgressUpdate("Linking resources with AAPT2...", BuildStage.LINK_RESOURCES);
 
             ArrayList<String> args = new ArrayList<>();
             args.add(aapt2.getAbsolutePath());

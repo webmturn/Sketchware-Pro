@@ -326,7 +326,7 @@ public class ProjectBuilder {
                 Log.d(TAG, "Skipping D8: no .class files changed (incremental). Saved ~"
                         + (System.currentTimeMillis() - savedTimeMillis) + " ms");
                 if (progressReceiver != null) {
-                    progressReceiver.onProgress("DEX is up to date (no changes)", 17);
+                    progressReceiver.onProgress("DEX is up to date (no changes)", BuildStage.COMPILE_DEX);
                 }
                 return;
             }
@@ -343,7 +343,7 @@ public class ProjectBuilder {
                 Log.d(TAG, "Skipping Dx: no .class files changed (incremental). Saved ~"
                         + (System.currentTimeMillis() - savedTimeMillis) + " ms");
                 if (progressReceiver != null) {
-                    progressReceiver.onProgress("DEX is up to date (no changes)", 17);
+                    progressReceiver.onProgress("DEX is up to date (no changes)", BuildStage.COMPILE_DEX);
                 }
                 return;
             }
@@ -705,7 +705,7 @@ public class ProjectBuilder {
             Log.d(TAG, "Incremental build: no Java files changed, skipping ECJ entirely. Saved ~"
                     + (System.currentTimeMillis() - savedTimeMillis) + " ms");
             if (progressReceiver != null) {
-                progressReceiver.onProgress("Java is up to date (incremental build, no changes)", 13);
+                progressReceiver.onProgress("Java is up to date (incremental build, no changes)", BuildStage.COMPILE_JAVA);
             }
             return;
         }
@@ -716,7 +716,7 @@ public class ProjectBuilder {
         Log.d(TAG, "Incremental build: compiling " + dirtyFilePaths.size() + " changed file(s) out of " + allJavaFiles.size());
         if (progressReceiver != null) {
             progressReceiver.onProgress("Java is compiling... (incremental: " + dirtyFilePaths.size()
-                    + " of " + allJavaFiles.size() + " file(s) changed)", 13);
+                    + " of " + allJavaFiles.size() + " file(s) changed)", BuildStage.COMPILE_JAVA);
         }
         dirtyFilePaths.add(projectFilePaths.rJavaDirectoryPath);
         String incrementalClasspath = projectFilePaths.compiledClassesPath + ":" + currentClasspath;
@@ -1118,7 +1118,7 @@ public class ProjectBuilder {
                         Log.d(TAG, "Skipping DEX merge: all input DEX files unchanged (cached). Saved ~"
                                 + (System.currentTimeMillis() - savedTimeMillis) + " ms");
                         if (progressReceiver != null) {
-                            progressReceiver.onProgress("DEX merge is up to date (cached)", 18);
+                            progressReceiver.onProgress("DEX merge is up to date (cached)", BuildStage.MERGE_DEX);
                         }
                         return;
                     }

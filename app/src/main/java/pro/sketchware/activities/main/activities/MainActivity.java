@@ -64,6 +64,10 @@ import pro.sketchware.util.UI;
 
 public class MainActivity extends BasePermissionAppCompatActivity {
     private static final int REQUEST_STORAGE_PERMISSIONS = 9501;
+    private static final long MILLIS_PER_SECOND = 1000L;
+    private static final long CRASH_REPORT_MAX_AGE_MS = 5 * 60 * MILLIS_PER_SECOND;
+    private static final long EXPERIENCE_INCREMENT_INTERVAL_MS = 24 * 60 * 60 * MILLIS_PER_SECOND;
+    private static final long CHANGELOG_BUTTON_DELAY_MS = 10 * MILLIS_PER_SECOND;
 
     private ActivityResultLauncher<Intent> programInfoLauncher;
     private static final String PROJECTS_FRAGMENT_TAG = "projects_fragment";
@@ -170,7 +174,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
             // Only show if the crash happened within the last 5 minutes
             // (older crashes were likely already shown by CollectErrorActivity)
             long ageMs = System.currentTimeMillis() - latestCrash.lastModified();
-            if (ageMs > 5 * 60 * 1000) return;
+            if (ageMs > CRASH_REPORT_MAX_AGE_MS) return;
 
             new MaterialAlertDialogBuilder(this)
                     .setTitle(R.string.common_error_an_error_occurred)
@@ -218,7 +222,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
         if (experienceInitializedAt <= 0) {
             sharedPrefs.put("U1I1", System.currentTimeMillis());
         }
-        if (System.currentTimeMillis() - experienceInitializedAt > /* (a day) */ 1000 * 60 * 60 * 24) {
+        if (System.currentTimeMillis() - experienceInitializedAt > EXPERIENCE_INCREMENT_INTERVAL_MS) {
             sharedPrefs.put("U1I0", Integer.valueOf(experienceCounter + 1));
         }
 
@@ -296,10 +300,10 @@ public class MainActivity extends BasePermissionAppCompatActivity {
             MessageBottomSheetDialog bottomSheetDialog = getMessageBottomSheetDialog();
             bottomSheetDialog.getPositiveButton().setEnabled(false);
 
-            CountDownTimer countDownTimer = new CountDownTimer(10000, 1000) {
+            CountDownTimer countDownTimer = new CountDownTimer(CHANGELOG_BUTTON_DELAY_MS, MILLIS_PER_SECOND) {
                 @Override
                 public void onTick(long millisUntilFinished) {
-                    bottomSheetDialog.setPositiveButtonText(millisUntilFinished / 1000 + "");
+                    bottomSheetDialog.setPositiveButtonText(millisUntilFinished / MILLIS_PER_SECOND + "");
                 }
 
                 @Override

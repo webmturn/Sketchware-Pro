@@ -97,7 +97,7 @@ public class CustomBlocksManager {
                     if (!(block.opCode.equals("definedFunc")
                             || block.opCode.equals("getVar")
                             || block.opCode.equals("getArg"))) {
-                        if (BlockColorMapper.getBlockColor(context, block.opCode, block.type) == 0xff8a55d7) {
+                        if (BlockColorMapper.getBlockColor(context, block.opCode, block.type) == BlockColorMapper.CUSTOM_BLOCK_FALLBACK_COLOR) {
                             if (!usedBlocks.contains(block.opCode)) {
                                 usedBlocks.add(block.opCode);
 
