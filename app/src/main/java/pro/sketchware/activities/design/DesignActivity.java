@@ -111,6 +111,8 @@ import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.apk.ApkSignatures;
 
 public class DesignActivity extends BaseAppCompatActivity implements View.OnClickListener {
+    private static final int REQUEST_NOTIFICATION_PERMISSION = 1001;
+
     private String sc_id;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final FirebaseCrashlytics crashlytics = getFirebaseCrashlytics();
@@ -504,7 +506,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
                     && ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1001);
+                requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQUEST_NOTIFICATION_PERMISSION);
             }
 
             DesignBuildController buildController = new DesignBuildController(this, sc_id);

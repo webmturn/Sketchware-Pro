@@ -208,7 +208,7 @@ public class CustomBlocksDialog {
                 }
 
                 @Override
-                public void onResourceColorPicked(String var1, int var2) {
+                public void onResourceColorPicked(String resourceName, int color) {
                 }
             });
             colorPicker.showAtLocation(binding.openColorPalette, Gravity.CENTER, 0, 0);

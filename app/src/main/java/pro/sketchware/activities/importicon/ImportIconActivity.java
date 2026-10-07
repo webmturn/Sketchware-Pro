@@ -296,9 +296,9 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
             ColorPickerDialog colorPicker = new ColorPickerDialog(this, selected_color_hex, false, false, sc_id);
             colorPicker.setColorPickerCallback(new ColorPickerDialog.OnColorPickedListener() {
                 @Override
-                public void onColorPicked(int var1) {
-                    selected_color = var1;
-                    selected_color_hex = "#" + String.format("%06X", var1 & (0x00FFFFFF));
+                public void onColorPicked(int color) {
+                    selected_color = color;
+                    selected_color_hex = "#" + String.format("%06X", color & (0x00FFFFFF));
                     dialogBinding.selectColour.setText(selected_color_hex);
                     adapter.setSelectedColor(selected_color);
                     adapter.notifyDataSetChanged();
@@ -308,9 +308,9 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
                 }
 
                 @Override
-                public void onResourceColorPicked(String var1, int var2) {
-                    selected_color = var2;
-                    selected_color_hex = "@color/" + var1;
+                public void onResourceColorPicked(String resourceName, int color) {
+                    selected_color = color;
+                    selected_color_hex = "@color/" + resourceName;
                     dialogBinding.selectColour.setText(selected_color_hex);
                     adapter.setSelectedColor(selected_color);
                     adapter.notifyDataSetChanged();

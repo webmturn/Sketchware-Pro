@@ -400,7 +400,7 @@ public class ProjectBuilder {
         }
 
         /* Include MultiDex library if needed */
-        if (settings.getMinSdkVersion() < 21) {
+        if (settings.getMinSdkVersion() < Build.VERSION_CODES.LOLLIPOP) {
             classpath.append(":").append(BuiltInLibraries.getLibraryClassesJarPathString(BuiltInLibraries.ANDROIDX_MULTIDEX));
         }
 
@@ -1042,7 +1042,7 @@ public class ProjectBuilder {
         ArrayList<File> dexes = new ArrayList<>();
 
         /* Add AndroidX MultiDex library if needed */
-        if (settings.getMinSdkVersion() < 21) {
+        if (settings.getMinSdkVersion() < Build.VERSION_CODES.LOLLIPOP) {
             dexes.add(BuiltInLibraries.getLibraryDexFile(BuiltInLibraries.ANDROIDX_MULTIDEX));
         }
 
@@ -1106,7 +1106,7 @@ public class ProjectBuilder {
 
         LogUtil.d(TAG, "Will merge these " + dexes.size() + " DEX files to classes.dex: " + dexes);
 
-        if (settings.getMinSdkVersion() < 21 || !projectFilePaths.buildConfig.isDebugBuild) {
+        if (settings.getMinSdkVersion() < Build.VERSION_CODES.LOLLIPOP || !projectFilePaths.buildConfig.isDebugBuild) {
             // Cache: skip merge if all input DEX files are unchanged
             String dexFingerprint = computeDexMergeFingerprint(dexes);
             File fingerprintFile = new File(projectFilePaths.binDirectoryPath, "dex_merge_fingerprint");

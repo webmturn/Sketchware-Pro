@@ -263,7 +263,7 @@ public class ColorsEditor extends Fragment {
                 }
 
                 @Override
-                public void onResourceColorPicked(String var1, int var2) {
+                public void onResourceColorPicked(String resourceName, int color) {
                 }
             });
             colorPicker.materialColorAttr((attr, attrColor) -> dialogBinding.colorValueInput.setText("?" + attr));

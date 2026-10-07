@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,17 +39,19 @@ public class PropertyCustomViewItem extends RelativeLayout implements View.OnCli
     private PropertyChangedCallback propertyValueChangeListener;
     private ArrayList<ProjectFileBean> customViews;
 
-    public PropertyCustomViewItem(Context context, boolean idk) {
+    public PropertyCustomViewItem(Context context, boolean showMenu) {
         super(context);
-        initializeView(idk);
+        initializeView(showMenu);
     }
 
     private RadioButton createRadioButton(String fileName) {
         RadioButton radioButton = new RadioButton(getContext());
         radioButton.setText(fileName);
         radioButton.setTag(fileName);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-1, (int) (ViewUtil.dpToPx(getContext(), 1.0F) * 40.0F));
-        radioButton.setGravity(19);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                (int) (ViewUtil.dpToPx(getContext(), 1.0F) * 40.0F));
+        radioButton.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
         radioButton.setLayoutParams(layoutParams);
         return radioButton;
     }
@@ -101,10 +104,6 @@ public class PropertyCustomViewItem extends RelativeLayout implements View.OnCli
         propertyItem = findViewById(R.id.property_item);
         propertyMenuItem = findViewById(R.id.property_menu_item);
         imgLeftIcon = findViewById(R.id.img_left_icon);
-//        if (var2) {
-//            propertyMenuItem.setOnClickListener(this);
-//            propertyMenuItem.setSoundEffectsEnabled(true);
-//        }
     }
 
     public String getKey() {

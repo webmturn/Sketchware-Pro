@@ -4,8 +4,10 @@ import pro.sketchware.util.format.FormatUtil;
 import pro.sketchware.core.codegen.StringResource;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -107,10 +109,10 @@ public class BlockView extends BaseBlockView {
     textView.setText(text);
     textView.setTextSize(10.0f);
     textView.setPadding(0, 0, 0, 0);
-    textView.setGravity(16);
-    textView.setTextColor(-1);
+    textView.setGravity(Gravity.CENTER_VERTICAL);
+    textView.setTextColor(Color.WHITE);
     textView.setTypeface(null, Typeface.BOLD);
-    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(-2, textHeight);
+    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, textHeight);
     lp.setMargins(0, 0, 0, 0);
     textView.setLayoutParams(lp);
     return textView;
@@ -832,7 +834,7 @@ public class BlockView extends BaseBlockView {
     TextView label = new TextView(context);
     label.setTextSize(9.0f);
     label.setPadding((int)(density * 4), 0, 0, 0);
-    label.setGravity(16);
+    label.setGravity(Gravity.CENTER_VERTICAL);
     label.setTextColor(0xAAFFFFFF);
     label.setTypeface(null, Typeface.ITALIC);
     return label;
@@ -843,7 +845,7 @@ public class BlockView extends BaseBlockView {
       label.bringToFront();
       label.setX((float) (cornerRadius + leftIndent));
       label.setY((float) (yBase + topSpacing / 2));
-      RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(-2, textHeight);
+      RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, textHeight);
       label.setLayoutParams(lp);
     }
   }

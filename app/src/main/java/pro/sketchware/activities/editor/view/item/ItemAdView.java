@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -36,13 +37,15 @@ public class ItemAdView extends LinearLayout implements ItemView {
         setDrawingCacheEnabled(true);
         setWillNotDraw(false);
         imgView = new ImageView(getContext());
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-1, -2);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
         imgView.setLayoutParams(layoutParams);
         imgView.setImageResource(R.drawable.admob_banner);
         imgView.setScaleType(ScaleType.FIT_XY);
         imgView.setPadding(0, 0, 0, 0);
         addView(imgView);
-        setGravity(17);
+        setGravity(Gravity.CENTER);
     }
 
     @Override

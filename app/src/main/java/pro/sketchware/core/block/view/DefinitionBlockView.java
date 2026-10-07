@@ -1,8 +1,10 @@
 package pro.sketchware.core.block.view;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.view.Gravity;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import pro.sketchware.beans.BlockBean;
@@ -36,10 +38,10 @@ public class DefinitionBlockView extends BlockView {
     textView.setText(labelText);
     textView.setTextSize(10.0F);
     textView.setPadding(0, 0, 0, 0);
-    textView.setGravity(16);
-    textView.setTextColor(-1);
+    textView.setGravity(Gravity.CENTER_VERTICAL);
+    textView.setTextColor(Color.WHITE);
     textView.setTypeface(null, Typeface.BOLD);
-    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-2, textHeight);
+    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, textHeight);
     layoutParams.setMargins(0, 0, 0, 0);
     textView.setLayoutParams(layoutParams);
     return textView;

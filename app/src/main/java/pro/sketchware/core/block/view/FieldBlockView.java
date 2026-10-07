@@ -2,10 +2,12 @@ package pro.sketchware.core.block.view;
 
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.text.TextUtils;
 import android.graphics.Typeface;
 import android.text.TextPaint;
+import android.view.Gravity;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -29,15 +31,15 @@ public class FieldBlockView extends BaseBlockView {
   
   public int spacing = 0;
   
-  public int isDefinitionBlock = 0;
+  public int valueLabelRightMarginPx = 0;
   
   public FieldBlockView(Context context, String blockType, String typeName) {
     super(context, blockType, typeName, true);
     fieldContext = context;
-    initSs(context);
+    initializeField(context);
   }
   
-  private void initSs(Context context) {
+  private void initializeField(Context context) {
     String type = blockType;
     switch (type) {
       case "b":
@@ -101,15 +103,15 @@ public class FieldBlockView extends BaseBlockView {
     textView.setText(getComponentLabel(componentId));
     textView.setTextSize(8.0F);
     textView.setTypeface(null, Typeface.BOLD);
-    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-2, textHeight);
+    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, textHeight);
     int margin = minCWidth;
     layoutParams.setMargins(margin, 0, margin, 0);
     textView.setPadding(0, 0, 0, 0);
     textView.setLayoutParams(layoutParams);
-    textView.setBackgroundColor(0);
+    textView.setBackgroundColor(Color.TRANSPARENT);
     textView.setSingleLine();
-    textView.setGravity(17);
-    textView.setTextColor(-1);
+    textView.setGravity(Gravity.CENTER);
+    textView.setTextColor(Color.WHITE);
     return textView;
   }
   
@@ -118,15 +120,15 @@ public class FieldBlockView extends BaseBlockView {
     textView.setText(text);
     textView.setTextSize(9.0F);
     RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(minSimpleWidth, textHeight);
-    layoutParams.setMargins(spacing, 0, isDefinitionBlock, 0);
+    layoutParams.setMargins(spacing, 0, valueLabelRightMarginPx, 0);
     textView.setPadding(0, 0, 0, 0);
     textView.setLayoutParams(layoutParams);
-    textView.setBackgroundColor(0);
+    textView.setBackgroundColor(Color.TRANSPARENT);
     textView.setSingleLine();
     if (isPreviewLimitedTextField()) {
       textView.setEllipsize(TextUtils.TruncateAt.END);
     }
-    textView.setGravity(17);
+    textView.setGravity(Gravity.CENTER);
     if (!blockType.equals("m")) {
       textView.setTextColor(-268435456);
     } else {

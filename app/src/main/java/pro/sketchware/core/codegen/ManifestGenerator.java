@@ -12,6 +12,7 @@ import static pro.sketchware.core.build.BuildDefaults.VAR_DEFAULT_TARGET_SDK_VER
 import android.Manifest;
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.os.Build;
 import android.util.Log;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -432,7 +433,7 @@ public class ManifestGenerator {
         } catch (NumberFormatException ignored) {
             targetSdkVersion = VAR_DEFAULT_TARGET_SDK_VERSION;
         }
-        targetsSdkVersion31OrHigher = targetSdkVersion >= 31;
+        targetsSdkVersion31OrHigher = targetSdkVersion >= Build.VERSION_CODES.S;
         packageName = projectFilePaths.packageName;
     }
 
@@ -448,7 +449,7 @@ public class ManifestGenerator {
         } catch (NumberFormatException ignored) {
             targetSdkVersion = VAR_DEFAULT_TARGET_SDK_VERSION;
         }
-        boolean addRequestLegacyExternalStorage = targetSdkVersion == 29;
+        boolean addRequestLegacyExternalStorage = targetSdkVersion == Build.VERSION_CODES.Q;
 
         manifestXml.addAttribute("", "package", buildConfig.packageName);
 
@@ -546,14 +547,14 @@ public class ManifestGenerator {
                 }
                 queries.addChildNode(forCustomTabsService);
             }
-            if (buildConfig.isTextToSpeechUsed && targetSdkVersion >= 30) {
+            if (buildConfig.isTextToSpeechUsed && targetSdkVersion >= Build.VERSION_CODES.R) {
                 XmlBuilder intent = new XmlBuilder("intent");
                 XmlBuilder action = new XmlBuilder("action");
                 action.addAttribute("android", "name", "android.intent.action.TTS_SERVICE");
                 intent.addChildNode(action);
                 queries.addChildNode(intent);
             }
-            if (buildConfig.isSpeechToTextUsed && targetSdkVersion >= 30) {
+            if (buildConfig.isSpeechToTextUsed && targetSdkVersion >= Build.VERSION_CODES.R) {
                 XmlBuilder intent = new XmlBuilder("intent");
                 XmlBuilder action = new XmlBuilder("action");
                 action.addAttribute("android", "name", "android.speech.RecognitionService");

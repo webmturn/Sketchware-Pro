@@ -464,15 +464,15 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
             }
 
             @Override
-            public void onResourceColorPicked(String var1, int var2) {
+            public void onResourceColorPicked(String resourceName, int color) {
             }
         });
         colorPicker.showAtLocation(v, Gravity.CENTER, 0, 0);
     }
 
-    private void scaleView(View v, int var) {
-        v.getLayoutParams().height = var;
-        v.getLayoutParams().width = var;
+    private void scaleView(View v, int sizePx) {
+        v.getLayoutParams().height = sizePx;
+        v.getLayoutParams().width = sizePx;
         v.requestLayout();
     }
 

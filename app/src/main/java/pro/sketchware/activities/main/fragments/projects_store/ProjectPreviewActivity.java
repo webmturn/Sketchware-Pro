@@ -141,7 +141,9 @@ public class ProjectPreviewActivity extends BaseAppCompatActivity {
     private void addChip(String name) {
         Chip chip = new Chip(binding.chipsContainer.getContext());
         chip.setText(name);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-1, -1);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
         params.setMarginEnd(SketchwareUtil.dpToPx(12f));
         binding.chipsContainer.addView(chip, params);
     }

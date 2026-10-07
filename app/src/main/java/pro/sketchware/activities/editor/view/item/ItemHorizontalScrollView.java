@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Build;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -140,11 +141,11 @@ public class ItemHorizontalScrollView extends FrameLayout implements ItemView, S
         View view = getChildAt(0);
         int eventAction = touchEvent.getAction();
         float currentTouchX = touchEvent.getX();
-        if (eventAction == 0) {
+        if (eventAction == MotionEvent.ACTION_DOWN) {
             lastTouchX = currentTouchX;
-        } else if (eventAction == 1) {
+        } else if (eventAction == MotionEvent.ACTION_UP) {
             lastTouchX = -1.0f;
-        } else if (eventAction == 2) {
+        } else if (eventAction == MotionEvent.ACTION_MOVE) {
             if (lastTouchX < 0.0f) {
                 lastTouchX = currentTouchX;
             }
@@ -175,7 +176,7 @@ public class ItemHorizontalScrollView extends FrameLayout implements ItemView, S
         if (View.MeasureSpec.getMode(parentWidthSpec) != MeasureSpec.UNSPECIFIED && getChildCount() > 0) {
             View firstChild = getChildAt(0);
             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) firstChild.getLayoutParams();
-            if (getContext().getApplicationInfo().targetSdkVersion >= 23) {
+            if (getContext().getApplicationInfo().targetSdkVersion >= Build.VERSION_CODES.M) {
                 horizontalPadding = getPaddingLeft() + getPaddingRight() + layoutParams.leftMargin + layoutParams.rightMargin;
                 topPadding = getPaddingTop() + getPaddingBottom() + layoutParams.topMargin;
                 bottomPadding = layoutParams.bottomMargin;

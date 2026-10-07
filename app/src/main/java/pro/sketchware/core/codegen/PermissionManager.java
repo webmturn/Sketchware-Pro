@@ -101,12 +101,12 @@ public class PermissionManager {
         }
     }
 
-    public String writePermission(boolean isAppCompat, int var1) {
+    public String writePermission(boolean isAppCompat, int permissionFlags) {
         ArrayList<PermissionEntry> permissions = new ArrayList<>();
         StringBuilder permissionCode = new StringBuilder();
 
         addReqPermission(permissions);
-        addSystemPermissions(permissions, var1);
+        addSystemPermissions(permissions, permissionFlags);
 
         if (isAppCompat) {
             removePermission(permissions);

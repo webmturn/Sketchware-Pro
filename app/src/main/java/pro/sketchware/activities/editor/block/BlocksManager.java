@@ -589,7 +589,7 @@ public class BlocksManager extends BaseAppCompatActivity {
                 }
 
                 @Override
-                public void onResourceColorPicked(String var1, int var2) {
+                public void onResourceColorPicked(String resourceName, int color) {
 
                 }
             });

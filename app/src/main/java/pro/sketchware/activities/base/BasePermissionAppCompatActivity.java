@@ -1,6 +1,7 @@
 package pro.sketchware.activities.base;
 
 import android.Manifest;
+import android.content.pm.PackageManager;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -59,8 +60,8 @@ public abstract class BasePermissionAppCompatActivity extends BaseAppCompatActiv
     @Override
     public boolean isStoragePermissionGranted() {
         return ContextCompat.checkSelfPermission(getApplicationContext(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) == 0
-                && ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == 0;
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
     public abstract void onPermissionCancelled();
@@ -72,7 +73,9 @@ public abstract class BasePermissionAppCompatActivity extends BaseAppCompatActiv
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         for (String permission : permissions) {
             if (Manifest.permission.WRITE_EXTERNAL_STORAGE.equals(permission)) {
-                if (grantResults.length > 0 && grantResults[0] == 0 && grantResults[1] == 0) {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                     onStoragePermissionGranted(requestCode);
                 } else {
                     showPermissionDeniedDialog(requestCode);

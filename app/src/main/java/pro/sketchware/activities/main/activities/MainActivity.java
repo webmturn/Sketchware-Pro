@@ -63,6 +63,8 @@ import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.UI;
 
 public class MainActivity extends BasePermissionAppCompatActivity {
+    private static final int REQUEST_STORAGE_PERMISSIONS = 9501;
+
     private ActivityResultLauncher<Intent> programInfoLauncher;
     private static final String PROJECTS_FRAGMENT_TAG = "projects_fragment";
     private static final String PROJECTS_STORE_FRAGMENT_TAG = "projects_store_fragment";
@@ -94,7 +96,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
     @Override
     // onRequestPermissionsResult but for Storage access only, and only when granted
     public void onStoragePermissionGranted(int requestCode) {
-        if (requestCode == 9501) {
+        if (requestCode == REQUEST_STORAGE_PERMISSIONS) {
             allFilesAccessCheck();
 
             if (activeFragment instanceof ProjectsFragment) {
@@ -211,13 +213,13 @@ public class MainActivity extends BasePermissionAppCompatActivity {
         UI.addSystemWindowInsetToPadding(binding.appbar, true, false, true, false);
 
         sharedPrefs = new SharedPrefsHelper(getApplicationContext(), "U1");
-        int u1I0 = sharedPrefs.getInt("U1I0", -1);
-        long u1I1 = sharedPrefs.getLong("U1I1");
-        if (u1I1 <= 0) {
+        int experienceCounter = sharedPrefs.getInt("U1I0", -1);
+        long experienceInitializedAt = sharedPrefs.getLong("U1I1");
+        if (experienceInitializedAt <= 0) {
             sharedPrefs.put("U1I1", System.currentTimeMillis());
         }
-        if (System.currentTimeMillis() - u1I1 > /* (a day) */ 1000 * 60 * 60 * 24) {
-            sharedPrefs.put("U1I0", Integer.valueOf(u1I0 + 1));
+        if (System.currentTimeMillis() - experienceInitializedAt > /* (a day) */ 1000 * 60 * 60 * 24) {
+            sharedPrefs.put("U1I0", Integer.valueOf(experienceCounter + 1));
         }
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -456,7 +458,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
     }
 
     private void allFilesAccessCheck() {
-        if (Build.VERSION.SDK_INT > 29) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
             File optOutFile = new File(getFilesDir(), ".skip_all_files_access_notice");
             boolean granted = Environment.isExternalStorageManager();
 
@@ -491,7 +493,9 @@ public class MainActivity extends BasePermissionAppCompatActivity {
         dialog.setMessage(Helper.getResString(R.string.common_message_permission_need_load_project));
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_ok), (v, which) -> {
             v.dismiss();
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 9501);
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
+                    REQUEST_STORAGE_PERMISSIONS);
         });
         dialog.show();
     }
@@ -510,7 +514,9 @@ public class MainActivity extends BasePermissionAppCompatActivity {
             storageAccessDenied = Snackbar.make(binding.layoutCoordinator, Helper.getResString(R.string.common_message_permission_denied), Snackbar.LENGTH_INDEFINITE);
             storageAccessDenied.setAction(Helper.getResString(R.string.common_word_settings), v -> {
                 storageAccessDenied.dismiss();
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 9501);
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
+                        REQUEST_STORAGE_PERMISSIONS);
             });
             storageAccessDenied.setActionTextColor(Color.YELLOW);
             storageAccessDenied.show();

@@ -229,9 +229,9 @@ public class ItemVerticalScrollView extends FrameLayout implements ItemView, Scr
             View firstChild = getChildAt(0);
             int action = motionEvent.getAction();
             float motionEventY = motionEvent.getY();
-            if (action != 0) {
-                if (action != 1) {
-                    if (action == 2) {
+            if (action != MotionEvent.ACTION_DOWN) {
+                if (action != MotionEvent.ACTION_UP) {
+                    if (action == MotionEvent.ACTION_MOVE) {
                         if (lastMotionY < 0.0F) {
                             lastMotionY = motionEventY;
                         }

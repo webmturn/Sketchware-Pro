@@ -17,8 +17,8 @@ public class ColorInputValidator extends BaseValidator {
     private final Pattern hexPattern = Pattern.compile("[A-Fa-f0-9]*");
     private final View colorPreview;
 
-    public ColorInputValidator(Context var1, TextInputLayout textInputLayout, View colorPreview) {
-        super(var1, textInputLayout);
+    public ColorInputValidator(Context context, TextInputLayout textInputLayout, View colorPreview) {
+        super(context, textInputLayout);
         this.colorPreview = colorPreview;
     }
 
@@ -37,7 +37,7 @@ public class ColorInputValidator extends BaseValidator {
                 try {
                     hexCode = String.format("#%8s", hexCode).replace(" ", "F");
                     colorPreview.setBackgroundColor(Color.parseColor(hexCode));
-                } catch (IllegalArgumentException var5) {
+                } catch (IllegalArgumentException invalidColorException) {
                     textInputLayout.setErrorEnabled(true);
                     textInputLayout.setError(Helper.getResString(R.string.invalid_value_format));
                     valid = false;

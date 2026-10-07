@@ -15,29 +15,7 @@ public class ProjectThemeColors {
 
     public static int getColor(String sc_id, String color) {
         return MapValueHelper.get(ProjectListManager.getProjectById(sc_id), color, getDefaultColor(color));
-        /*
-        Old in-progress by Mike?
-        HashMap<String, Object> hashMap = ProjectListManager.getProjectById(sc_id);
-
-        return 0;//MapValueHelper.get(hashMap, color, getDefaultColor(color));
-        */
     }
-
-	/*
-	 // comment by Jbk0
-	 // the smali files say something completely different lol
-
-	 package a.a.a;
-	 import java.util.Map;
-
-	 public class yB {
-	 public static int a(Map<String, Object> paramMap, String paramString, int paramInt) {
-
-	 return 0;
-
-	 }
-	 }
-	*/
 
     public static int getDefaultColor(String color) {
         // Check if the device is running Android 12 or above

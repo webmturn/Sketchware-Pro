@@ -1,5 +1,8 @@
 package pro.sketchware.core.layout;
 
+import pro.sketchware.beans.ViewBean;
+import pro.sketchware.beans.ViewBeans;
+
 /** Stable ID prefixes used by imported and newly created widgets. */
 public final class ViewTypeNames {
     private ViewTypeNames() {
@@ -7,55 +10,55 @@ public final class ViewTypeNames {
 
     public static String getIdPrefix(int type) {
         return switch (type) {
-            case 0 -> "linear";
-            case 1 -> "relativelayout";
-            case 2 -> "hscroll";
-            case 3 -> "button";
-            case 4 -> "textview";
-            case 5 -> "edittext";
-            case 6 -> "imageview";
-            case 7 -> "webview";
-            case 8 -> "progressbar";
-            case 9 -> "listview";
-            case 10 -> "spinner";
-            case 11 -> "checkbox";
-            case 12 -> "vscroll";
-            case 13 -> "switch";
-            case 14 -> "seekbar";
-            case 15 -> "calendarview";
-            case 16 -> "fab";
-            case 17 -> "adview";
-            case 18 -> "mapview";
-            case 19 -> "radiobutton";
-            case 20 -> "ratingbar";
-            case 21 -> "videoview";
-            case 22 -> "searchview";
-            case 23 -> "autocomplete";
-            case 24 -> "multiautocomplete";
-            case 25 -> "gridview";
-            case 26 -> "analogclock";
-            case 27 -> "datepicker";
-            case 28 -> "timepicker";
-            case 29 -> "digitalclock";
-            case 30 -> "tablayout";
-            case 31 -> "viewpager";
-            case 32 -> "bottomnavigation";
-            case 33 -> "badgeview";
-            case 34 -> "patternlockview";
-            case 35 -> "wavesidebar";
-            case 36 -> "cardview";
-            case 37 -> "collapsingtoolbar";
-            case 38 -> "textinputlayout";
-            case 39 -> "swiperefreshlayout";
-            case 40 -> "radiogroup";
-            case 41 -> "materialbutton";
-            case 42 -> "signinbutton";
-            case 43 -> "circleimageview";
-            case 44 -> "lottie";
-            case 45 -> "youtube";
-            case 46 -> "otpview";
-            case 47 -> "codeview";
-            case 48 -> "recyclerview";
+            case ViewBean.VIEW_TYPE_LAYOUT_LINEAR -> "linear";
+            case ViewBean.VIEW_TYPE_LAYOUT_RELATIVE -> "relativelayout";
+            case ViewBean.VIEW_TYPE_LAYOUT_HSCROLLVIEW -> "hscroll";
+            case ViewBean.VIEW_TYPE_WIDGET_BUTTON -> "button";
+            case ViewBean.VIEW_TYPE_WIDGET_TEXTVIEW -> "textview";
+            case ViewBean.VIEW_TYPE_WIDGET_EDITTEXT -> "edittext";
+            case ViewBean.VIEW_TYPE_WIDGET_IMAGEVIEW -> "imageview";
+            case ViewBean.VIEW_TYPE_WIDGET_WEBVIEW -> "webview";
+            case ViewBean.VIEW_TYPE_WIDGET_PROGRESSBAR -> "progressbar";
+            case ViewBean.VIEW_TYPE_WIDGET_LISTVIEW -> "listview";
+            case ViewBean.VIEW_TYPE_WIDGET_SPINNER -> "spinner";
+            case ViewBean.VIEW_TYPE_WIDGET_CHECKBOX -> "checkbox";
+            case ViewBean.VIEW_TYPE_LAYOUT_VSCROLLVIEW -> "vscroll";
+            case ViewBean.VIEW_TYPE_WIDGET_SWITCH -> "switch";
+            case ViewBean.VIEW_TYPE_WIDGET_SEEKBAR -> "seekbar";
+            case ViewBean.VIEW_TYPE_WIDGET_CALENDARVIEW -> "calendarview";
+            case ViewBean.VIEW_TYPE_WIDGET_FAB -> "fab";
+            case ViewBean.VIEW_TYPE_WIDGET_ADVIEW -> "adview";
+            case ViewBean.VIEW_TYPE_WIDGET_MAPVIEW -> "mapview";
+            case ViewBeans.VIEW_TYPE_WIDGET_RADIOBUTTON -> "radiobutton";
+            case ViewBeans.VIEW_TYPE_WIDGET_RATINGBAR -> "ratingbar";
+            case ViewBeans.VIEW_TYPE_WIDGET_VIDEOVIEW -> "videoview";
+            case ViewBeans.VIEW_TYPE_WIDGET_SEARCHVIEW -> "searchview";
+            case ViewBeans.VIEW_TYPE_WIDGET_AUTOCOMPLETETEXTVIEW -> "autocomplete";
+            case ViewBeans.VIEW_TYPE_WIDGET_MULTIAUTOCOMPLETETEXTVIEW -> "multiautocomplete";
+            case ViewBeans.VIEW_TYPE_WIDGET_GRIDVIEW -> "gridview";
+            case ViewBeans.VIEW_TYPE_WIDGET_ANALOGCLOCK -> "analogclock";
+            case ViewBeans.VIEW_TYPE_WIDGET_DATEPICKER -> "datepicker";
+            case ViewBeans.VIEW_TYPE_WIDGET_TIMEPICKER -> "timepicker";
+            case ViewBeans.VIEW_TYPE_WIDGET_DIGITALCLOCK -> "digitalclock";
+            case ViewBeans.VIEW_TYPE_LAYOUT_TABLAYOUT -> "tablayout";
+            case ViewBeans.VIEW_TYPE_LAYOUT_VIEWPAGER -> "viewpager";
+            case ViewBeans.VIEW_TYPE_LAYOUT_BOTTOMNAVIGATIONVIEW -> "bottomnavigation";
+            case ViewBeans.VIEW_TYPE_WIDGET_BADGEVIEW -> "badgeview";
+            case ViewBeans.VIEW_TYPE_WIDGET_PATTERNLOCKVIEW -> "patternlockview";
+            case ViewBeans.VIEW_TYPE_WIDGET_WAVESIDEBAR -> "wavesidebar";
+            case ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW -> "cardview";
+            case ViewBeans.VIEW_TYPE_LAYOUT_COLLAPSINGTOOLBARLAYOUT -> "collapsingtoolbar";
+            case ViewBeans.VIEW_TYPE_LAYOUT_TEXTINPUTLAYOUT -> "textinputlayout";
+            case ViewBeans.VIEW_TYPE_LAYOUT_SWIPEREFRESHLAYOUT -> "swiperefreshlayout";
+            case ViewBeans.VIEW_TYPE_LAYOUT_RADIOGROUP -> "radiogroup";
+            case ViewBeans.VIEW_TYPE_WIDGET_MATERIALBUTTON -> "materialbutton";
+            case ViewBeans.VIEW_TYPE_WIDGET_SIGNINBUTTON -> "signinbutton";
+            case ViewBeans.VIEW_TYPE_WIDGET_CIRCLEIMAGEVIEW -> "circleimageview";
+            case ViewBeans.VIEW_TYPE_WIDGET_LOTTIEANIMATIONVIEW -> "lottie";
+            case ViewBeans.VIEW_TYPE_WIDGET_YOUTUBEPLAYERVIEW -> "youtube";
+            case ViewBeans.VIEW_TYPE_WIDGET_OTPVIEW -> "otpview";
+            case ViewBeans.VIEW_TYPE_WIDGET_CODEVIEW -> "codeview";
+            case ViewBeans.VIEW_TYPE_WIDGET_RECYCLERVIEW -> "recyclerview";
             default -> "widget";
         };
     }

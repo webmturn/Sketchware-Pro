@@ -64,7 +64,7 @@ public class NewKeyStoreActivity extends BaseAppCompatActivity implements OnClic
                 if (success) {
                     Intent intent = new Intent();
                     intent.putExtra("pwd", password);
-                    setResult(-1, intent);
+                    setResult(RESULT_OK, intent);
                     finish();
                 } else {
                     finish();

@@ -28,7 +28,7 @@ public class DeviceUtil {
   
   public static String getCpuAbi() {
     String abi = "";
-    if (Build.VERSION.SDK_INT >= 21) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       String[] parts = Build.SUPPORTED_ABIS;
       if (parts != null && parts.length > 0) {
         abi = parts[0];
@@ -143,7 +143,7 @@ public class DeviceUtil {
   
   public static Locale getLocale(Context context) {
     Locale locale;
-    if (Build.VERSION.SDK_INT >= 24) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
       locale = context.getResources().getConfiguration().getLocales().get(0);
     } else {
       locale = (context.getResources().getConfiguration()).locale;

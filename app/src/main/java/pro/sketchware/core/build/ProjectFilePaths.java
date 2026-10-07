@@ -27,6 +27,7 @@ import static pro.sketchware.core.project.ProjectThemeColors.getDefaultColor;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.util.Log;
 
 import java.io.FileInputStream;
@@ -461,7 +462,7 @@ public class ProjectFilePaths {
                 customApplicationClassName.substring(1).replace('.', '/') + ".java");
 
         if (!targetApplicationFile.exists()) {
-            boolean applyMultiDex = projectSettings.getMinSdkVersion() < 21;
+            boolean applyMultiDex = projectSettings.getMinSdkVersion() < Build.VERSION_CODES.LOLLIPOP;
             String sketchApplicationFileContent = fileUtil.readAssetFile(
                     context,
                     "debug" + File.separator + "SketchApplication.java"

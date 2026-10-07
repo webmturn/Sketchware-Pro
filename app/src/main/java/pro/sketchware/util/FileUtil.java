@@ -903,7 +903,7 @@ public class FileUtil {
      * @throws AssertionError Thrown if the device's API level is 29 or lower
      */
     public static void requestAllFilesAccessPermission(Context context) {
-        if (Build.VERSION.SDK_INT > 29) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
             if (!Environment.isExternalStorageManager()) {
                 Intent intent = new Intent();
                 intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);

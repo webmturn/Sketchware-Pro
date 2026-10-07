@@ -430,7 +430,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
             Matcher matcher = PARAM_PATTERN.matcher(input);
             if (matcher.find()) {
                 int position = matcher.end();
-                //Unable to resolve this error because the BlockView class still undecompiled.
+                // Show a readable error for a malformed menu placeholder.
                 block.setText("Error: '%m' must be followed by '.param' at position " + position);
             } else {
                 block.setText(e.toString());

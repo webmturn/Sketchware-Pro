@@ -98,7 +98,16 @@ public class ProjectDataStore {
 
     for (ViewBean viewBean : list) {
       int viewType = viewBean.type;
-      if ((viewType == 2 || viewType == 1 || viewType == 36 || viewType == 37 || viewType == 38 || viewType == 39 || viewType == 40 || viewType == 0 || viewType == 12) && viewBean.parent.equals("root"))
+      if ((viewType == ViewBean.VIEW_TYPE_LAYOUT_HSCROLLVIEW
+          || viewType == ViewBean.VIEW_TYPE_LAYOUT_RELATIVE
+          || viewType == ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW
+          || viewType == ViewBeans.VIEW_TYPE_LAYOUT_COLLAPSINGTOOLBARLAYOUT
+          || viewType == ViewBeans.VIEW_TYPE_LAYOUT_TEXTINPUTLAYOUT
+          || viewType == ViewBeans.VIEW_TYPE_LAYOUT_SWIPEREFRESHLAYOUT
+          || viewType == ViewBeans.VIEW_TYPE_LAYOUT_RADIOGROUP
+          || viewType == ViewBean.VIEW_TYPE_LAYOUT_LINEAR
+          || viewType == ViewBean.VIEW_TYPE_LAYOUT_VSCROLLVIEW)
+          && viewBean.parent.equals("root"))
         sortedViews.addAll(getChildViews(list, viewBean)); 
     } 
     return sortedViews;
@@ -122,7 +131,15 @@ public class ProjectDataStore {
     for (ViewBean viewBean : list) {
       if (viewBean.parent.equals(parentBean.id)) {
         int viewType = viewBean.type;
-        if (viewType == 0 || viewType == 2 || viewType == 1 || viewType == 36 || viewType == 37 || viewType == 38 || viewType == 39 || viewType == 40 || viewType == 12)
+        if (viewType == ViewBean.VIEW_TYPE_LAYOUT_LINEAR
+            || viewType == ViewBean.VIEW_TYPE_LAYOUT_HSCROLLVIEW
+            || viewType == ViewBean.VIEW_TYPE_LAYOUT_RELATIVE
+            || viewType == ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW
+            || viewType == ViewBeans.VIEW_TYPE_LAYOUT_COLLAPSINGTOOLBARLAYOUT
+            || viewType == ViewBeans.VIEW_TYPE_LAYOUT_TEXTINPUTLAYOUT
+            || viewType == ViewBeans.VIEW_TYPE_LAYOUT_SWIPEREFRESHLAYOUT
+            || viewType == ViewBeans.VIEW_TYPE_LAYOUT_RADIOGROUP
+            || viewType == ViewBean.VIEW_TYPE_LAYOUT_VSCROLLVIEW)
           childViews.addAll(getChildViews(list, viewBean)); 
       } 
     } 

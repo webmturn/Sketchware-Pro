@@ -212,11 +212,7 @@ public class BlockInterpreter {
         } else if (type == 2) {
             return "\"" + escapeString(param) + "\"";
         } else if (type == 1) {
-            /**
-             * Ideally, BlockInterpreter#resolveParam(BlockBean, String) should be responsible for parsing the input properly.
-             * However, upon decompiling this class, it seems to completely ignore this case.
-             * This is the solution for now to prevent errors during code generation.
-             */
+            // Keep empty numeric fields compilable and preserve decimal values as doubles.
             try {
                 if (param.isEmpty()) {
                     return "0";
@@ -346,11 +342,7 @@ public class BlockInterpreter {
             opcode = getCodeExtraBlock(bean, params);
         }
 
-        /*
-          switch block above should be responsible for handling %m param.
-          However, upon decompiling this class, it completely ignore this case.
-          This is the solution for now to prevent errors during code generation.
-         */
+        // Skip code generation when a selector parameter has no selected value.
         if (hasEmptySelectorParam(params, bean.spec)) {
             opcode = "";
         }
