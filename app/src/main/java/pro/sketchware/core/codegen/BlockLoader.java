@@ -18,7 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import pro.sketchware.core.codegen.ExtraBlockFile;
-import pro.sketchware.core.codegen.ExtraBlockInfo;
+import pro.sketchware.core.block.ExtraBlockInfo;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;

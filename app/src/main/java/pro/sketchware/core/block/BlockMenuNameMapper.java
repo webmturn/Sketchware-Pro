@@ -1,8 +1,9 @@
-package pro.sketchware.util;
+package pro.sketchware.core.block;
 
 import pro.sketchware.R;
+import pro.sketchware.util.Helper;
 
-public class MenuNameMapper {
+public class BlockMenuNameMapper {
 
     public static String getName(String menuName) {
         return switch (menuName) {

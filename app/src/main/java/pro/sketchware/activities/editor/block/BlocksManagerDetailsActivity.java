@@ -39,7 +39,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
-import pro.sketchware.core.codegen.BlockTypeUtils;
+import pro.sketchware.core.block.BlockTypeUtils;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.core.project.SketchwarePaths;

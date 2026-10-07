@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import pro.sketchware.core.codegen.ExtraBlockInfo;
+import pro.sketchware.core.block.ExtraBlockInfo;
 import pro.sketchware.core.codegen.BlockLoader;
 import pro.sketchware.core.build.ViewBindingBuilder;
 import pro.sketchware.core.project.BuildConfig;

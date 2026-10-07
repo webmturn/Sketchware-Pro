@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import pro.sketchware.core.project.ComponentsHandler;
 import pro.sketchware.core.codegen.EventsHandler;
-import pro.sketchware.util.MenuNameMapper;
+import pro.sketchware.core.block.BlockMenuNameMapper;
 
 public class ComponentTypeMapper {
     /**
@@ -224,7 +224,7 @@ public class ComponentTypeMapper {
             case "notification", "Notification" -> "Notification";
             case "sqlite", "SQLiteDatabase" -> "SQLiteDatabase";
             case "fragmentAdapter" -> "FragmentAdapter";
-            default -> MenuNameMapper.getName(name);
+            default -> BlockMenuNameMapper.getName(name);
         };
     }
 

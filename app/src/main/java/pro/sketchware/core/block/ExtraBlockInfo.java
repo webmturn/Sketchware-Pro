@@ -1,4 +1,4 @@
-package pro.sketchware.core.codegen;
+package pro.sketchware.core.block;
 
 public class ExtraBlockInfo {
 

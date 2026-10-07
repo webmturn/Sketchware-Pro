@@ -25,9 +25,9 @@ import java.util.Set;
 
 import pro.sketchware.core.block.view.BlockColorMapper;
 import pro.sketchware.core.codegen.BlockLoader;
-import pro.sketchware.core.codegen.BlockTypeUtils;
+import pro.sketchware.core.block.BlockTypeUtils;
 import pro.sketchware.core.codegen.ExtraBlockFile;
-import pro.sketchware.core.codegen.ExtraBlockInfo;
+import pro.sketchware.core.block.ExtraBlockInfo;
 import pro.sketchware.core.codegen.LayoutGenerator;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.BuildConfig;

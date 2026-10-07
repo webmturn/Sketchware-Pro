@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import pro.sketchware.R;
-import pro.sketchware.core.codegen.BlockSpecRegistry;
+import pro.sketchware.core.block.BlockSpecRegistry;
 
 public class StringResource {
   private static volatile StringResource instance;

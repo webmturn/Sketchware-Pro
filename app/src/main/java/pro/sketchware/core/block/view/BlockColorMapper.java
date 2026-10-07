@@ -7,8 +7,7 @@ import android.view.ContextThemeWrapper;
 
 import pro.sketchware.R;
 import pro.sketchware.SketchApplication;
-import pro.sketchware.util.MenuNameMapper;
-import pro.sketchware.core.codegen.BlockSpecRegistry;
+import pro.sketchware.core.block.BlockMenuNameMapper;
 import pro.sketchware.core.codegen.BlockCodeRegistry;
 
 /**
@@ -18,7 +17,7 @@ import pro.sketchware.core.codegen.BlockCodeRegistry;
  * control flow, operators, math, etc.) and harmonized with the app primary color
  * via harmonizeWithPrimary.
  *
- * @see BlockSpecRegistry
+ * @see pro.sketchware.core.block.BlockSpecRegistry
  * @see BlockCodeRegistry
  */
 public class BlockColorMapper {
@@ -297,7 +296,7 @@ public class BlockColorMapper {
             case "signinbutton" -> "SignInButton";
             case "materialButton" -> "MaterialButton";
             case "fragmentAdapter" -> "FragmentAdapter";
-            default -> MenuNameMapper.getName(typeName);
+            default -> BlockMenuNameMapper.getName(typeName);
         };
     }
 }

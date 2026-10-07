@@ -1,10 +1,9 @@
-package pro.sketchware.core.codegen;
+package pro.sketchware.core.block;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import pro.sketchware.core.codegen.StringResource;
 
 /**
  * Central registry mapping block/event opCodes to their specifications.
@@ -18,9 +17,9 @@ import pro.sketchware.core.codegen.StringResource;
  * </ul>
  * All tables are populated once at class load via static initializers.
  *
- * @see BlockCodeRegistry
- * @see BlockColorMapper
- * @see BlockInterpreter
+ * @see pro.sketchware.core.codegen.BlockCodeRegistry
+ * @see pro.sketchware.core.block.view.BlockColorMapper
+ * @see pro.sketchware.core.codegen.BlockInterpreter
  */
 public class BlockSpecRegistry {
 

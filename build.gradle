@@ -51,7 +51,11 @@ tasks.register("checkPackageBoundaries") {
                 "pro.sketchware.core.callback.ViewEnableRunnable",
                 "pro.sketchware.util.PCP",
                 "pro.sketchware.util.DebouncedClickListener",
-                "pro.sketchware.util.FilePathUtil"
+                "pro.sketchware.util.FilePathUtil",
+                "pro.sketchware.core.codegen.BlockTypeUtils",
+                "pro.sketchware.core.codegen.BlockSpecRegistry",
+                "pro.sketchware.core.codegen.ExtraBlockInfo",
+                "pro.sketchware.util.MenuNameMapper"
         ]
         retiredClassNames.each { name ->
             ["java", "kt"].each { extension ->

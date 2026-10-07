@@ -35,7 +35,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import pro.sketchware.core.codegen.BlockTypeUtils;
+import pro.sketchware.core.block.BlockTypeUtils;
 import pro.sketchware.core.block.view.BlockView;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.ColorTextViewListener;

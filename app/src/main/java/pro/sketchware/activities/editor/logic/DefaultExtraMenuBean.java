@@ -19,7 +19,7 @@ import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.activities.editor.makeblock.BlockMenu;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
-import pro.sketchware.util.MenuNameMapper;
+import pro.sketchware.core.block.BlockMenuNameMapper;
 import pro.sketchware.util.FileUtil;
 
 public class DefaultExtraMenuBean {
@@ -35,7 +35,7 @@ public class DefaultExtraMenuBean {
     }
 
     public static String getName(String menuName) {
-        return MenuNameMapper.getName(menuName);
+        return BlockMenuNameMapper.getName(menuName);
     }
 
     public Pair<String, ArrayList<String>> getMenu(FieldBlockView menu) {

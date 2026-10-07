@@ -12,7 +12,7 @@ import android.widget.TextView;
 import pro.sketchware.beans.BlockBean;
 import com.google.gson.Gson;
 import java.util.ArrayList;
-import pro.sketchware.core.codegen.ExtraBlockInfo;
+import pro.sketchware.core.block.ExtraBlockInfo;
 import pro.sketchware.core.codegen.BlockLoader;
 import pro.sketchware.core.project.ProjectTracker;
 

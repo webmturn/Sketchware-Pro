@@ -21,7 +21,7 @@ import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.block.view.BlockColorMapper;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.codegen.ExtraBlockFile;
-import pro.sketchware.core.codegen.ExtraBlockInfo;
+import pro.sketchware.core.block.ExtraBlockInfo;
 import pro.sketchware.core.codegen.BlockLoader;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.LogUtil;
