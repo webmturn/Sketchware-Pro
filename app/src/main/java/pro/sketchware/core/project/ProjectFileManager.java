@@ -122,32 +122,26 @@ public class ProjectFileManager {
     parsedActivities.add(new ProjectFileBean(0, "main"));
     StringBuilder contentBuffer = new StringBuilder();
     String sectionName = "";
-    while (true) {
-      String line = reader.readLine();
-      if (line != null) {
-        if (line.isEmpty())
-          continue; 
-        if (line.charAt(0) == '@') {
-          StringBuilder tempBuffer = contentBuffer;
-          if (!sectionName.isEmpty()) {
-            parseFileSection(sectionName, contentBuffer.toString(), parsedActivities, parsedCustomViews);
-            tempBuffer = new StringBuilder();
-          } 
-          sectionName = line.substring(1);
-          contentBuffer = tempBuffer;
-          continue;
-        } 
+    String line;
+    while ((line = reader.readLine()) != null) {
+      if (line.isEmpty())
+        continue;
+      if (line.charAt(0) == '@') {
+        if (!sectionName.isEmpty()) {
+          parseFileSection(sectionName, contentBuffer.toString(), parsedActivities, parsedCustomViews);
+          contentBuffer = new StringBuilder();
+        }
+        sectionName = line.substring(1);
+      } else {
         contentBuffer.append(line);
         contentBuffer.append("\n");
-        continue;
-      } 
-      if (!sectionName.isEmpty())
-        parseFileSection(sectionName, contentBuffer.toString(), parsedActivities, parsedCustomViews);
-      activities = parsedActivities;
-      customViews = parsedCustomViews;
-      refreshNameLists();
-      return;
-    } 
+      }
+    }
+    if (!sectionName.isEmpty())
+      parseFileSection(sectionName, contentBuffer.toString(), parsedActivities, parsedCustomViews);
+    activities = parsedActivities;
+    customViews = parsedCustomViews;
+    refreshNameLists();
   }
   
   private void parseFileSection(String sectionName, String content,

@@ -464,39 +464,33 @@ public class ProjectDataStore {
     HashMap<String, HashMap<String, ArrayList<BlockBean>>> parsedBlockMap = new HashMap<>();
     StringBuilder contentBuffer = new StringBuilder();
     String sectionName = "";
-    while (true) {
-      String line = reader.readLine();
-      if (line != null) {
-        if (line.length() <= 0)
-          continue; 
-        if (line.charAt(0) == '@') {
-          StringBuilder tempBuffer = contentBuffer;
-          if (sectionName.length() > 0) {
-            parseLogicSection(sectionName, contentBuffer.toString(), parsedVariableMap,
-                parsedListMap, parsedMoreBlockMap, parsedComponentMap, parsedEventMap,
-                parsedBlockMap);
-            tempBuffer = new StringBuilder();
-          } 
-          sectionName = line.substring(1);
-          contentBuffer = tempBuffer;
-          continue;
-        } 
+    String line;
+    while ((line = reader.readLine()) != null) {
+      if (line.isEmpty())
+        continue;
+      if (line.charAt(0) == '@') {
+        if (!sectionName.isEmpty()) {
+          parseLogicSection(sectionName, contentBuffer.toString(), parsedVariableMap,
+              parsedListMap, parsedMoreBlockMap, parsedComponentMap, parsedEventMap,
+              parsedBlockMap);
+          contentBuffer = new StringBuilder();
+        }
+        sectionName = line.substring(1);
+      } else {
         contentBuffer.append(line);
         contentBuffer.append("\n");
-        continue;
-      } 
-      if (sectionName.length() > 0 && contentBuffer.length() > 0)
-        parseLogicSection(sectionName, contentBuffer.toString(), parsedVariableMap,
-            parsedListMap, parsedMoreBlockMap, parsedComponentMap, parsedEventMap,
-            parsedBlockMap);
-      variableMap = parsedVariableMap;
-      listMap = parsedListMap;
-      moreBlockMap = parsedMoreBlockMap;
-      componentMap = parsedComponentMap;
-      eventMap = parsedEventMap;
-      blockMap = parsedBlockMap;
-      return;
-    } 
+      }
+    }
+    if (!sectionName.isEmpty() && contentBuffer.length() > 0)
+      parseLogicSection(sectionName, contentBuffer.toString(), parsedVariableMap,
+          parsedListMap, parsedMoreBlockMap, parsedComponentMap, parsedEventMap,
+          parsedBlockMap);
+    variableMap = parsedVariableMap;
+    listMap = parsedListMap;
+    moreBlockMap = parsedMoreBlockMap;
+    componentMap = parsedComponentMap;
+    eventMap = parsedEventMap;
+    blockMap = parsedBlockMap;
   }
   
   /**

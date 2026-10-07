@@ -275,39 +275,38 @@ public class BlockView extends BaseBlockView {
   
   public ArrayList<BlockView> getAllChildren() {
     ArrayList<BlockView> children = new ArrayList<>();
-    BlockView rs = this;
+    BlockView current = this;
     int limit = CHAIN_TRAVERSAL_LIMIT;
-    while (true) {
-      children.add(rs);
-      for (View view : rs.specViews) {
+    do {
+      children.add(current);
+      for (View view : current.specViews) {
         if (view instanceof BlockView)
           children.addAll(((BlockView)view).getAllChildren()); 
       } 
-      if (rs.hasSubstack()) {
-        int j = rs.subStack1;
-        if (j != -1) {
-          BlockView sub = blockPane.getBlockByTag(j);
+      if (current.hasSubstack()) {
+        int substackId = current.subStack1;
+        if (substackId != -1) {
+          BlockView sub = blockPane.getBlockByTag(substackId);
           if (sub != null && sub != this)
             children.addAll(sub.getAllChildren()); 
         }
       } 
-      if (rs.hasDoubleSubstack()) {
-        int j = rs.subStack2;
-        if (j != -1) {
-          BlockView sub = blockPane.getBlockByTag(j);
+      if (current.hasDoubleSubstack()) {
+        int substackId = current.subStack2;
+        if (substackId != -1) {
+          BlockView sub = blockPane.getBlockByTag(substackId);
           if (sub != null && sub != this)
             children.addAll(sub.getAllChildren()); 
         }
       } 
-      int i = rs.nextBlock;
-      if (i != -1 && --limit > 0) {
-        BlockView next = blockPane.getBlockByTag(i);
-        if (next == null || next == this) return children;
-        rs = next;
-        continue;
-      } 
-      return children;
-    } 
+      if (current.nextBlock == -1 || --limit <= 0)
+        break;
+      BlockView next = blockPane.getBlockByTag(current.nextBlock);
+      if (next == null || next == this)
+        break;
+      current = next;
+    } while (true);
+    return children;
   }
   
   public BlockBean getBean() {
@@ -365,94 +364,69 @@ public class BlockView extends BaseBlockView {
   }
   
   public int getDepth() {
-    int b = 0;
-    BlockView rs = this;
+    int depth = 0;
+    BlockView current = parentBlock;
     int limit = DEPTH_TRAVERSAL_LIMIT;
-    while (true) {
-      rs = rs.parentBlock;
-      if (rs != null && --limit > 0) {
-        b++;
-        continue;
-      } 
-      return b;
-    } 
+    while (current != null && --limit > 0) {
+      depth++;
+      current = current.parentBlock;
+    }
+    return depth;
   }
   public int getHeightSum() {
-    int i = 0;
-    BlockView rs = this;
+    int height = 0;
+    BlockView current = this;
     int limit = CHAIN_TRAVERSAL_LIMIT;
-    while (true) {
-      int j = i;
-      if (i != 0)
-        j = i - borderWidth; 
-      i = j + rs.getTotalHeight();
-      j = rs.nextBlock;
-      if (j != -1 && --limit > 0) {
-        BlockView next = blockPane.getBlockByTag(j);
-        if (next == null || next == this) break;
-        rs = next;
-        continue;
-      } 
-      return i;
-    }
-    return i;
+    do {
+      if (height != 0)
+        height -= borderWidth;
+      height += current.getTotalHeight();
+      if (current.nextBlock == -1 || --limit <= 0)
+        break;
+      BlockView next = blockPane.getBlockByTag(current.nextBlock);
+      if (next == null || next == this)
+        break;
+      current = next;
+    } while (true);
+    return height;
   }
   
   public int getWidthSum() {
-    int i = 0;
-    BlockView rs = this;
+    int width = 0;
+    BlockView current = this;
     int limit = CHAIN_TRAVERSAL_LIMIT;
-    while (true) {
-      i = Math.max(i, rs.getW());
-      int j = i;
-      if (rs.hasSubstack()) {
-        int k = rs.subStack1;
-        j = i;
-        if (k != -1) {
-          BlockView sub1 = blockPane.getBlockByTag(k);
-          if (sub1 != null) {
-            j = cornerRadius;
-            j = Math.max(i, sub1.getWidthSum() + j);
-          }
-        } 
-      } 
-      i = j;
-      if (rs.hasDoubleSubstack()) {
-        int k = rs.subStack2;
-        i = j;
-        if (k != -1) {
-          BlockView sub2 = blockPane.getBlockByTag(k);
-          if (sub2 != null) {
-            i = cornerRadius;
-            i = Math.max(j, sub2.getWidthSum() + i);
-          }
-        } 
-      } 
-      j = rs.nextBlock;
-      if (j != -1 && --limit > 0) {
-        BlockView next = blockPane.getBlockByTag(j);
-        if (next == null || next == this) break;
-        rs = next;
-        continue;
-      } 
-      return i;
-    }
-    return i;
+    do {
+      width = Math.max(width, current.getW());
+      if (current.hasSubstack() && current.subStack1 != -1) {
+        BlockView substack = blockPane.getBlockByTag(current.subStack1);
+        if (substack != null)
+          width = Math.max(width, substack.getWidthSum() + cornerRadius);
+      }
+      if (current.hasDoubleSubstack() && current.subStack2 != -1) {
+        BlockView substack = blockPane.getBlockByTag(current.subStack2);
+        if (substack != null)
+          width = Math.max(width, substack.getWidthSum() + cornerRadius);
+      }
+      if (current.nextBlock == -1 || --limit <= 0)
+        break;
+      BlockView next = blockPane.getBlockByTag(current.nextBlock);
+      if (next == null || next == this)
+        break;
+      current = next;
+    } while (true);
+    return width;
   }
   
   public BlockView getLastInChain() {
-    BlockView rs = this;
+    BlockView current = this;
     int limit = CHAIN_TRAVERSAL_LIMIT;
-    while (true) {
-      int i = rs.nextBlock;
-      if (i != -1 && --limit > 0) {
-        BlockView next = blockPane.getBlockByTag(i);
-        if (next == null || next == this) return rs;
-        rs = next;
-        continue;
-      } 
-      return rs;
-    } 
+    while (current.nextBlock != -1 && --limit > 0) {
+      BlockView next = blockPane.getBlockByTag(current.nextBlock);
+      if (next == null || next == this)
+        break;
+      current = next;
+    }
+    return current;
   }
   
   public final void rebuildChildViews() {
@@ -599,29 +573,14 @@ public class BlockView extends BaseBlockView {
     minHatWidth = (int) (minHatWidth * scale);
     minCWidth = (int) (minCWidth * scale);
     spacing = (int) (spacing * scale);
-    String type = blockType;
-    byte typeNum = 0;
-    if (type.equals("b")) { typeNum = 1; }
-    else if (type.equals("s")) { typeNum = 2; }
-    else if (type.equals("d")) { typeNum = 3; }
-    else if (type.equals("v")) { typeNum = 4; }
-    else if (type.equals("p")) { typeNum = 5; }
-    else if (type.equals("l")) { typeNum = 6; }
-    else if (type.equals("a")) { typeNum = 7; }
-    else if (type.equals("c")) { typeNum = 8; }
-    else if (type.equals("e")) { typeNum = 9; }
-    else if (type.equals("f")) { typeNum = 10; }
-    else if (type.equals("h")) { typeNum = 11; }
-    else if (type.equals(" ")) { typeNum = 0; }
-    else { typeNum = -1; }
-    switch (typeNum) {
-      case 1: case 2: case 3: case 4: case 5: case 6: case 7:
+    switch (blockType) {
+      case "b": case "s": case "d": case "v": case "p": case "l": case "a":
         isParameter = true;
         break;
-      case 10:
+      case "f":
         hasEndCap = true;
         break;
-      case 11:
+      case "h":
         isDefinitionBlock = true;
         break;
       default:
@@ -751,16 +710,11 @@ public class BlockView extends BaseBlockView {
   }
   
   public BlockView getRootBlock() {
-    BlockView rs = this;
+    BlockView current = this;
     int limit = CHAIN_TRAVERSAL_LIMIT;
-    while (true) {
-      BlockView parent = rs.parentBlock;
-      if (parent != null && --limit > 0) {
-        rs = parent;
-        continue;
-      } 
-      return rs;
-    } 
+    while (current.parentBlock != null && --limit > 0)
+      current = current.parentBlock;
+    return current;
   }
   
   public int countBlocksInChain(int tag) {

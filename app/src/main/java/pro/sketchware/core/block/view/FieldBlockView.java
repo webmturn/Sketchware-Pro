@@ -64,7 +64,7 @@ public class FieldBlockView extends BaseBlockView {
     minHatWidth = (int) (minHatWidth * scale);
     minCWidth = (int) (minCWidth * scale);
     spacing = minCWidth;
-    if (blockType.equals("m") && getComponentLabel(componentType).length() >= 0) {
+    if (blockType.equals("m")) {
       dropdownLabel = createLabelTextView(componentType);
       addView(dropdownLabel);
       spacing = getDropdownTypeWidth();

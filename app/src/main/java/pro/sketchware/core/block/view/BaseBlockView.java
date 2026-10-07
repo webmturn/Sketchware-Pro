@@ -189,50 +189,48 @@ public class BaseBlockView extends RelativeLayout {
   }
   
   private float[] getBooleanReflections() {
-    int i = blockHeight / 2;
-    int j = outlineStrokeWidth;
-    float f1 = (j / 2 + 0);
-    float f2 = i;
-    return new float[] { f1, f2, f2, (j / 2 + 0), f2, (j / 2 + 0), (blockWidth - i), (j / 2 + 0) };
+    int halfHeight = blockHeight / 2;
+    int halfStroke = outlineStrokeWidth / 2;
+    return new float[] {
+        halfStroke, halfHeight, halfHeight, halfStroke,
+        halfHeight, halfStroke, blockWidth - halfHeight, halfStroke };
   }
   
   private float[] getBooleanShadows() {
-    int i = blockHeight;
-    int j = i / 2;
-    int k = blockWidth;
-    int m = outlineStrokeWidth;
-    float f1 = (k - m / 2);
-    float f2 = j;
-    return new float[] { f1, f2, (k - j), (i - m / 2), (k - j), (i - m / 2), f2, (i - m / 2) };
+    int halfHeight = blockHeight / 2;
+    int halfStroke = outlineStrokeWidth / 2;
+    int right = blockWidth - halfStroke;
+    int bottom = blockHeight - halfStroke;
+    int rightCorner = blockWidth - halfHeight;
+    return new float[] {
+        right, halfHeight, rightCorner, bottom,
+        rightCorner, bottom, halfHeight, bottom };
   }
   
   private float[] getNumberBottomShadows() {
-    int i = blockHeight;
-    int j = i / 2;
-    float f = (blockWidth - j);
-    int k = outlineStrokeWidth;
-    return new float[] { f, (i - k / 2), j, (i - k / 2) };
+    int halfHeight = blockHeight / 2;
+    int bottom = blockHeight - outlineStrokeWidth / 2;
+    return new float[] { blockWidth - halfHeight, bottom, halfHeight, bottom };
   }
   
   private float[] getNumberTopReflections() {
-    int i = blockHeight / 2;
-    float f = i;
-    int j = outlineStrokeWidth;
-    return new float[] { f, (j / 2 + 0), (blockWidth - i), (j / 2 + 0) };
+    int halfHeight = blockHeight / 2;
+    int halfStroke = outlineStrokeWidth / 2;
+    return new float[] { halfHeight, halfStroke, blockWidth - halfHeight, halfStroke };
   }
   
   private float[] getRectReflections() {
-    int i = outlineStrokeWidth;
-    return new float[] { 0.0F, (i / 2 + 0), (blockWidth - i / 2), (i / 2 + 0), (i / 2 + 0), 0.0F, (i / 2 + 0), (blockHeight - i / 2) };
+    int halfStroke = outlineStrokeWidth / 2;
+    return new float[] {
+        0.0F, halfStroke, blockWidth - halfStroke, halfStroke,
+        halfStroke, 0.0F, halfStroke, blockHeight - halfStroke };
   }
   
   private float[] getRectShadows() {
-    int i = blockWidth;
-    int j = outlineStrokeWidth;
-    float f1 = (i - j / 2);
-    float f2 = (i - j / 2);
-    int k = blockHeight;
-    return new float[] { f1, 0.0F, f2, (k - j / 2), (i - j / 2), (k - j / 2), 0.0F, (k - j / 2) };
+    int halfStroke = outlineStrokeWidth / 2;
+    int right = blockWidth - halfStroke;
+    int bottom = blockHeight - halfStroke;
+    return new float[] { right, 0.0F, right, bottom, right, bottom, 0.0F, bottom };
   }
   
   public void initClassInfo() {
@@ -380,42 +378,26 @@ public class BaseBlockView extends RelativeLayout {
     } 
   }
   
-  public final float[] getTopReflectionLines(int index) {
-    int i = outlineStrokeWidth;
-    float f1 = (i / 2 + 0);
-    int j = notchWidth;
-    float f2 = (index - j);
-    float f3 = (i / 2 + 0);
-    float f4 = j;
-    float f5 = (i / 2 + 0);
-    float f6 = j;
-    float f7 = j;
-    float f8 = (i / 2 + 0);
-    float f9 = j;
-    float f10 = (i / 2 + 0);
-    float f11 = connectorOffset;
-    float f12 = (i / 2 + 0);
-    float f13 = connectorStart;
-    index = borderWidth;
-    float f14 = (i / 2 + index);
-    int k = connectorEnd;
-    float f15 = k;
-    float f16 = (i / 2 + index);
-    float f17 = k;
-    float f18 = (index + i / 2);
-    index = connectorEndOffset;
-    return new float[] { 
-        f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, 
-        f11, f12, f13, f14, f15, f16, f17, f18, index, (i / 2 + 0), 
-        index, (i / 2 + 0), (blockWidth - j), (i / 2 + 0) };
+  public final float[] getTopReflectionLines(int height) {
+    // Keep integer division before conversion to float for pixel alignment.
+    int halfStroke = outlineStrokeWidth / 2;
+    int connectorY = halfStroke + borderWidth;
+    return new float[] {
+        halfStroke, height - notchWidth, halfStroke, notchWidth,
+        halfStroke, notchWidth, notchWidth, halfStroke,
+        notchWidth, halfStroke, connectorOffset, halfStroke,
+        connectorStart, connectorY, connectorEnd, connectorY,
+        connectorEnd, connectorY, connectorEndOffset, halfStroke,
+        connectorEndOffset, halfStroke, blockWidth - notchWidth, halfStroke };
   }
   
   public final float[] getLeftSideShadowLines(int start, int end) {
-    int i = cornerRadius;
-    int j = notchDepth;
-    float f = (i + j);
-    int k = outlineStrokeWidth;
-    return new float[] { f, (start - k / 2), (i - k / 2), (start + j), (i - k / 2), (start + j), (i - k / 2), (end - j) };
+    int halfStroke = outlineStrokeWidth / 2;
+    int left = cornerRadius - halfStroke;
+    int top = start + notchDepth;
+    return new float[] {
+        cornerRadius + notchDepth, start - halfStroke, left, top,
+        left, top, left, end - notchDepth };
   }
   
   public final float[] getBottomShadowLines(int start, boolean flag, int end) {
@@ -499,11 +481,8 @@ public class BaseBlockView extends RelativeLayout {
   }
   
   public final float[] getRightSideShadowLines(int start, int end) {
-    int i = blockWidth;
-    int j = outlineStrokeWidth;
-    float f = (i - j / 2);
-    int k = notchWidth;
-    return new float[] { f, (start + k), (i - j / 2), (end - k) };
+    int right = blockWidth - outlineStrokeWidth / 2;
+    return new float[] { right, start + notchWidth, right, end - notchWidth };
   }
   
   public final void drawParameterShape(Canvas canvas) {
@@ -527,9 +506,9 @@ public class BaseBlockView extends RelativeLayout {
   }
   
   public final float[] getSubstackReflectionLines(int start, int end) {
-    float f = (end + notchDepth);
-    end = outlineStrokeWidth;
-    return new float[] { f, (end / 2 + start), (blockWidth - notchWidth), (start + end / 2) };
+    int halfStroke = outlineStrokeWidth / 2;
+    return new float[] {
+        end + notchDepth, halfStroke + start, blockWidth - notchWidth, start + halfStroke };
   }
   
   public int getContentBottom() {
@@ -595,8 +574,8 @@ public class BaseBlockView extends RelativeLayout {
     drawTopPath(path);
     drawBottomPath(path, blockHeight, true, cornerRadius);
     drawSubstackBottomPath(path, i);
-    boolean isEndCap = (shapeType == SHAPE_SINGLE_SUBSTACK);
-    drawBottomPath(path, topPadding + i, isEndCap, 0);
+    boolean hasBottomNotch = (shapeType == SHAPE_SINGLE_SUBSTACK);
+    drawBottomPath(path, topPadding + i, hasBottomNotch, 0);
     canvas.drawPath(path, fillPaint);
     if (drawShadow) {
       canvas.drawLines(getRightSideShadowLines(0, blockHeight), outlinePaint);
@@ -665,19 +644,15 @@ public class BaseBlockView extends RelativeLayout {
   }
   
   public int getTotalHeight() {
-    int i = blockHeight;
-    int k = i;
+    int height = blockHeight;
     if (hasSubstack())
-      k = i + bottomPadding + contentHeight - borderWidth; 
-    i = k;
+      height = height + bottomPadding + contentHeight - borderWidth;
     if (hasDoubleSubstack())
-      i = k + topPadding + innerHeight - borderWidth; 
-    int j = shapeType;
-    if (j != SHAPE_STATEMENT && j != SHAPE_HAT && j != SHAPE_SINGLE_SUBSTACK) {
-      k = i;
-      return (j == SHAPE_DOUBLE_SUBSTACK) ? (i + borderWidth) : k;
-    } 
-    return i + borderWidth;
+      height = height + topPadding + innerHeight - borderWidth;
+    if (shapeType == SHAPE_STATEMENT || shapeType == SHAPE_HAT
+        || shapeType == SHAPE_SINGLE_SUBSTACK || shapeType == SHAPE_DOUBLE_SUBSTACK)
+      return height + borderWidth;
+    return height;
   }
   
   public int getTotalWidth() {
