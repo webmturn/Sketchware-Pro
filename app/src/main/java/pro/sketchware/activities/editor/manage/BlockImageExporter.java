@@ -2,7 +2,6 @@ package pro.sketchware.activities.editor.manage;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
 
@@ -48,13 +47,10 @@ public class BlockImageExporter {
         }
         Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-        Drawable background = view.getBackground();
-        if (background != null) {
-            background.draw(canvas);
-        } else {
+        if (view.getBackground() == null) {
             canvas.drawColor(-1);
-            view.draw(canvas);
         }
+        view.draw(canvas);
         return bitmap;
     }
 }
