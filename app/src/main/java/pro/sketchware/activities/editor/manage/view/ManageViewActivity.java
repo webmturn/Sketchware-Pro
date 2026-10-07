@@ -38,7 +38,6 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.activities.editor.manage.view.fragments.ViewFilesFragment;
@@ -69,45 +68,30 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
     private String sc_id;
 
     public final String generateUniqueWidgetId(int widgetType, String xmlName) {
-        String typeName = ViewTypeNames.getIdPrefix(widgetType);
-        StringBuilder sb = new StringBuilder();
-        sb.append(typeName);
-        int[] counts = widgetTypeCounts;
-        int count = counts[widgetType] + 1;
-        counts[widgetType] = count;
-        sb.append(count);
-        String candidateId = sb.toString();
-        ArrayList<ViewBean> views = ProjectDataManager.getProjectDataManager(sc_id).getViews(xmlName);
-        String currentId = candidateId;
+        String prefix = ViewTypeNames.getIdPrefix(widgetType);
+        int[] counters = widgetTypeCounts;
+        int nextNumber = counters[widgetType] + 1;
+        counters[widgetType] = nextNumber;
+        String candidateId = prefix + nextNumber;
+        ArrayList<ViewBean> existingViews = ProjectDataManager.getProjectDataManager(sc_id).getViews(xmlName);
 
         while (true) {
             boolean isDuplicate = false;
-            Iterator<ViewBean> iterator = views.iterator();
-
-            boolean found;
-            while (true) {
-                found = isDuplicate;
-                if (!iterator.hasNext()) {
-                    break;
-                }
-
-                if (currentId.equals(iterator.next().id)) {
-                    found = true;
+            for (ViewBean view : existingViews) {
+                if (candidateId.equals(view.id)) {
+                    isDuplicate = true;
                     break;
                 }
             }
 
-            if (!found) {
-                return currentId;
+            if (!isDuplicate) {
+                return candidateId;
             }
 
-            StringBuilder nextSb = new StringBuilder();
-            nextSb.append(typeName);
-            int[] nextCounts = widgetTypeCounts;
-            count = nextCounts[widgetType] + 1;
-            nextCounts[widgetType] = count;
-            nextSb.append(count);
-            currentId = nextSb.toString();
+            counters = widgetTypeCounts;
+            nextNumber = counters[widgetType] + 1;
+            counters[widgetType] = nextNumber;
+            candidateId = prefix + nextNumber;
         }
     }
 

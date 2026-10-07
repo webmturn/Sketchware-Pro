@@ -42,28 +42,27 @@ public class CustomViewFilesFragment extends BaseFragment {
   
   public int[] viewCounters = new int[ViewBean.VIEW_TYPE_COUNT];
   
-  public final String generateUniqueViewId(int position, String xmlName) {
-    String prefix = ViewTypeNames.getIdPrefix(position);
-    int[] intValues = viewCounters;
-    int counter = intValues[position] + 1;
-    intValues[position] = counter;
-    String candidateId = prefix + counter;
-    ArrayList existingViews = ProjectDataManager.getProjectDataManager(projectId).getViews(xmlName);
-    xmlName = candidateId;
+  public final String generateUniqueViewId(int viewType, String xmlName) {
+    String prefix = ViewTypeNames.getIdPrefix(viewType);
+    int[] counters = viewCounters;
+    int nextNumber = counters[viewType] + 1;
+    counters[viewType] = nextNumber;
+    String candidateId = prefix + nextNumber;
+    ArrayList<ViewBean> existingViews = ProjectDataManager.getProjectDataManager(projectId).getViews(xmlName);
     while (true) {
-      counter = 0;
-      for (Object view : existingViews) {
-        if (xmlName.equals(((ViewBean)view).id)) {
-          counter = 1;
+      boolean isDuplicate = false;
+      for (ViewBean view : existingViews) {
+        if (candidateId.equals(view.id)) {
+          isDuplicate = true;
           break;
         }
       }
-      if (counter == 0)
-        return xmlName; 
-      int[] intValues1 = viewCounters;
-      counter = intValues1[position] + 1;
-      intValues1[position] = counter;
-      xmlName = prefix + counter;
+      if (!isDuplicate)
+        return candidateId;
+      counters = viewCounters;
+      nextNumber = counters[viewType] + 1;
+      counters[viewType] = nextNumber;
+      candidateId = prefix + nextNumber;
     } 
   }
   
