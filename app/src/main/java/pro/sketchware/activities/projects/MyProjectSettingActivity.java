@@ -1,5 +1,7 @@
 package pro.sketchware.activities.projects;
 
+import pro.sketchware.core.settings.ApplicationSettings;
+
 
 import android.util.Log;
 import static pro.sketchware.util.ProjectFile.getDefaultColor;
@@ -52,7 +54,6 @@ import pro.sketchware.util.MapValueHelper;
 import pro.sketchware.core.project.ProjectSettings;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.ProjectFile;
-import pro.sketchware.activities.settings.ConfigActivity;
 import pro.sketchware.R;
 import pro.sketchware.activities.iconcreator.IconCreatorActivity;
 import pro.sketchware.dialogs.VersionDialog;
@@ -240,7 +241,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
                 binding.imgColorGuide.setVisibility(View.VISIBLE);
             }
         } else if (id == R.id.ver_code_holder || id == R.id.ver_name_holder) {
-            if (ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_USE_NEW_VERSION_CONTROL)) {
+            if (ApplicationSettings.isSettingEnabled(ApplicationSettings.SETTING_USE_NEW_VERSION_CONTROL)) {
                 new VersionDialog(this, Helper.getText(binding.verCode), Helper.getText(binding.verName), (versionCode, versionName) -> {
                     binding.verCode.setText(versionCode);
                     binding.verName.setText(versionName);

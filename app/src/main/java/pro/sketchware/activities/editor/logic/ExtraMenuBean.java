@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor.logic;
 
+import pro.sketchware.core.settings.ApplicationSettings;
+
 import static android.text.TextUtils.isEmpty;
 import static pro.sketchware.util.SketchwareUtil.dpToPx;
 
@@ -39,7 +41,6 @@ import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
 import dev.pranav.filepicker.SelectionMode;
 import pro.sketchware.util.Helper;
-import pro.sketchware.activities.settings.ConfigActivity;
 import pro.sketchware.dialogs.AsdDialog;
 import pro.sketchware.R;
 import pro.sketchware.core.resources.StringResourceResolver;
@@ -759,7 +760,7 @@ public class ExtraMenuBean {
         EditText edittext = root.findViewById(R.id.ed_input);
         edittext.setImeOptions(EditorInfo.IME_ACTION_NONE);
 
-        if (ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_USE_ASD_HIGHLIGHTER)) {
+        if (ApplicationSettings.isSettingEnabled(ApplicationSettings.SETTING_USE_ASD_HIGHLIGHTER)) {
             new SimpleHighlighter(edittext);
         }
         edittext.setText(ss.getArgValue().toString());

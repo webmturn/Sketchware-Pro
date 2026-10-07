@@ -1,6 +1,7 @@
 package pro.sketchware.activities.settings;
 
-import static pro.sketchware.util.GsonUtils.getGson;
+import pro.sketchware.core.settings.ApplicationSettings;
+
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -8,7 +9,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.Preference;
@@ -20,160 +20,16 @@ import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.gson.JsonParseException;
 import com.topjohnwu.superuser.Shell;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import pro.sketchware.util.Helper;
-import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
-import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.UI;
 import pro.sketchware.databinding.DialogCreateNewFileLayoutBinding;
 import pro.sketchware.databinding.PreferenceActivityBinding;
-import pro.sketchware.util.FileUtil;
-import pro.sketchware.util.SketchwareUtil;
 
 public class ConfigActivity extends BaseAppCompatActivity {
-
-    public static final File SETTINGS_FILE = new File(SketchwarePaths.getSettingsPath());
-    public static final String SETTING_ALWAYS_SHOW_BLOCKS = "always-show-blocks";
-    public static final String SETTING_BACKUP_DIRECTORY = "backup-dir";
-    public static final String SETTING_ROOT_AUTO_INSTALL_PROJECTS = "root-auto-install-projects";
-    public static final String SETTING_ROOT_AUTO_OPEN_AFTER_INSTALLING = "root-auto-open-after-installing";
-    public static final String SETTING_BACKUP_FILENAME = "backup-filename";
-    public static final String SETTING_SHOW_BUILT_IN_BLOCKS = "built-in-blocks";
-    public static final String SETTING_SHOW_EVERY_SINGLE_BLOCK = "show-every-single-block";
-    public static final String SETTING_USE_NEW_VERSION_CONTROL = "use-new-version-control";
-    public static final String SETTING_USE_ASD_HIGHLIGHTER = "use-asd-highlighter";
-    public static final String SETTING_CRITICAL_UPDATE_REMINDER = "critical-update-reminder";
-    public static final String SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH = "palletteDir";
-    public static final String SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH = "blockDir";
-    public static final String SETTING_PROJECT_DATA_ENCRYPTION = "project-data-encryption";
-    public static final String SETTING_LAST_RESTORE_DIRECTORY = "last-restore-dir";
-
-    public static String getBackupPath() {
-        return DataStore.getInstance().getString(SETTING_BACKUP_DIRECTORY,
-                (String) getDefaultValue(SETTING_BACKUP_DIRECTORY));
-    }
-
-    public static String getLastRestoreDirectory() {
-        return DataStore.getInstance().getString(SETTING_LAST_RESTORE_DIRECTORY, "");
-    }
-
-    public static void setLastRestoreDirectory(String path) {
-        DataStore.getInstance().putString(SETTING_LAST_RESTORE_DIRECTORY, path);
-    }
-
-    public static String getStringSettingValueOrSetAndGet(String settingKey, String toReturnAndSetIfNotFound) {
-        var dataStore = DataStore.getInstance();
-        Map<String, Object> settings = dataStore.getSettings();
-
-        Object value = settings.get(settingKey);
-        if (value instanceof String s) {
-            return s;
-        } else {
-            dataStore.putString(settingKey, toReturnAndSetIfNotFound);
-            dataStore.persist();
-
-            return toReturnAndSetIfNotFound;
-        }
-    }
-
-    public static String getBackupFileName() {
-        return DataStore.getInstance().getString(SETTING_BACKUP_FILENAME, "$projectName v$versionName ($pkgName, $versionCode) $time(yyyy-MM-dd'T'HHmmss)");
-    }
-
-    public static boolean isSettingEnabled(String keyName) {
-        return DataStore.getInstance().getBoolean(keyName, false);
-    }
-
-    public static void setSetting(String key, Object value) {
-        var dataStore = DataStore.getInstance();
-        if (value instanceof String s) {
-            dataStore.putString(key, s);
-        } else if (value instanceof Boolean b) {
-            dataStore.putBoolean(key, b);
-        } else {
-            throw new IllegalArgumentException("Unhandled data type " + value.getClass());
-        }
-        dataStore.persist();
-    }
-
-    @NonNull
-    private static HashMap<String, Object> readSettings() {
-        HashMap<String, Object> settings;
-
-        if (SETTINGS_FILE.exists()) {
-            Exception toLog;
-
-            try {
-                settings = getGson().fromJson(FileUtil.readFile(SETTINGS_FILE.getAbsolutePath()), Helper.TYPE_MAP);
-
-                if (settings != null) {
-                    return settings;
-                }
-
-                toLog = new NullPointerException("settings == null");
-                // fall-through to shared error handler
-            } catch (JsonParseException e) {
-                toLog = e;
-                // fall-through to shared error handler
-            }
-
-            SketchwareUtil.toastError(Helper.getResString(R.string.config_error_parse_settings));
-            LogUtil.e("ConfigActivity", "Failed to parse App Settings.", toLog);
-        }
-        settings = new HashMap<>();
-        restoreDefaultSettings(settings);
-
-        return settings;
-    }
-
-    private static void restoreDefaultSettings(HashMap<String, Object> settings) {
-        settings.clear();
-
-        List<String> keys = Arrays.asList(SETTING_ALWAYS_SHOW_BLOCKS,
-                SETTING_BACKUP_DIRECTORY,
-                SETTING_ROOT_AUTO_INSTALL_PROJECTS,
-                SETTING_ROOT_AUTO_OPEN_AFTER_INSTALLING,
-                SETTING_SHOW_BUILT_IN_BLOCKS,
-                SETTING_SHOW_EVERY_SINGLE_BLOCK,
-                SETTING_USE_NEW_VERSION_CONTROL,
-                SETTING_USE_ASD_HIGHLIGHTER,
-                SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH,
-                SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH,
-                SETTING_PROJECT_DATA_ENCRYPTION);
-
-        for (String key : keys) {
-            settings.put(key, getDefaultValue(key));
-        }
-        FileUtil.writeFile(SETTINGS_FILE.getAbsolutePath(), getGson().toJson(settings));
-    }
-
-    public static Object getDefaultValue(String key) {
-        return switch (key) {
-            case SETTING_ALWAYS_SHOW_BLOCKS,
-                 SETTING_ROOT_AUTO_INSTALL_PROJECTS, SETTING_SHOW_BUILT_IN_BLOCKS,
-                 SETTING_SHOW_EVERY_SINGLE_BLOCK, SETTING_USE_NEW_VERSION_CONTROL,
-                 SETTING_USE_ASD_HIGHLIGHTER, SETTING_PROJECT_DATA_ENCRYPTION -> false;
-            case SETTING_BACKUP_DIRECTORY ->
-                    SketchwarePaths.toExternalStorageRelativePath(SketchwarePaths.getBackupsPath());
-            case SETTING_ROOT_AUTO_OPEN_AFTER_INSTALLING -> true;
-            case SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH ->
-                    SketchwarePaths.toExternalStorageRelativePath(
-                            SketchwarePaths.getBlockManagerPaletteFilePath());
-            case SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH ->
-                    SketchwarePaths.toExternalStorageRelativePath(
-                            SketchwarePaths.getBlockManagerBlockFilePath());
-            default -> throw new IllegalArgumentException("Unknown key '" + key + "'!");
-        };
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -206,7 +62,7 @@ public class ConfigActivity extends BaseAppCompatActivity {
             assert backupDir != null;
             backupDir.setOnPreferenceClickListener(preference -> {
                 DialogCreateNewFileLayoutBinding binding = DialogCreateNewFileLayoutBinding.inflate(getLayoutInflater());
-                binding.inputText.setText(getBackupPath());
+                binding.inputText.setText(ApplicationSettings.getBackupPath());
                 binding.chipGroupTypes.setVisibility(View.GONE);
                 AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
                         .setView(binding.getRoot())
@@ -221,7 +77,7 @@ public class ConfigActivity extends BaseAppCompatActivity {
                             Helper.getDialogDismissListener(dialogInterface));
                     Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
                     positiveButton.setOnClickListener(view -> {
-                        getDataStore().putString(SETTING_BACKUP_DIRECTORY, Helper.getText(binding.inputText));
+                        getDataStore().putString(ApplicationSettings.SETTING_BACKUP_DIRECTORY, Helper.getText(binding.inputText));
                         dialog.dismiss();
                     });
 
@@ -251,7 +107,7 @@ public class ConfigActivity extends BaseAppCompatActivity {
             backupFilename.setOnPreferenceClickListener(preference -> {
                 DialogCreateNewFileLayoutBinding binding = DialogCreateNewFileLayoutBinding.inflate(getLayoutInflater());
                 binding.chipGroupTypes.setVisibility(View.GONE);
-                binding.inputText.setText(getBackupFileName());
+                binding.inputText.setText(ApplicationSettings.getBackupFileName());
 
                 AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
                         .setView(binding.getRoot())
@@ -260,7 +116,7 @@ public class ConfigActivity extends BaseAppCompatActivity {
                         .setNegativeButton(R.string.common_word_cancel, null)
                         .setPositiveButton(R.string.common_word_save, null)
                         .setNeutralButton(R.string.common_word_reset, (dialogInterface, which) -> {
-                            getDataStore().putString(SETTING_BACKUP_FILENAME, null);
+                            getDataStore().putString(ApplicationSettings.SETTING_BACKUP_FILENAME, null);
                             Snackbar.make(snackbarView, Helper.getResString(R.string.config_toast_reset_default), BaseTransientBottomBar.LENGTH_SHORT).show();
                         })
                         .create();
@@ -270,7 +126,7 @@ public class ConfigActivity extends BaseAppCompatActivity {
                             Helper.getDialogDismissListener(dialog));
                     Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
                     positiveButton.setOnClickListener(view -> {
-                        getDataStore().putString(SETTING_BACKUP_FILENAME, Helper.getText(binding.inputText));
+                        getDataStore().putString(ApplicationSettings.SETTING_BACKUP_FILENAME, Helper.getText(binding.inputText));
                         dialog.dismiss();
                     });
                     dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
@@ -290,69 +146,36 @@ public class ConfigActivity extends BaseAppCompatActivity {
         }
     }
 
-    /**
-     * An in-memory caching store for settings listed in {@link ConfigActivity}.
-     * Persists to {@link #SETTINGS_FILE}.
-     *
-     * @see #persist()
-     */
+    /** Adapts shared application settings to Android's preference UI. */
     public static class DataStore extends PreferenceDataStore {
-        private static DataStore INSTANCE;
-        private final Map<String, Object> settings;
+        private static final DataStore INSTANCE = new DataStore();
 
         private DataStore() {
-            settings = readSettings();
         }
 
         public static DataStore getInstance() {
-            return INSTANCE == null ? (INSTANCE = new DataStore()) : INSTANCE;
-        }
-
-        private Map<String, Object> getSettings() {
-            return settings;
-        }
-
-        /**
-         * Blocking method that writes its data to {@link #SETTINGS_FILE}. Should be called manually,
-         * since there's no automatic persist. Meaning, every write, unless they are in batches.
-         */
-        public void persist() {
-            FileUtil.writeFile(SETTINGS_FILE.getAbsolutePath(), getGson().toJson(settings));
+            return INSTANCE;
         }
 
         @Override
         public void putString(String key, @Nullable String value) {
-            if (value == null) {
-                settings.remove(key);
-            } else {
-                settings.put(key, value);
-            }
-            persist();
+            ApplicationSettings.putString(key, value);
         }
 
         @Nullable
         @Override
-        public String getString(String key, @Nullable String defValue) {
-            var value = settings.get(key);
-            if (value instanceof String s) {
-                return s;
-            }
-            return defValue;
+        public String getString(String key, @Nullable String defaultValue) {
+            return ApplicationSettings.getString(key, defaultValue);
         }
 
         @Override
         public void putBoolean(String key, boolean value) {
-            settings.put(key, value);
-            persist();
+            ApplicationSettings.putBoolean(key, value);
         }
 
         @Override
-        public boolean getBoolean(String key, boolean defValue) {
-            var value = settings.get(key);
-            if (value instanceof Boolean b) {
-                return b;
-            }
-            return defValue;
+        public boolean getBoolean(String key, boolean defaultValue) {
+            return ApplicationSettings.getBoolean(key, defaultValue);
         }
     }
 }

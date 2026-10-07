@@ -1,10 +1,11 @@
 package pro.sketchware.activities.editor.logic;
 
+import pro.sketchware.core.settings.ApplicationSettings;
+
 import androidx.annotation.ColorInt;
 
 import pro.sketchware.R;
 import pro.sketchware.activities.editor.LogicEditorActivity;
-import pro.sketchware.activities.settings.ConfigActivity;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.ThemeUtils;
 
@@ -14,13 +15,13 @@ public final class PrimaryPaletteBlocks {
     }
 
     private static boolean showAll() {
-        return ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_ALWAYS_SHOW_BLOCKS)
-                || ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_SHOW_EVERY_SINGLE_BLOCK);
+        return ApplicationSettings.isSettingEnabled(ApplicationSettings.SETTING_ALWAYS_SHOW_BLOCKS)
+                || ApplicationSettings.isSettingEnabled(ApplicationSettings.SETTING_SHOW_EVERY_SINGLE_BLOCK);
     }
 
     private static boolean showBuiltIn() {
-        return ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_SHOW_BUILT_IN_BLOCKS)
-                || ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_SHOW_EVERY_SINGLE_BLOCK);
+        return ApplicationSettings.isSettingEnabled(ApplicationSettings.SETTING_SHOW_BUILT_IN_BLOCKS)
+                || ApplicationSettings.isSettingEnabled(ApplicationSettings.SETTING_SHOW_EVERY_SINGLE_BLOCK);
     }
 
     public static void primaryBlocksA(

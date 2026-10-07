@@ -17,6 +17,9 @@ import androidx.core.os.LocaleListCompat;
 import pro.sketchware.activities.tools.CollectErrorActivity;
 
 import pro.sketchware.core.project.ProjectListManager;
+import pro.sketchware.core.settings.ApplicationSettings;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.locale.LanguageOverrideContextWrapper;
 import pro.sketchware.util.locale.LanguageOverrideManager;
 import pro.sketchware.util.CrashLogManager;
@@ -74,6 +77,8 @@ public class SketchApplication extends Application {
     @Override
     public void onCreate() {
         mApplicationContext = getApplicationContext();
+        ApplicationSettings.setReadErrorHandler(error ->
+                SketchwareUtil.toastError(Helper.getResString(R.string.config_error_parse_settings)));
         ProjectListManager.initializeDb(mApplicationContext, false);
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) { currentActivity = activity; }

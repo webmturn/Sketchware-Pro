@@ -1,5 +1,7 @@
 package pro.sketchware.activities.main.fragments.projects;
 
+import pro.sketchware.core.settings.ApplicationSettings;
+
 import android.content.Context;
 
 import pro.sketchware.util.FilePathUtil;
@@ -49,7 +51,6 @@ import pro.sketchware.core.codegen.ExtraBlockInfo;
 import pro.sketchware.core.codegen.BlockLoader;
 import pro.sketchware.activities.design.CustomBlocksManager;
 import pro.sketchware.util.Helper;
-import pro.sketchware.activities.settings.ConfigActivity;
 import pro.sketchware.R;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
@@ -85,7 +86,7 @@ public class BackupFactory {
     }
 
     public static String getBackupDir() {
-        return SketchwarePaths.resolveExternalStorageRelativePath(ConfigActivity.getBackupPath());
+        return SketchwarePaths.resolveExternalStorageRelativePath(ApplicationSettings.getBackupPath());
     }
 
     private static File getAllLocalLibsDir() {
@@ -118,8 +119,8 @@ public class BackupFactory {
 
         try {
             byte[] data;
-            if (pro.sketchware.activities.settings.ConfigActivity.isSettingEnabled(
-                    pro.sketchware.activities.settings.ConfigActivity.SETTING_PROJECT_DATA_ENCRYPTION)) {
+            if (ApplicationSettings.isSettingEnabled(
+                    ApplicationSettings.SETTING_PROJECT_DATA_ENCRYPTION)) {
                 Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
                 cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(LEGACY_KEY, "AES"), new IvParameterSpec(LEGACY_KEY));
                 data = cipher.doFinal((string.trim()).getBytes(java.nio.charset.StandardCharsets.UTF_8));
@@ -295,7 +296,7 @@ public class BackupFactory {
     /************************ BACKUP ************************/
 
     public void backup(Context context, String project_name) {
-        String customFileName = ConfigActivity.getBackupFileName();
+        String customFileName = ApplicationSettings.getBackupFileName();
 
         String versionName = MapValueHelper.getString(ProjectListManager.getProjectById(sc_id), "sc_ver_name");
         String versionCode = MapValueHelper.getString(ProjectListManager.getProjectById(sc_id), "sc_ver_code");

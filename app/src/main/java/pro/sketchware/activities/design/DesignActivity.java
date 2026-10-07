@@ -1,5 +1,7 @@
 package pro.sketchware.activities.design;
 
+import pro.sketchware.core.settings.ApplicationSettings;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -95,7 +97,6 @@ import pro.sketchware.activities.editor.ManageJavaActivity;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.SystemLogPrinter;
 import pro.sketchware.activities.editor.manifest.AndroidManifestInjection;
-import pro.sketchware.activities.settings.ConfigActivity;
 import pro.sketchware.core.build.CompileErrorSaver;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.activities.editor.LogReaderActivity;
@@ -336,7 +337,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     void installBuiltApk() {
         TaskHost taskHost = TaskHost.of(this);
         taskHost.postToUi(() -> {
-            if (!ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_ROOT_AUTO_INSTALL_PROJECTS)) {
+            if (!ApplicationSettings.isSettingEnabled(ApplicationSettings.SETTING_ROOT_AUTO_INSTALL_PROJECTS)) {
                 requestPackageInstallerInstall();
             } else {
                 File apkUri = new File(projectFilePaths.finalToInstallApkPath);
@@ -350,7 +351,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                                 taskHost.postToUi(() -> {
                                     if (result.isSuccess()) {
                                         SketchwareUtil.toast(Helper.getResString(R.string.design_toast_package_installed));
-                                        if (ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_ROOT_AUTO_OPEN_AFTER_INSTALLING)) {
+                                        if (ApplicationSettings.isSettingEnabled(ApplicationSettings.SETTING_ROOT_AUTO_OPEN_AFTER_INSTALLING)) {
                                             Intent launcher = getPackageManager().getLaunchIntentForPackage(projectFilePaths.packageName);
                                             if (launcher != null) {
                                                 startActivity(launcher);

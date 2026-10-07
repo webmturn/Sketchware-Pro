@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor.logic;
 
+import pro.sketchware.core.settings.ApplicationSettings;
+
 import static pro.sketchware.util.ThemeUtils.getColor;
 import static pro.sketchware.util.ThemeUtils.isDarkThemeEnabled;
 
@@ -33,7 +35,6 @@ import pro.sketchware.beans.ViewBeans;
 import pro.sketchware.util.IdGenerator;
 import pro.sketchware.util.Helper;
 import pro.sketchware.activities.editor.makeblock.ReturnMoreblockManager;
-import pro.sketchware.activities.settings.ConfigActivity;
 import pro.sketchware.core.build.ViewBindingBuilder;
 import pro.sketchware.R;
 import pro.sketchware.core.resources.StringResourceResolver;
@@ -252,7 +253,7 @@ public class ExtraPaletteBlock {
     }
 
     private boolean isWidgetUsed(String widgetType) {
-        if (ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_SHOW_EVERY_SINGLE_BLOCK)) {
+        if (ApplicationSettings.isSettingEnabled(ApplicationSettings.SETTING_SHOW_EVERY_SINGLE_BLOCK)) {
             return true;
         }
 
@@ -1850,12 +1851,12 @@ public class ExtraPaletteBlock {
             case 8:
                 logicEditor.addPaletteLabel(Helper.getResString(R.string.logic_editor_panel_button_create_block), "blockAdd");
                 logicEditor.addPaletteLabel(Helper.getResString(R.string.logic_editor_panel_button_import_collection), "blockImport");
-                if (ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_SHOW_BUILT_IN_BLOCKS)) {
+                if (ApplicationSettings.isSettingEnabled(ApplicationSettings.SETTING_SHOW_BUILT_IN_BLOCKS)) {
                     logicEditor.createPaletteBlock(" ", "customToast");
                     logicEditor.createPaletteBlock(" ", "customToastWithIcon");
                 }
                 moreBlocks();
-                if (ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_SHOW_BUILT_IN_BLOCKS)) {
+                if (ApplicationSettings.isSettingEnabled(ApplicationSettings.SETTING_SHOW_BUILT_IN_BLOCKS)) {
                     logicEditor.addPaletteCategory(Helper.getResString(R.string.logic_editor_category_command_blocks), getTitleBgColor());
                     logicEditor.createPaletteBlock("c", "CommandBlockJava");
                     logicEditor.addDeprecatedBlock(Helper.getResString(R.string.logic_editor_deprecated_xml_command), "c", "CommandBlockXML");

@@ -3,16 +3,13 @@ package pro.sketchware.core.project;
 import android.app.Application;
 import android.content.pm.ApplicationInfo;
 import android.util.Log;
-import android.view.View;
-import android.widget.Checkable;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.io.File;
 
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.LogUtil;
@@ -72,7 +69,16 @@ public class ProjectSettings {
         sc_id = scId;
 
         path = getPath();
+        load();
+    }
 
+    ProjectSettings(String scId, File settingsFile) {
+        sc_id = scId;
+        path = settingsFile.getAbsolutePath();
+        load();
+    }
+
+    private void load() {
         if (FileUtil.isExistFile(path)) {
             try {
                 settings = new Gson().fromJson(FileUtil.readFile(path).trim(), Helper.TYPE_STRING_MAP);
@@ -120,47 +126,14 @@ public class ProjectSettings {
         }
     }
 
-    private void processView(View v) {
-        if (v.getTag() != null) {
-            String key = (String) v.getTag();
-            String value;
-
-            if (v instanceof EditText editText) {
-                value = Helper.getText(editText);
-            } else if (v instanceof Checkable checkable) {
-                value = Boolean.toString(checkable.isChecked());
-            } else if (v instanceof RadioGroup radioGroup) {
-                value = getCheckedRbValue(radioGroup);
-            } else {
-                return;
-            }
-
-            settings.put(key, value);
-        }
-    }
-
-    public void setValues(View... views) {
-        for (View v : views) {
-            processView(v);
-        }
+    public void setValues(Map<String, String> values) {
+        settings.putAll(values);
         save();
     }
 
     public void setValue(String key, String value) {
         settings.put(key, value);
         save();
-    }
-
-    private String getCheckedRbValue(RadioGroup rg) {
-        for (int i = 0; i < rg.getChildCount(); i++) {
-            RadioButton rb = (RadioButton) rg.getChildAt(i);
-
-            if (rb.isChecked()) {
-                return Helper.getText(rb);
-            }
-        }
-
-        return "";
     }
 
     private void save() {

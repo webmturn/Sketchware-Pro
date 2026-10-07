@@ -1,5 +1,7 @@
 package pro.sketchware.activities.design;
 
+import pro.sketchware.core.settings.ApplicationSettings;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -31,7 +33,6 @@ import pro.sketchware.core.codegen.ExtraBlockInfo;
 import pro.sketchware.core.codegen.BlockLoader;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.LogUtil;
-import pro.sketchware.activities.settings.ConfigActivity;
 
 import pro.sketchware.R;
 import pro.sketchware.databinding.DialogPaletteBinding;
@@ -123,8 +124,8 @@ public class CustomBlocksDialog {
 
     private void importAll(Context context, CustomBlocksManager customBlocksManager, ArrayList<BlockBean> list) {
         ArrayList<HashMap<String, Object>> blocksList = new ArrayList<>();
-        String paletteDir = getConfigPath(ConfigActivity.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH);
-        String blocksDir = getConfigPath(ConfigActivity.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH);
+        String paletteDir = getConfigPath(ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH);
+        String blocksDir = getConfigPath(ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH);
 
         ArrayList<HashMap<String, Object>> allBlocksList = loadJsonList(blocksDir);
         ArrayList<HashMap<String, Object>> paletteList = loadJsonList(paletteDir);
@@ -162,8 +163,8 @@ public class CustomBlocksDialog {
 
     private String getConfigPath(String settingKey) {
         return SketchwarePaths.resolveExternalStorageRelativePath(
-                ConfigActivity.getStringSettingValueOrSetAndGet(
-                        settingKey, (String) ConfigActivity.getDefaultValue(settingKey)));
+                ApplicationSettings.getStringSettingValueOrSetAndGet(
+                        settingKey, (String) ApplicationSettings.getDefaultValue(settingKey)));
     }
 
     private ArrayList<HashMap<String, Object>> loadJsonList(String path) {

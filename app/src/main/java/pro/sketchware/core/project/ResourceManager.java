@@ -1,5 +1,7 @@
 package pro.sketchware.core.project;
 
+import pro.sketchware.core.settings.ApplicationSettings;
+
 import android.util.Log;
 
 import pro.sketchware.beans.ProjectResourceBean;
@@ -86,7 +88,8 @@ public class ResourceManager {
 
   private byte[] encryptStringForStorage(String content, String filePath) throws IOException {
     try {
-      return fileUtil.encryptString(content);
+      return fileUtil.encryptString(content, ApplicationSettings.isSettingEnabled(
+              ApplicationSettings.SETTING_PROJECT_DATA_ENCRYPTION));
     } catch (GeneralSecurityException e) {
       throw new IOException("Failed to encrypt resource data file: " + filePath, e);
     }

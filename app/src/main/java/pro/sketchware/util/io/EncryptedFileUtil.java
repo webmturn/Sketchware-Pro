@@ -19,7 +19,6 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import pro.sketchware.activities.settings.ConfigActivity;
 
 /**
  * Low-level file I/O utility used throughout Sketchware Pro for reading and writing
@@ -35,7 +34,6 @@ import pro.sketchware.activities.settings.ConfigActivity;
  * </ul>
  *
  * @see ProjectDataStore
- * @see ConfigActivity#SETTING_PROJECT_DATA_ENCRYPTION
  */
 public class EncryptedFileUtil {
   public boolean encryptionEnabled = false;
@@ -329,14 +327,15 @@ public class EncryptedFileUtil {
   
   /**
    * Encrypts a string for storage. Returns plaintext UTF-8 bytes if
-   * encryption is disabled in {@link ConfigActivity} settings.
+   * encryption is disabled by the caller's current storage policy.
    *
    * @param content the string to encrypt
+   * @param encrypt whether this write should use encryption
    * @return encrypted bytes, or plaintext UTF-8 bytes if encryption is disabled
    * @throws Exception if encryption fails
    */
-  public byte[] encryptString(String content) throws GeneralSecurityException {
-    if (!ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_PROJECT_DATA_ENCRYPTION)) {
+  public byte[] encryptString(String content, boolean encrypt) throws GeneralSecurityException {
+    if (!encrypt) {
       // Encryption disabled — write as plaintext UTF-8 bytes
       return content.getBytes(StandardCharsets.UTF_8);
     }

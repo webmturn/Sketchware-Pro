@@ -1,5 +1,7 @@
 package pro.sketchware.core.project;
 
+import pro.sketchware.core.settings.ApplicationSettings;
+
 import android.content.Context;
 
 import java.io.File;
@@ -28,7 +30,8 @@ public class ProjectListManager {
 
     private static byte[] encryptProjectJson(EncryptedFileUtil fileUtil, String jsonData, String projectMetadataPath) throws IOException {
         try {
-            return fileUtil.encryptString(jsonData);
+            return fileUtil.encryptString(jsonData, ApplicationSettings.isSettingEnabled(
+              ApplicationSettings.SETTING_PROJECT_DATA_ENCRYPTION));
         } catch (GeneralSecurityException e) {
             throw new IOException("Failed to encrypt project metadata file: " + projectMetadataPath, e);
         }

@@ -1,6 +1,7 @@
 package pro.sketchware.activities.editor.block;
 
-import pro.sketchware.activities.settings.ConfigActivity;
+import pro.sketchware.core.settings.ApplicationSettings;
+
 
 import static pro.sketchware.util.GsonUtils.getGson;
 
@@ -327,8 +328,8 @@ public class BlocksManager extends BaseAppCompatActivity {
         dialog.setView(dialogBinding.getRoot());
 
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (view, which) -> {
-            ConfigActivity.setSetting(ConfigActivity.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH, Objects.requireNonNull(dialogBinding.palettesPath.getText()).toString());
-            ConfigActivity.setSetting(ConfigActivity.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH, Objects.requireNonNull(dialogBinding.blocksPath.getText()).toString());
+            ApplicationSettings.setSetting(ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH, Objects.requireNonNull(dialogBinding.palettesPath.getText()).toString());
+            ApplicationSettings.setSetting(ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH, Objects.requireNonNull(dialogBinding.blocksPath.getText()).toString());
 
             readSettings();
             refreshList();
@@ -338,8 +339,8 @@ public class BlocksManager extends BaseAppCompatActivity {
         dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
 
         dialog.setNeutralButton(R.string.common_word_defaults, (view, which) -> {
-            ConfigActivity.setSetting(ConfigActivity.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH, ConfigActivity.getDefaultValue(ConfigActivity.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH));
-            ConfigActivity.setSetting(ConfigActivity.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH, ConfigActivity.getDefaultValue(ConfigActivity.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH));
+            ApplicationSettings.setSetting(ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH, ApplicationSettings.getDefaultValue(ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH));
+            ApplicationSettings.setSetting(ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH, ApplicationSettings.getDefaultValue(ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH));
 
             readSettings();
             refreshList();
@@ -373,13 +374,13 @@ public class BlocksManager extends BaseAppCompatActivity {
 
     private void readSettings() {
         pallet_dir = SketchwarePaths.resolveExternalStorageRelativePath(
-                ConfigActivity.getStringSettingValueOrSetAndGet(
-                        ConfigActivity.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH,
-                        (String) ConfigActivity.getDefaultValue(ConfigActivity.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH)));
+                ApplicationSettings.getStringSettingValueOrSetAndGet(
+                        ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH,
+                        (String) ApplicationSettings.getDefaultValue(ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH)));
         blocks_dir = SketchwarePaths.resolveExternalStorageRelativePath(
-                ConfigActivity.getStringSettingValueOrSetAndGet(
-                        ConfigActivity.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH,
-                        (String) ConfigActivity.getDefaultValue(ConfigActivity.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH)));
+                ApplicationSettings.getStringSettingValueOrSetAndGet(
+                        ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH,
+                        (String) ApplicationSettings.getDefaultValue(ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH)));
 
         if (FileUtil.isExistFile(blocks_dir) && isValidJson(FileUtil.readFile(blocks_dir))) {
             try {

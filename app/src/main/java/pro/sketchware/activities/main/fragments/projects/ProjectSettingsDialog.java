@@ -1,5 +1,7 @@
 package pro.sketchware.activities.main.fragments.projects;
 
+import pro.sketchware.util.UIHelper;
+
 import static pro.sketchware.core.build.BuildDefaults.VAR_DEFAULT_MIN_SDK_VERSION;
 import static pro.sketchware.core.build.BuildDefaults.VAR_DEFAULT_TARGET_SDK_VERSION;
 
@@ -70,7 +72,7 @@ public class ProjectSettingsDialog {
         };
 
         binding.save.setOnClickListener(v -> {
-            settings.setValues(preferences);
+            settings.setValues(UIHelper.collectTaggedViewValues(preferences));
             dialog.dismiss();
         });
         binding.cancel.setOnClickListener(v -> dialog.dismiss());

@@ -1,5 +1,7 @@
 package pro.sketchware.activities.main.fragments.projects;
 
+import pro.sketchware.core.settings.ApplicationSettings;
+
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
@@ -24,7 +26,6 @@ import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
 import pro.sketchware.util.Helper;
-import pro.sketchware.activities.settings.ConfigActivity;
 import pro.sketchware.R;
 import pro.sketchware.activities.main.fragments.projects.ProjectsFragment;
 import pro.sketchware.databinding.ProgressMsgBoxBinding;
@@ -137,7 +138,7 @@ public class BackupRestoreManager {
         options.setExtensions(new String[]{BackupFactory.EXTENSION});
         options.setTitle(String.format(Helper.getResString(R.string.backup_select_to_restore), BackupFactory.EXTENSION));
 
-        String lastDir = ConfigActivity.getLastRestoreDirectory();
+        String lastDir = ApplicationSettings.getLastRestoreDirectory();
         if (!lastDir.isEmpty() && new File(lastDir).isDirectory()) {
             options.setInitialDirectory(lastDir);
         }
@@ -148,7 +149,7 @@ public class BackupRestoreManager {
                 if (!files.isEmpty()) {
                     File parent = files.get(0).getParentFile();
                     if (parent != null) {
-                        ConfigActivity.setLastRestoreDirectory(parent.getAbsolutePath());
+                        ApplicationSettings.setLastRestoreDirectory(parent.getAbsolutePath());
                     }
                 }
                 for (int i = 0; i < files.size(); i++) {

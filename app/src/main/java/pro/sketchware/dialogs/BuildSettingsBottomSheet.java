@@ -1,5 +1,7 @@
 package pro.sketchware.dialogs;
 
+import pro.sketchware.util.UIHelper;
+
 import static pro.sketchware.core.build.BuildSettings.SETTING_ANDROID_JAR_PATH;
 import static pro.sketchware.core.build.BuildSettings.SETTING_CLASSPATH;
 import static pro.sketchware.core.build.BuildSettings.SETTING_DEXER;
@@ -116,7 +118,7 @@ public class BuildSettingsBottomSheet extends BottomSheetDialogFragment {
 
         binding.btnCancel.setOnClickListener(v -> dismiss());
         binding.btnSave.setOnClickListener(v -> {
-            projectSettings.setValues(views);
+            projectSettings.setValues(UIHelper.collectTaggedViewValues(views));
             dismiss();
         });
     }

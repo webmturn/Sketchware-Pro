@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor.logic;
 
+import pro.sketchware.core.settings.ApplicationSettings;
+
 import android.util.Pair;
 
 import pro.sketchware.activities.editor.LogicEditorActivity;
@@ -11,7 +13,6 @@ import java.util.regex.Pattern;
 
 import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.core.project.ProjectDataManager;
-import pro.sketchware.activities.settings.ConfigActivity;
 
 public class ExtraBlocks {
 
@@ -45,7 +46,7 @@ public class ExtraBlocks {
     }
 
     public boolean isComponentUsed(int componentId) {
-        return projectDataManager.hasComponentOfType(javaName, componentId) || ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_SHOW_EVERY_SINGLE_BLOCK);
+        return projectDataManager.hasComponentOfType(javaName, componentId) || ApplicationSettings.isSettingEnabled(ApplicationSettings.SETTING_SHOW_EVERY_SINGLE_BLOCK);
     }
 
     public void invalidateCustomVarCache() {
@@ -53,7 +54,7 @@ public class ExtraBlocks {
     }
 
     public boolean isCustomVarUsed(String variable) {
-        if (ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_SHOW_EVERY_SINGLE_BLOCK)) {
+        if (ApplicationSettings.isSettingEnabled(ApplicationSettings.SETTING_SHOW_EVERY_SINGLE_BLOCK)) {
             return true;
         }
         if (customVarTypesCache == null) {

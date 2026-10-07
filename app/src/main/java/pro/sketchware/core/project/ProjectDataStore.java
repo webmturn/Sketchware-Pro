@@ -1,5 +1,7 @@
 package pro.sketchware.core.project;
 
+import pro.sketchware.core.settings.ApplicationSettings;
+
 import android.util.Log;
 import android.util.Pair;
 
@@ -29,8 +31,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import pro.sketchware.core.project.ClassInfo;
-import pro.sketchware.core.project.ProjectDataParser;
 import pro.sketchware.util.io.EncryptedFileUtil;
 
 /**
@@ -218,7 +218,8 @@ public class ProjectDataStore {
 
   private byte[] encryptStringForStorage(String content, String filePath) throws IOException {
     try {
-      return fileUtil.encryptString(content);
+      return fileUtil.encryptString(content, ApplicationSettings.isSettingEnabled(
+              ApplicationSettings.SETTING_PROJECT_DATA_ENCRYPTION));
     } catch (GeneralSecurityException e) {
       throw new IOException("Failed to encrypt project data file: " + filePath, e);
     }

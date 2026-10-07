@@ -1,5 +1,7 @@
 package pro.sketchware.activities.main.activities;
 
+import pro.sketchware.core.settings.ApplicationSettings;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -48,7 +50,6 @@ import pro.sketchware.util.DeviceUtil;
 import pro.sketchware.activities.main.fragments.projects.BackupFactory;
 import pro.sketchware.activities.main.fragments.projects.BackupRestoreManager;
 import pro.sketchware.util.Helper;
-import pro.sketchware.activities.settings.ConfigActivity;
 import pro.sketchware.activities.main.fragments.projects.SingleCopyTask;
 import pro.sketchware.R;
 import pro.sketchware.activities.about.AboutActivity;
@@ -289,7 +290,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
                     }
                 }).copyFile(data);
             }
-        } else if (!ConfigActivity.isSettingEnabled(ConfigActivity.SETTING_CRITICAL_UPDATE_REMINDER)) {
+        } else if (!ApplicationSettings.isSettingEnabled(ApplicationSettings.SETTING_CRITICAL_UPDATE_REMINDER)) {
             BottomSheetDialogView bottomSheetDialog = getBottomSheetDialogView();
             bottomSheetDialog.getPositiveButton().setEnabled(false);
 
@@ -405,7 +406,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
         bottomSheetDialog.setDescription(Helper.getResString(R.string.main_major_changes_desc));
 
         bottomSheetDialog.setPositiveButton(Helper.getResString(R.string.common_word_view_changes), (dialog, which) -> {
-            ConfigActivity.setSetting(ConfigActivity.SETTING_CRITICAL_UPDATE_REMINDER, true);
+            ApplicationSettings.setSetting(ApplicationSettings.SETTING_CRITICAL_UPDATE_REMINDER, true);
             Intent launcher = new Intent(this, AboutActivity.class);
             launcher.putExtra("select", "changelog");
             startActivity(launcher);
