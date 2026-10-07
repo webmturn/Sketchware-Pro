@@ -119,29 +119,23 @@ public class ResourceManager {
       ArrayList<ProjectResourceBean> targetFonts) throws IOException {
     StringBuilder contentBuffer = new StringBuilder();
     String sectionName = "";
-    while (true) {
-      String line = reader.readLine();
-      if (line != null) {
-        if (line.length() <= 0)
-          continue; 
-        if (line.charAt(0) == '@') {
-          StringBuilder tempBuffer = contentBuffer;
-          if (sectionName.length() > 0) {
-            parseResourceSection(sectionName, contentBuffer.toString(), targetImages, targetSounds, targetFonts);
-            tempBuffer = new StringBuilder();
-          } 
-          sectionName = line.substring(1);
-          contentBuffer = tempBuffer;
-          continue;
-        } 
-        contentBuffer.append(line);
-        contentBuffer.append("\n");
+    String line;
+    while ((line = reader.readLine()) != null) {
+      if (line.length() <= 0)
         continue;
-      } 
-      if (sectionName.length() > 0)
-        parseResourceSection(sectionName, contentBuffer.toString(), targetImages, targetSounds, targetFonts);
-      return;
-    } 
+      if (line.charAt(0) == '@') {
+        if (sectionName.length() > 0) {
+          parseResourceSection(sectionName, contentBuffer.toString(), targetImages, targetSounds, targetFonts);
+          contentBuffer = new StringBuilder();
+        }
+        sectionName = line.substring(1);
+        continue;
+      }
+      contentBuffer.append(line);
+      contentBuffer.append("\n");
+    }
+    if (sectionName.length() > 0)
+      parseResourceSection(sectionName, contentBuffer.toString(), targetImages, targetSounds, targetFonts);
   }
   
   public void copyFontsToDir(String destDir) {

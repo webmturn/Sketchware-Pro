@@ -817,31 +817,25 @@ public void readViewData(BufferedReader reader) throws IOException {
     HashMap<String, ViewBean> parsedFabMap = new HashMap<>();
     StringBuilder contentBuffer = new StringBuilder();
     String sectionName = "";
-    while (true) {
-      String line = reader.readLine();
-      if (line != null) {
-        if (line.length() <= 0)
-          continue; 
-        if (line.charAt(0) == '@') {
-          StringBuilder tempBuffer = contentBuffer;
-          if (sectionName.length() > 0) {
-            parseViewSection(sectionName, contentBuffer.toString(), parsedViewMap, parsedFabMap);
-            tempBuffer = new StringBuilder();
-          } 
-          sectionName = line.substring(1);
-          contentBuffer = tempBuffer;
-          continue;
-        } 
-        contentBuffer.append(line);
-        contentBuffer.append("\n");
+    String line;
+    while ((line = reader.readLine()) != null) {
+      if (line.length() <= 0)
         continue;
-      } 
-      if (sectionName.length() > 0 && contentBuffer.length() > 0)
-        parseViewSection(sectionName, contentBuffer.toString(), parsedViewMap, parsedFabMap);
-      viewMap = parsedViewMap;
-      fabMap = parsedFabMap;
-      return;
-    } 
+      if (line.charAt(0) == '@') {
+        if (sectionName.length() > 0) {
+          parseViewSection(sectionName, contentBuffer.toString(), parsedViewMap, parsedFabMap);
+          contentBuffer = new StringBuilder();
+        }
+        sectionName = line.substring(1);
+        continue;
+      }
+      contentBuffer.append(line);
+      contentBuffer.append("\n");
+    }
+    if (sectionName.length() > 0 && contentBuffer.length() > 0)
+      parseViewSection(sectionName, contentBuffer.toString(), parsedViewMap, parsedFabMap);
+    viewMap = parsedViewMap;
+    fabMap = parsedFabMap;
   }
   
   public void addListVariable(String fileName, int listType, String listName) {

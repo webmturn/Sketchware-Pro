@@ -81,33 +81,27 @@ public class LibraryManager {
     LibraryState parsedState = new LibraryState();
     StringBuilder contentBuffer = new StringBuilder();
     String sectionName = "";
-    while (true) {
-      String line = reader.readLine();
-      if (line != null) {
-        if (line.length() <= 0)
-          continue;
-        if (line.charAt(0) == '@') {
-          StringBuilder tempBuffer = contentBuffer;
-          if (sectionName.length() > 0) {
-            parseLibrarySection(sectionName, contentBuffer.toString(), parsedState);
-            tempBuffer = new StringBuilder();
-          } 
-          sectionName = line.substring(1);
-          contentBuffer = tempBuffer;
-          continue;
-        } 
-        contentBuffer.append(line);
-        contentBuffer.append("\n");
+    String line;
+    while ((line = reader.readLine()) != null) {
+      if (line.length() <= 0)
         continue;
-      } 
-      if (sectionName.length() > 0)
-        parseLibrarySection(sectionName, contentBuffer.toString(), parsedState);
-      firebaseDB = parsedState.firebaseDB;
-      compat = parsedState.compat;
-      admob = parsedState.admob;
-      googleMap = parsedState.googleMap;
-      return;
-    } 
+      if (line.charAt(0) == '@') {
+        if (sectionName.length() > 0) {
+          parseLibrarySection(sectionName, contentBuffer.toString(), parsedState);
+          contentBuffer = new StringBuilder();
+        }
+        sectionName = line.substring(1);
+        continue;
+      }
+      contentBuffer.append(line);
+      contentBuffer.append("\n");
+    }
+    if (sectionName.length() > 0)
+      parseLibrarySection(sectionName, contentBuffer.toString(), parsedState);
+    firebaseDB = parsedState.firebaseDB;
+    compat = parsedState.compat;
+    admob = parsedState.admob;
+    googleMap = parsedState.googleMap;
   }
   
   public final boolean writeToFile(String filePath) {
