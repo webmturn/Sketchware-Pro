@@ -72,7 +72,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
     public DimensEditor dimensEditor;
     private ResourcesEditorsActivityBinding binding;
     private MaterialAlertDialogBuilder builder;
-    private int currentTabPosition = 0;
+    private int currentTabPosition = ResourceEditorTabs.STRINGS;
 
     public static String escapeXml(String text) {
         return XmlUtil.escapeXml(text);
@@ -83,7 +83,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            currentTabPosition = savedInstanceState.getInt("current_tab_position", 0);
+            currentTabPosition = savedInstanceState.getInt("current_tab_position", ResourceEditorTabs.STRINGS);
         }
 
         setupUI();
@@ -98,7 +98,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         binding = ResourcesEditorsActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setSupportActionBar(binding.topAppBar);
-        binding.viewPager.setOffscreenPageLimit(5);
+        binding.viewPager.setOffscreenPageLimit(ResourceEditorTabs.COUNT - 1);
     }
 
     private void initializeManagers() {
@@ -136,12 +136,12 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         binding.fab.setOnClickListener(view -> {
             int currentItem = binding.viewPager.getCurrentItem();
             switch (currentItem) {
-                case 0 -> stringsEditor.showAddStringDialog();
-                case 1 -> colorsEditor.showColorEditDialog(null, -1);
-                case 2 -> stylesEditor.showAddStyleDialog();
-                case 3 -> themesEditor.showAddThemeDialog();
-                case 4 -> arraysEditor.showAddArrayDialog();
-                case 5 -> dimensEditor.showDimenEditDialog(null, -1);
+                case ResourceEditorTabs.STRINGS -> stringsEditor.showAddStringDialog();
+                case ResourceEditorTabs.COLORS -> colorsEditor.showColorEditDialog(null, -1);
+                case ResourceEditorTabs.STYLES -> stylesEditor.showAddStyleDialog();
+                case ResourceEditorTabs.THEMES -> themesEditor.showAddThemeDialog();
+                case ResourceEditorTabs.ARRAYS -> arraysEditor.showAddArrayDialog();
+                case ResourceEditorTabs.DIMENS -> dimensEditor.showDimenEditDialog(null, -1);
             }
         });
     }
@@ -284,27 +284,27 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         if (isComingFromSrcCodeEditor) {
             int currentItem = binding.viewPager.getCurrentItem();
 
-            if (currentItem == 0 || stringsEditor.stringsEditorManager.isDataLoadingFailed) {
+            if (currentItem == ResourceEditorTabs.STRINGS || stringsEditor.stringsEditorManager.isDataLoadingFailed) {
                 stringsEditor.updateStringsList(stringsFilePath, 0, false);
             }
 
-            if (currentItem == 1 || colorsEditor.colorsEditorManager.isDataLoadingFailed) {
+            if (currentItem == ResourceEditorTabs.COLORS || colorsEditor.colorsEditorManager.isDataLoadingFailed) {
                 colorsEditor.updateColorsList(colorsFilePath, 0, false);
             }
 
-            if (currentItem == 2 || stylesEditor.stylesEditorManager.isDataLoadingFailed) {
+            if (currentItem == ResourceEditorTabs.STYLES || stylesEditor.stylesEditorManager.isDataLoadingFailed) {
                 stylesEditor.updateStylesList(stylesFilePath, 0, false);
             }
 
-            if (currentItem == 3 || themesEditor.themesEditorManager.isDataLoadingFailed) {
+            if (currentItem == ResourceEditorTabs.THEMES || themesEditor.themesEditorManager.isDataLoadingFailed) {
                 themesEditor.updateThemesList(themesFilePath, 0, false);
             }
 
-            if (currentItem == 4 || arraysEditor.arraysEditorManager.isDataLoadingFailed) {
+            if (currentItem == ResourceEditorTabs.ARRAYS || arraysEditor.arraysEditorManager.isDataLoadingFailed) {
                 arraysEditor.updateArraysList(arrayFilePath, 0, false);
             }
 
-            if (currentItem == 5 || (dimensEditor.dimensEditorManager != null && dimensEditor.dimensEditorManager.isDataLoadingFailed)) {
+            if (currentItem == ResourceEditorTabs.DIMENS || (dimensEditor.dimensEditorManager != null && dimensEditor.dimensEditorManager.isDataLoadingFailed)) {
                 dimensEditor.updateDimensList(dimensFilePath, 0, false);
             }
             checkForInvalidResources();
@@ -326,17 +326,17 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
                 public boolean onQueryTextChange(String newText) {
                     newText = newText.toLowerCase().trim();
                     int currentItem = binding.viewPager.getCurrentItem();
-                    if (currentItem == 0) {
+                    if (currentItem == ResourceEditorTabs.STRINGS) {
                         stringsEditor.adapter.filter(newText);
-                    } else if (currentItem == 1) {
+                    } else if (currentItem == ResourceEditorTabs.COLORS) {
                         colorsEditor.adapter.filter(newText);
-                    } else if (currentItem == 2) {
+                    } else if (currentItem == ResourceEditorTabs.STYLES) {
                         stylesEditor.adapter.filter(newText);
-                    } else if (currentItem == 3) {
+                    } else if (currentItem == ResourceEditorTabs.THEMES) {
                         themesEditor.adapter.filter(newText);
-                    } else if (currentItem == 4) {
+                    } else if (currentItem == ResourceEditorTabs.ARRAYS) {
                         arraysEditor.adapter.filter(newText);
-                    } else if (currentItem == 5) {
+                    } else if (currentItem == ResourceEditorTabs.DIMENS) {
                         if (dimensEditor.adapter != null) dimensEditor.adapter.filter(newText);
                     }
                     return false;
@@ -368,32 +368,32 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         } else if (id != R.id.action_search) {
             int currentItem = binding.viewPager.getCurrentItem();
             switch (currentItem) {
-                case 0 -> {
+                case ResourceEditorTabs.STRINGS -> {
                     stringsEditor.hasUnsavedChanges = true;
                     stringsEditor.saveStringsFile();
                     goToCodeEditor("strings.xml", stringsFilePath);
                 }
-                case 1 -> {
+                case ResourceEditorTabs.COLORS -> {
                     colorsEditor.hasUnsavedChanges = true;
                     colorsEditor.saveColorsFile();
                     goToCodeEditor("colors.xml", colorsFilePath);
                 }
-                case 2 -> {
+                case ResourceEditorTabs.STYLES -> {
                     stylesEditor.hasUnsavedChanges = true;
                     stylesEditor.saveStylesFile();
                     goToCodeEditor("styles.xml", stylesFilePath);
                 }
-                case 3 -> {
+                case ResourceEditorTabs.THEMES -> {
                     themesEditor.hasUnsavedChanges = true;
                     themesEditor.saveThemesFile();
                     goToCodeEditor("themes.xml", themesFilePath);
                 }
-                case 4 -> {
+                case ResourceEditorTabs.ARRAYS -> {
                     arraysEditor.hasUnsavedChanges = true;
                     arraysEditor.saveArraysFile();
                     goToCodeEditor("arrays.xml", arrayFilePath);
                 }
-                case 5 -> {
+                case ResourceEditorTabs.DIMENS -> {
                     dimensEditor.hasUnsavedChanges = true;
                     dimensEditor.saveDimensFile();
                     goToCodeEditor("dimens.xml", dimensFilePath);
@@ -449,22 +449,22 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
 
         new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position) -> {
             switch (position) {
-                case 0:
+                case ResourceEditorTabs.STRINGS:
                     tab.setText("strings" + variant + ".xml");
                     break;
-                case 1:
+                case ResourceEditorTabs.COLORS:
                     tab.setText("colors" + variant + ".xml");
                     break;
-                case 2:
+                case ResourceEditorTabs.STYLES:
                     tab.setText("styles" + variant + ".xml");
                     break;
-                case 3:
+                case ResourceEditorTabs.THEMES:
                     tab.setText("themes" + variant + ".xml");
                     break;
-                case 4:
+                case ResourceEditorTabs.ARRAYS:
                     tab.setText("arrays" + variant + ".xml");
                     break;
-                case 5:
+                case ResourceEditorTabs.DIMENS:
                     tab.setText("dimens" + variant + ".xml");
             }
         }).attach();
@@ -621,17 +621,17 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
             for (int i = 0; i < resourcesFileNames.size(); i++) {
                 if (selectedItems.get(i)) {
                     switch (i) {
-                        case 0 ->
+                        case ResourceEditorTabs.STRINGS ->
                                 stringsEditor.updateStringsList(stringsFilePath.replace(variant, ""), updateMode, true);
-                        case 1 ->
+                        case ResourceEditorTabs.COLORS ->
                                 colorsEditor.updateColorsList(colorsFilePath.replace(variant, ""), updateMode, true);
-                        case 2 ->
+                        case ResourceEditorTabs.STYLES ->
                                 stylesEditor.updateStylesList(stylesFilePath.replace(variant, ""), updateMode, true);
-                        case 3 ->
+                        case ResourceEditorTabs.THEMES ->
                                 themesEditor.updateThemesList(themesFilePath.replace(variant, ""), updateMode, true);
-                        case 4 ->
+                        case ResourceEditorTabs.ARRAYS ->
                                 arraysEditor.updateArraysList(arrayFilePath.replace(variant, ""), updateMode, true);
-                        case 5 ->
+                        case ResourceEditorTabs.DIMENS ->
                                 dimensEditor.updateDimensList(dimensFilePath.replace(variant, ""), updateMode, true);
                     }
                 }

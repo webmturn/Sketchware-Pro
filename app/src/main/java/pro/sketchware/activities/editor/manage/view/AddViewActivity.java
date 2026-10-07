@@ -34,7 +34,7 @@ public class AddViewActivity extends BaseAppCompatActivity {
 
     public static final int REQUEST_CODE_EDIT = 265;
     public static final int REQUEST_CODE_ADD = 264;
-    public static final int REQUEST_CODE_PRESET_SELECTION = 276;
+    public static final int REQUEST_CODE_PRESET_SELECTION = ViewPresetRequestCodes.ACTIVITY;
     public static final int VIEW_TYPE_ACTIVITY = 0;
     public static final int VIEW_TYPE_FRAGMENT = 1;
     public static final int VIEW_TYPE_DIALOG_FRAGMENT = 2;
@@ -178,7 +178,7 @@ public class AddViewActivity extends BaseAppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 276 && resultCode == RESULT_OK && data != null) {
+        if (requestCode == REQUEST_CODE_PRESET_SELECTION && resultCode == RESULT_OK && data != null) {
             ProjectFileBean presetData = data.getParcelableExtra("preset_data");
             if (presetData == null) return;
             presetName = presetData.presetName;

@@ -6,6 +6,7 @@ import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import pro.sketchware.activities.editor.manage.view.ViewPresetRequestCodes;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.activities.editor.manage.view.PresetSettingActivity;
 import pro.sketchware.util.UIHelper;
@@ -21,7 +22,8 @@ public class ViewFileEditClickListener implements View.OnClickListener {
   }
   
   public void onClick(View view) {
-    char c;
+    // Preserve the legacy char extra type used by this preset entry point.
+    char presetRequestCode;
     if (UIHelper.isClickThrottled())
       return; 
     CustomViewFilesFragment.FileListAdapter.ViewHolder holder = viewHolder;
@@ -30,12 +32,12 @@ public class ViewFileEditClickListener implements View.OnClickListener {
     holder.adapterRef.selectedPosition = pos;
     Intent intent = new Intent(viewHolder.adapterRef.outerAdapter.getActivity(), PresetSettingActivity.class);
     if (((ProjectFileBean)viewHolder.adapterRef.outerAdapter.projectFiles.get(viewHolder.adapterRef.selectedPosition)).fileType == ProjectFileBean.PROJECT_FILE_TYPE_CUSTOM_VIEW) {
-      c = 'ĕ';
+      presetRequestCode = ViewPresetRequestCodes.LIST_ITEM;
     } else {
-      c = 'Ė';
+      presetRequestCode = ViewPresetRequestCodes.DRAWER;
     } 
-    intent.putExtra("request_code", c);
+    intent.putExtra("request_code", presetRequestCode);
     intent.putExtra("edit_mode", true);
-    viewHolder.adapterRef.outerAdapter.startActivityForResult(intent, c);
+    viewHolder.adapterRef.outerAdapter.startActivityForResult(intent, presetRequestCode);
   }
 }

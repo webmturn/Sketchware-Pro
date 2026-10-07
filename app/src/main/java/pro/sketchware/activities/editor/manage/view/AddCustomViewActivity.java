@@ -26,7 +26,8 @@ import pro.sketchware.R;
 
 public class AddCustomViewActivity extends BaseDialogActivity implements View.OnClickListener {
 
-    public static final int REQ_CD_PRESET_ACTIVITY = 277;
+    /** Legacy public name for the list-item preset request code. */
+    public static final int REQ_CD_PRESET_ACTIVITY = ViewPresetRequestCodes.LIST_ITEM;
 
     private ActivityResultLauncher<Intent> presetLauncher;
 
@@ -78,7 +79,7 @@ public class AddCustomViewActivity extends BaseDialogActivity implements View.On
             finish();
         } else if (id == R.id.common_dialog_default_button) {
             Intent intent = new Intent(getApplicationContext(), PresetSettingActivity.class);
-            intent.putExtra("request_code", REQ_CD_PRESET_ACTIVITY);
+            intent.putExtra("request_code", ViewPresetRequestCodes.LIST_ITEM);
             presetLauncher.launch(intent);
         } else if (id == R.id.common_dialog_cancel_button) {
             finish();

@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor.manage.view.fragments;
 
+import android.app.Activity;
+import pro.sketchware.activities.editor.manage.view.ViewPresetRequestCodes;
 import pro.sketchware.core.layout.ViewTypeNames;
 
 import android.content.Intent;
@@ -67,9 +69,9 @@ public class CustomViewFilesFragment extends BaseFragment {
   
   public final ArrayList<ViewBean> getPresetViews(String fileName, int position) {
     ArrayList<ViewBean> presetViews;
-    if (position == 277) {
+    if (position == ViewPresetRequestCodes.LIST_ITEM) {
       presetViews = PresetLayoutFactory.getListItemPresetViews(fileName);
-    } else if (position == 278) {
+    } else if (position == ViewPresetRequestCodes.DRAWER) {
       presetViews = PresetLayoutFactory.getDrawerPresetViews(fileName);
     } else {
       presetViews = new ArrayList<>();
@@ -163,7 +165,7 @@ public class CustomViewFilesFragment extends BaseFragment {
   }
   
   public void onActivityResult(int start, int end, Intent resultIntent) {
-    if ((start == 277 || start == 278) && end == -1) {
+    if ((start == ViewPresetRequestCodes.LIST_ITEM || start == ViewPresetRequestCodes.DRAWER) && end == Activity.RESULT_OK) {
       ProjectFileBean projectFileBean = projectFiles.get(adapter.selectedPosition);
       ArrayList<ViewBean> currentViews = ProjectDataManager.getProjectDataManager(projectId).getViews(projectFileBean.getXmlName());
       for (end = currentViews.size() - 1; end >= 0; end--) {

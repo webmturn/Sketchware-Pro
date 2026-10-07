@@ -1,5 +1,6 @@
 package pro.sketchware.activities.editor.manage.view.fragments;
 
+import pro.sketchware.activities.editor.manage.view.ViewPresetRequestCodes;
 import pro.sketchware.core.layout.ViewTypeNames;
 
 import android.app.Activity;
@@ -40,7 +41,7 @@ import pro.sketchware.util.UIHelper;
 
 public class ViewFilesFragment extends BaseFragment {
 
-    private static final int REQUEST_CODE_PRESET_ACTIVITY = 276;
+    private static final int REQUEST_CODE_PRESET_ACTIVITY = ViewPresetRequestCodes.ACTIVITY;
     private static final int REQUEST_CODE_ADD_VIEW_ACTIVITY = 265;
     private ActivityResultLauncher<Intent> addViewLauncher;
     private ActivityResultLauncher<Intent> presetLauncher;

@@ -1,5 +1,6 @@
 package pro.sketchware.activities.editor.manage;
 
+import pro.sketchware.activities.editor.manage.view.ViewPresetRequestCodes;
 import pro.sketchware.core.layout.ViewTypeNames;
 
 import android.content.Intent;
@@ -147,7 +148,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         ProjectFileBean presetData = result.getData().getParcelableExtra("preset_data");
                         if (presetData == null) return;
-                        if (lastPresetRequestCode == 276) {
+                        if (lastPresetRequestCode == ViewPresetRequestCodes.ACTIVITY) {
                             ProjectFileBean activity = ProjectDataManager.getFileManager(sc_id).getActivities().get(viewSelectorAdapter.selectedItem);
                             activity.keyboardSetting = presetData.keyboardSetting;
                             activity.orientation = presetData.orientation;
@@ -281,9 +282,9 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
     private ArrayList<ViewBean> getPresetViews(String presetName, int requestCode) {
         ArrayList<ViewBean> views = new ArrayList<>();
         return switch (requestCode) {
-            case 276 -> PresetLayoutFactory.getActivityPresetViews(presetName);
-            case 277 -> PresetLayoutFactory.getListItemPresetViews(presetName);
-            case 278 -> PresetLayoutFactory.getDrawerPresetViews(presetName);
+            case ViewPresetRequestCodes.ACTIVITY -> PresetLayoutFactory.getActivityPresetViews(presetName);
+            case ViewPresetRequestCodes.LIST_ITEM -> PresetLayoutFactory.getListItemPresetViews(presetName);
+            case ViewPresetRequestCodes.DRAWER -> PresetLayoutFactory.getDrawerPresetViews(presetName);
             default -> views;
         };
     }
@@ -319,9 +320,9 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
 
     private int getRequestCode(ProjectFileBean projectFileBean) {
         if (selectedTab == 0) {
-            return 276;
+            return ViewPresetRequestCodes.ACTIVITY;
         }
-        return projectFileBean.fileType == ProjectFileBean.PROJECT_FILE_TYPE_CUSTOM_VIEW ? 277 : 278;
+        return projectFileBean.fileType == ProjectFileBean.PROJECT_FILE_TYPE_CUSTOM_VIEW ? ViewPresetRequestCodes.LIST_ITEM : ViewPresetRequestCodes.DRAWER;
     }
 
     private class ViewSelectorAdapter extends RecyclerView.Adapter<ViewSelectorAdapter.ViewHolder> {

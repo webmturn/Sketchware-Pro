@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import pro.sketchware.activities.resourceseditor.ResourceEditorTabs;
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
 
 public class EditorsAdapter extends FragmentStateAdapter {
@@ -19,18 +20,18 @@ public class EditorsAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         return switch (position) {
-            case 0 -> activity.stringsEditor;
-            case 1 -> activity.colorsEditor;
-            case 2 -> activity.stylesEditor;
-            case 3 -> activity.themesEditor;
-            case 4 -> activity.arraysEditor;
-            case 5 -> activity.dimensEditor;
+            case ResourceEditorTabs.STRINGS -> activity.stringsEditor;
+            case ResourceEditorTabs.COLORS -> activity.colorsEditor;
+            case ResourceEditorTabs.STYLES -> activity.stylesEditor;
+            case ResourceEditorTabs.THEMES -> activity.themesEditor;
+            case ResourceEditorTabs.ARRAYS -> activity.arraysEditor;
+            case ResourceEditorTabs.DIMENS -> activity.dimensEditor;
             default -> throw new IllegalArgumentException("Invalid position");
         };
     }
 
     @Override
     public int getItemCount() {
-        return 6;
+        return ResourceEditorTabs.COUNT;
     }
 }
