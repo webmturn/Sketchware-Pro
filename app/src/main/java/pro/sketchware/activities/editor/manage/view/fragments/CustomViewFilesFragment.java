@@ -2,7 +2,6 @@ package pro.sketchware.activities.editor.manage.view.fragments;
 
 import pro.sketchware.core.layout.ViewTypeNames;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;

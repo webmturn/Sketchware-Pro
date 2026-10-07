@@ -66,7 +66,7 @@ import pro.sketchware.activities.editor.view.palette.WidgetPaletteIcon;
 import pro.sketchware.util.ViewUtil;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.beans.ViewBeans;
-import pro.sketchware.util.ProjectFile;
+import pro.sketchware.core.project.ProjectThemeColors;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.util.ThemeUtils;
@@ -789,9 +789,9 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
     }
 
     private void setPreviewColors(String scId) {
-        bgStatus.setBackgroundColor(ProjectFile.getColor(scId, ProjectFile.COLOR_PRIMARY_DARK));
-        imgPhoneTopBg.setBackgroundColor(ProjectFile.getColor(scId, ProjectFile.COLOR_PRIMARY_DARK));
-        toolbar.setBackgroundColor(ProjectFile.getColor(scId, ProjectFile.COLOR_PRIMARY));
+        bgStatus.setBackgroundColor(ProjectThemeColors.getColor(scId, ProjectThemeColors.COLOR_PRIMARY_DARK));
+        imgPhoneTopBg.setBackgroundColor(ProjectThemeColors.getColor(scId, ProjectThemeColors.COLOR_PRIMARY_DARK));
+        toolbar.setBackgroundColor(ProjectThemeColors.getColor(scId, ProjectThemeColors.COLOR_PRIMARY));
     }
 
     private void showDeleteView(boolean show, boolean isCustomWidget) {

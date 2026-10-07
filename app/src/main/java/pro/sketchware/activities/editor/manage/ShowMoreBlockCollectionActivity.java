@@ -29,10 +29,10 @@ import pro.sketchware.core.block.view.BaseBlockView;
 import pro.sketchware.util.SketchToast;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.UI;
-import pro.sketchware.util.BlockUtil;
+import pro.sketchware.core.block.view.BlockUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageCollectionShowBlockBinding;
-import pro.sketchware.tools.ImageFactory;
+import pro.sketchware.activities.editor.manage.BlockImageExporter;
 import pro.sketchware.util.SketchwareUtil;
 
 public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity implements View.OnClickListener {
@@ -199,7 +199,7 @@ public class ShowMoreBlockCollectionActivity extends BaseAppCompatActivity imple
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == 12) {
-            if (ImageFactory.saveBitmap(binding.editor.getChildAt(0), moreBlockName).exists()) {
+            if (BlockImageExporter.saveBitmap(binding.editor.getChildAt(0), moreBlockName).exists()) {
                 SketchwareUtil.toast(String.format(Helper.getResString(R.string.toast_block_image_saved), moreBlockName));
             } else {
                 SketchwareUtil.toastError(Helper.getResString(R.string.error_save_image_failed));

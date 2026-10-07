@@ -30,7 +30,7 @@ import pro.sketchware.util.SketchToast;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageCollectionShowBlockBinding;
-import pro.sketchware.tools.ImageFactory;
+import pro.sketchware.activities.editor.manage.BlockImageExporter;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.UI;
 
@@ -193,7 +193,7 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == 12) {
-            if (ImageFactory.saveBitmap(binding.editor.getChildAt(0), blockName).exists()) {
+            if (BlockImageExporter.saveBitmap(binding.editor.getChildAt(0), blockName).exists()) {
                 SketchwareUtil.toast(String.format(Helper.getResString(R.string.toast_block_image_saved), blockName));
             } else {
                 SketchwareUtil.toastError(Helper.getResString(R.string.error_save_image_failed));

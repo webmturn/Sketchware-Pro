@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
 
-import pro.sketchware.core.codegen.BlockColorMapper;
+import pro.sketchware.core.block.view.BlockColorMapper;
 import pro.sketchware.core.codegen.BlockLoader;
 import pro.sketchware.core.codegen.BlockTypeUtils;
 import pro.sketchware.core.codegen.ExtraBlockFile;
@@ -38,7 +38,6 @@ import pro.sketchware.activities.editor.makeblock.ReturnMoreblockManager;
 import pro.sketchware.core.build.ViewBindingBuilder;
 import pro.sketchware.R;
 import pro.sketchware.core.resources.StringResourceResolver;
-import pro.sketchware.util.CustomVariableUtil;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.codegen.StringResource;
 import pro.sketchware.core.project.FileResConfig;

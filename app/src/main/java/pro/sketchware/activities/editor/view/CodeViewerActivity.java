@@ -9,7 +9,7 @@ import pro.sketchware.activities.base.BaseAppCompatActivity;
 import pro.sketchware.core.codegen.ComponentCodeGenerator;
 import pro.sketchware.util.Helper;
 import pro.sketchware.databinding.ActivityCodeViewerBinding;
-import pro.sketchware.util.EditorUtils;
+import pro.sketchware.lib.code_editor.EditorUtils;
 import pro.sketchware.util.UI;
 
 public class CodeViewerActivity extends BaseAppCompatActivity {

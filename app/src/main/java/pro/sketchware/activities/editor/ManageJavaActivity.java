@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor;
 
+import pro.sketchware.core.project.SketchwarePaths;
+
 import androidx.activity.OnBackPressedCallback;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -43,7 +45,6 @@ import pro.sketchware.databinding.DialogCreateNewFileLayoutBinding;
 import pro.sketchware.databinding.DialogInputLayoutBinding;
 import pro.sketchware.databinding.ManageFileBinding;
 import pro.sketchware.databinding.ManageJavaItemHsBinding;
-import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.core.project.FileResConfig;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
@@ -101,7 +102,6 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
     private final ArrayList<String> currentTree = new ArrayList<>();
     ManageFileBinding binding;
     private String current_path;
-    private FilePathUtil fpu;
     private FileResConfig frc;
     private String sc_id;
     private FilesAdapter filesAdapter;
@@ -113,7 +113,7 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if (Objects.equals(Uri.parse(current_path).getPath(), Uri.parse(fpu.getPathJava(sc_id)).getPath())) {
+                if (Objects.equals(Uri.parse(current_path).getPath(), Uri.parse(SketchwarePaths.getProjectJavaPath(sc_id)).getPath())) {
                     finish();
                 } else {
                     current_path = current_path.substring(0, current_path.lastIndexOf("/"));
@@ -131,8 +131,7 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
         }
         setupUI();
         frc = new FileResConfig(sc_id);
-        fpu = new FilePathUtil();
-        current_path = Uri.parse(fpu.getPathJava(sc_id)).getPath();
+        current_path = Uri.parse(SketchwarePaths.getProjectJavaPath(sc_id)).getPath();
         refresh();
     }
 
@@ -163,7 +162,7 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
         String pkgName = getIntent().getStringExtra("pkgName");
 
         try {
-            String trimmedPath = Helper.trimPath(fpu.getPathJava(sc_id));
+            String trimmedPath = Helper.trimPath(SketchwarePaths.getProjectJavaPath(sc_id));
             String substring = current_path.substring(current_path.indexOf(trimmedPath) + trimmedPath.length());
 
             if (substring.endsWith("/")) {
@@ -305,7 +304,7 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
                 if (!filesAdapter.isFolder(position)) {
                     if (frc.getJavaManifestList().contains(filesAdapter.getFullName(position))) {
                         frc.getJavaManifestList().remove(filesAdapter.getFullName(position));
-                        FileUtil.writeFile(fpu.getManifestJava(sc_id), new Gson().toJson(frc.listJavaManifest));
+                        FileUtil.writeFile(SketchwarePaths.getProjectJavaManifestPath(sc_id), new Gson().toJson(frc.listJavaManifest));
                         SketchwareUtil.toast(Helper.getResString(R.string.toast_removed_activity_manifest));
                     }
 
@@ -343,7 +342,7 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
         new MaterialAlertDialogBuilder(this).setTitle(Helper.getResString(R.string.common_word_delete) + " " + filesAdapter.getFileName(position) + "?").setMessage(Helper.getResString(R.string.delete_confirm_format, getString(filesAdapter.isFolder(position) ? R.string.common_word_folder : R.string.common_word_file), isInManifest ? Helper.getResString(R.string.java_delete_manifest_warning) : "")).setPositiveButton(R.string.common_word_delete, (dialog, which) -> {
             if (!filesAdapter.isFolder(position) && isInManifest) {
                 frc.getJavaManifestList().remove(filesAdapter.getFullName(position));
-                FileUtil.writeFile(fpu.getManifestJava(sc_id), new Gson().toJson(frc.listJavaManifest));
+                FileUtil.writeFile(SketchwarePaths.getProjectJavaManifestPath(sc_id), new Gson().toJson(frc.listJavaManifest));
             }
 
             FileUtil.deleteFile(filesAdapter.getItem(position));
@@ -353,13 +352,13 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
     }
 
     private void refresh() {
-        if (!FileUtil.isExistFile(fpu.getPathJava(sc_id))) {
-            FileUtil.makeDir(fpu.getPathJava(sc_id));
+        if (!FileUtil.isExistFile(SketchwarePaths.getProjectJavaPath(sc_id))) {
+            FileUtil.makeDir(SketchwarePaths.getProjectJavaPath(sc_id));
             refresh();
         }
 
-        if (!FileUtil.isExistFile(fpu.getManifestJava(sc_id))) {
-            FileUtil.writeFile(fpu.getManifestJava(sc_id), "");
+        if (!FileUtil.isExistFile(SketchwarePaths.getProjectJavaManifestPath(sc_id))) {
+            FileUtil.writeFile(SketchwarePaths.getProjectJavaManifestPath(sc_id), "");
             refresh();
         }
 
@@ -527,12 +526,12 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
                 switch (item.getItemId()) {
                     case MENU_ADD_ACTIVITY -> {
                         frc.getJavaManifestList().add(getFullName(position));
-                        FileUtil.writeFile(fpu.getManifestJava(sc_id), new Gson().toJson(frc.listJavaManifest));
+                        FileUtil.writeFile(SketchwarePaths.getProjectJavaManifestPath(sc_id), new Gson().toJson(frc.listJavaManifest));
                         SketchwareUtil.toast(String.format(Helper.getResString(R.string.toast_added_activity_manifest), getFileNameWoExt(position)));
                     }
                     case MENU_REMOVE_ACTIVITY -> {
                         if (frc.getJavaManifestList().remove(getFullName(position))) {
-                            FileUtil.writeFile(fpu.getManifestJava(sc_id), new Gson().toJson(frc.listJavaManifest));
+                            FileUtil.writeFile(SketchwarePaths.getProjectJavaManifestPath(sc_id), new Gson().toJson(frc.listJavaManifest));
                             SketchwareUtil.toast(String.format(Helper.getResString(R.string.toast_removed_activity_from_manifest), getFileNameWoExt(position)));
                         } else {
                             SketchwareUtil.toast(Helper.getResString(R.string.toast_activity_not_in_manifest));
@@ -540,12 +539,12 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
                     }
                     case MENU_ADD_SERVICE -> {
                         frc.getServiceManifestList().add(getFullName(position));
-                        FileUtil.writeFile(fpu.getManifestService(sc_id), new Gson().toJson(frc.listServiceManifest));
+                        FileUtil.writeFile(SketchwarePaths.getProjectServiceManifestPath(sc_id), new Gson().toJson(frc.listServiceManifest));
                         SketchwareUtil.toast(String.format(Helper.getResString(R.string.toast_added_service_manifest), getFileNameWoExt(position)));
                     }
                     case MENU_REMOVE_SERVICE -> {
                         if (frc.getServiceManifestList().remove(getFullName(position))) {
-                            FileUtil.writeFile(fpu.getManifestService(sc_id), new Gson().toJson(frc.listServiceManifest));
+                            FileUtil.writeFile(SketchwarePaths.getProjectServiceManifestPath(sc_id), new Gson().toJson(frc.listServiceManifest));
                             SketchwareUtil.toast(String.format(Helper.getResString(R.string.toast_removed_service_from_manifest), getFileNameWoExt(position)));
                         } else {
                             SketchwareUtil.toast(Helper.getResString(R.string.toast_service_not_in_manifest));

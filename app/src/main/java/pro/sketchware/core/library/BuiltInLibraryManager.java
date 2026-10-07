@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import pro.sketchware.core.project.BuiltInLibrary;
 import pro.sketchware.core.build.ProjectBuilder;
-import pro.sketchware.core.library.BuiltInLibraries;
 
 /**
  * A class to keep track of a project's built-in libraries.

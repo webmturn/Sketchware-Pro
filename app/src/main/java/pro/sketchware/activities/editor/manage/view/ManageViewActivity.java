@@ -41,7 +41,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import pro.sketchware.core.async.BackgroundTasks;
-import pro.sketchware.core.exception.SketchwareException;
 import pro.sketchware.activities.editor.manage.view.fragments.ViewFilesFragment;
 import pro.sketchware.util.SketchToast;
 import pro.sketchware.core.project.ProjectDataStore;

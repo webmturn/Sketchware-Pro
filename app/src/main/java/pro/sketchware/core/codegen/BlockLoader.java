@@ -1,5 +1,7 @@
 package pro.sketchware.core.codegen;
 
+import pro.sketchware.core.block.DynamicPaletteProvider;
+
 import static com.google.android.material.color.MaterialColors.harmonizeWithPrimary;
 
 import android.content.Context;

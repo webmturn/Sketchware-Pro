@@ -1,4 +1,4 @@
-package pro.sketchware.util;
+package pro.sketchware.core.block.view;
 
 import android.content.Context;
 import android.view.ViewGroup;
@@ -6,9 +6,7 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 
 import pro.sketchware.util.format.FormatUtil;
-import pro.sketchware.core.block.view.BlockView;
-import pro.sketchware.core.block.view.BaseBlockView;
-import pro.sketchware.core.codegen.BlockColorMapper;
+import pro.sketchware.core.block.MoreblockSpecUtils;
 
 public class BlockUtil {
     public static void loadMoreblockPreview(ViewGroup blockArea, String spec) {

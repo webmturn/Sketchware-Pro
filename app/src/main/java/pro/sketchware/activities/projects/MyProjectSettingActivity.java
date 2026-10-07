@@ -4,7 +4,7 @@ import pro.sketchware.core.settings.ApplicationSettings;
 
 
 import android.util.Log;
-import static pro.sketchware.util.ProjectFile.getDefaultColor;
+import static pro.sketchware.core.project.ProjectThemeColors.getDefaultColor;
 
 import android.content.Context;
 import android.content.Intent;
@@ -36,7 +36,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import pro.sketchware.core.async.BackgroundTasks;
@@ -53,7 +52,7 @@ import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.MapValueHelper;
 import pro.sketchware.core.project.ProjectSettings;
 import pro.sketchware.util.Helper;
-import pro.sketchware.util.ProjectFile;
+import pro.sketchware.core.project.ProjectThemeColors;
 import pro.sketchware.R;
 import pro.sketchware.activities.iconcreator.IconCreatorActivity;
 import pro.sketchware.dialogs.VersionDialog;
@@ -147,11 +146,11 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
             }
         });
 
-        projectThemeColors[0] = getDefaultColor(ProjectFile.COLOR_ACCENT);
-        projectThemeColors[1] = getDefaultColor(ProjectFile.COLOR_PRIMARY);
-        projectThemeColors[2] = getDefaultColor(ProjectFile.COLOR_PRIMARY_DARK);
-        projectThemeColors[3] = getDefaultColor(ProjectFile.COLOR_CONTROL_HIGHLIGHT);
-        projectThemeColors[4] = getDefaultColor(ProjectFile.COLOR_CONTROL_NORMAL);
+        projectThemeColors[0] = getDefaultColor(ProjectThemeColors.COLOR_ACCENT);
+        projectThemeColors[1] = getDefaultColor(ProjectThemeColors.COLOR_PRIMARY);
+        projectThemeColors[2] = getDefaultColor(ProjectThemeColors.COLOR_PRIMARY_DARK);
+        projectThemeColors[3] = getDefaultColor(ProjectThemeColors.COLOR_CONTROL_HIGHLIGHT);
+        projectThemeColors[4] = getDefaultColor(ProjectThemeColors.COLOR_CONTROL_NORMAL);
 
         for (int i = 0; i < themeColorKeys.length; i++) {
             ThemeColorView colorView = new ThemeColorView(this, i);

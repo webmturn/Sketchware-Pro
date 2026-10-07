@@ -1,4 +1,6 @@
-package pro.sketchware.core.codegen;
+package pro.sketchware.core.block;
+
+import pro.sketchware.core.codegen.ExtraBlockFile;
 
 import android.graphics.Color;
 

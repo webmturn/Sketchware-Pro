@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor;
 
+import pro.sketchware.core.project.SketchwarePaths;
+
 import androidx.activity.OnBackPressedCallback;
 import android.content.DialogInterface;
 import android.net.Uri;
@@ -41,14 +43,12 @@ import pro.sketchware.databinding.DialogCreateNewFileLayoutBinding;
 import pro.sketchware.databinding.DialogInputLayoutBinding;
 import pro.sketchware.databinding.ManageFileBinding;
 import pro.sketchware.databinding.ManageJavaItemHsBinding;
-import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.core.project.FileResConfig;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 
 public class ManageNativelibsActivity extends BaseAppCompatActivity implements View.OnClickListener {
     private FilePickerDialogFragment filePicker;
-    private FilePathUtil fpu;
     private FileResConfig frc;
     private String numProj;
     private String nativeLibrariesPath;
@@ -81,7 +81,6 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
         }
 
         frc = new FileResConfig(numProj);
-        fpu = new FilePathUtil();
 
         setupDialog();
         checkDir();
@@ -90,14 +89,14 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
 
 
     private void checkDir() {
-        if (!FileUtil.isExistFile(fpu.getPathNativelibs(numProj))) {
-            FileUtil.makeDir(fpu.getPathNativelibs(numProj));
-            FileUtil.makeDir(fpu.getPathNativelibs(numProj) + "/armeabi");
-            FileUtil.makeDir(fpu.getPathNativelibs(numProj) + "/armeabi-v7a");
-            FileUtil.makeDir(fpu.getPathNativelibs(numProj) + "/arm64-v8a");
-            FileUtil.makeDir(fpu.getPathNativelibs(numProj) + "/x86");
+        if (!FileUtil.isExistFile(SketchwarePaths.getProjectNativeLibsPath(numProj))) {
+            FileUtil.makeDir(SketchwarePaths.getProjectNativeLibsPath(numProj));
+            FileUtil.makeDir(SketchwarePaths.getProjectNativeLibsPath(numProj) + "/armeabi");
+            FileUtil.makeDir(SketchwarePaths.getProjectNativeLibsPath(numProj) + "/armeabi-v7a");
+            FileUtil.makeDir(SketchwarePaths.getProjectNativeLibsPath(numProj) + "/arm64-v8a");
+            FileUtil.makeDir(SketchwarePaths.getProjectNativeLibsPath(numProj) + "/x86");
         }
-        nativeLibrariesPath = fpu.getPathNativelibs(numProj);
+        nativeLibrariesPath = SketchwarePaths.getProjectNativeLibsPath(numProj);
         handleAdapter(nativeLibrariesPath);
         handleFab();
     }
@@ -112,7 +111,7 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
     }
 
     private boolean isInMainDirectory() {
-        return nativeLibrariesPath.equals(fpu.getPathNativelibs(numProj));
+        return nativeLibrariesPath.equals(SketchwarePaths.getProjectNativeLibsPath(numProj));
     }
 
     private void handleFab() {
@@ -206,7 +205,7 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
                 }
                 textInputLayout.setError(null);
 
-                String path = fpu.getPathNativelibs(numProj) + "/" + name;
+                String path = SketchwarePaths.getProjectNativeLibsPath(numProj) + "/" + name;
 
                 if (FileUtil.isExistFile(path)) {
                     textInputLayout.setError(Helper.getResString(R.string.error_folder_already_exists));

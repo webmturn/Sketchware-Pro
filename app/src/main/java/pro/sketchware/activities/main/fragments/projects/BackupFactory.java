@@ -4,7 +4,6 @@ import pro.sketchware.core.settings.ApplicationSettings;
 
 import android.content.Context;
 
-import pro.sketchware.util.FilePathUtil;
 import android.util.Log;
 
 import pro.sketchware.beans.BlockBean;
@@ -90,7 +89,7 @@ public class BackupFactory {
     }
 
     private static File getAllLocalLibsDir() {
-        return FilePathUtil.getLocalLibsDir();
+        return SketchwarePaths.getLocalLibsDir();
     }
 
     private static HashMap<String, Object> getProject(File file) {
@@ -395,7 +394,7 @@ public class BackupFactory {
 
                         File libDir = new File(getAllLocalLibsDir(), libName);
                         if (!libDir.exists()) {
-                            libDir = new File(FilePathUtil.getLocalLibsFallbackDir(), libName);
+                            libDir = new File(SketchwarePaths.getLocalLibsFallbackDir(), libName);
                         }
                         if (libDir.isDirectory()) {
                             copy(libDir, new File(libsF, libName));
@@ -553,7 +552,7 @@ public class BackupFactory {
                     for (File local_lib : local_libs_content) {
 
                         File primaryPath = new File(getAllLocalLibsDir(), local_lib.getName());
-                        File fallbackPath = new File(FilePathUtil.getLocalLibsFallbackDir(), local_lib.getName());
+                        File fallbackPath = new File(SketchwarePaths.getLocalLibsFallbackDir(), local_lib.getName());
 
                         if (!primaryPath.exists() && !fallbackPath.exists()) {
                             try {

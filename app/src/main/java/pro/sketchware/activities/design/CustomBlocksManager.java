@@ -18,7 +18,7 @@ import java.util.Optional;
 import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.core.project.ProjectFileManager;
 import pro.sketchware.core.project.ProjectDataManager;
-import pro.sketchware.core.codegen.BlockColorMapper;
+import pro.sketchware.core.block.view.BlockColorMapper;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.codegen.ExtraBlockFile;
 import pro.sketchware.core.codegen.ExtraBlockInfo;

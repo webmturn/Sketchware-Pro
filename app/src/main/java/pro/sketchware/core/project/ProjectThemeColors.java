@@ -1,13 +1,12 @@
-package pro.sketchware.util;
+package pro.sketchware.core.project;
 
 import android.graphics.Color;
 import android.os.Build;
 
-import pro.sketchware.core.project.ProjectListManager;
 import pro.sketchware.util.MapValueHelper;
 import pro.sketchware.SketchApplication;
 
-public class ProjectFile {
+public class ProjectThemeColors {
     public static final String COLOR_ACCENT = "color_accent";
     public static final String COLOR_PRIMARY = "color_primary";
     public static final String COLOR_PRIMARY_DARK = "color_primary_dark";

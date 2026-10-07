@@ -20,7 +20,6 @@ import pro.sketchware.activities.editor.makeblock.BlockMenu;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.util.MenuNameMapper;
-import pro.sketchware.util.CustomVariableUtil;
 import pro.sketchware.util.FileUtil;
 
 public class DefaultExtraMenuBean {

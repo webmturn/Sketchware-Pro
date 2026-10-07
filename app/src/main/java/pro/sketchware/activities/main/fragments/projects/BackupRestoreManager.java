@@ -27,7 +27,6 @@ import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
-import pro.sketchware.activities.main.fragments.projects.ProjectsFragment;
 import pro.sketchware.databinding.ProgressMsgBoxBinding;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;

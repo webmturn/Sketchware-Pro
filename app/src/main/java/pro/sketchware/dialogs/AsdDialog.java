@@ -17,7 +17,7 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.CodeEditorHsAsdBinding;
 import pro.sketchware.lib.code_editor.CodeEditorPreferences;
-import pro.sketchware.util.EditorUtils;
+import pro.sketchware.lib.code_editor.EditorUtils;
 import pro.sketchware.util.SketchwareUtil;
 
 public class AsdDialog extends Dialog implements DialogInterface.OnDismissListener {

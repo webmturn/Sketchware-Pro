@@ -30,7 +30,7 @@ import pro.sketchware.core.build.BuildProgressReceiver;
 import pro.sketchware.core.library.BuiltInLibraries;
 import pro.sketchware.core.build.compiler.AppBundleCompiler;
 import pro.sketchware.dialogs.GetKeyStoreCredentialsDialog;
-import pro.sketchware.util.TestkeySignBridge;
+import pro.sketchware.util.apk.TestkeySignBridge;
 import org.spongycastle.jce.provider.BouncyCastleProvider;
 
 import pro.sketchware.R;
@@ -48,7 +48,6 @@ import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.validation.VersionCodeValidator;
 import pro.sketchware.util.io.ZipUtil;
-import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 
@@ -213,11 +212,10 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
         project_metadata.cleanBuildCache();
 
         /* It makes no sense that those methods aren't static */
-        FilePathUtil util = new FilePathUtil();
-        File pathJava = new File(util.getPathJava(sc_id));
-        File pathResources = new File(util.getPathResource(sc_id));
-        File pathAssets = new File(util.getPathAssets(sc_id));
-        File pathNativeLibraries = new File(util.getPathNativelibs(sc_id));
+        File pathJava = new File(SketchwarePaths.getProjectJavaPath(sc_id));
+        File pathResources = new File(SketchwarePaths.getProjectResourcePath(sc_id));
+        File pathAssets = new File(SketchwarePaths.getProjectAssetsPath(sc_id));
+        File pathNativeLibraries = new File(SketchwarePaths.getProjectNativeLibsPath(sc_id));
 
         if (pathJava.exists()) {
             FileUtil.copyDirectory(pathJava, new File(project_metadata.javaFilesPath + File.separator + project_metadata.packageNameAsFolders));
@@ -225,7 +223,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
         if (pathResources.exists()) {
             FileUtil.copyDirectory(pathResources, new File(project_metadata.resDirectoryPath));
         }
-        String pathProguard = util.getPathProguard(sc_id);
+        String pathProguard = SketchwarePaths.getProjectProguardRulesPath(sc_id);
         if (FileUtil.isExistFile(pathProguard)) {
             FileUtil.copyFile(pathProguard, project_metadata.proguardFilePath);
         }
@@ -246,7 +244,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
         }
 
         ArrayList<String> toExclude = new ArrayList<>();
-        if (!new File(new FilePathUtil().getPathJava(sc_id) + File.separator + "SketchApplication.java").exists()) {
+        if (!new File(SketchwarePaths.getProjectJavaPath(sc_id) + File.separator + "SketchApplication.java").exists()) {
             toExclude.add("SketchApplication.java");
         }
         toExclude.add("DebugActivity.java");

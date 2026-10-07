@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor;
 
+import pro.sketchware.core.project.SketchwarePaths;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -22,7 +24,6 @@ import pro.sketchware.R;
 import pro.sketchware.databinding.ManagePermissionBinding;
 import pro.sketchware.databinding.ViewItemPermissionBinding;
 import pro.sketchware.lib.base.BaseTextWatcher;
-import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.core.project.FileResConfig;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.UI;
@@ -45,7 +46,7 @@ public class ManagePermissionActivity extends BaseAppCompatActivity {
         numProj = getIntent().getStringExtra("sc_id");
         frc = new FileResConfig(numProj);
 
-        String path = new FilePathUtil().getPathPermission(numProj);
+        String path = SketchwarePaths.getProjectPermissionPath(numProj);
         if (!FileUtil.isExistFile(path)) FileUtil.writeFile(path, "");
 
         initViews();
@@ -55,7 +56,7 @@ public class ManagePermissionActivity extends BaseAppCompatActivity {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                FileUtil.writeFile(new FilePathUtil().getPathPermission(numProj), new Gson().toJson(frc.getPermissionList()));
+                FileUtil.writeFile(SketchwarePaths.getProjectPermissionPath(numProj), new Gson().toJson(frc.getPermissionList()));
                 finish();
             }
         });
@@ -139,7 +140,7 @@ public class ManagePermissionActivity extends BaseAppCompatActivity {
                 .setTitle(R.string.permission_reset_title)
                 .setMessage(R.string.permission_reset_message)
                 .setPositiveButton(R.string.common_word_reset, (dialog, which) -> {
-                    FileUtil.writeFile(new FilePathUtil().getPathPermission(numProj), "[]");
+                    FileUtil.writeFile(SketchwarePaths.getProjectPermissionPath(numProj), "[]");
                     frc = new FileResConfig(numProj);
                     loadAndSortData();
                 })

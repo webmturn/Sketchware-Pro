@@ -75,7 +75,6 @@ import pro.sketchware.util.io.SharedPrefsHelper;
 import pro.sketchware.util.DeviceUtil;
 import pro.sketchware.core.codegen.LayoutGenerator;
 import pro.sketchware.activities.design.fragments.ViewEditorFragment;
-import pro.sketchware.util.SketchToast;
 import pro.sketchware.core.project.BlockHistoryManager;
 import pro.sketchware.activities.design.fragments.ComponentListFragment;
 import pro.sketchware.core.project.ViewHistoryManager;

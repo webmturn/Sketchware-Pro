@@ -72,7 +72,7 @@ public class PaletteSelector extends RecyclerView {
             allPalettes.add(new paletteSelectorRecord(MainCategoriesIds[i], MainCategoriesNames[i], MainCategoriesColors[i]));
         }
 
-        new pro.sketchware.core.codegen.DynamicPaletteProvider()
+        new pro.sketchware.core.block.DynamicPaletteProvider()
                 .getPaletteSelector()
                 .forEach(this::addDynamicPalette);
 

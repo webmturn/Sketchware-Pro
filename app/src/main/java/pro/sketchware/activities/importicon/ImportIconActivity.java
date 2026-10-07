@@ -59,7 +59,7 @@ import pro.sketchware.databinding.DialogFilterIconsLayoutBinding;
 import pro.sketchware.databinding.DialogSaveIconBinding;
 import pro.sketchware.databinding.ImportIconBinding;
 import pro.sketchware.util.PropertiesUtil;
-import pro.sketchware.util.SvgUtils;
+import pro.sketchware.graphics.SvgUtils;
 
 public class ImportIconActivity extends BaseAppCompatActivity implements IconAdapter.OnIconSelectedListener {
 

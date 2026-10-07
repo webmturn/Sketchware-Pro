@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.io.File;
 
 import pro.sketchware.databinding.ImportIconListItemBinding;
-import pro.sketchware.util.SvgUtils;
+import pro.sketchware.graphics.SvgUtils;
 
 public class IconAdapter extends ListAdapter<Pair<String, String>, IconAdapter.ViewHolder> {
     private static final DiffUtil.ItemCallback<Pair<String, String>> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {

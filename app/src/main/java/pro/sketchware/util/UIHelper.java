@@ -1,7 +1,5 @@
 package pro.sketchware.util;
 
-import pro.sketchware.core.callback.ViewEnableRunnable;
-
 import android.content.Context;
 import android.graphics.ColorFilter;
 import android.graphics.ColorMatrix;
@@ -63,7 +61,7 @@ public class UIHelper {
   
   public static void disableTemporarily(View view) {
     view.setEnabled(false);
-    (new Handler(Looper.getMainLooper())).postDelayed(new ViewEnableRunnable(view), 100L);
+    (new Handler(Looper.getMainLooper())).postDelayed(() -> view.setEnabled(true), 100L);
   }
   
   public static void expandView(View view, int duration, Animation.AnimationListener listener) {

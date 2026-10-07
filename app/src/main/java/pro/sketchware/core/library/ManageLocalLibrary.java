@@ -17,7 +17,6 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 
@@ -28,7 +27,7 @@ public class ManageLocalLibrary {
 
     public ManageLocalLibrary(String sc_id) {
         projectId = sc_id;
-        String localLibraryConfigPath = FilePathUtil.getPathLocalLibrary(projectId);
+        String localLibraryConfigPath = SketchwarePaths.getProjectLocalLibraryPath(projectId);
         if (FileUtil.isExistFile(localLibraryConfigPath)) {
             try {
                 Gson gson = new Gson();
@@ -52,8 +51,8 @@ public class ManageLocalLibrary {
                         }
 
                         String name = (String) nameObject;
-                        File primaryLibDir = new File(FilePathUtil.getLocalLibsDir(), name);
-                        File fallbackLibDir = new File(FilePathUtil.getLocalLibsFallbackDir(), name);
+                        File primaryLibDir = new File(SketchwarePaths.getLocalLibsDir(), name);
+                        File fallbackLibDir = new File(SketchwarePaths.getLocalLibsFallbackDir(), name);
                         if (!primaryLibDir.exists() && !fallbackLibDir.exists()) {
                             changed = true;
                             continue;

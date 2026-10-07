@@ -1,4 +1,4 @@
-package pro.sketchware.util;
+package pro.sketchware.activities.tools;
 
 import android.content.Context;
 import android.graphics.Typeface;

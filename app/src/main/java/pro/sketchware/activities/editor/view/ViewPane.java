@@ -107,18 +107,17 @@ import pro.sketchware.activities.editor.view.item.ItemRatingBar;
 import pro.sketchware.activities.editor.view.item.ItemTimePicker;
 import pro.sketchware.activities.editor.view.item.ItemVideoView;
 import pro.sketchware.graphics.VectorDrawableLoader;
-import pro.sketchware.util.ProjectFile;
+import pro.sketchware.core.project.ProjectThemeColors;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.core.resources.ColorResourceResolver;
 import pro.sketchware.core.resources.StringResourceResolver;
 import pro.sketchware.core.project.InjectRootLayoutManager;
-import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.core.layout.InjectAttributeHandler;
 import pro.sketchware.util.InvokeUtil;
 import pro.sketchware.util.PropertiesUtil;
-import pro.sketchware.util.SvgUtils;
+import pro.sketchware.graphics.SvgUtils;
 import pro.sketchware.util.ThemeUtils;
 
 public class ViewPane extends RelativeLayout {
@@ -426,13 +425,12 @@ public class ViewPane extends RelativeLayout {
 
                             if (imagePath.endsWith(".xml")) {
                                 if (crashlytics != null) crashlytics.log("ViewPane: loading scaled XML/SVG image");
-                                FilePathUtil fpu = new FilePathUtil();
                                 svgUtils.loadScaledSvgIntoImageView(new AppCompatImageView(getContext()) {
                                     @Override
                                     public void setImageBitmap(Bitmap bitmap) {
                                         fab.setImageBitmap(bitmap);
                                     }
-                                }, fpu.getSvgFullPath(sc_id, viewBean.image.resName), scaleFactor);
+                                }, SketchwarePaths.getProjectConvertedVectorFilePath(sc_id, viewBean.image.resName), scaleFactor);
                             } else {
                                 Bitmap bitmap = FileUtil.decodeSampleBitmapFromPath(imagePath, 256, 256);
                                 if (bitmap != null) {
@@ -553,8 +551,7 @@ public class ViewPane extends RelativeLayout {
                         if (file.exists() && file.length() > 0) {
                             int imageScale = Math.round(getResources().getDisplayMetrics().density / 2.0f);
                             if (imagelocation.endsWith(".xml")) {
-                                FilePathUtil fpu = new FilePathUtil();
-                                svgUtils.loadScaledSvgIntoImageView((ImageView) view, fpu.getSvgFullPath(sc_id, imgResName), imageScale);
+                                svgUtils.loadScaledSvgIntoImageView((ImageView) view, SketchwarePaths.getProjectConvertedVectorFilePath(sc_id, imgResName), imageScale);
                             } else {
                                 Bitmap imageBitmap = FileUtil.decodeSampleBitmapFromPath(imagelocation, 512, 512);
                                 if (imageBitmap != null) {
@@ -769,7 +766,7 @@ public class ViewPane extends RelativeLayout {
         itemFloatingActionButton.setLayoutParams(new LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
-        itemFloatingActionButton.setMainColor(ProjectFile.getColor(sc_id, ProjectFile.COLOR_ACCENT));
+        itemFloatingActionButton.setMainColor(ProjectThemeColors.getColor(sc_id, ProjectThemeColors.COLOR_ACCENT));
         itemFloatingActionButton.setFixed(true);
         if (viewBean == null) {
             ViewBean defaultFabBean = new ViewBean("_fab", ViewBean.VIEW_TYPE_WIDGET_FAB);

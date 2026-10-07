@@ -25,7 +25,7 @@ import java.util.IdentityHashMap;
 import java.util.Objects;
 
 import pro.sketchware.util.Helper;
-import pro.sketchware.util.ProjectFile;
+import pro.sketchware.core.project.ProjectThemeColors;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
 import pro.sketchware.activities.resourceseditor.components.adapters.ColorsAdapter;
@@ -137,11 +137,11 @@ public class ColorsEditor extends Fragment {
 
     private void initialize() {
 
-        defaultColors.put("colorAccent", ProjectFile.COLOR_ACCENT);
-        defaultColors.put("colorPrimary", ProjectFile.COLOR_PRIMARY);
-        defaultColors.put("colorPrimaryDark", ProjectFile.COLOR_PRIMARY_DARK);
-        defaultColors.put("colorControlHighlight", ProjectFile.COLOR_CONTROL_HIGHLIGHT);
-        defaultColors.put("colorControlNormal", ProjectFile.COLOR_CONTROL_NORMAL);
+        defaultColors.put("colorAccent", ProjectThemeColors.COLOR_ACCENT);
+        defaultColors.put("colorPrimary", ProjectThemeColors.COLOR_PRIMARY);
+        defaultColors.put("colorPrimaryDark", ProjectThemeColors.COLOR_PRIMARY_DARK);
+        defaultColors.put("colorControlHighlight", ProjectThemeColors.COLOR_CONTROL_HIGHLIGHT);
+        defaultColors.put("colorControlNormal", ProjectThemeColors.COLOR_CONTROL_NORMAL);
 
         colorsEditorManager = new ColorsEditorManager(activity.sc_id);
         colorsEditorManager.defaultColors = defaultColors;

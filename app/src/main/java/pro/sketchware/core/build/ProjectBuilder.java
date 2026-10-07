@@ -1,7 +1,7 @@
 package pro.sketchware.core.build;
 
 import pro.sketchware.core.project.BuildConfig;
-import pro.sketchware.core.project.BuiltInLibrary;
+import pro.sketchware.core.library.BuiltInLibrary;
 import pro.sketchware.util.io.EncryptedFileUtil;
 import pro.sketchware.core.exception.SimpleException;
 import pro.sketchware.core.exception.SketchwareException;
@@ -82,7 +82,7 @@ import pro.sketchware.core.build.compiler.DexCompiler;
 import pro.sketchware.core.build.compiler.ResourceCompiler;
 import pro.sketchware.core.exception.MissingFileException;
 import pro.sketchware.util.LogUtil;
-import pro.sketchware.util.TestkeySignBridge;
+import pro.sketchware.util.apk.TestkeySignBridge;
 import pro.sketchware.core.build.compiler.JarBuilder;
 import pro.sketchware.core.build.compiler.R8Compiler;
 import pro.sketchware.core.build.ViewBindingBuilder;

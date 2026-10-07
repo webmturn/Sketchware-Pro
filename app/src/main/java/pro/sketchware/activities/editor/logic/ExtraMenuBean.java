@@ -46,8 +46,6 @@ import pro.sketchware.R;
 import pro.sketchware.core.resources.StringResourceResolver;
 import pro.sketchware.lib.base.BaseTextWatcher;
 import pro.sketchware.lib.highlighter.SimpleHighlighter;
-import pro.sketchware.util.CustomVariableUtil;
-import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.core.project.FileResConfig;
 import pro.sketchware.util.FileUtil;
 
@@ -71,7 +69,6 @@ public class ExtraMenuBean {
     public static final String[] permission = {"CAMERA", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE", "ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION", "RECORD_AUDIO", "READ_CONTACTS", "WRITE_CONTACTS", "READ_SMS", "SEND_SMS", "READ_PHONE_STATE", "CALL_PHONE", "READ_CALENDAR", "WRITE_CALENDAR", "BLUETOOTH", "BLUETOOTH_ADMIN"};
 
     private final DefaultExtraMenuBean defaultExtraMenu;
-    private final FilePathUtil fpu;
     private final FileResConfig frc;
     private final LogicEditorActivity logicEditor;
     private final FilePickerOptions mOptions = new FilePickerOptions();
@@ -82,7 +79,6 @@ public class ExtraMenuBean {
     public ExtraMenuBean(LogicEditorActivity logicA) {
         logicEditor = logicA;
         sc_id = logicA.scId;
-        fpu = new FilePathUtil();
         frc = new FileResConfig(logicA.scId);
         defaultExtraMenu = new DefaultExtraMenuBean(logicA);
         projectDataManager = ProjectDataManager.getProjectDataManager(logicA.scId);
@@ -533,14 +529,14 @@ public class ExtraMenuBean {
 
             case "service":
                 title = Helper.getResString(R.string.logic_editor_title_select_background_service);
-                if (FileUtil.isExistFile(fpu.getManifestService(sc_id))) {
+                if (FileUtil.isExistFile(SketchwarePaths.getProjectServiceManifestPath(sc_id))) {
                     menus = frc.getServiceManifestList();
                 }
                 break;
 
             case "broadcast":
                 title = Helper.getResString(R.string.logic_editor_title_select_broadcast_receiver);
-                if (FileUtil.isExistFile(fpu.getManifestBroadcast(sc_id))) {
+                if (FileUtil.isExistFile(SketchwarePaths.getProjectBroadcastManifestPath(sc_id))) {
                     menus = frc.getBroadcastManifestList();
                 }
                 break;
@@ -555,7 +551,7 @@ public class ExtraMenuBean {
                     viewGroup.addView(logicEditor.createRadioButton(activity));
                 }
                 activityMenu = new ArrayList<>();
-                if (FileUtil.isExistFile(fpu.getManifestJava(sc_id))) {
+                if (FileUtil.isExistFile(SketchwarePaths.getProjectJavaManifestPath(sc_id))) {
                     for (String activity : frc.getJavaManifestList()) {
                         if (activity.contains(".")) {
                             activityMenu.add(activity.substring(1 + activity.lastIndexOf(".")));

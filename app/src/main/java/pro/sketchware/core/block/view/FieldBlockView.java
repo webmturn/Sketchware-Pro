@@ -1,6 +1,5 @@
 package pro.sketchware.core.block.view;
 
-import pro.sketchware.core.codegen.BlockColorMapper;
 
 import android.content.Context;
 import android.graphics.Rect;

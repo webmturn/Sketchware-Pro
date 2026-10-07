@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor.manage.image.fragments;
 
+import pro.sketchware.core.project.SketchwarePaths;
+
 
 import pro.sketchware.util.Helper;
 import android.app.Activity;
@@ -58,8 +60,7 @@ import pro.sketchware.R;
 import pro.sketchware.activities.importicon.ImportIconActivity;
 import pro.sketchware.databinding.FrManageImageListBinding;
 import pro.sketchware.databinding.ManageImageListItemBinding;
-import pro.sketchware.util.FilePathUtil;
-import pro.sketchware.util.SvgUtils;
+import pro.sketchware.graphics.SvgUtils;
 import pro.sketchware.graphics.BitmapUtil;
 import pro.sketchware.util.io.EncryptedFileUtil;
 import pro.sketchware.core.project.ProjectDataManager;
@@ -68,7 +69,6 @@ import pro.sketchware.util.SketchToast;
 
 public class ImageListFragment extends BaseFragment implements MenuProvider {
 
-    private final FilePathUtil fpu = new FilePathUtil();
     public boolean isSelecting = false;
     public SvgUtils svgUtils;
     Map<Integer, Map<String, Object>> colorMap = new HashMap<>();
@@ -202,13 +202,13 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
         // Backup images before any file writes, so discard can restore pristine state
         ProjectDataManager.getResourceManager(sc_id).backupImages();
 
-        Path svgDir = Paths.get(fpu.getPathSvg(sc_id));
+        Path svgDir = Paths.get(SketchwarePaths.getProjectConvertedVectorsPath(sc_id));
         try {
             if (!Files.exists(svgDir)) {
                 Files.createDirectories(svgDir);
             }
         } catch (IOException error) {
-            Log.d("pu.java", "Failed to create directory for saving svgs at: " + fpu.getPathResource(sc_id));
+            Log.d("pu.java", "Failed to create directory for saving svgs at: " + SketchwarePaths.getProjectResourcePath(sc_id));
         }
         int index = 0;
         for (ProjectResourceBean image : images) {
@@ -225,7 +225,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
                 Log.d("svg", "full name : " + image.resFullName);
                 if (image.resFullName.endsWith(".svg")) {
                     // convert the svg to vectors
-                    String svgPath = fpu.getSvgFullPath(sc_id, image.resName);
+                    String svgPath = SketchwarePaths.getProjectConvertedVectorFilePath(sc_id, image.resName);
                     copyFile(sourcePath, svgPath);
                     Map<String, Object> colorInfo = colorMap.get(index);
                     Object colorHexValue = colorInfo != null ? colorInfo.get("colorHex") : null;
@@ -532,8 +532,8 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
             if (image.resFullName.endsWith(".svg")) {
                 svgUtils.loadImage(holder.binding.img, image.isNew ? image.resFullName : String.join(File.separator, projectImagesDirectory, image.resFullName));
             } else if (image.resFullName.endsWith(".xml")) {
-                Log.d("loading converted vector: ", fpu.getSvgFullPath(sc_id, image.resName));
-                svgUtils.loadImage(holder.binding.img, image.isNew ? image.resFullName : fpu.getSvgFullPath(sc_id, image.resName));
+                Log.d("loading converted vector: ", SketchwarePaths.getProjectConvertedVectorFilePath(sc_id, image.resName));
+                svgUtils.loadImage(holder.binding.img, image.isNew ? image.resFullName : SketchwarePaths.getProjectConvertedVectorFilePath(sc_id, image.resName));
             } else {
                 Glide.with(requireActivity())
                         .asBitmap()

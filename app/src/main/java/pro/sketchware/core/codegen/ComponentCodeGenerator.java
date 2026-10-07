@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
-import pro.sketchware.util.MoreblockSpecUtils;
+import pro.sketchware.core.block.MoreblockSpecUtils;
 import pro.sketchware.core.project.ComponentsHandler;
 import pro.sketchware.core.build.ViewBindingBuilder;
 import pro.sketchware.core.codegen.BlockCodeRegistry;

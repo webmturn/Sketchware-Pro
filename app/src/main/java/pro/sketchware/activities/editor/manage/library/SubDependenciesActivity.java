@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor.manage.library;
 
+import pro.sketchware.core.project.SketchwarePaths;
+
 import static pro.sketchware.core.library.LocalLibrariesUtil.buildEnabledRootDependencyState;
 import static pro.sketchware.core.library.LocalLibrariesUtil.createLibraryMap;
 import static pro.sketchware.core.library.LocalLibrariesUtil.getLocalLibraries;
@@ -33,7 +35,6 @@ import pro.sketchware.databinding.ActivitySubDependenciesBinding;
 import pro.sketchware.databinding.ViewItemLocalLibBinding;
 import pro.sketchware.core.library.LocalLibrariesUtil;
 import pro.sketchware.core.library.LocalLibrary;
-import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.util.UI;
 
 import static pro.sketchware.util.FileUtil.formatFileSize;
@@ -215,9 +216,9 @@ public class SubDependenciesActivity extends BaseAppCompatActivity {
     }
 
     private File resolveLibDir(String name) {
-        File primary = new File(FilePathUtil.getLocalLibsDir(), name);
+        File primary = new File(SketchwarePaths.getLocalLibsDir(), name);
         if (primary.exists()) return primary;
-        File fallback = new File(FilePathUtil.getLocalLibsFallbackDir(), name);
+        File fallback = new File(SketchwarePaths.getLocalLibsFallbackDir(), name);
         if (fallback.exists()) return fallback;
         return null;
     }

@@ -18,7 +18,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 
-import pro.sketchware.core.codegen.BlockColorMapper;
+import pro.sketchware.core.block.view.BlockColorMapper;
 import pro.sketchware.util.UIHelper;
 import pro.sketchware.util.ViewUtil;
 import pro.sketchware.util.Helper;

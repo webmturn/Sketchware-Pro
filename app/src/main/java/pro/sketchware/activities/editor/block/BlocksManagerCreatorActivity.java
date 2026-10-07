@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
 import pro.sketchware.core.codegen.BlockTypeUtils;
 import pro.sketchware.core.block.view.BlockView;
 import pro.sketchware.util.Helper;
-import pro.sketchware.util.PCP;
+import pro.sketchware.util.ColorTextViewListener;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ActivityBlocksManagerCreatorBinding;
@@ -142,7 +142,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
 
         binding.openColorPalette.setOnClickListener(v -> {
             ColorPickerDialog colorPickerDialog = new ColorPickerDialog(this, 0, false, false);
-            colorPickerDialog.setColorPickerCallback(new PCP(binding.colour));
+            colorPickerDialog.setColorPickerCallback(new ColorTextViewListener(binding.colour));
             colorPickerDialog.showAtLocation(v, Gravity.CENTER, 0, 0);
         });
 

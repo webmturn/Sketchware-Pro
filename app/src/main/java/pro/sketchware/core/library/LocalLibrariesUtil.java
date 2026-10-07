@@ -20,17 +20,16 @@ import java.util.Set;
 
 import pro.sketchware.util.Helper;
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.util.FilePathUtil;
 
 public class LocalLibrariesUtil {
     private static final String MAVEN_COORDINATE_FILE_NAME = "maven-coordinate";
 
     private static String getLocalLibsPath() {
-        return FilePathUtil.getLocalLibsDir().getAbsolutePath() + "/";
+        return SketchwarePaths.getLocalLibsDir().getAbsolutePath() + "/";
     }
 
     private static String getFallbackLocalLibsPath() {
-        return FilePathUtil.getLocalLibsFallbackDir().getAbsolutePath() + "/";
+        return SketchwarePaths.getLocalLibsFallbackDir().getAbsolutePath() + "/";
     }
 
     public static List<LocalLibrary> getAllLocalLibraries() {

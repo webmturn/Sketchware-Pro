@@ -1,9 +1,8 @@
-package pro.sketchware.util;
+package pro.sketchware.util.apk;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
-import pro.sketchware.util.apk.ApkSigner;
 
 public class TestkeySignBridge {
     private TestkeySignBridge() {

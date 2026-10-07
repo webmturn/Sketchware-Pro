@@ -4,11 +4,11 @@ import android.widget.TextView;
 
 import pro.sketchware.widgets.ColorPickerDialog;
 
-public class PCP implements ColorPickerDialog.OnColorPickedListener {
+public class ColorTextViewListener implements ColorPickerDialog.OnColorPickedListener {
 
     private final TextView toSetText;
 
-    public PCP(TextView toSetText) {
+    public ColorTextViewListener(TextView toSetText) {
         this.toSetText = toSetText;
     }
 

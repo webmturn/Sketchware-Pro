@@ -33,7 +33,7 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.core.project.ComponentsHandler;
 import pro.sketchware.R;
 import pro.sketchware.databinding.LogicAddComponentDialogBinding;
-import pro.sketchware.util.DebouncedClickListener;
+import pro.sketchware.util.ThrottledClickListener;
 
 public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
     private final AtomicInteger selectedMime = new AtomicInteger(0);
@@ -155,9 +155,9 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
         });
 
         binding.btnCancel.setOnClickListener(v -> dismiss());
-        binding.btnSave.setOnClickListener(new DebouncedClickListener() {
+        binding.btnSave.setOnClickListener(new ThrottledClickListener() {
             @Override
-            protected void onDebouncedClick(View v) {
+            protected void onThrottledClick(View v) {
                 if (checks() && getContext() != null) {
                     SketchToast.toast(requireContext(), Helper.getResString(R.string.component_message_component_block_added), SketchToast.TOAST_WARNING).show();
                     UIHelper.hideKeyboard(requireContext(), binding.edInput);

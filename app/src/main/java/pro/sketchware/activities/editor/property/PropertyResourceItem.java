@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor.property;
 
+import pro.sketchware.core.project.SketchwarePaths;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
@@ -39,13 +41,11 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ImagePickerItemBinding;
 import pro.sketchware.databinding.SearchWithRecyclerViewBinding;
-import pro.sketchware.util.FilePathUtil;
-import pro.sketchware.util.SvgUtils;
+import pro.sketchware.graphics.SvgUtils;
 
 public class PropertyResourceItem extends RelativeLayout implements View.OnClickListener {
 
     private final SvgUtils svgUtils;
-    private final FilePathUtil fpu = new FilePathUtil();
     private final Map<String, View> imageCache = new HashMap<>();
 
     public String scId;
@@ -117,7 +117,7 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
                     Context context = getContext();
                     fromFile = FileProvider.getUriForFile(context, getContext().getPackageName() + ".provider", file);
                     if (file.getAbsolutePath().endsWith(".xml")) {
-                        svgUtils.loadImage(imagePreview, fpu.getSvgFullPath(scId, resName));
+                        svgUtils.loadImage(imagePreview, SketchwarePaths.getProjectConvertedVectorFilePath(scId, resName));
                         return;
                     }
                     Glide.with(getContext()).load(fromFile).signature(ResourceManager.getCacheSignature()).error(R.drawable.ic_remove_grey600_24dp).into(imagePreview);
@@ -294,7 +294,7 @@ public class PropertyResourceItem extends RelativeLayout implements View.OnClick
                 if (file.exists()) {
                     Uri uri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".provider", file);
                     if (file.getAbsolutePath().endsWith(".xml")) {
-                        svgUtils.loadImage(imageView, fpu.getSvgFullPath(scId, image));
+                        svgUtils.loadImage(imageView, SketchwarePaths.getProjectConvertedVectorFilePath(scId, image));
                     } else {
                         Glide.with(getContext())
                                 .load(uri)

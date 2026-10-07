@@ -1,4 +1,4 @@
-package pro.sketchware.util;
+package pro.sketchware.core.block;
 
 public class MoreblockSpecUtils {
 

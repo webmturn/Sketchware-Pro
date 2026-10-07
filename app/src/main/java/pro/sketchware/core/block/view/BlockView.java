@@ -1,6 +1,5 @@
 package pro.sketchware.core.block.view;
 
-import pro.sketchware.core.codegen.BlockColorMapper;
 import pro.sketchware.util.format.FormatUtil;
 import pro.sketchware.core.codegen.StringResource;
 

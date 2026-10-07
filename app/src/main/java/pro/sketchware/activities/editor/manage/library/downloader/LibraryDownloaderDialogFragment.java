@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor.manage.library.downloader;
 
+import pro.sketchware.core.project.SketchwarePaths;
+
 import static android.net.ConnectivityManager.NetworkCallback;
 import android.content.Context;
 import android.content.Intent;
@@ -44,7 +46,6 @@ import pro.sketchware.R;
 import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.databinding.LibraryDownloaderDialogBinding;
-import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 
@@ -421,12 +422,12 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
     }
 
     private File resolveLibraryDirectory(String libraryName) {
-        File primaryDirectory = new File(FilePathUtil.getLocalLibsDir(), libraryName);
+        File primaryDirectory = new File(SketchwarePaths.getLocalLibsDir(), libraryName);
         if (primaryDirectory.exists()) {
             return primaryDirectory;
         }
 
-        File fallbackDirectory = new File(FilePathUtil.getLocalLibsFallbackDir(), libraryName);
+        File fallbackDirectory = new File(SketchwarePaths.getLocalLibsFallbackDir(), libraryName);
         if (fallbackDirectory.exists()) {
             return fallbackDirectory;
         }
@@ -548,7 +549,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
         new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.common_message_permission_title_storage)
                 .setMessage(Helper.getResString(R.string.common_message_permission_storage)
-                        + "\n\nPath: " + FilePathUtil.getLocalLibsDir().getAbsolutePath())
+                        + "\n\nPath: " + SketchwarePaths.getLocalLibsDir().getAbsolutePath())
                 .setPositiveButton(R.string.common_word_settings, (dialog, which) -> {
                     try {
                         Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,

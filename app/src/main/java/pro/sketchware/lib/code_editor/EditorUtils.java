@@ -1,4 +1,4 @@
-package pro.sketchware.util;
+package pro.sketchware.lib.code_editor;
 
 import static pro.sketchware.util.ThemeUtils.isDarkThemeEnabled;
 
@@ -13,8 +13,6 @@ import io.github.rosemoe.sora.langs.java.JavaLanguage;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 import io.github.rosemoe.sora.widget.schemes.SchemeDarcula;
-import pro.sketchware.lib.code_editor.CodeEditorColorSchemes;
-import pro.sketchware.lib.code_editor.CodeEditorLanguages;
 import pro.sketchware.R;
 
 public class EditorUtils {

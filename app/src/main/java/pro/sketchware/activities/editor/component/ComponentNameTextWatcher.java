@@ -1,15 +1,15 @@
-package pro.sketchware.tools;
+package pro.sketchware.activities.editor.component;
 
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
-public class ComponentHelper implements TextWatcher {
+public class ComponentNameTextWatcher implements TextWatcher {
 
     private final EditText[] mEditArray;
     private final EditText mTypeClass;
 
-    public ComponentHelper(EditText[] editTextArr, EditText editText) {
+    public ComponentNameTextWatcher(EditText[] editTextArr, EditText editText) {
         mEditArray = editTextArr;
         mTypeClass = editText;
     }

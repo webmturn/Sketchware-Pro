@@ -1,9 +1,7 @@
-package pro.sketchware.core.project;
+package pro.sketchware.core.library;
 
 import java.util.Objects;
 
-import pro.sketchware.core.library.BuiltInLibraries;
-import pro.sketchware.core.library.BuiltInLibraryUtils;
 
 /**
  * An object representing a built-in library, e.g. the MDC library (nicknamed material-1.0.0)

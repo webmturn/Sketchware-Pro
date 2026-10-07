@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import pro.sketchware.util.MoreblockSpecUtils;
+import pro.sketchware.core.block.MoreblockSpecUtils;
 import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.codegen.ComponentCodeGenerator;
 import pro.sketchware.core.project.ProjectDataManager;

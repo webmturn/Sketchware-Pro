@@ -584,7 +584,7 @@ public class BuiltInLibraries {
      * @throws IllegalArgumentException Thrown if the specified library doesn't have any assets.
      */
     public static File getLibraryAssets(String libraryName) {
-        pro.sketchware.core.project.BuiltInLibrary library = new pro.sketchware.core.project.BuiltInLibrary(libraryName);
+        pro.sketchware.core.library.BuiltInLibrary library = new pro.sketchware.core.library.BuiltInLibrary(libraryName);
 
         if (library.hasAssets()) {
             return new File(EXTRACTED_BUILT_IN_LIBRARIES_PATH, libraryName + File.separator + "assets");
@@ -601,7 +601,7 @@ public class BuiltInLibraries {
     }
 
     public static File getLibraryResources(String libraryName) {
-        pro.sketchware.core.project.BuiltInLibrary library = new pro.sketchware.core.project.BuiltInLibrary(libraryName);
+        pro.sketchware.core.library.BuiltInLibrary library = new pro.sketchware.core.library.BuiltInLibrary(libraryName);
 
         if (library.hasResources()) {
             return new File(EXTRACTED_BUILT_IN_LIBRARIES_PATH, libraryName + File.separator + "res");

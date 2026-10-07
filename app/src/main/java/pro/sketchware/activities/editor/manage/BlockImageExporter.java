@@ -1,4 +1,4 @@
-package pro.sketchware.tools;
+package pro.sketchware.activities.editor.manage;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -12,7 +12,7 @@ import java.io.IOException;
 
 import pro.sketchware.util.FileUtil;
 
-public class ImageFactory {
+public class BlockImageExporter {
 
     /**
      * Saves a bitmap of a view to storage.
@@ -37,7 +37,7 @@ public class ImageFactory {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
             }
         } catch (IOException e) {
-            Log.e(ImageFactory.class.getSimpleName(), "Couldn't save bitmap with name " + imageName + ": " + e.getMessage(), e);
+            Log.e(BlockImageExporter.class.getSimpleName(), "Couldn't save bitmap with name " + imageName + ": " + e.getMessage(), e);
         }
         return savedBitmap;
     }

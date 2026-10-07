@@ -1,4 +1,4 @@
-package pro.sketchware.core.codegen;
+package pro.sketchware.core.block.view;
 
 import static com.google.android.material.color.MaterialColors.harmonizeWithPrimary;
 
@@ -8,6 +8,8 @@ import android.view.ContextThemeWrapper;
 import pro.sketchware.R;
 import pro.sketchware.SketchApplication;
 import pro.sketchware.util.MenuNameMapper;
+import pro.sketchware.core.codegen.BlockSpecRegistry;
+import pro.sketchware.core.codegen.BlockCodeRegistry;
 
 /**
  * Maps block opCodes to their display colors using Material You color harmonization.

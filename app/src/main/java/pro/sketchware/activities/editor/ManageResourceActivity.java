@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor;
 
+import pro.sketchware.core.project.SketchwarePaths;
+
 import androidx.activity.OnBackPressedCallback;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -44,7 +46,6 @@ import pro.sketchware.databinding.DialogCreateNewFileLayoutBinding;
 import pro.sketchware.databinding.DialogInputLayoutBinding;
 import pro.sketchware.databinding.ManageFileBinding;
 import pro.sketchware.databinding.ManageJavaItemHsBinding;
-import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.core.project.FileResConfig;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
@@ -54,7 +55,6 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
 
     private CustomAdapter adapter;
     private FilePickerDialogFragment dialog;
-    private FilePathUtil fpu;
     private FileResConfig frc;
     private String numProj;
     private String temp;
@@ -105,23 +105,22 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
             return;
         }
         frc = new FileResConfig(numProj);
-        fpu = new FilePathUtil();
         setupDialog();
         checkDir();
         initToolbar();
     }
 
     private void checkDir() {
-        if (!FileUtil.isExistFile(fpu.getPathResource(numProj))) {
-            FileUtil.makeDir(fpu.getPathResource(numProj));
-            FileUtil.makeDir(fpu.getPathResource(numProj) + "/anim");
-            FileUtil.makeDir(fpu.getPathResource(numProj) + "/drawable");
-            FileUtil.makeDir(fpu.getPathResource(numProj) + "/drawable-xhdpi");
-            FileUtil.makeDir(fpu.getPathResource(numProj) + "/layout");
-            FileUtil.makeDir(fpu.getPathResource(numProj) + "/menu");
-            FileUtil.makeDir(fpu.getPathResource(numProj) + "/values");
+        if (!FileUtil.isExistFile(SketchwarePaths.getProjectResourcePath(numProj))) {
+            FileUtil.makeDir(SketchwarePaths.getProjectResourcePath(numProj));
+            FileUtil.makeDir(SketchwarePaths.getProjectResourcePath(numProj) + "/anim");
+            FileUtil.makeDir(SketchwarePaths.getProjectResourcePath(numProj) + "/drawable");
+            FileUtil.makeDir(SketchwarePaths.getProjectResourcePath(numProj) + "/drawable-xhdpi");
+            FileUtil.makeDir(SketchwarePaths.getProjectResourcePath(numProj) + "/layout");
+            FileUtil.makeDir(SketchwarePaths.getProjectResourcePath(numProj) + "/menu");
+            FileUtil.makeDir(SketchwarePaths.getProjectResourcePath(numProj) + "/values");
         }
-        temp = fpu.getPathResource(numProj);
+        temp = SketchwarePaths.getProjectResourcePath(numProj);
         handleAdapter(temp);
         handleFab();
     }
@@ -137,7 +136,7 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
     }
 
     private boolean isInMainDirectory() {
-        return temp.equals(fpu.getPathResource(numProj));
+        return temp.equals(SketchwarePaths.getProjectResourcePath(numProj));
     }
 
     private void handleFab() {
@@ -218,7 +217,7 @@ public class ManageResourceActivity extends BaseAppCompatActivity {
                 String name = Helper.getText(inputText);
                 String path;
                 if (isFolder) {
-                    path = fpu.getPathResource(numProj) + "/" + name;
+                    path = SketchwarePaths.getProjectResourcePath(numProj) + "/" + name;
                 } else {
                     path = new File(temp + File.separator + name).getAbsolutePath();
                 }

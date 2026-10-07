@@ -58,7 +58,7 @@ import pro.sketchware.lib.code_editor.CodeEditorPreferences;
 import pro.sketchware.R;
 import pro.sketchware.activities.preview.LayoutPreviewActivity;
 import pro.sketchware.databinding.CodeEditorHsBinding;
-import pro.sketchware.util.EditorUtils;
+import pro.sketchware.lib.code_editor.EditorUtils;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.ThemeUtils;

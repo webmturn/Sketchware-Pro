@@ -17,7 +17,6 @@ import androidx.core.view.WindowInsetsCompat;
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import pro.sketchware.util.CompileLogHelper;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.core.build.CompileErrorSaver;

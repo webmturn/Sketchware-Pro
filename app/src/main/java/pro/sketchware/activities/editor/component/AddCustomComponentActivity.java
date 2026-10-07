@@ -36,7 +36,7 @@ import pro.sketchware.core.project.OldResourceIdMapper;
 import pro.sketchware.beans.CustomComponent;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageCustomComponentAddBinding;
-import pro.sketchware.tools.ComponentHelper;
+import pro.sketchware.activities.editor.component.ComponentNameTextWatcher;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.UI;
@@ -115,7 +115,7 @@ public class AddCustomComponentActivity extends BaseAppCompatActivity implements
     }
 
     private void initializeHelper() {
-        binding.componentName.addTextChangedListener(new ComponentHelper(new EditText[]{binding.componentBuildClass, binding.componentVariableName, binding.componentTypeName, binding.componentTypeClass}, binding.componentTypeClass));
+        binding.componentName.addTextChangedListener(new ComponentNameTextWatcher(new EditText[]{binding.componentBuildClass, binding.componentVariableName, binding.componentTypeName, binding.componentTypeClass}, binding.componentTypeClass));
     }
 
     @Override

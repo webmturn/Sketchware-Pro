@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor;
 
+import pro.sketchware.core.project.SketchwarePaths;
+
 import androidx.activity.OnBackPressedCallback;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -44,7 +46,6 @@ import pro.sketchware.databinding.DialogCreateNewFileLayoutBinding;
 import pro.sketchware.databinding.DialogInputLayoutBinding;
 import pro.sketchware.databinding.ManageFileBinding;
 import pro.sketchware.databinding.ManageJavaItemHsBinding;
-import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 
@@ -52,7 +53,6 @@ public class ManageAssetsActivity extends BaseAppCompatActivity {
 
     private final ArrayList<String> currentTree = new ArrayList<>();
     private String current_path;
-    private FilePathUtil fpu;
     private AssetsAdapter assetsAdapter;
     private String sc_id;
 
@@ -67,7 +67,7 @@ public class ManageAssetsActivity extends BaseAppCompatActivity {
             public void handleOnBackPressed() {
                 if (Objects.equals(
                         Uri.parse(current_path).getPath(),
-                        Uri.parse(fpu.getPathAssets(sc_id)).getPath()
+                        Uri.parse(SketchwarePaths.getProjectAssetsPath(sc_id)).getPath()
                 )) {
                     finish();
                 } else {
@@ -86,8 +86,7 @@ public class ManageAssetsActivity extends BaseAppCompatActivity {
         }
         setupUI();
 
-        fpu = new FilePathUtil();
-        current_path = Uri.parse(fpu.getPathAssets(sc_id)).getPath();
+        current_path = Uri.parse(SketchwarePaths.getProjectAssetsPath(sc_id)).getPath();
 
         refresh();
     }
@@ -258,8 +257,8 @@ public class ManageAssetsActivity extends BaseAppCompatActivity {
     }
 
     private void refresh() {
-        if (!FileUtil.isExistFile(fpu.getPathAssets(sc_id))) {
-            FileUtil.makeDir(fpu.getPathAssets(sc_id));
+        if (!FileUtil.isExistFile(SketchwarePaths.getProjectAssetsPath(sc_id))) {
+            FileUtil.makeDir(SketchwarePaths.getProjectAssetsPath(sc_id));
             refresh();
         }
 

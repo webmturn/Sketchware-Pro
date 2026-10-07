@@ -63,7 +63,7 @@ import pro.sketchware.util.UIHelper;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.AudioMetadata;
-import pro.sketchware.util.BlockUtil;
+import pro.sketchware.core.block.view.BlockUtil;
 import pro.sketchware.activities.editor.manage.sound.SoundPlayingAdapter;
 import pro.sketchware.R;
 

@@ -1,12 +1,12 @@
 package pro.sketchware.activities.projects;
 
-import static pro.sketchware.util.ProjectFile.getDefaultColor;
+import static pro.sketchware.core.project.ProjectThemeColors.getDefaultColor;
 
 import android.graphics.Color;
 
 import java.util.Random;
 
-import pro.sketchware.util.ProjectFile;
+import pro.sketchware.core.project.ProjectThemeColors;
 
 
 public class ThemeManager {
@@ -100,11 +100,11 @@ public class ThemeManager {
     public static ThemePreset getDefault() {
         return new ThemePreset(
                 "Default",
-                getDefaultColor(ProjectFile.COLOR_ACCENT),
-                getDefaultColor(ProjectFile.COLOR_PRIMARY),
-                getDefaultColor(ProjectFile.COLOR_PRIMARY_DARK),
-                getDefaultColor(ProjectFile.COLOR_CONTROL_HIGHLIGHT),
-                getDefaultColor(ProjectFile.COLOR_CONTROL_NORMAL));
+                getDefaultColor(ProjectThemeColors.COLOR_ACCENT),
+                getDefaultColor(ProjectThemeColors.COLOR_PRIMARY),
+                getDefaultColor(ProjectThemeColors.COLOR_PRIMARY_DARK),
+                getDefaultColor(ProjectThemeColors.COLOR_CONTROL_HIGHLIGHT),
+                getDefaultColor(ProjectThemeColors.COLOR_CONTROL_NORMAL));
     }
 
     private static int darkenColor(int color, float factor) {

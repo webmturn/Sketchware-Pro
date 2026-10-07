@@ -1,6 +1,6 @@
 package pro.sketchware.activities.resourceseditor.components.utils;
 
-import static pro.sketchware.util.ProjectFile.getDefaultColor;
+import static pro.sketchware.core.project.ProjectThemeColors.getDefaultColor;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

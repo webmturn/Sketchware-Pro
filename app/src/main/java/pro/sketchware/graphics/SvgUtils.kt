@@ -1,4 +1,4 @@
-package pro.sketchware.util
+package pro.sketchware.graphics
 
 import android.content.Context
 import android.graphics.Bitmap

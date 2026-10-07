@@ -18,11 +18,75 @@ tasks.register("clean", Delete) {
 
 tasks.register("checkPackageBoundaries") {
     group = "verification"
-    description = "Rejects retired package roots and direct global data access from design tabs."
+    description = "Checks retired packages, shared-service dependencies, and design-tab data access."
 
     doLast {
         def sourceRoot = file("app/src/main/java")
         def violations = [] as Set
+
+        // Mask comments and literals before checking imports and qualified code references.
+        def nonCode = ~/(?s)""".*?"""|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\/\*.*?\*\/|\/\/[^\r\n]*/
+        def retiredClassNames = [
+                "pro.sketchware.core.project.BuiltInLibrary",
+                "pro.sketchware.core.codegen.BlockColorMapper",
+                "pro.sketchware.core.codegen.XmlLayoutParser",
+                "pro.sketchware.tools.InjectRootLayoutManager",
+                "pro.sketchware.tools.ViewBeanParser",
+                "pro.sketchware.tools.ViewBeanFactory",
+                "pro.sketchware.util.AttributeConstants",
+                "pro.sketchware.util.BlockUtil",
+                "pro.sketchware.util.CompileLogHelper",
+                "pro.sketchware.util.CustomVariableUtil",
+                "pro.sketchware.util.EditorUtils",
+                "pro.sketchware.util.InjectAttributeHandler",
+                "pro.sketchware.util.MoreblockSpecUtils",
+                "pro.sketchware.util.SvgUtils",
+                "pro.sketchware.util.TestkeySignBridge",
+                "pro.sketchware.tools.ComponentHelper",
+                "pro.sketchware.tools.ImageFactory",
+                "pro.sketchware.util.ProjectFile",
+                "pro.sketchware.core.codegen.DynamicPaletteProvider",
+                "pro.sketchware.util.relativelayout.CircularDependencyDetector",
+                "pro.sketchware.util.relativelayout.RelativeLayoutAttributes",
+                "pro.sketchware.core.callback.ViewEnableRunnable",
+                "pro.sketchware.util.PCP",
+                "pro.sketchware.util.DebouncedClickListener",
+                "pro.sketchware.util.FilePathUtil"
+        ]
+        retiredClassNames.each { name ->
+            ["java", "kt"].each { extension ->
+                def retiredFile = new File(sourceRoot, name.replace('.', '/') + "." + extension)
+                if (retiredFile.exists()) violations.add(retiredFile)
+            }
+        }
+        def retiredTypes = retiredClassNames.collect { name ->
+            java.util.regex.Pattern.compile('(?<![\\w$])' + java.util.regex.Pattern.quote(name) + '(?![\\w$])')
+        }
+        fileTree(sourceRoot) {
+            include "pro/sketchware/**/*.java"
+            include "pro/sketchware/**/*.kt"
+            exclude "pro/sketchware/third_party/**"
+        }.files.each { sourceFile ->
+            def code = nonCode.matcher(sourceFile.getText("UTF-8")).replaceAll(" ")
+            def path = sourceRoot.toPath().relativize(sourceFile.toPath()).toString().replace('\\', '/')
+            if (retiredTypes.any { type -> type.matcher(code).find() }) {
+                violations.add(sourceFile)
+            }
+            if ((path.startsWith("pro/sketchware/core/") || path.startsWith("pro/sketchware/util/"))
+                    && (code =~ /\bpro\.sketchware\.(activities|dialogs)\./).find()) {
+                violations.add(sourceFile)
+            }
+            if ((path == "pro/sketchware/core/project/ProjectSettings.java"
+                    || path == "pro/sketchware/core/project/InjectRootLayoutManager.java"
+                    || path.startsWith("pro/sketchware/core/settings/"))
+                    && (code =~ /\bandroid\.(view|widget)\./).find()) {
+                violations.add(sourceFile)
+            }
+            if (path.startsWith("pro/sketchware/core/layout/")
+                    && (code =~ /\bpro\.sketchware\.core\.project\.SketchwarePaths\b/).find()) {
+                violations.add(sourceFile)
+            }
+        }
 
         ["a/a/a", "com/besome/sketch", "dev", "mod"].each { retiredRoot ->
             def retiredDirectory = new File(sourceRoot, retiredRoot)

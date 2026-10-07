@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor;
 
+import pro.sketchware.core.project.SketchwarePaths;
+
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -125,7 +127,7 @@ import pro.sketchware.core.project.ProjectSettings;
 import pro.sketchware.util.Helper;
 import pro.sketchware.dialogs.AsdDialog;
 import pro.sketchware.activities.editor.makeblock.MoreblockImporter;
-import pro.sketchware.util.BlockUtil;
+import pro.sketchware.core.block.view.BlockUtil;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.core.build.ViewBindingBuilder;
 import pro.sketchware.R;
@@ -135,8 +137,7 @@ import pro.sketchware.databinding.ImagePickerItemBinding;
 import pro.sketchware.databinding.SearchWithRecyclerViewBinding;
 import pro.sketchware.activities.editor.logic.ExtraMenuBean;
 import pro.sketchware.dialogs.FieldValueSetter;
-import pro.sketchware.util.FilePathUtil;
-import pro.sketchware.util.SvgUtils;
+import pro.sketchware.graphics.SvgUtils;
 
 @SuppressLint({"ClickableViewAccessibility", "RtlHardcoded", "SetTextI18n", "DefaultLocale"})
 public class LogicEditorActivity extends BaseAppCompatActivity implements View.OnClickListener, BlockSizeListener, View.OnTouchListener, MoreblockImporterDialog.CallBack, FieldValueSetter {
@@ -179,7 +180,6 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     private Boolean isViewBindingEnabled;
 
     private SvgUtils svgUtils;
-    private final FilePathUtil fpu = new FilePathUtil();
     private EditText blockSearchField;
     private int lastSelectedPaletteId = 0;
     private int lastSelectedPaletteColor;
@@ -582,7 +582,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
             Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".provider", imageFile);
 
             if (path.endsWith(".xml")) {
-                svgUtils.loadImage(imageView, fpu.getSvgFullPath(scId, name));
+                svgUtils.loadImage(imageView, SketchwarePaths.getProjectConvertedVectorFilePath(scId, name));
             } else {
                 Glide.with(this)
                         .load(uri)

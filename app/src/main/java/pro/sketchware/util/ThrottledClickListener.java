@@ -3,7 +3,7 @@ package pro.sketchware.util;
 import android.os.SystemClock;
 import android.view.View;
 
-public abstract class DebouncedClickListener implements View.OnClickListener {
+public abstract class ThrottledClickListener implements View.OnClickListener {
 
     private static final long MIN_CLICK_INTERVAL = 100L;
     private long lastClickTime = 0;
@@ -13,10 +13,10 @@ public abstract class DebouncedClickListener implements View.OnClickListener {
         long currentTime = SystemClock.elapsedRealtime();
         if (currentTime - lastClickTime > MIN_CLICK_INTERVAL) {
             lastClickTime = currentTime;
-            onDebouncedClick(v);
+            onThrottledClick(v);
         }
     }
 
-    protected abstract void onDebouncedClick(View v);
+    protected abstract void onThrottledClick(View v);
 
 }
