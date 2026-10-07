@@ -1,4 +1,4 @@
-package pro.sketchware.dialogs;
+package pro.sketchware.widgets;
 
 import android.content.Context;
 import android.content.DialogInterface;

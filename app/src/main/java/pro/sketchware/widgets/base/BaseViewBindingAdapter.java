@@ -1,4 +1,4 @@
-package pro.sketchware.lib.base;
+package pro.sketchware.widgets.base;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;

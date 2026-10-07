@@ -18,7 +18,7 @@ import androidx.core.view.WindowInsetsCompat;
 import pro.sketchware.widgets.LoadingDialog;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-import pro.sketchware.dialogs.ProgressDialog;
+import pro.sketchware.widgets.ProgressDialog;
 import pro.sketchware.util.locale.LanguageOverrideContextWrapper;
 import pro.sketchware.util.UI;
 

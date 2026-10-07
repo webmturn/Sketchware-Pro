@@ -44,7 +44,7 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.dialogs.AsdDialog;
 import pro.sketchware.R;
 import pro.sketchware.core.resources.StringResourceResolver;
-import pro.sketchware.lib.base.BaseTextWatcher;
+import pro.sketchware.util.BaseTextWatcher;
 import pro.sketchware.lib.highlighter.SimpleHighlighter;
 import pro.sketchware.core.project.FileResConfig;
 import pro.sketchware.util.FileUtil;

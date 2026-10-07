@@ -56,7 +56,7 @@ import pro.sketchware.activities.about.AboutActivity;
 import pro.sketchware.activities.main.fragments.projects.ProjectsFragment;
 import pro.sketchware.activities.main.fragments.projects_store.ProjectsStoreFragment;
 import pro.sketchware.databinding.MainBinding;
-import pro.sketchware.lib.base.BottomSheetDialogView;
+import pro.sketchware.widgets.MessageBottomSheetDialog;
 import pro.sketchware.util.DataResetter;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
@@ -291,7 +291,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
                 }).copyFile(data);
             }
         } else if (!ApplicationSettings.isSettingEnabled(ApplicationSettings.SETTING_CRITICAL_UPDATE_REMINDER)) {
-            BottomSheetDialogView bottomSheetDialog = getBottomSheetDialogView();
+            MessageBottomSheetDialog bottomSheetDialog = getMessageBottomSheetDialog();
             bottomSheetDialog.getPositiveButton().setEnabled(false);
 
             CountDownTimer countDownTimer = new CountDownTimer(10000, 1000) {
@@ -400,8 +400,8 @@ public class MainActivity extends BasePermissionAppCompatActivity {
     }
 
     @NonNull
-    private BottomSheetDialogView getBottomSheetDialogView() {
-        BottomSheetDialogView bottomSheetDialog = new BottomSheetDialogView(this);
+    private MessageBottomSheetDialog getMessageBottomSheetDialog() {
+        MessageBottomSheetDialog bottomSheetDialog = new MessageBottomSheetDialog(this);
         bottomSheetDialog.setTitle(Helper.getResString(R.string.main_major_changes_title));
         bottomSheetDialog.setDescription(Helper.getResString(R.string.main_major_changes_desc));
 

@@ -1,4 +1,4 @@
-package pro.sketchware.lib.base;
+package pro.sketchware.widgets;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,10 +11,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ViewBottomSheetDialogBinding;
 
-public class BottomSheetDialogView extends BottomSheetDialog {
+public class MessageBottomSheetDialog extends BottomSheetDialog {
     private final ViewBottomSheetDialogBinding binding;
 
-    public BottomSheetDialogView(Context context) {
+    public MessageBottomSheetDialog(Context context) {
         super(context);
         binding = ViewBottomSheetDialogBinding.inflate(LayoutInflater.from(getContext()));
         setContentView(binding.getRoot());

@@ -37,7 +37,7 @@ import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.databinding.ActivityLogcatreaderBinding;
 import pro.sketchware.databinding.EasyDeleteEdittextBinding;
 import pro.sketchware.databinding.ViewLogcatItemBinding;
-import pro.sketchware.lib.base.BaseTextWatcher;
+import pro.sketchware.util.BaseTextWatcher;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 

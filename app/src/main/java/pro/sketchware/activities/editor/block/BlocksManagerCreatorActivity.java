@@ -42,7 +42,7 @@ import pro.sketchware.util.ColorTextViewListener;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ActivityBlocksManagerCreatorBinding;
-import pro.sketchware.lib.base.BaseTextWatcher;
+import pro.sketchware.util.BaseTextWatcher;
 import pro.sketchware.lib.highlighter.SimpleHighlighter;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.PropertiesUtil;

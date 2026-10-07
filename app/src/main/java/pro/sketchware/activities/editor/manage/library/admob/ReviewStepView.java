@@ -22,7 +22,7 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageLibraryAdmobPreviewBinding;
 import pro.sketchware.databinding.ManageLibrarySettingAdmobTestDeviceItemBinding;
-import pro.sketchware.lib.base.BaseViewBindingAdapter;
+import pro.sketchware.widgets.base.BaseViewBindingAdapter;
 
 public class ReviewStepView extends LinearLayout implements LibrarySettingsView {
 

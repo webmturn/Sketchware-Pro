@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-import pro.sketchware.lib.base.BaseTextWatcher;
 import pro.sketchware.util.FileUtil;
 
 public class Helper {

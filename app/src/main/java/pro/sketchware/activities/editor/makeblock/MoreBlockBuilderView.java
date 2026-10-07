@@ -29,7 +29,7 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.core.block.view.BlockUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.MakeBlockLayoutBinding;
-import pro.sketchware.lib.base.BaseTextWatcher;
+import pro.sketchware.util.BaseTextWatcher;
 
 @SuppressLint("ViewConstructor")
 public class MoreBlockBuilderView extends LinearLayout {
