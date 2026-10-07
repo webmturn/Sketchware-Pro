@@ -6,7 +6,7 @@ package pro.sketchware.core.build;
  * <p>These constants represent the SDK versions used when a project does not specify
  * its own values (e.g. newly created projects, or projects imported without complete
  * build configuration). They are referenced by {@link ProjectFilePaths},
- * {@link ManifestGenerator}, the resource compiler, and the project settings dialog.
+ * {@link pro.sketchware.core.codegen.ManifestGenerator}, the resource compiler, and the project settings dialog.
  */
 public final class BuildDefaults {
 

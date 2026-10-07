@@ -55,7 +55,8 @@ tasks.register("checkPackageBoundaries") {
                 "pro.sketchware.core.codegen.BlockTypeUtils",
                 "pro.sketchware.core.codegen.BlockSpecRegistry",
                 "pro.sketchware.core.codegen.ExtraBlockInfo",
-                "pro.sketchware.util.MenuNameMapper"
+                "pro.sketchware.util.MenuNameMapper",
+                "pro.sketchware.core.build.ManifestGenerator"
         ]
         retiredClassNames.each { name ->
             ["java", "kt"].each { extension ->

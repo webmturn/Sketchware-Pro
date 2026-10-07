@@ -1,4 +1,4 @@
-package pro.sketchware.core.build;
+package pro.sketchware.core.codegen;
 
 import pro.sketchware.core.codegen.ActivityConfigConstants;
 import pro.sketchware.core.project.BuildConfig;
@@ -28,6 +28,7 @@ import java.util.Set;
 
 import pro.sketchware.core.codegen.EditorManifest;
 import pro.sketchware.core.build.BuildSettings;
+import pro.sketchware.core.build.ProjectFilePaths;
 import pro.sketchware.core.project.ProjectSettings;
 import pro.sketchware.util.Helper;
 import pro.sketchware.core.codegen.AndroidManifestInjector;
@@ -51,7 +52,7 @@ import pro.sketchware.util.xml.XmlBuilder;
  *   <li>User-injected manifest entries via {@link AndroidManifestInjector}</li>
  * </ul>
  *
- * @see ProjectBuilder
+ * @see pro.sketchware.core.build.ProjectBuilder
  * @see LayoutGenerator
  * @see ComponentCodeGenerator
  */

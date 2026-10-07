@@ -7,6 +7,7 @@ import pro.sketchware.core.codegen.ComponentCodeGenerator;
 import pro.sketchware.core.codegen.ComponentTemplates;
 import pro.sketchware.util.io.EncryptedFileUtil;
 import pro.sketchware.core.codegen.LayoutGenerator;
+import pro.sketchware.core.codegen.ManifestGenerator;
 import pro.sketchware.core.project.LibraryManager;
 import pro.sketchware.core.codegen.LocalLibraryManifestMerger;
 import pro.sketchware.util.MapValueHelper;
