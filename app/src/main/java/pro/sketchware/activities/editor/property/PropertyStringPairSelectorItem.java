@@ -114,36 +114,26 @@ public class PropertyStringPairSelectorItem extends RelativeLayout implements Vi
         dialog.setIcon(icon);
         View view = ViewUtil.inflateLayout(getContext(), R.layout.property_popup_selector_single);
         radioGroupContent = view.findViewById(R.id.rg_content);
-        int counter = 0;
         for (Pair<String, String> pair : SketchwareConstants.getStringPropertyPairs(key)) {
             radioGroupContent.addView(getOption(pair));
         }
         int childCount = radioGroupContent.getChildCount();
-        while (true) {
-            if (counter >= childCount) {
-                break;
-            }
-            RadioButton radioButton = (RadioButton) radioGroupContent.getChildAt(counter);
+        for (int childIndex = 0; childIndex < childCount; childIndex++) {
+            RadioButton radioButton = (RadioButton) radioGroupContent.getChildAt(childIndex);
             if (radioButton.getTag().toString().equals(value)) {
                 radioButton.setChecked(true);
                 break;
             }
-            counter++;
         }
         dialog.setView(view);
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_select), (v, which) -> {
             int radioCount = radioGroupContent.getChildCount();
-            int idx = 0;
-            while (true) {
-                if (idx >= radioCount) {
-                    break;
-                }
-                RadioButton radioButton = (RadioButton) radioGroupContent.getChildAt(idx);
+            for (int childIndex = 0; childIndex < radioCount; childIndex++) {
+                RadioButton radioButton = (RadioButton) radioGroupContent.getChildAt(childIndex);
                 if (radioButton.isChecked()) {
                     setValue(radioButton.getTag().toString());
                     break;
                 }
-                idx++;
             }
             if (valueChangeListener != null) {
                 valueChangeListener.onPropertyChanged(key, value);

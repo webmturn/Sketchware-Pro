@@ -63,22 +63,12 @@ public class ItemLinearLayout extends LinearLayout implements ItemView, ScrollCo
         if (index > childCount) {
             super.addView(child);
         } else {
-            byte defaultGoneIndex = -1;
-            int searchIdx = 0;
-
-            int goneChildIndex;
-            while (true) {
-                goneChildIndex = defaultGoneIndex;
-                if (searchIdx >= childCount) {
+            int goneChildIndex = -1;
+            for (int childIndex = 0; childIndex < childCount; childIndex++) {
+                if (getChildAt(childIndex).getVisibility() == View.GONE) {
+                    goneChildIndex = childIndex;
                     break;
                 }
-
-                if (getChildAt(searchIdx).getVisibility() == View.GONE) {
-                    goneChildIndex = searchIdx;
-                    break;
-                }
-
-                ++searchIdx;
             }
 
             if (goneChildIndex >= 0 && index >= goneChildIndex) {

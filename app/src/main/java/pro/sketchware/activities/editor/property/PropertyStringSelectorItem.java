@@ -147,17 +147,12 @@ public class PropertyStringSelectorItem extends RelativeLayout implements View.O
         dialog.setView(view);
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_select), (v, which) -> {
             int childCount = radioGroupContent.getChildCount();
-            int counter = 0;
-            while (true) {
-                if (counter >= childCount) {
-                    break;
-                }
-                RadioButton radioButton = (RadioButton) radioGroupContent.getChildAt(counter);
+            for (int childIndex = 0; childIndex < childCount; childIndex++) {
+                RadioButton radioButton = (RadioButton) radioGroupContent.getChildAt(childIndex);
                 if (radioButton.isChecked()) {
                     setValue(radioButton.getTag().toString());
                     break;
                 }
-                counter++;
             }
             if (valueChangeListener != null) {
                 valueChangeListener.onPropertyChanged(key, value);
