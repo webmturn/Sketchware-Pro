@@ -1,4 +1,4 @@
-package pro.sketchware.util.relativelayout;
+package pro.sketchware.core.layout.relativelayout;
 
 import pro.sketchware.beans.ViewBean;
 
@@ -7,25 +7,25 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Utility class for detecting IllegalStateException: Circular Dependencies in RelativeLayout parent attributes
+ * Checks pairwise references for conflicting RelativeLayout attributes.
  */
 
-public class CircularDependencyDetector {
+public class RelativeLayoutRelationValidator {
 
     private final ArrayList<ViewBean> beans;
     private final ViewBean bean;
 
-    public CircularDependencyDetector(ArrayList<ViewBean> beans, ViewBean bean) {
+    public RelativeLayoutRelationValidator(ArrayList<ViewBean> beans, ViewBean bean) {
         this.beans = beans;
         this.bean = bean;
     }
 
     /**
-     * Validates if the given attribute for a target view leads to a circular dependency.
+     * Checks the requested relation against the target view's references back to this view.
      *
      * @param targetId The ID of the target view.
      * @param attr     The layout attribute to validate.
-     * @return True if no circular dependency is detected, false otherwise.
+     * @return True if no pairwise conflict is detected, false otherwise.
      */
     public boolean isLegalAttribute(String targetId, String attr) {
         for (ViewBean viewBean : beans) {
@@ -114,7 +114,4 @@ public class CircularDependencyDetector {
             default -> List.of();
         };
     }
-    // I tested this class with some complex Circular Dependency cases,
-    // and it seems to be working fine. I hope this code is able to detect all possible cases, or at least most of them.
-
 }

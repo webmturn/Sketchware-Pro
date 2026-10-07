@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor.view;
 
+import pro.sketchware.core.layout.ViewTypeNames;
+
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -731,7 +733,7 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
     public ItemView createAndAddView(ViewBean viewBean) {
         View itemView = viewPane.createItemView(viewBean);
         viewPane.addViewAndUpdateIndex(itemView);
-        String generatedId = SketchwarePaths.getWidgetTypeName(viewBean.type);
+        String generatedId = ViewTypeNames.getIdPrefix(viewBean.type);
         if (viewBean.id.indexOf(generatedId) == 0 && viewBean.id.length() > generatedId.length()) {
             try {
                 int intValue = Integer.parseInt(viewBean.id.substring(generatedId.length()));
@@ -965,7 +967,7 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
 
     private String generateWidgetId(ViewBean bean) {
         int type = bean.type;
-        String typeName = !bean.isCustomWidget ? SketchwarePaths.getWidgetTypeName(type) : widgetsCreatorManager.generateCustomWidgetId(bean.convert);
+        String typeName = !bean.isCustomWidget ? ViewTypeNames.getIdPrefix(type) : widgetsCreatorManager.generateCustomWidgetId(bean.convert);
         boolean typeInBounds = type >= 0 && type < countItems.length;
         StringBuilder sb = new StringBuilder();
         sb.append(typeName);

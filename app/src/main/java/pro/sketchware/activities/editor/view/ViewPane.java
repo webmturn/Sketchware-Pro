@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor.view;
 
+import pro.sketchware.core.layout.RootLayoutConverter;
+
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
@@ -110,10 +112,10 @@ import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.core.resources.ColorResourceResolver;
 import pro.sketchware.core.resources.StringResourceResolver;
-import pro.sketchware.tools.InjectRootLayoutManager;
+import pro.sketchware.core.project.InjectRootLayoutManager;
 import pro.sketchware.util.FilePathUtil;
 import pro.sketchware.util.FileUtil;
-import pro.sketchware.util.InjectAttributeHandler;
+import pro.sketchware.core.layout.InjectAttributeHandler;
 import pro.sketchware.util.InvokeUtil;
 import pro.sketchware.util.PropertiesUtil;
 import pro.sketchware.util.SvgUtils;
@@ -350,7 +352,7 @@ public class ViewPane extends RelativeLayout {
 
     public void updateRootLayout(String sc_id, String fileName) {
         InjectRootLayoutManager manager = new InjectRootLayoutManager(sc_id);
-        var currentBean = manager.toBean(fileName);
+        var currentBean = RootLayoutConverter.toBean(manager.getLayoutByFileName(fileName));
         View rootView = createItemView(currentBean);
         if (rootView instanceof ItemView sy) {
             sy.setFixed(true);

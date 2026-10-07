@@ -1,5 +1,4 @@
-package pro.sketchware.core.codegen;
-import pro.sketchware.core.project.ClassInfo;
+package pro.sketchware.core.layout;
 
 import android.graphics.Color;
 import android.view.ViewGroup;

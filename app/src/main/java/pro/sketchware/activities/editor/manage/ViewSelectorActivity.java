@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor.manage;
 
+import pro.sketchware.core.layout.ViewTypeNames;
+
 import android.content.Intent;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -25,7 +27,6 @@ import pro.sketchware.core.project.ProjectFileManager;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.util.UIHelper;
 import pro.sketchware.activities.editor.manage.view.PresetLayoutFactory;
-import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FileSelectorPopupSelectXmlActivityItemBinding;
 import pro.sketchware.databinding.FileSelectorPopupSelectXmlBinding;
@@ -288,7 +289,7 @@ public class ViewSelectorActivity extends BaseAppCompatActivity {
     }
 
     private String generateUniqueViewId(int viewType, String xmlName) {
-        String typeName = SketchwarePaths.getWidgetTypeName(viewType);
+        String typeName = ViewTypeNames.getIdPrefix(viewType);
         StringBuilder sb = new StringBuilder();
         sb.append(typeName);
         int count = widgetTypeCounts[viewType] + 1;

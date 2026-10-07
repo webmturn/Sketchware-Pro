@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor.manage.view.fragments;
 
+import pro.sketchware.core.layout.ViewTypeNames;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,7 +24,6 @@ import pro.sketchware.activities.base.BaseFragment;
 import pro.sketchware.activities.editor.manage.view.PresetLayoutFactory;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.ProjectDataStore;
-import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.codegen.StringResource;
 
 public class CustomViewFilesFragment extends BaseFragment {
@@ -41,7 +42,7 @@ public class CustomViewFilesFragment extends BaseFragment {
   public int[] viewCounters = new int[19];
   
   public final String generateUniqueViewId(int position, String xmlName) {
-    String prefix = SketchwarePaths.getWidgetTypeName(position);
+    String prefix = ViewTypeNames.getIdPrefix(position);
     int[] intValues = viewCounters;
     int counter = intValues[position] + 1;
     intValues[position] = counter;

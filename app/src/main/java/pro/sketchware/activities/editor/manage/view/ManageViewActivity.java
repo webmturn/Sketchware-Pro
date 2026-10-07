@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor.manage.view;
 
+import pro.sketchware.core.layout.ViewTypeNames;
+
 
 import pro.sketchware.util.Helper;
 import static pro.sketchware.util.SketchwareUtil.dpToPx;
@@ -46,7 +48,6 @@ import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.util.UIHelper;
-import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.activities.editor.manage.view.fragments.CustomViewFilesFragment;
 import pro.sketchware.R;
 
@@ -69,7 +70,7 @@ public class ManageViewActivity extends BaseAppCompatActivity implements OnClick
     private String sc_id;
 
     public final String generateUniqueWidgetId(int widgetType, String xmlName) {
-        String typeName = SketchwarePaths.getWidgetTypeName(widgetType);
+        String typeName = ViewTypeNames.getIdPrefix(widgetType);
         StringBuilder sb = new StringBuilder();
         sb.append(typeName);
         int[] counts = widgetTypeCounts;

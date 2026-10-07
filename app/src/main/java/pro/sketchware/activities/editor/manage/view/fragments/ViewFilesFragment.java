@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor.manage.view.fragments;
 
+import pro.sketchware.core.layout.ViewTypeNames;
+
 import android.app.Activity;
 import android.content.Intent;
 import androidx.activity.result.ActivityResultLauncher;
@@ -34,7 +36,6 @@ import pro.sketchware.activities.editor.manage.view.PresetLayoutFactory;
 import pro.sketchware.beans.EventBean;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.ProjectDataStore;
-import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.UIHelper;
 
 public class ViewFilesFragment extends BaseFragment {
@@ -53,7 +54,7 @@ public class ViewFilesFragment extends BaseFragment {
     private ArrayList<ProjectFileBean> activitiesFiles;
 
     public final String generateWidgetId(int beanType, String xmlName) {
-        String baseName = SketchwarePaths.getWidgetTypeName(beanType);
+        String baseName = ViewTypeNames.getIdPrefix(beanType);
         int[] nameCounters = widgetIdCounters;
         int counter = nameCounters[beanType] + 1;
         nameCounters[beanType] = counter;

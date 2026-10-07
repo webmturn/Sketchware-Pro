@@ -14,7 +14,7 @@ import pro.sketchware.util.UIHelper;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ActivityLayoutPreviewBinding;
-import pro.sketchware.tools.ViewBeanParser;
+import pro.sketchware.core.layout.ViewBeanParser;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.UI;
 

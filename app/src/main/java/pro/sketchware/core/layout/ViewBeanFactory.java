@@ -1,4 +1,4 @@
-package pro.sketchware.tools;
+package pro.sketchware.core.layout;
 
 import static pro.sketchware.util.PropertiesUtil.parseReferName;
 
@@ -10,11 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import android.util.Log;
-import android.util.Pair;
-import android.view.Gravity;
-import android.view.View;
 import pro.sketchware.beans.ViewBeans;
-import pro.sketchware.util.AttributeConstants;
 import pro.sketchware.util.PropertiesUtil;
 
 public class ViewBeanFactory {

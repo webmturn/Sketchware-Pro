@@ -35,8 +35,8 @@ import pro.sketchware.databinding.PropertyInputItemBinding;
 import pro.sketchware.databinding.PropertyPopupParentAttrBinding;
 import pro.sketchware.databinding.PropertySwitchItemSinglelineBinding;
 import pro.sketchware.util.SketchwareUtil;
-import pro.sketchware.util.relativelayout.CircularDependencyDetector;
-import pro.sketchware.util.relativelayout.RelativeLayoutAttributes;
+import pro.sketchware.core.layout.relativelayout.RelativeLayoutRelationValidator;
+import pro.sketchware.core.layout.relativelayout.RelativeLayoutAttributes;
 
 @SuppressLint("ViewConstructor")
 public class PropertyAttributesItem extends LinearLayout implements View.OnClickListener {
@@ -187,7 +187,7 @@ public class PropertyAttributesItem extends LinearLayout implements View.OnClick
                                             .setTitle(R.string.dialog_title_choose_id)
                                             .setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, ids), (d2, w2) -> {
                                                 var id = ids.get(w2);
-                                                if (new CircularDependencyDetector(beans, bean).isLegalAttribute(id, attr)) {
+                                                if (new RelativeLayoutRelationValidator(beans, bean).isLegalAttribute(id, attr)) {
                                                     value.put(attr, id);
                                                     if (valueChangeListener != null)
                                                         valueChangeListener.onPropertyChanged(key, value);

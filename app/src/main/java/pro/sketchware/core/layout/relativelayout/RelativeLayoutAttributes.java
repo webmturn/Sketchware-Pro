@@ -1,4 +1,4 @@
-package pro.sketchware.util.relativelayout;
+package pro.sketchware.core.layout.relativelayout;
 
 import java.util.Arrays;
 import java.util.List;

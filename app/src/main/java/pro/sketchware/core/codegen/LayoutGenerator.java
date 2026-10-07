@@ -3,7 +3,7 @@ import pro.sketchware.core.project.BuildConfig;
 import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.project.SketchwareConstants;
 
-import static pro.sketchware.util.relativelayout.RelativeLayoutAttributes.RELATIVE_ID_ATTRIBUTES;
+import static pro.sketchware.core.layout.relativelayout.RelativeLayoutAttributes.RELATIVE_ID_ATTRIBUTES;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
@@ -40,8 +40,8 @@ import pro.sketchware.beans.ViewBeans;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.SketchApplication;
 import pro.sketchware.core.resources.ColorResourceResolver;
-import pro.sketchware.tools.InjectRootLayoutManager;
-import pro.sketchware.util.InjectAttributeHandler;
+import pro.sketchware.core.project.InjectRootLayoutManager;
+import pro.sketchware.core.layout.InjectAttributeHandler;
 import pro.sketchware.util.PropertiesUtil;
 import pro.sketchware.util.xml.XmlBuilder;
 

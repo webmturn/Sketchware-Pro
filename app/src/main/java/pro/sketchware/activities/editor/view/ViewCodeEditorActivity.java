@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor.view;
 
+import pro.sketchware.core.layout.RootLayoutConverter;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,12 +29,12 @@ import pro.sketchware.R;
 import pro.sketchware.activities.appcompat.ManageAppCompatActivity;
 import pro.sketchware.activities.preview.LayoutPreviewActivity;
 import pro.sketchware.databinding.ViewCodeEditorBinding;
-import pro.sketchware.tools.InjectRootLayoutManager;
-import pro.sketchware.tools.ViewBeanParser;
+import pro.sketchware.core.project.InjectRootLayoutManager;
+import pro.sketchware.core.layout.ViewBeanParser;
 import pro.sketchware.lib.code_editor.CodeEditorPreferences;
 import pro.sketchware.util.EditorUtils;
 import pro.sketchware.util.SketchwareUtil;
-import pro.sketchware.util.relativelayout.CircularDependencyDetector;
+import pro.sketchware.core.layout.relativelayout.RelativeLayoutRelationValidator;
 
 public class ViewCodeEditorActivity extends BaseAppCompatActivity {
     private ViewCodeEditorBinding binding;
@@ -265,7 +267,7 @@ public class ViewCodeEditorActivity extends BaseAppCompatActivity {
 
                 var parsedLayout = parser.parse();
                 for (ViewBean viewBean : parsedLayout) {
-                    CircularDependencyDetector detector = new CircularDependencyDetector(parsedLayout, viewBean);
+                    RelativeLayoutRelationValidator detector = new RelativeLayoutRelationValidator(parsedLayout, viewBean);
                     for (String attr : viewBean.parentAttributes.keySet()) {
                         String targetId = viewBean.parentAttributes.get(attr);
                         if (!detector.isLegalAttribute(targetId, attr)) {
@@ -307,7 +309,7 @@ public class ViewCodeEditorActivity extends BaseAppCompatActivity {
             parser.setSkipRoot(true);
             var parsedLayout = parser.parse();
             var root = parser.getRootAttributes();
-            rootLayoutManager.set(filename, InjectRootLayoutManager.toRoot(root));
+            rootLayoutManager.set(filename, RootLayoutConverter.toRoot(root));
             HistoryViewBean bean = new HistoryViewBean();
             bean.actionOverride(parsedLayout, ProjectDataManager.getProjectDataManager(sc_id).getViews(filename));
             var viewHistoryMgr = ViewHistoryManager.getInstance(sc_id);
