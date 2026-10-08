@@ -71,17 +71,12 @@ public abstract class BasePermissionAppCompatActivity extends BaseAppCompatActiv
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        for (String permission : permissions) {
-            if (Manifest.permission.WRITE_EXTERNAL_STORAGE.equals(permission)) {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                    onStoragePermissionGranted(requestCode);
-                } else {
-                    showPermissionDeniedDialog(requestCode);
-                    return;
-                }
-            }
+        if (!StoragePermissionResult.containsStoragePermission(permissions)) return;
+        if (StoragePermissionResult.allReportedStoragePermissionsGranted(permissions, grantResults)
+                && isStoragePermissionGranted()) {
+            onStoragePermissionGranted(requestCode);
+        } else {
+            showPermissionDeniedDialog(requestCode);
         }
     }
 

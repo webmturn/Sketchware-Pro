@@ -90,15 +90,12 @@ public abstract class PermissionFragment extends BaseFragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, @NonNull int[] grantResults) {
-        for (String permission : permissions) {
-            if ("android.permission.WRITE_EXTERNAL_STORAGE".equals(permission)) {
-                if (grantResults.length == 0 || grantResults[0] != 0 || grantResults[1] != 0) {
-                    showSettingsDialog(requestCode);
-                    break;
-                }
-                onPermissionGranted(requestCode);
-            }
+        if (!StoragePermissionResult.containsStoragePermission(permissions)) return;
+        if (StoragePermissionResult.allReportedStoragePermissionsGranted(permissions, grantResults)
+                && hasStoragePermission()) {
+            onPermissionGranted(requestCode);
+        } else {
+            showSettingsDialog(requestCode);
         }
-
     }
 }

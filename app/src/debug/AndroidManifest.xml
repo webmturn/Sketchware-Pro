@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application>
+        <activity
+            android:name="pro.sketchware.activities.base.PermissionResultTestActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SketchwarePro" />
         <meta-data
             android:name="firebase_analytics_collection_deactivated"
             android:value="true" />
