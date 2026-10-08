@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="project_load_failed_title">项目数据读取失败</string>
+    <string name="project_load_failed_message">部分项目数据无法读取。为保护原文件和备份，已禁止保存和资源清理。你可以退出，或尝试读取现有备份。备份全部读取成功后才能继续编辑。</string>
     <!-- ========== 通用词汇 (Common Words) ========== -->
     <string name="common_word_accept">保存</string>
     <string name="common_word_actions">操作</string>

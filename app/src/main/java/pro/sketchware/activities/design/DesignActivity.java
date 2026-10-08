@@ -215,6 +215,10 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         ProjectDataManager.getFileManager(sc_id, haveSavedState);
         ResourceManager resourceManager = ProjectDataManager.getResourceManager(sc_id, haveSavedState);
         ProjectDataManager.getLibraryManager(sc_id, haveSavedState);
+        if (!haveSavedState) ProjectDataManager.reloadProjectFromData(sc_id);
+        if (!ProjectDataManager.canSaveProject(sc_id)) return;
+        projectFilePaths = new ProjectFilePaths(getApplicationContext(), SketchwarePaths.getMyscPath(sc_id),
+                ProjectListManager.getProjectById(sc_id));
         ViewHistoryManager.getInstance(sc_id);
         BlockHistoryManager.getInstance(sc_id);
         // Resource backup is now lazy �?ensureBackedUp() is called
@@ -283,6 +287,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     }
 
     void refresh() {
+        if (projectFilePaths != null) projectFilePaths.refreshLibrarySettings();
         if (!refreshFileSelector()) {
             editorViewModel.refreshActiveProjectFile();
         }
@@ -702,7 +707,6 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
 
         HashMap<String, Object> projectInfo = ProjectListManager.getProjectById(sc_id);
         getSupportActionBar().setTitle(MapValueHelper.getString(projectInfo, "my_ws_name"));
-        projectFilePaths = new ProjectFilePaths(getApplicationContext(), SketchwarePaths.getMyscPath(sc_id), projectInfo);
 
         try {
             projectController.load(savedInstanceState);
@@ -828,6 +832,11 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 if (hasLogicBackup) {
                     ProjectDataManager.getProjectDataManager(sc_id).loadLogicFromBackup();
                 }
+                if (!ProjectDataManager.canSaveProject(sc_id)) {
+                    v.dismiss();
+                    showProjectLoadFailure();
+                    return;
+                }
                 if (hasLibraryBackup) {
                     ProjectDataManager.getFileManager(sc_id).syncWithLibrary(ProjectDataManager.getLibraryManager(sc_id));
                     ProjectDataManager.getProjectDataManager(sc_id).removeAdmobComponents(ProjectDataManager.getLibraryManager(sc_id).getFirebaseDB());
@@ -852,6 +861,27 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         });
         dialog.setCancelable(false);
         dialog.show();
+    }
+
+    void showProjectLoadFailure() {
+        isRestoringData = true;
+        MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
+        dialog.setTitle(R.string.project_load_failed_title);
+        dialog.setMessage(R.string.project_load_failed_message);
+        dialog.setNegativeButton(R.string.common_word_exit, (v, which) -> finish());
+        if (ProjectDataManager.hasProjectBackup(sc_id)) {
+            dialog.setPositiveButton(R.string.common_word_restore, (v, which) -> projectController.restoreBackup());
+        }
+        dialog.setCancelable(false);
+        dialog.show();
+    }
+
+    void onProjectLoadStarted() {
+        isRestoringData = true;
+    }
+
+    void onProjectDataLoaded() {
+        isRestoringData = false;
     }
 
     private void showCurrentActivitySrcCode() {

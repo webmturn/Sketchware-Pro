@@ -19,6 +19,16 @@ import java.util.Locale;
 import pro.sketchware.util.io.EncryptedFileUtil;
 
 public class ResourceManager {
+  private final ProjectLoadState loadState = new ProjectLoadState();
+
+  public boolean canSave() {
+    return loadState.canSave();
+  }
+
+  public IOException getLoadFailure() {
+    return loadState.getFailure();
+  }
+
   public static StringSignature cacheSignature;
   
   public ArrayList<ProjectResourceBean> images;
@@ -96,21 +106,28 @@ public class ResourceManager {
   }
 
   private void loadFromPath(String resourcePath, String sourceName) {
-    try (BufferedReader bufferedReader = new BufferedReader(new StringReader(decryptFileToString(resourcePath)))) {
-      parseResourceData(bufferedReader);
+    try {
+      loadState.read(() -> {
+        try (BufferedReader bufferedReader = new BufferedReader(new StringReader(decryptFileToString(resourcePath)))) {
+          parseResourceData(bufferedReader);
+        }
+      });
     } catch (IOException | RuntimeException e) {
+      loadState.failed(e);
       Log.w("ResourceManager", "Failed to load " + sourceName + " for project " + projectId + " from " + resourcePath, e);
     }
   }
   
   public void parseResourceData(BufferedReader reader) throws IOException {
-    ArrayList<ProjectResourceBean> parsedImages = new ArrayList<>();
-    ArrayList<ProjectResourceBean> parsedSounds = new ArrayList<>();
-    ArrayList<ProjectResourceBean> parsedFonts = new ArrayList<>();
-    parseResourceData(reader, parsedImages, parsedSounds, parsedFonts);
-    images = parsedImages;
-    sounds = parsedSounds;
-    fonts = parsedFonts;
+    loadState.read(() -> {
+      ArrayList<ProjectResourceBean> parsedImages = new ArrayList<>();
+      ArrayList<ProjectResourceBean> parsedSounds = new ArrayList<>();
+      ArrayList<ProjectResourceBean> parsedFonts = new ArrayList<>();
+      parseResourceData(reader, parsedImages, parsedSounds, parsedFonts);
+      images = parsedImages;
+      sounds = parsedSounds;
+      fonts = parsedFonts;
+    });
   }
 
   private void parseResourceData(BufferedReader reader,
@@ -129,8 +146,11 @@ public class ResourceManager {
           contentBuffer = new StringBuilder();
         }
         sectionName = line.substring(1);
+        if (sectionName.trim().isEmpty()) throw new IOException("Empty project section header");
         continue;
       }
+      if (sectionName.isEmpty() && !line.matches("[ \\t]*"))
+        throw new IOException("Project data before a section header");
       contentBuffer.append(line);
       contentBuffer.append("\n");
     }
@@ -157,19 +177,29 @@ public class ResourceManager {
   }
   
   public void parseResourceSection(String sectionName, String sectionContent) {
-    parseResourceSection(sectionName, sectionContent, images, sounds, fonts);
+    try {
+      parseResourceSection(sectionName, sectionContent, images, sounds, fonts);
+    } catch (IOException e) {
+      loadState.failed(e);
+      Log.w("ResourceManager", "Invalid section: " + sectionName, e);
+      return;
+    }
   }
 
   private void parseResourceSection(String sectionName, String sectionContent,
       ArrayList<ProjectResourceBean> targetImages,
       ArrayList<ProjectResourceBean> targetSounds,
-      ArrayList<ProjectResourceBean> targetFonts) {
+      ArrayList<ProjectResourceBean> targetFonts) throws IOException {
+    if (!sectionName.equals("images") && !sectionName.equals("sounds") && !sectionName.equals("fonts"))
+      throw new IOException("Unknown resource section: " + sectionName);
     if (sectionContent.trim().length() <= 0) return;
     try (BufferedReader reader = new BufferedReader(new StringReader(sectionContent))) {
       String line;
       while ((line = reader.readLine()) != null) {
-        if (line.trim().length() <= 0 || line.trim().charAt(0) != '{') continue;
+        if (line.trim().isEmpty()) continue;
+        if (line.trim().charAt(0) != '{') throw new IOException("Expected a resource JSON object");
         ProjectResourceBean parsedResource = gson.fromJson(line, ProjectResourceBean.class);
+        if (parsedResource == null) throw new IOException("Null resource entry");
         if (sectionName.equals("images")) {
           targetImages.add(parsedResource);
         } else if (sectionName.equals("sounds")) {
@@ -179,7 +209,7 @@ public class ResourceManager {
         }
       }
     } catch (IOException | RuntimeException e) {
-      Log.w("ResourceManager", "Failed to parse resource section: " + sectionName, e);
+      throw new IOException("Invalid resource section '" + sectionName + "'", e);
     }
   }
   
@@ -207,6 +237,7 @@ public class ResourceManager {
   }
   
   public void cleanupUnusedFonts() {
+    if (!canSave() || !ProjectDataManager.canSaveLoadedProject(projectId)) return;
     File[] files = new File(fontDirPath).listFiles();
     if (files == null || files.length <= 0) return;
     for (File file : files) {
@@ -248,6 +279,7 @@ public class ResourceManager {
   }
   
   public void cleanupUnusedImages() {
+    if (!canSave() || !ProjectDataManager.canSaveLoadedProject(projectId)) return;
     File[] files = new File(imageDirPath).listFiles();
     if (files == null || files.length <= 0) return;
     for (File file : files) {
@@ -299,6 +331,7 @@ public class ResourceManager {
   }
   
   public void cleanupUnusedSounds() {
+    if (!canSave() || !ProjectDataManager.canSaveLoadedProject(projectId)) return;
     File[] files = new File(soundDirPath).listFiles();
     if (files == null || files.length <= 0) return;
     for (File file : files) {
@@ -325,6 +358,7 @@ public class ResourceManager {
   }
   
   public void backupFonts() {
+    if (!canSave() || !ProjectDataManager.canSaveLoadedProject(projectId)) return;
     if (fontsBackedUp || projectId.isEmpty()) return;
     String tempPath = SketchwarePaths.getTempFontsPath(projectId);
     try {
@@ -349,6 +383,7 @@ public class ResourceManager {
   }
   
   public void backupImages() {
+    if (!canSave() || !ProjectDataManager.canSaveLoadedProject(projectId)) return;
     if (imagesBackedUp || projectId.isEmpty()) return;
     String tempPath = SketchwarePaths.getTempImagesPath(projectId);
     try {
@@ -371,6 +406,7 @@ public class ResourceManager {
   }
   
   public void backupSounds() {
+    if (!canSave() || !ProjectDataManager.canSaveLoadedProject(projectId)) return;
     if (soundsBackedUp || projectId.isEmpty()) return;
     String tempPath = SketchwarePaths.getTempSoundsPath(projectId);
     try {
@@ -602,6 +638,7 @@ public class ResourceManager {
   }
   
   public boolean saveToData() {
+    if (!canSave() || !ProjectDataManager.canSaveLoadedProject(projectId)) return false;
     String resourcePath = SketchwarePaths.getDataPath(projectId) + File.separator + "resource";
     StringBuilder contentBuffer = new StringBuilder();
     serializeResources(contentBuffer);
@@ -619,6 +656,7 @@ public class ResourceManager {
   }
   
   public boolean saveToBackup() {
+    if (!canSave() || !ProjectDataManager.canSaveLoadedProject(projectId)) return false;
     String backupPath = SketchwarePaths.getBackupPath(projectId) + File.separator + "resource";
     StringBuilder contentBuffer = new StringBuilder();
     serializeResources(contentBuffer);

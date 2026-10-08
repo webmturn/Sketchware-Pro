@@ -18,10 +18,66 @@ package pro.sketchware.core.project;
  */
 public class ProjectDataManager {
 
-    private static ProjectDataStore projectDataStore;
-    private static ProjectFileManager projectFileManager;
-    private static ResourceManager resourceManager;
-    private static LibraryManager libraryManager;
+    private static volatile ProjectDataStore projectDataStore;
+    private static volatile ProjectFileManager projectFileManager;
+    private static volatile ResourceManager resourceManager;
+    private static volatile LibraryManager libraryManager;
+
+    /** Loads all metadata before allowing a save or resource cleanup. */
+    public static synchronized boolean canSaveProject(String projectId) {
+        ProjectDataStore data = getProjectDataManager(projectId);
+        ProjectFileManager files = getFileManager(projectId);
+        ResourceManager resources = getResourceManager(projectId);
+        LibraryManager libraries = getLibraryManager(projectId);
+        return data.canSave() && files.canSave() && resources.canSave() && libraries.canSave();
+    }
+
+    // Do not acquire the factory lock here: closeDataManager holds it while joining save workers.
+    static boolean canSaveLoadedProject(String projectId) {
+        ProjectDataStore data = projectDataStore;
+        ProjectFileManager files = projectFileManager;
+        ResourceManager resources = resourceManager;
+        LibraryManager libraries = libraryManager;
+        return (data == null || !projectId.equals(data.projectId) || data.canSave())
+                && (files == null || !projectId.equals(files.projectId) || files.canSave())
+                && (resources == null || !projectId.equals(resources.projectId) || resources.canSave())
+                && (libraries == null || !projectId.equals(libraries.projectId) || libraries.canSave());
+    }
+
+    public static synchronized boolean hasProjectBackup(String projectId) {
+        return getProjectDataManager(projectId).hasViewBackup()
+                || getProjectDataManager(projectId).hasLogicBackup()
+                || getFileManager(projectId).hasBackup()
+                || getResourceManager(projectId).hasBackup()
+                || getLibraryManager(projectId).hasBackup();
+    }
+
+    /** Recovery stays in memory; failed backups never authorize writing over the original. */
+    public static synchronized boolean loadProjectBackup(String projectId) {
+        ProjectDataStore data = getProjectDataManager(projectId);
+        ProjectFileManager files = getFileManager(projectId);
+        ResourceManager resources = getResourceManager(projectId);
+        LibraryManager libraries = getLibraryManager(projectId);
+        if (data.hasViewBackup()) data.loadViewFromBackup();
+        if (data.hasLogicBackup()) data.loadLogicFromBackup();
+        if (files.hasBackup()) files.loadFromBackup();
+        if (resources.hasBackup()) resources.loadFromBackup();
+        if (libraries.hasBackup()) libraries.loadFromBackup();
+        return canSaveProject(projectId);
+    }
+
+    /** A fresh editor must check canonical files even if a UI helper already opened a backup. */
+    public static synchronized void reloadProjectFromData(String projectId) {
+        ProjectDataStore data = getProjectDataManager(projectId, false);
+        ProjectFileManager files = getFileManager(projectId, false);
+        ResourceManager resources = getResourceManager(projectId, false);
+        LibraryManager libraries = getLibraryManager(projectId, false);
+        data.loadViewFromData();
+        data.loadLogicFromData();
+        files.loadFromData();
+        resources.loadFromData();
+        libraries.loadFromData();
+    }
 
     private static void requireProjectId(String sc_id) {
         if (sc_id == null || sc_id.isEmpty()) {
@@ -77,6 +133,7 @@ public class ProjectDataManager {
      */
     public static synchronized boolean closeDataManager() {
         if (projectDataStore != null) {
+            if (!canSaveLoadedProject(projectDataStore.projectId)) return false;
             if (!projectDataStore.saveAllBackup()) {
                 return false;
             }
@@ -92,6 +149,7 @@ public class ProjectDataManager {
      */
     public static synchronized boolean closeFileManager() {
         if (projectFileManager != null) {
+            if (!canSaveLoadedProject(projectFileManager.projectId)) return false;
             if (!projectFileManager.saveToBackup()) {
                 return false;
             }
@@ -107,6 +165,7 @@ public class ProjectDataManager {
      */
     public static synchronized boolean closeLibraryManager() {
         if (libraryManager != null) {
+            if (!canSaveLoadedProject(libraryManager.projectId)) return false;
             if (!libraryManager.saveToBackup()) {
                 return false;
             }
@@ -122,6 +181,7 @@ public class ProjectDataManager {
      */
     public static synchronized boolean closeResourceManager() {
         if (resourceManager != null) {
+            if (!canSaveLoadedProject(resourceManager.projectId)) return false;
             if (!resourceManager.saveToBackup()) {
                 return false;
             }

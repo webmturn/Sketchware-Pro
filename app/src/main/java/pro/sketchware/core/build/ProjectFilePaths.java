@@ -232,7 +232,7 @@ public class ProjectFilePaths {
      */
     public final String importedSoundsPath;
     public final HashMap<String, Object> metadata;
-    private final Material3LibraryManager material3LibraryManager;
+    private volatile Material3LibraryManager material3LibraryManager;
     private final EncryptedFileUtil fileUtil;
     private final Context context;
     public BuildConfig buildConfig;
@@ -242,6 +242,11 @@ public class ProjectFilePaths {
 
     public ProjectFilePaths(Context context, String sc_id) {
         this(context, SketchwarePaths.getMyscPath(sc_id), ProjectListManager.getProjectById(sc_id));
+    }
+
+    /** Refreshes the library snapshot after the editor loads or restores project metadata. */
+    public void refreshLibrarySettings() {
+        material3LibraryManager = new Material3LibraryManager(sc_id);
     }
 
     public ProjectFilePaths(Context context, String myscFolderPath, HashMap<String, Object> metadata) {

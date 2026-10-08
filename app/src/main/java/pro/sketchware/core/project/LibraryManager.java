@@ -16,6 +16,16 @@ import java.util.Arrays;
 import pro.sketchware.util.io.EncryptedFileUtil;
 
 public class LibraryManager {
+  private final ProjectLoadState loadState = new ProjectLoadState();
+
+  public boolean canSave() {
+    return loadState.canSave();
+  }
+
+  public IOException getLoadFailure() {
+    return loadState.getFailure();
+  }
+
   public String projectId;
   
   public EncryptedFileUtil fileUtil;
@@ -59,9 +69,14 @@ public class LibraryManager {
   }
 
   private void loadFromPath(String filePath, String sourceName) {
-    try (BufferedReader bufferedReader = new BufferedReader(new StringReader(decryptFileToString(filePath)))) {
-      parseLibraryData(bufferedReader);
+    try {
+      loadState.read(() -> {
+        try (BufferedReader bufferedReader = new BufferedReader(new StringReader(decryptFileToString(filePath)))) {
+          parseLibraryData(bufferedReader);
+        }
+      });
     } catch (IOException | RuntimeException e) {
+      loadState.failed(e);
       Log.w("LibraryManager", "Failed to load " + sourceName + " for project " + projectId + " from " + filePath, e);
     }
   }
@@ -78,33 +93,39 @@ public class LibraryManager {
   }
   
   public void parseLibraryData(BufferedReader reader) throws IOException {
-    LibraryState parsedState = new LibraryState();
-    StringBuilder contentBuffer = new StringBuilder();
-    String sectionName = "";
-    String line;
-    while ((line = reader.readLine()) != null) {
-      if (line.length() <= 0)
-        continue;
-      if (line.charAt(0) == '@') {
-        if (sectionName.length() > 0) {
-          parseLibrarySection(sectionName, contentBuffer.toString(), parsedState);
-          contentBuffer = new StringBuilder();
+    loadState.read(() -> {
+      LibraryState parsedState = new LibraryState();
+      StringBuilder contentBuffer = new StringBuilder();
+      String sectionName = "";
+      String line;
+      while ((line = reader.readLine()) != null) {
+        if (line.length() <= 0)
+          continue;
+        if (line.charAt(0) == '@') {
+          if (sectionName.length() > 0) {
+            parseLibrarySection(sectionName, contentBuffer.toString(), parsedState);
+            contentBuffer = new StringBuilder();
+          }
+          sectionName = line.substring(1);
+          if (sectionName.trim().isEmpty()) throw new IOException("Empty project section header");
+          continue;
         }
-        sectionName = line.substring(1);
-        continue;
+        if (sectionName.isEmpty() && !line.matches("[ \\t]*"))
+          throw new IOException("Project data before a section header");
+        contentBuffer.append(line);
+        contentBuffer.append("\n");
       }
-      contentBuffer.append(line);
-      contentBuffer.append("\n");
-    }
-    if (sectionName.length() > 0)
-      parseLibrarySection(sectionName, contentBuffer.toString(), parsedState);
-    firebaseDB = parsedState.firebaseDB;
-    compat = parsedState.compat;
-    admob = parsedState.admob;
-    googleMap = parsedState.googleMap;
+      if (sectionName.length() > 0)
+        parseLibrarySection(sectionName, contentBuffer.toString(), parsedState);
+      firebaseDB = parsedState.firebaseDB;
+      compat = parsedState.compat;
+      admob = parsedState.admob;
+      googleMap = parsedState.googleMap;
+    });
   }
   
   public final boolean writeToFile(String filePath) {
+    if (!canSave() || !ProjectDataManager.canSaveLoadedProject(projectId)) return false;
     StringBuilder contentBuffer = new StringBuilder();
     serializeLibraries(contentBuffer);
     try {
@@ -124,18 +145,28 @@ public class LibraryManager {
     currentState.compat = compat;
     currentState.admob = admob;
     currentState.googleMap = googleMap;
-    parseLibrarySection(sectionName, sectionContent, currentState);
+    try {
+      parseLibrarySection(sectionName, sectionContent, currentState);
+    } catch (IOException e) {
+      loadState.failed(e);
+      Log.w("LibraryManager", "Invalid section: " + sectionName, e);
+      return;
+    }
     firebaseDB = currentState.firebaseDB;
     compat = currentState.compat;
     admob = currentState.admob;
     googleMap = currentState.googleMap;
   }
 
-  private void parseLibrarySection(String sectionName, String sectionContent, LibraryState targetState) {
+  private void parseLibrarySection(String sectionName, String sectionContent, LibraryState targetState) throws IOException {
+    if (!sectionName.equals("firebaseDB") && !sectionName.equals("compat")
+        && !sectionName.equals("admob") && !sectionName.equals("googleMap"))
+      throw new IOException("Unknown library section: " + sectionName);
     if (sectionContent.length() <= 0)
       return; 
     try {
       ProjectLibraryBean parsedLibrary = gson.fromJson(sectionContent, ProjectLibraryBean.class);
+      if (parsedLibrary == null) throw new IOException("Null library entry");
       if (sectionName.equals("firebaseDB")) {
         parsedLibrary.libType = ProjectLibraryBean.PROJECT_LIB_TYPE_FIREBASE;
         targetState.firebaseDB = parsedLibrary;
@@ -150,7 +181,7 @@ public class LibraryManager {
         targetState.googleMap = parsedLibrary;
       }
     } catch (RuntimeException e) {
-      Log.w("LibraryManager", "Failed to parse library section: " + sectionName, e);
+      throw new IOException("Invalid library section '" + sectionName + "'", e);
     }
   }
   

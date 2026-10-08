@@ -77,6 +77,74 @@ public class ProjectDataParser {
   public String getFileName() {
     return fileName;
   }
+
+  /** Project loading must reject an incomplete section; collection imports keep their legacy API. */
+  @SuppressWarnings("unchecked")
+  <T> T parseDataStrict(String sectionContent) throws IOException {
+    try {
+      switch (dataType) {
+        case VIEW: return (T) parseBeansStrict(sectionContent, ViewBean.class);
+        case EVENT_BLOCK: return (T) parseBeansStrict(sectionContent, BlockBean.class);
+        case COMPONENT: {
+          ArrayList<ComponentBean> beans = parseBeansStrict(sectionContent, ComponentBean.class);
+          for (ComponentBean bean : beans) bean.initValue();
+          return (T) beans;
+        }
+        case EVENT: {
+          ArrayList<EventBean> beans = parseBeansStrict(sectionContent, EventBean.class);
+          for (EventBean bean : beans) bean.initValue();
+          return (T) beans;
+        }
+        case FAB: {
+          if (sectionContent.trim().isEmpty())
+            return (T) new ViewBean("_fab", ViewBean.VIEW_TYPE_WIDGET_FAB);
+          ArrayList<ViewBean> beans = parseBeansStrict(sectionContent, ViewBean.class);
+          if (beans.size() != 1) throw new IOException("Expected one FAB view");
+          return (T) beans.get(0);
+        }
+        case VARIABLE:
+        case LIST: {
+          ArrayList<Pair<Integer, String>> result = new ArrayList<>();
+          for (Pair<String, String> pair : parsePairsStrict(sectionContent))
+            result.add(new Pair<>(Integer.valueOf(pair.first), pair.second));
+          return (T) result;
+        }
+        case MORE_BLOCK: return (T) parsePairsStrict(sectionContent);
+        default: throw new IOException("Unsupported project section");
+      }
+    } catch (RuntimeException error) {
+      throw new IOException("Invalid project section", error);
+    }
+  }
+
+  private static <T> ArrayList<T> parseBeansStrict(String content, Class<T> beanClass) throws IOException {
+    ArrayList<T> result = new ArrayList<>();
+    try (JsonReader reader = new JsonReader(new StringReader(content))) {
+      // The project format stores consecutive JSON objects, including legacy multiline objects.
+      reader.setLenient(true);
+      while (reader.peek() != JsonToken.END_DOCUMENT) {
+        if (reader.peek() != JsonToken.BEGIN_OBJECT) throw new IOException("Expected a JSON object");
+        T bean = gson.fromJson(reader, beanClass);
+        if (bean == null) throw new IOException("Null project entry");
+        result.add(bean);
+      }
+    }
+    return result;
+  }
+
+  private static ArrayList<Pair<String, String>> parsePairsStrict(String content) throws IOException {
+    ArrayList<Pair<String, String>> result = new ArrayList<>();
+    try (BufferedReader reader = new BufferedReader(new StringReader(content))) {
+      String line;
+      while ((line = reader.readLine()) != null) {
+        if (line.trim().isEmpty()) continue;
+        int separator = line.indexOf(':');
+        if (separator < 0) throw new IOException("Expected a type/name or name/spec pair");
+        result.add(new Pair<>(line.substring(0, separator), line.substring(separator + 1)));
+      }
+    }
+    return result;
+  }
   
   public ArrayList<ComponentBean> parseComponentBeans(String sectionContent) {
     ArrayList<ComponentBean> result = new ArrayList<>();

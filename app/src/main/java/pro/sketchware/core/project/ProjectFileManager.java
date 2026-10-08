@@ -18,6 +18,16 @@ import java.util.Arrays;
 import pro.sketchware.util.io.EncryptedFileUtil;
 
 public class ProjectFileManager {
+  private final ProjectLoadState loadState = new ProjectLoadState();
+
+  public boolean canSave() {
+    return loadState.canSave();
+  }
+
+  public IOException getLoadFailure() {
+    return loadState.getFailure();
+  }
+
   public ArrayList<String> xmlNames;
   
   public ArrayList<String> javaNames;
@@ -77,9 +87,14 @@ public class ProjectFileManager {
   }
 
   private void loadFromPath(String filePath, String sourceName) {
-    try (BufferedReader reader = new BufferedReader(new StringReader(decryptFileToString(filePath)))) {
-      parseFileData(reader);
+    try {
+      loadState.read(() -> {
+        try (BufferedReader reader = new BufferedReader(new StringReader(decryptFileToString(filePath)))) {
+          parseFileData(reader);
+        }
+      });
     } catch (IOException | RuntimeException e) {
+      loadState.failed(e);
       Log.e("ProjectFileManager", "Failed to load " + sourceName + " for project " + projectId + " from " + filePath, e);
     }
   }
@@ -117,45 +132,52 @@ public class ProjectFileManager {
   }
   
   public void parseFileData(BufferedReader reader) throws IOException {
-    ArrayList<ProjectFileBean> parsedActivities = new ArrayList<>();
-    ArrayList<ProjectFileBean> parsedCustomViews = new ArrayList<>();
-    parsedActivities.add(new ProjectFileBean(ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY, "main"));
-    StringBuilder contentBuffer = new StringBuilder();
-    String sectionName = "";
-    String line;
-    while ((line = reader.readLine()) != null) {
-      if (line.isEmpty())
-        continue;
-      if (line.charAt(0) == '@') {
-        if (!sectionName.isEmpty()) {
-          parseFileSection(sectionName, contentBuffer.toString(), parsedActivities, parsedCustomViews);
-          contentBuffer = new StringBuilder();
+    loadState.read(() -> {
+      ArrayList<ProjectFileBean> parsedActivities = new ArrayList<>();
+      ArrayList<ProjectFileBean> parsedCustomViews = new ArrayList<>();
+      parsedActivities.add(new ProjectFileBean(ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY, "main"));
+      StringBuilder contentBuffer = new StringBuilder();
+      String sectionName = "";
+      String line;
+      while ((line = reader.readLine()) != null) {
+        if (line.isEmpty())
+          continue;
+        if (line.charAt(0) == '@') {
+          if (!sectionName.isEmpty()) {
+            parseFileSection(sectionName, contentBuffer.toString(), parsedActivities, parsedCustomViews);
+            contentBuffer = new StringBuilder();
+          }
+          sectionName = line.substring(1);
+          if (sectionName.trim().isEmpty()) throw new IOException("Empty project section header");
+        } else {
+          if (sectionName.isEmpty() && !line.matches("[ \\t]*"))
+            throw new IOException("Project data before a section header");
+          contentBuffer.append(line);
+          contentBuffer.append("\n");
         }
-        sectionName = line.substring(1);
-      } else {
-        contentBuffer.append(line);
-        contentBuffer.append("\n");
       }
-    }
-    if (!sectionName.isEmpty())
-      parseFileSection(sectionName, contentBuffer.toString(), parsedActivities, parsedCustomViews);
-    activities = parsedActivities;
-    customViews = parsedCustomViews;
-    refreshNameLists();
+      if (!sectionName.isEmpty())
+        parseFileSection(sectionName, contentBuffer.toString(), parsedActivities, parsedCustomViews);
+      activities = parsedActivities;
+      customViews = parsedCustomViews;
+      refreshNameLists();
+    });
   }
   
   private void parseFileSection(String sectionName, String content,
       ArrayList<ProjectFileBean> targetActivities,
-      ArrayList<ProjectFileBean> targetCustomViews) {
+      ArrayList<ProjectFileBean> targetCustomViews) throws IOException {
+    if (!sectionName.equals("activity") && !sectionName.equals("customview"))
+      throw new IOException("Unknown project file section: " + sectionName);
     if (sectionName.equals("activity")) {
       if (content.isEmpty())
         return; 
       String remaining = content;
       while (true) {
         int newlineIdx = remaining.indexOf("\n");
-        if (newlineIdx < 0 || remaining.charAt(0) != '{')
-          break; 
+        if (newlineIdx < 0) break;
         String jsonLine = remaining.substring(0, newlineIdx);
+        if (!jsonLine.trim().startsWith("{")) throw new IOException("Expected a project file JSON object");
         ProjectFileBean parsedBean = gson.fromJson(jsonLine, ProjectFileBean.class);
         parsedBean.setOptionsByTheme();
         if (parsedBean.fileName.equals("main")) {
@@ -185,9 +207,9 @@ public class ProjectFileManager {
       String remaining = content;
       while (true) {
         int newlineIdx = remaining.indexOf("\n");
-        if (newlineIdx < 0 || remaining.charAt(0) != '{')
-          break; 
+        if (newlineIdx < 0) break;
         String jsonLine = remaining.substring(0, newlineIdx);
+        if (!jsonLine.trim().startsWith("{")) throw new IOException("Expected a project file JSON object");
         ProjectFileBean parsedBean = gson.fromJson(jsonLine, ProjectFileBean.class);
         parsedBean.setOptionsByTheme();
         targetCustomViews.add(parsedBean);
@@ -199,7 +221,13 @@ public class ProjectFileManager {
   }
 
   public void parseFileSection(String sectionName, String content) {
-    parseFileSection(sectionName, content, activities, customViews);
+    try {
+      parseFileSection(sectionName, content, activities, customViews);
+    } catch (IOException e) {
+      loadState.failed(e);
+      Log.w("ProjectFileManager", "Invalid section: " + sectionName, e);
+      return;
+    }
   }
   
   public final void serializeFiles(StringBuilder buffer) {
@@ -281,6 +309,7 @@ public class ProjectFileManager {
   }
 
   public final boolean writeToFile(String filePath) {
+    if (!canSave() || !ProjectDataManager.canSaveLoadedProject(projectId)) return false;
     StringBuilder contentBuffer = new StringBuilder();
     serializeFiles(contentBuffer);
     try {

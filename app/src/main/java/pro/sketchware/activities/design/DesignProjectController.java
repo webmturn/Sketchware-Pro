@@ -38,13 +38,14 @@ final class DesignProjectController {
         if (activity == null) {
             return;
         }
+        activity.onProjectLoadStarted();
         activity.showProjectLoadingDialog();
         BackgroundTasks.runIoIfAlive(
                 TaskHost.of(activity),
                 "DesignActivity$ProjectLoader",
                 () -> loadInBackground(savedInstanceState),
                 () -> onProjectLoaded(savedInstanceState),
-                error -> dismissLoadingDialog());
+                error -> onProjectLoadFailed());
     }
 
     void save() {
@@ -129,12 +130,42 @@ final class DesignProjectController {
         if (activity == null) {
             return;
         }
+        if (!ProjectDataManager.canSaveProject(projectId)) {
+            onProjectLoadFailed();
+            return;
+        }
         activity.updateBottomMenu();
         activity.refresh();
+        activity.onProjectDataLoaded();
         activity.dismissProjectLoadingDialog();
         if (savedInstanceState == null) {
             activity.checkForUnsavedProjectData();
         }
+    }
+
+    private void onProjectLoadFailed() {
+        DesignActivity activity = getActivity();
+        if (activity != null) {
+            activity.dismissProjectLoadingDialog();
+            activity.showProjectLoadFailure();
+        }
+    }
+
+    void restoreBackup() {
+        DesignActivity activity = getActivity();
+        if (activity == null) return;
+        activity.showProjectLoadingDialog();
+        BackgroundTasks.callIoIfAlive(TaskHost.of(activity), "DesignActivity$BackupLoader", () -> {
+            if (!ProjectDataManager.loadProjectBackup(projectId)) return false;
+            activity.loadProject(true);
+            return true;
+        }, restored -> {
+            if (restored) {
+                onProjectLoaded(new Bundle());
+            } else {
+                onProjectLoadFailed();
+            }
+        }, error -> onProjectLoadFailed());
     }
 
     private void onProjectSaved(boolean dataSaved, boolean closeAfterSave) {
@@ -185,6 +216,7 @@ final class DesignProjectController {
         if (activity == null) {
             return;
         }
+        if (!ProjectDataManager.canSaveProject(projectId)) return;
         try {
             ResourceManager resourceManager = ProjectDataManager.getResourceManager(projectId);
             if (resourceManager.hasLazyBackup()) {
@@ -217,6 +249,7 @@ final class DesignProjectController {
 
     /** Persists views, logic, files, resources, and libraries in parallel. */
     private static boolean saveProjectDataToFiles(String projectId) {
+        if (!ProjectDataManager.canSaveProject(projectId)) return false;
         ProjectDataManager.getResourceManager(projectId).cleanupAllResources();
         ExecutorService pool = Executors.newFixedThreadPool(4);
         try {
@@ -240,6 +273,7 @@ final class DesignProjectController {
     }
 
     private void saveUnsavedChangesInBackground() {
+        if (!ProjectDataManager.canSaveProject(projectId)) return;
         ProjectDataStore projectDataStore =
                 ProjectDataManager.getProjectDataManager(projectId);
         synchronized (projectDataStore) {
