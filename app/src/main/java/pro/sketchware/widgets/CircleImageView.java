@@ -31,7 +31,7 @@ public class CircleImageView extends AppCompatImageView {
     paint.setColor(-16776961);
     canvas.drawCircle((bitmap.getWidth() / 2), (bitmap.getHeight() / 2), (bitmap.getHeight() / 2), paint);
     paint.setXfermode((Xfermode)new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-    canvas.drawBitmap(bitmap, rect, rect, paint);
+    canvas.drawBitmap(sourceBitmap, rect, rect, paint);
     return bitmap;
   }
   
