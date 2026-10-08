@@ -22,8 +22,7 @@ public class ViewFileEditClickListener implements View.OnClickListener {
   }
   
   public void onClick(View view) {
-    // Preserve the legacy char extra type used by this preset entry point.
-    char presetRequestCode;
+    int presetRequestCode;
     if (UIHelper.isClickThrottled())
       return; 
     CustomViewFilesFragment.FileListAdapter.ViewHolder holder = viewHolder;
