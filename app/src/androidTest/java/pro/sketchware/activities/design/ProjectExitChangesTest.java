@@ -23,10 +23,15 @@ import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
@@ -267,6 +272,14 @@ public class ProjectExitChangesTest {
     }
 
     @Test(timeout = 30000) public void saveFailureKeepsEditsAndAllowsRetry() throws Exception {
+        assertSaveFailureAllowsRetry(false);
+    }
+
+    @Test(timeout = 30000) public void saveAndCloseFailureKeepsEditsAndAllowsRetry() throws Exception {
+        assertSaveFailureAllowsRetry(true);
+    }
+
+    private void assertSaveFailureAllowsRetry(boolean closeAfterSave) throws Exception {
         try (TestProject project = new TestProject()) {
             Path files = new File(project.fixture.data, "file").toPath();
             byte[] original = Files.readAllBytes(files);
@@ -276,7 +289,8 @@ public class ProjectExitChangesTest {
             Files.createDirectory(files);
             Files.write(files.resolve("block-replacement"), new byte[]{1});
             try {
-                ProjectEditorPersistenceTest.clickSave();
+                if (closeAfterSave) project.scenario.onActivity(activity -> controller(activity).saveAndClose());
+                else ProjectEditorPersistenceTest.clickSave();
                 waitForToast(R.string.common_message_save_failed);
                 project.waitReady();
                 project.assertOpen();
@@ -311,6 +325,124 @@ public class ProjectExitChangesTest {
                 assertTrue(project.fixture.read(project.fixture.backup, "logic").contains("exit_edit"));
                 assertArrayEquals(before, Files.readAllBytes(new File(project.fixture.data, "logic").toPath()));
             }
+        }
+    }
+
+    @Test(timeout = 30000) public void saveAndCloseDoesNotSerializeANewBaseline() throws Exception {
+        try (TestProject project = new TestProject()) {
+            project.launch(true);
+            project.editVariable();
+            CountingImages images = countResourceSerializations(project);
+            project.scenario.onActivity(activity -> controller(activity).saveAndClose());
+            project.waitFinished();
+            assertTrue(project.fixture.read(project.fixture.data, "logic").contains("exit_edit"));
+            // The resource metadata is serialized once for the write, with no post-save snapshot.
+            assertEquals(1, images.iterations.get());
+        }
+    }
+
+    @Test(timeout = 30000) public void saveAndCloseDuringRecreationKeepsSavedEditsInNewEditor() throws Exception {
+        try (TestProject project = new TestProject()) {
+            project.launch(true);
+            project.editVariable();
+            BlockingImages images = new BlockingImages();
+            project.scenario.onActivity(activity -> {
+                ResourceManager resources = ProjectDataManager.getResourceManager(project.fixture.id);
+                images.addAll(resources.images);
+                resources.images = images;
+                controller(activity).saveAndClose();
+            });
+            try {
+                assertTrue("Save never reached resource serialization", images.entered.await(10, TimeUnit.SECONDS));
+                project.recreate(true);
+            } finally {
+                images.release.countDown();
+            }
+            ProjectEditorPersistenceTest.waitUntil(() -> !ProjectDataManager.getResourceManager(project.fixture.id).hasLazyBackup());
+            instrumentation().waitForIdleSync();
+            project.assertOpen();
+            assertTrue(project.fixture.read(project.fixture.data, "logic").contains("exit_edit"));
+            project.back();
+            project.waitFinished();
+            assertTrue(project.fixture.read(project.fixture.data, "logic").contains("exit_edit"));
+        }
+    }
+
+    @Test(timeout = 30000) public void unknownBaselineRequiresConfirmationWithoutASnapshot() throws Exception {
+        assertConservativeCloseSkipsSnapshot(false);
+    }
+
+    @Test(timeout = 30000) public void restoredBackupRequiresConfirmationWithoutASnapshot() throws Exception {
+        assertConservativeCloseSkipsSnapshot(true);
+    }
+
+    private void assertConservativeCloseSkipsSnapshot(boolean restored) throws Exception {
+        try (TestProject project = new TestProject()) {
+            Map<Path, byte[]> before = project.fixture.snapshot();
+            project.launch(false);
+            CountingImages images = countResourceSerializations(project);
+            project.scenario.onActivity(activity -> {
+                DesignProjectController controller = controller(activity);
+                if (restored) controller.onBackupRestored();
+                else {
+                    try {
+                        Field baseline = DesignProjectController.class.getDeclaredField("savedContent");
+                        baseline.setAccessible(true);
+                        baseline.set(controller, null);
+                    } catch (ReflectiveOperationException error) { throw new AssertionError(error); }
+                }
+            });
+            project.back();
+            waitForText(R.string.design_quit_message_confirm_save);
+            assertEquals(0, images.iterations.get());
+            project.assertOpen();
+            project.fixture.assertUnchanged(before);
+            clickText(R.string.common_word_exit);
+            project.waitFinished();
+        }
+    }
+
+    private static DesignProjectController controller(DesignActivity activity) {
+        try {
+            Field controller = DesignActivity.class.getDeclaredField("projectController");
+            controller.setAccessible(true);
+            return (DesignProjectController) controller.get(activity);
+        } catch (ReflectiveOperationException error) { throw new AssertionError(error); }
+    }
+
+    private static CountingImages countResourceSerializations(TestProject project) {
+        CountingImages result = new CountingImages();
+        project.scenario.onActivity(activity -> {
+            ResourceManager resources = ProjectDataManager.getResourceManager(project.fixture.id);
+            result.addAll(resources.images);
+            resources.images = result;
+        });
+        return result;
+    }
+
+    private static final class CountingImages extends ArrayList<ProjectResourceBean> {
+        final AtomicInteger iterations = new AtomicInteger();
+        @Override public Iterator<ProjectResourceBean> iterator() {
+            iterations.incrementAndGet();
+            return super.iterator();
+        }
+    }
+
+    private static final class BlockingImages extends ArrayList<ProjectResourceBean> {
+        final CountDownLatch entered = new CountDownLatch(1);
+        final CountDownLatch release = new CountDownLatch(1);
+        final AtomicBoolean first = new AtomicBoolean(true);
+        @Override public Iterator<ProjectResourceBean> iterator() {
+            if (first.compareAndSet(true, false)) {
+                entered.countDown();
+                try {
+                    if (!release.await(15, TimeUnit.SECONDS)) throw new AssertionError("Blocked save was not released");
+                } catch (InterruptedException error) {
+                    Thread.currentThread().interrupt();
+                    throw new AssertionError(error);
+                }
+            }
+            return super.iterator();
         }
     }
 

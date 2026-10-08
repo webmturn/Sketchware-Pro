@@ -68,7 +68,7 @@ final class DesignProjectController {
         BackgroundTasks.callIo(
                 TaskHost.of(activity),
                 "DesignActivity$ProjectSaver",
-                this::saveProjectDataAndCleanup,
+                () -> saveProjectDataAndCleanup(true),
                 result -> onProjectSaved(result, false),
                 error -> onProjectSaveFailed());
     }
@@ -82,7 +82,7 @@ final class DesignProjectController {
         BackgroundTasks.callIo(
                 TaskHost.of(activity),
                 "DesignActivity$SaveChangesProjectCloser",
-                this::saveProjectDataAndCleanup,
+                () -> saveProjectDataAndCleanup(false),
                 result -> onProjectSaved(result, true),
                 error -> onProjectSaveFailed());
     }
@@ -104,8 +104,10 @@ final class DesignProjectController {
         activity.showProjectLoadingDialog();
         BackgroundTasks.callIoIfAlive(TaskHost.of(activity), "DesignActivity$ProjectChanges", () -> {
             if (!ProjectDataManager.canSaveProject(projectId)) return CloseState.UNREADABLE;
+            // These states must be saved conservatively; no comparison can authorize discard.
+            if (restoredBackup || savedContent == null) return CloseState.CHANGED;
             String current = ProjectContentSnapshot.capture(projectId);
-            if (restoredBackup || savedContent == null || !savedContent.equals(current)) {
+            if (!savedContent.equals(current)) {
                 return CloseState.CHANGED;
             }
             return CloseState.UNCHANGED;
@@ -336,10 +338,12 @@ final class DesignProjectController {
         }
     }
 
-    private SaveResult saveProjectDataAndCleanup() {
+    private SaveResult saveProjectDataAndCleanup(boolean updateBaseline) {
         boolean dataSaved = saveProjectDataToFiles(projectId);
         if (dataSaved) {
             ProjectDataManager.getResourceManager(projectId).deleteTempDirs();
+            // A completed save that immediately closes the editor needs no new baseline.
+            if (!updateBaseline) return new SaveResult(true, null);
             try {
                 return new SaveResult(true, ProjectContentSnapshot.capture(projectId));
             } catch (IOException | RuntimeException error) {

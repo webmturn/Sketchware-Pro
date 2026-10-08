@@ -1,19 +1,26 @@
 package pro.sketchware.core.project;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.Strictness;
+import com.google.gson.stream.JsonWriter;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Consumer;
@@ -22,6 +29,7 @@ import java.util.stream.Stream;
 /** Fingerprints the content the project managers would save, without writing any files. */
 public final class ProjectContentSnapshot {
     private static final int FILE_HASH_BUFFER_SIZE = 8 * 1024;
+    private static final int MAX_CACHED_KEY_ORDERS = 256;
     private ProjectContentSnapshot() { }
 
     public static String capture(String projectId) throws IOException {
@@ -70,19 +78,30 @@ public final class ProjectContentSnapshot {
         appendBytes(digest, new byte[0]);
     }
 
-    private static void append(MessageDigest digest, Consumer<StringBuilder> serializer) {
+    private static void append(MessageDigest digest, Consumer<StringBuilder> serializer) throws IOException {
         StringBuilder buffer = new StringBuilder();
         serializer.accept(buffer);
         // Section and JSON-object ordering is not an edit; list ordering is meaningful.
         Map<String, StringBuilder> sections = new TreeMap<>();
+        Map<List<String>, List<String>> keyOrders = new HashMap<>();
         StringBuilder section = new StringBuilder();
         sections.put("", section);
         for (String line : buffer.toString().split("\n")) {
             if (line.startsWith("@")) {
                 section = sections.computeIfAbsent(line, ignored -> new StringBuilder());
             } else if (!line.isEmpty()) {
-                section.append(line.startsWith("{")
-                        ? sortObjectKeys(JsonParser.parseString(line)).toString() : line).append('\n');
+                if (line.startsWith("{")) {
+                    StringWriter output = new StringWriter();
+                    try (JsonWriter writer = new JsonWriter(output)) {
+                        writer.setStrictness(Strictness.LENIENT);
+                        writer.setSerializeNulls(true);
+                        writeSorted(JsonParser.parseString(line), writer, keyOrders);
+                    }
+                    section.append(output);
+                } else {
+                    section.append(line);
+                }
+                section.append('\n');
             }
         }
         StringBuilder normalized = new StringBuilder();
@@ -96,19 +115,37 @@ public final class ProjectContentSnapshot {
         digest.update(bytes);
     }
 
-    private static JsonElement sortObjectKeys(JsonElement element) {
+    private static void writeSorted(JsonElement element, JsonWriter output,
+                                    Map<List<String>, List<String>> keyOrders) throws IOException {
         if (element.isJsonObject()) {
-            JsonObject result = new JsonObject();
-            Map<String, JsonElement> entries = new TreeMap<>();
-            element.getAsJsonObject().entrySet().forEach(entry -> entries.put(entry.getKey(), entry.getValue()));
-            entries.forEach((key, value) -> result.add(key, sortObjectKeys(value)));
-            return result;
+            JsonObject object = element.getAsJsonObject();
+            List<String> names = new ArrayList<>(object.keySet());
+            List<String> sorted = keyOrders.get(names);
+            if (sorted == null) {
+                sorted = new ArrayList<>(names);
+                Collections.sort(sorted);
+                // Reuse repeated bean shapes, with a per-serialization memory bound.
+                if (keyOrders.size() < MAX_CACHED_KEY_ORDERS) keyOrders.put(names, sorted);
+            }
+            output.beginObject();
+            for (String name : sorted) {
+                output.name(name);
+                writeSorted(object.get(name), output, keyOrders);
+            }
+            output.endObject();
+        } else if (element.isJsonArray()) {
+            output.beginArray();
+            for (JsonElement value : element.getAsJsonArray()) writeSorted(value, output, keyOrders);
+            output.endArray();
+        } else if (element.isJsonNull()) {
+            output.nullValue();
+        } else {
+            JsonPrimitive primitive = element.getAsJsonPrimitive();
+            if (primitive.isBoolean()) output.value(primitive.getAsBoolean());
+            // Only numeric tokens already recognized by JsonParser reach this branch.
+            // Preserve their spelling without value(Number)'s repeated regex validation.
+            else if (primitive.isNumber()) output.jsonValue(primitive.getAsString());
+            else output.value(primitive.getAsString());
         }
-        if (element.isJsonArray()) {
-            JsonArray result = new JsonArray();
-            element.getAsJsonArray().forEach(value -> result.add(sortObjectKeys(value)));
-            return result;
-        }
-        return element;
     }
 }
