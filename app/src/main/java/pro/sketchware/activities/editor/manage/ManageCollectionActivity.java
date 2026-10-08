@@ -109,7 +109,11 @@ public class ManageCollectionActivity extends BaseAppCompatActivity implements V
 
     private void showAddFontDialog() {
         Intent intent = new Intent(getApplicationContext(), AddFontActivity.class);
-        intent.putParcelableArrayListExtra("font_names", fonts);
+        ArrayList<String> fontNames = new ArrayList<>();
+        for (ProjectResourceBean font : fonts) {
+            fontNames.add(font.resName);
+        }
+        intent.putStringArrayListExtra("font_names", fontNames);
         intent.putExtra("sc_id", sc_id);
         intent.putExtra("add_to_collection", true);
         fontLauncher.launch(intent);
