@@ -2,185 +2,168 @@ package pro.sketchware.graphics;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.NinePatch;
-import java.io.ByteArrayOutputStream;
+
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.ArrayList;
+import java.util.List;
 
 public class NinePatchDecoder {
-  public static Bitmap decode(InputStream inputStream) throws Exception {
-    Field field;
-    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-    byte[] bytes = buildNinePatchChunk(bitmap);
-    if (NinePatch.isNinePatchChunk(bytes)) {
-      Bitmap bitmap1 = Bitmap.createBitmap(bitmap, 1, 1, bitmap.getWidth() - 2, bitmap.getHeight() - 2);
-      bitmap.recycle();
-      field = bitmap1.getClass().getDeclaredField("mNinePatchChunk");
-      field.setAccessible(true);
-      field.set(bitmap1, bytes);
-      return bitmap1;
-    } 
-    return bitmap;
-  }
-  
-  public static Bitmap decodeFile(String input) throws Exception {
-    try (FileInputStream fileInputStream = new FileInputStream(input)) {
-      return decode(fileInputStream);
+    private static final int CHUNK_HEADER_SIZE = 32;
+    private static final int PADDING_LEFT_OFFSET = 12;
+    private static final int PADDING_RIGHT_OFFSET = 16;
+    private static final int PADDING_TOP_OFFSET = 20;
+    private static final int PADDING_BOTTOM_OFFSET = 24;
+    private static final int MAX_REGION_COUNT = 127;
+    private static final int MAX_DIVISION_COUNT = 255;
+    private static final int NO_COLOR = 1;
+
+    public static Bitmap decode(InputStream inputStream) throws Exception {
+        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+        if (bitmap == null || NinePatch.isNinePatchChunk(bitmap.getNinePatchChunk())) {
+            return bitmap;
+        }
+        byte[] chunk = buildNinePatchChunk(bitmap);
+        if (chunk.length == 0) {
+            return bitmap;
+        }
+
+        Bitmap interior = Bitmap.createBitmap(bitmap, 1, 1, bitmap.getWidth() - 2, bitmap.getHeight() - 2);
+        Field field = Bitmap.class.getDeclaredField("mNinePatchChunk");
+        field.setAccessible(true);
+        field.set(interior, chunk);
+        bitmap.recycle();
+        return interior;
     }
-  }
-  
-  public static void extractPadding(Bitmap bitmap, byte[] data) {
-    int[] intValues = new int[bitmap.getWidth() - 2];
-    bitmap.getPixels(intValues, 0, intValues.length, 1, bitmap.getHeight() - 1, intValues.length, 1);
-    boolean bool = false;
-    int i;
-    for (i = 0; i < intValues.length; i++) {
-      if (-16777216 == intValues[i]) {
-        putIntLE(data, 12, i);
-        break;
-      } 
-    } 
-    for (i = intValues.length - 1; i >= 0; i--) {
-      if (-16777216 == intValues[i]) {
-        putIntLE(data, 16, intValues.length - i - 2);
-        break;
-      } 
-    } 
-    intValues = new int[bitmap.getHeight() - 2];
-    bitmap.getPixels(intValues, 0, 1, bitmap.getWidth() - 1, 0, 1, intValues.length);
-    for (i = 0; i < intValues.length; i++) {
-      if (-16777216 == intValues[i]) {
-        putIntLE(data, 20, i);
-        break;
-      } 
-    } 
-    for (i = intValues.length - 1; i >= 0; i--) {
-      if (-16777216 == intValues[i]) {
-        putIntLE(data, 24, intValues.length - i - 2);
-        break;
-      } 
-    } 
-  }
-  
-  public static void writeIntLE(OutputStream outputStream, int value) throws java.io.IOException {
-    outputStream.write(value >> 0 & 0xFF);
-    outputStream.write(value >> 8 & 0xFF);
-    outputStream.write(value >> 16 & 0xFF);
-    outputStream.write(value >> 24 & 0xFF);
-  }
-  
-  public static void putIntLE(byte[] data, int x, int y) {
-    data[x + 0] = (byte)(y >> 0);
-    data[x + 1] = (byte)(y >> 8);
-    data[x + 2] = (byte)(y >> 16);
-    data[x + 3] = (byte)(y >> 24);
-  }
-  
-  public static byte[] buildNinePatchChunk(Bitmap bitmap) throws java.io.IOException {
-    int n;
-    int m;
-    int i = bitmap.getWidth();
-    int j = bitmap.getHeight();
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    int k;
-    for (k = 0; k < 32; k++)
-      byteArrayOutputStream.write(0); 
-    k = i - 2;
-    int[] intValues = new int[k];
-    bitmap.getPixels(intValues, 0, i, 1, 0, k, 1);
-    if (intValues[0] == -16777216) {
-      m = 1;
-    } else {
-      m = 0;
-    } 
-    if (intValues[intValues.length - 1] == -16777216) {
-      n = 1;
-    } else {
-      n = 0;
-    } 
-    int i1 = intValues.length;
-    i = 0;
-    int i2 = 0;
-    int i7 = 0;
-    for (k = 0; i < i1; k = i7) {
-      int i6 = i2;
-      i7 = k;
-      if (i2 != intValues[i]) {
-        i7 = k + 1;
-        writeIntLE(byteArrayOutputStream, i);
-        i1 = intValues[i];
-      } 
-      i++;
-      i2 = i6;
-    } 
-    i = k;
-    if (n != 0) {
-      i = k + 1;
-      writeIntLE(byteArrayOutputStream, intValues.length);
-    } 
-    int i4 = i + 1;
-    k = i4;
-    if (m != 0)
-      k = i4 - 1; 
-    int m1 = k;
-    if (n != 0)
-      m1 = k - 1; 
-    k = j - 2;
-    intValues = new int[k];
-    bitmap.getPixels(intValues, 0, 1, 0, 1, 1, k);
-    if (intValues[0] == -16777216) {
-      i4 = 1;
-    } else {
-      i4 = 0;
-    } 
-    if (intValues[intValues.length - 1] == -16777216) {
-      n = 1;
-    } else {
-      n = 0;
-    } 
-    int i5 = intValues.length;
-    int i3 = 0;
-    j = 0;
-    for (k = 0; i3 < i5; k = i2) {
-      i1 = j;
-      i2 = k;
-      if (j != intValues[i3]) {
-        i2 = k + 1;
-        writeIntLE(byteArrayOutputStream, i3);
-        i1 = intValues[i3];
-      } 
-      i3++;
-      j = i1;
-    } 
-    i3 = k;
-    if (n != 0) {
-      i3 = k + 1;
-      writeIntLE(byteArrayOutputStream, intValues.length);
-    } 
-    i2 = i3 + 1;
-    k = i2;
-    if (i4 != 0)
-      k = i2 - 1; 
-    i4 = k;
-    if (n != 0)
-      i4 = k - 1; 
-    k = 0;
-    while (true) {
-      int i6 = m1 * i4;
-      if (k < i6) {
-        writeIntLE(byteArrayOutputStream, 1);
-        k++;
-        continue;
-      } 
-      byte[] bytes = byteArrayOutputStream.toByteArray();
-      bytes[0] = 1;
-      bytes[1] = (byte)i;
-      bytes[2] = (byte)i3;
-      bytes[3] = (byte)n;
-      extractPadding(bitmap, bytes);
-      return bytes;
-    } 
-  }
+
+    public static Bitmap decodeFile(String input) throws Exception {
+        try (FileInputStream fileInputStream = new FileInputStream(input)) {
+            return decode(fileInputStream);
+        }
+    }
+
+    public static void extractPadding(Bitmap bitmap, byte[] data) {
+        int[] horizontal = paddingBounds(edgePixels(bitmap, true, false), edgePixels(bitmap, true, true));
+        int[] vertical = paddingBounds(edgePixels(bitmap, false, false), edgePixels(bitmap, false, true));
+        ByteBuffer buffer = ByteBuffer.wrap(data).order(ByteOrder.nativeOrder());
+        buffer.putInt(PADDING_LEFT_OFFSET, horizontal[0]);
+        buffer.putInt(PADDING_RIGHT_OFFSET, horizontal[1]);
+        buffer.putInt(PADDING_TOP_OFFSET, vertical[0]);
+        buffer.putInt(PADDING_BOTTOM_OFFSET, vertical[1]);
+    }
+
+    private static int[] paddingBounds(int[] paddingPixels, int[] stretchPixels) {
+        List<Integer> divisions = markerDivisions(paddingPixels);
+        if (divisions.isEmpty()) {
+            // Android derives omitted padding from the first and last stretch regions.
+            divisions = markerDivisions(stretchPixels);
+        }
+        return divisions.isEmpty() ? new int[]{0, 0}
+                : new int[]{divisions.get(0), paddingPixels.length - divisions.get(divisions.size() - 1)};
+    }
+
+    public static void writeIntLE(OutputStream outputStream, int value) throws IOException {
+        outputStream.write(value & 0xFF);
+        outputStream.write(value >> 8 & 0xFF);
+        outputStream.write(value >> 16 & 0xFF);
+        outputStream.write(value >> 24 & 0xFF);
+    }
+
+    public static void putIntLE(byte[] data, int offset, int value) {
+        data[offset] = (byte) value;
+        data[offset + 1] = (byte) (value >> 8);
+        data[offset + 2] = (byte) (value >> 16);
+        data[offset + 3] = (byte) (value >> 24);
+    }
+
+    public static byte[] buildNinePatchChunk(Bitmap bitmap) throws IOException {
+        if (bitmap.getWidth() < 3 || bitmap.getHeight() < 3) {
+            return new byte[0];
+        }
+        int width = bitmap.getWidth() - 2;
+        int height = bitmap.getHeight() - 2;
+        List<Integer> horizontal = markerDivisions(edgePixels(bitmap, true, true));
+        List<Integer> vertical = markerDivisions(edgePixels(bitmap, false, true));
+        if (horizontal.isEmpty() || vertical.isEmpty()) {
+            return new byte[0];
+        }
+        if (horizontal.size() > MAX_DIVISION_COUNT || vertical.size() > MAX_DIVISION_COUNT) {
+            throw new IOException("Too many regions in NinePatch image");
+        }
+        int colorCount = segmentCount(horizontal, width) * segmentCount(vertical, height);
+        if (colorCount > MAX_REGION_COUNT) {
+            throw new IOException("Too many regions in NinePatch image");
+        }
+
+        int verticalOffset = CHUNK_HEADER_SIZE + horizontal.size() * Integer.BYTES;
+        int colorsOffset = verticalOffset + vertical.size() * Integer.BYTES;
+        ByteBuffer buffer = ByteBuffer.allocate(colorsOffset + colorCount * Integer.BYTES)
+                .order(ByteOrder.nativeOrder());
+        // Res_png_9patch header, followed by X divisions, Y divisions and region colors.
+        buffer.put((byte) 1);
+        buffer.put((byte) horizontal.size());
+        buffer.put((byte) vertical.size());
+        buffer.put((byte) colorCount);
+        buffer.putInt(CHUNK_HEADER_SIZE);
+        buffer.putInt(verticalOffset);
+        buffer.putInt(0).putInt(0).putInt(0).putInt(0);
+        buffer.putInt(colorsOffset);
+        for (int division : horizontal) {
+            buffer.putInt(division);
+        }
+        for (int division : vertical) {
+            buffer.putInt(division);
+        }
+        for (int i = 0; i < colorCount; i++) {
+            // No solid-color shortcut: sample the original pixels in every region.
+            buffer.putInt(NO_COLOR);
+        }
+        byte[] chunk = buffer.array();
+        extractPadding(bitmap, chunk);
+        return chunk;
+    }
+
+    private static int[] edgePixels(Bitmap bitmap, boolean horizontal, boolean leading) {
+        int length = (horizontal ? bitmap.getWidth() : bitmap.getHeight()) - 2;
+        int[] pixels = new int[length];
+        int x = horizontal ? 1 : (leading ? 0 : bitmap.getWidth() - 1);
+        int y = horizontal ? (leading ? 0 : bitmap.getHeight() - 1) : 1;
+        bitmap.getPixels(pixels, 0, horizontal ? length : 1, x, y,
+                horizontal ? length : 1, horizontal ? 1 : length);
+        return pixels;
+    }
+
+    private static List<Integer> markerDivisions(int[] pixels) {
+        List<Integer> divisions = new ArrayList<>();
+        boolean previousMarked = false;
+        for (int i = 0; i < pixels.length; i++) {
+            boolean marked = pixels[i] == Color.BLACK;
+            if (marked != previousMarked) {
+                divisions.add(i);
+                previousMarked = marked;
+            }
+        }
+        if (previousMarked) {
+            divisions.add(pixels.length);
+        }
+        return divisions;
+    }
+
+    private static int segmentCount(List<Integer> divisions, int length) {
+        int count = divisions.size() + 1;
+        if (divisions.get(0) == 0) {
+            count--;
+        }
+        if (divisions.get(divisions.size() - 1) == length) {
+            count--;
+        }
+        return count;
+    }
 }
