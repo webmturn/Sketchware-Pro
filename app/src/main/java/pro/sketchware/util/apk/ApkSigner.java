@@ -1,21 +1,27 @@
 package pro.sketchware.util.apk;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.android.apksigner.ApkSignerTool;
+import com.android.apksigner.PasswordRetriever;
+import com.android.apksigner.SignerParams;
+import com.android.apksig.apk.ApkFormatException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.security.GeneralSecurityException;
+import java.security.Security;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+
+import org.conscrypt.OpenSSLProvider;
 
 import pro.sketchware.core.library.BuiltInLibraries;
 
@@ -29,79 +35,98 @@ public class ApkSigner {
      * @param inputPath  The APK file to sign
      * @param outputPath File to output the signed APK to
      * @param callback   Callback for System.out during signing. May be null
+     * @throws IOException if an input or output file cannot be read or written
+     * @throws GeneralSecurityException if the key or APK cannot be signed
      */
-    public void signWithTestKey(@NonNull String inputPath, @NonNull String outputPath, @Nullable LogCallback callback) {
-        try (LogWriter logger = new LogWriter(callback)) {
-            long savedTimeMillis = System.currentTimeMillis();
-            File testkeyDirectory = new File(BuiltInLibraries.EXTRACTED_COMPILE_ASSETS_PATH, "testkey");
-
-            List<String> args = Arrays.asList(
-                    "sign",
-                    "--in",
-                    inputPath,
-                    "--out",
-                    outputPath,
-                    "--key",
-                    new File(testkeyDirectory, "testkey.pk8").getAbsolutePath(),
-                    "--cert",
-                    new File(testkeyDirectory, "testkey.x509.pem").getAbsolutePath()
-            );
-
-            logger.write("Signing an APK file with these arguments: " + args + "\n");
-            runWithOutput(logger, () -> {
-                try {
-                    ApkSignerTool.main(args.toArray(new String[0]));
-                } catch (Exception e) {
-                    LogCallback.errorCount.incrementAndGet();
-                    logger.write("An error occurred while trying to sign the APK file " + inputPath +
-                            " and outputting it to " + outputPath + ": " + e.getMessage() + "\n" +
-                            "Stack trace: " + Log.getStackTraceString(e));
-                }
-                logger.write("Signing an APK file took " + (System.currentTimeMillis() - savedTimeMillis) + " ms\n");
-            });
-        } catch (IOException e) {
-            Log.e("ApkSigner", e.getMessage(), e);
-        }
+    public void signWithTestKey(@NonNull String inputPath, @NonNull String outputPath,
+                                @Nullable LogCallback callback) throws IOException, GeneralSecurityException {
+        File testkeyDirectory = new File(BuiltInLibraries.EXTRACTED_COMPILE_ASSETS_PATH, "testkey");
+        SignerParams params = new SignerParams();
+        params.setKeyFile(new File(testkeyDirectory, "testkey.pk8").getAbsolutePath());
+        params.setCertFile(new File(testkeyDirectory, "testkey.x509.pem").getAbsolutePath());
+        sign(new File(inputPath), new File(outputPath), params, "testkey", callback);
     }
 
     public void signWithKeyStore(@NonNull String inputFilePath, @NonNull String outputFilePath,
                                  @NonNull String keyStorePath, @NonNull String keyStorePassword,
-                                 @NonNull String keyStoreKeyAlias, @NonNull String keyPassword, @Nullable LogCallback callback) {
+                                 @NonNull String keyStoreKeyAlias, @NonNull String keyPassword,
+                                 @Nullable LogCallback callback) throws IOException, GeneralSecurityException {
+        SignerParams params = new SignerParams();
+        params.setKeystoreFile(keyStorePath);
+        params.setKeystorePasswordSpec("pass:" + keyStorePassword);
+        params.setKeystoreKeyAlias(keyStoreKeyAlias);
+        params.setKeyPasswordSpec("pass:" + keyPassword);
+        sign(new File(inputFilePath), new File(outputFilePath), params, keyStoreKeyAlias, callback);
+    }
+
+    private static void sign(File input, File output, SignerParams params, String signatureName,
+                             LogCallback callback) throws IOException, GeneralSecurityException {
         try (LogWriter logger = new LogWriter(callback)) {
             long savedTimeMillis = System.currentTimeMillis();
-
-            List<String> args = Arrays.asList(
-                    "sign",
-                    "--in",
-                    inputFilePath,
-                    "--out",
-                    outputFilePath,
-                    "--ks",
-                    keyStorePath,
-                    "--ks-pass",
-                    "pass:" + keyStorePassword,
-                    "--ks-key-alias",
-                    keyStoreKeyAlias,
-                    "--key-pass",
-                    "pass:" + keyPassword
-            );
-
-            logger.write("Signing an APK with a JKS keystore\n");
-            runWithOutput(logger, () -> {
-                try {
-                    ApkSignerTool.main(args.toArray(new String[0]));
-                } catch (Exception e) {
-                    LogCallback.errorCount.incrementAndGet();
-                    logger.write("Failed to sign APK with JKS keystore: " + Log.getStackTraceString(e));
-                }
-                logger.write("Signing an APK took " + (System.currentTimeMillis() - savedTimeMillis) + " ms\n");
-            });
-        } catch (IOException e) {
-            Log.e("ApkSigner", e.getMessage(), e);
+            logger.writeLine("Signing an APK: " + input);
+            try {
+                runWithOutput(logger, () -> {
+                    try {
+                        // Preserve the CLI's optional provider and password/key-loading behavior.
+                        try {
+                            Security.addProvider(new OpenSSLProvider());
+                        } catch (UnsatisfiedLinkError ignored) {
+                            // The CLI also uses the platform providers when native Conscrypt is unavailable.
+                        }
+                        params.setName("signer #1");
+                        try (PasswordRetriever passwords = new PasswordRetriever()) {
+                            params.loadPrivateKeyAndCerts(passwords);
+                        }
+                        var signer = new com.android.apksig.ApkSigner.SignerConfig.Builder(
+                                signatureName, params.getPrivateKey(), params.getCerts(), false).build();
+                        signApk(input, output, signer);
+                    } catch (Exception error) {
+                        StringWriter trace = new StringWriter();
+                        error.printStackTrace(new PrintWriter(trace));
+                        logger.writeLine("Failed to sign APK: " + trace);
+                        throw error;
+                    } finally {
+                        logger.writeLine("Signing an APK took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
+                    }
+                });
+            } catch (IOException | GeneralSecurityException | RuntimeException error) {
+                throw error;
+            } catch (ApkFormatException error) {
+                throw new IOException("Invalid APK: " + error.getMessage(), error);
+            } catch (Exception error) {
+                throw new GeneralSecurityException("APK signing failed", error);
+            }
         }
     }
 
-    static void runWithOutput(LogWriter logger, Runnable signing) throws IOException {
+    private static void signApk(File input, File output, com.android.apksig.ApkSigner.SignerConfig signer) throws Exception {
+        boolean inPlace = input.getCanonicalPath().equals(output.getCanonicalPath());
+        File signed = inPlace ? File.createTempFile("apksigner", ".apk") : output;
+        try {
+            File v4Signature = new File(output.getCanonicalPath() + ".idsig");
+            Files.deleteIfExists(v4Signature.toPath());
+            // Match the defaults of our bundled apksigner CLI, including the v4 sidecar.
+            new com.android.apksig.ApkSigner.Builder(List.of(signer))
+                    .setInputApk(input)
+                    .setOutputApk(signed)
+                    .setOtherSignersSignaturesPreserved(false)
+                    .setV1SigningEnabled(true)
+                    .setV2SigningEnabled(true)
+                    .setV3SigningEnabled(true)
+                    .setV4SigningEnabled(true)
+                    .setV4ErrorReportingEnabled(false)
+                    .setForceSourceStampOverwrite(false)
+                    .setVerityEnabled(false)
+                    .setDebuggableApkPermitted(true)
+                    .setV4SignatureOutputFile(v4Signature)
+                    .build().sign();
+            if (inPlace) Files.move(signed.toPath(), output.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } finally {
+            if (inPlace) signed.delete();
+        }
+    }
+
+    static void runWithOutput(LogWriter logger, SigningOperation signing) throws Exception {
         // System.out is shared by all signer instances, including signing without a callback.
         synchronized (SIGNING_OUTPUT_LOCK) {
             if (logger.isLoggingDisabled()) {
@@ -120,9 +145,12 @@ public class ApkSigner {
         }
     }
 
-    public interface LogCallback {
-        AtomicInteger errorCount = new AtomicInteger(0);
+    @FunctionalInterface
+    interface SigningOperation {
+        void run() throws Exception;
+    }
 
+    public interface LogCallback {
         void onNewLineLogged(String line);
     }
 
@@ -149,6 +177,13 @@ public class ApkSigner {
             for (byte b : s.getBytes(StandardCharsets.UTF_8)) {
                 write(b);
             }
+        }
+
+        private void writeLine(String message) {
+            if (isLoggingDisabled()) return;
+            if (mCache.size() > 0) write('\n');
+            write(message);
+            if (!message.endsWith("\n")) write('\n');
         }
 
         @Override

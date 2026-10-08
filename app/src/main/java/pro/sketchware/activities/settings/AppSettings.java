@@ -262,14 +262,10 @@ public class AppSettings extends BaseAppCompatActivity {
                         keyStorePath, keyStorePassword, keyStoreKeyAlias, keyPassword, callback);
             }
         }, () -> {
-            if (ApkSigner.LogCallback.errorCount.get() == 0) {
-                building_dialog.dismiss();
-                SketchwareUtil.toast(String.format(Helper.getResString(R.string.apk_sign_success),
-                                Uri.fromFile(new File(outputApkPath)).getLastPathSegment()),
-                        Toast.LENGTH_LONG);
-            } else {
-                tv_progress.setText(Helper.getResString(R.string.signing_error_occurred));
-            }
+            building_dialog.dismiss();
+            SketchwareUtil.toast(String.format(Helper.getResString(R.string.apk_sign_success),
+                            Uri.fromFile(new File(outputApkPath)).getLastPathSegment()),
+                    Toast.LENGTH_LONG);
         }, error -> tv_progress.setText(Helper.getResString(R.string.signing_failed_format, error.getMessage())));
 
         building_dialog.show();

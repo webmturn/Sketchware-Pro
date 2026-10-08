@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -57,6 +58,10 @@ public class ApkSignerOutputTest {
         assertRestoredAfterFailure(new AssertionError("signing error"));
     }
 
+    @Test public void restoresOutputWhenSigningThrowsACheckedException() throws Exception {
+        assertRestoredAfterFailure(new IOException("signing file failure"));
+    }
+
     private void assertRestoredAfterFailure(Throwable expected) throws Exception {
         PrintStream original = System.out;
         List<String> lines = new ArrayList<>();
@@ -65,10 +70,10 @@ public class ApkSignerOutputTest {
                 ApkSigner.runWithOutput(logger, () -> {
                     System.out.print("before failure");
                     if (expected instanceof Error) throw (Error) expected;
-                    throw (RuntimeException) expected;
+                    throw (Exception) expected;
                 });
                 fail("Expected signing failure");
-            } catch (RuntimeException | Error actual) {
+            } catch (Exception | Error actual) {
                 assertSame(expected, actual);
             }
             assertSame(original, System.out);
