@@ -5,6 +5,7 @@ import static pro.sketchware.util.Helper.addBasicTextChangedListener;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import pro.sketchware.beans.ProjectResourceBean;
@@ -43,13 +44,17 @@ public class AddFontCollectionActivity extends BaseDialogActivity implements Vie
         projectResourceBeanArrayList = intent.getParcelableArrayListExtra("fonts");
         requestCode = intent.getIntExtra("request_code", -1);
         projectResourceBean = intent.getParcelableExtra("edit_target");
+        if (projectResourceBeanArrayList == null || projectResourceBean == null) {
+            Log.w("AddFontCollection", "Missing fonts or edit_target; canceling font rename");
+            finish();
+            return;
+        }
 
         binding.addToCollectionCheckbox.setVisibility(View.GONE);
         binding.buttonsHolder.setVisibility(View.GONE);
         binding.fontPreviewView.setVisibility(View.VISIBLE);
         dialogOkButton.setOnClickListener(this);
         dialogCancelButton.setOnClickListener(this);
-        fontValidator = new FontNameValidator(this, binding.tiInput, BlockConstants.RESERVED_KEYWORDS, getExistingFontNames());
         fontValidator = new FontNameValidator(this, binding.tiInput, BlockConstants.RESERVED_KEYWORDS, getExistingFontNames(), projectResourceBean.resName);
         binding.edInput.setText(projectResourceBean.resName);
         binding.fontPreviewTxt.setTypeface(Typeface.createFromFile(getFontFilePath(projectResourceBean)));

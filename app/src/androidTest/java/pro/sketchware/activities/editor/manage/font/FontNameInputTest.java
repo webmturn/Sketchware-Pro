@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.EditText;
 
+import androidx.lifecycle.Lifecycle;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -32,6 +33,26 @@ import pro.sketchware.core.project.SketchwarePaths;
 @RunWith(AndroidJUnit4.class)
 public class FontNameInputTest {
     @Test(timeout = 30000)
+    public void renamingWithoutAFontListIsCanceled() {
+        Intent intent = new Intent(targetContext(), AddFontCollectionActivity.class);
+        intent.putExtra("edit_target", new ProjectResourceBean(
+                ProjectResourceBean.PROJECT_RES_TYPE_FILE, "original_font", "unused.ttf"));
+        assertRenameIsCanceled(intent);
+    }
+
+    @Test(timeout = 30000)
+    public void renamingWithoutATargetIsCanceled() {
+        Intent intent = new Intent(targetContext(), AddFontCollectionActivity.class);
+        intent.putParcelableArrayListExtra("fonts", new ArrayList<ProjectResourceBean>());
+        assertRenameIsCanceled(intent);
+    }
+
+    @Test(timeout = 30000)
+    public void launchingRenameWithoutExtrasIsCanceled() {
+        assertRenameIsCanceled(new Intent(targetContext(), AddFontCollectionActivity.class));
+    }
+
+    @Test(timeout = 30000)
     public void addingAFontRemainsResponsiveAfterInvalidFirstCharacters() {
         Intent intent = new Intent(targetContext(), AddFontActivity.class);
         intent.putStringArrayListExtra("font_names", new ArrayList<>());
@@ -45,6 +66,15 @@ public class FontNameInputTest {
 
     @Test(timeout = 30000)
     public void renamingACollectionFontRemainsResponsiveAndAllowsItsOriginalName() throws Exception {
+        verifyCollectionRename(false);
+    }
+
+    @Test(timeout = 30000)
+    public void recreatingACollectionFontRenameKeepsItsInputWorking() throws Exception {
+        verifyCollectionRename(true);
+    }
+
+    private void verifyCollectionRename(boolean recreate) throws Exception {
         // Only the preview needs a font file. No collection entry is created or saved.
         File dataDirectory = new File(SketchwarePaths.getCollectionPath(), "font/data");
         ArrayList<File> createdDirectories = new ArrayList<>();
@@ -61,6 +91,9 @@ public class FontNameInputTest {
             intent.putParcelableArrayListExtra("fonts", fonts);
             intent.putExtra("edit_target", font);
             try (ActivityScenario<AddFontCollectionActivity> scenario = ActivityScenario.launch(intent)) {
+                if (recreate) {
+                    scenario.recreate();
+                }
                 scenario.onActivity(activity -> {
                     assertInvalidThenCorrected(activity, "original_font");
                     EditText input = activity.findViewById(R.id.ed_input);
@@ -99,6 +132,12 @@ public class FontNameInputTest {
 
     private static Context targetContext() {
         return InstrumentationRegistry.getInstrumentation().getTargetContext();
+    }
+
+    private static void assertRenameIsCanceled(Intent intent) {
+        try (ActivityScenario<AddFontCollectionActivity> scenario = ActivityScenario.launch(intent)) {
+            assertEquals(Lifecycle.State.DESTROYED, scenario.getState());
+        }
     }
 
     private static File systemFont() {
