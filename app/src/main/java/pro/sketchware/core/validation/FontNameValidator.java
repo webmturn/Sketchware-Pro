@@ -63,6 +63,7 @@ public class FontNameValidator extends BaseValidator {
                     return;
                 } else {
                     msgRes = R.string.logic_editor_message_variable_name_must_start_letter;
+                    break;
                 }
             }
             errorMessage = context.getString(msgRes);

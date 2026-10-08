@@ -17,6 +17,7 @@ android {
         minSdk = 26
         versionCode = 160
         versionName = "v7.0.0-beta9"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "GIT_HASH", "\"${gitCommitHash}\"")
 
@@ -80,6 +81,8 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"])
 
     testImplementation libs.junit
+    androidTestImplementation libs.androidx.test.runner
+    androidTestImplementation libs.androidx.test.junit
 
     implementation libs.bundles.ui
 
