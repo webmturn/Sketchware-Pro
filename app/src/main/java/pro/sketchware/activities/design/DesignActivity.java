@@ -454,11 +454,8 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                     if (currentTabNumber > 0) {
                         currentTabNumber--;
                         viewPager.setCurrentItem(currentTabNumber);
-                    } else if (prefP12.getBooleanDefault("P12I2")) {
-                        showLoadingDialog();
-                        saveChangesAndCloseProject();
                     } else {
-                        showSaveBeforeQuittingDialog();
+                        projectController.requestClose(prefP12.getBooleanDefault("P12I2"));
                     }
                 }
             }
@@ -736,6 +733,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putString("sc_id", sc_id);
+        if (projectController != null) projectController.saveState(outState);
         super.onSaveInstanceState(outState);
         if (!isStoragePermissionGranted()) {
             finish();
@@ -760,7 +758,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
     /**
      * Show a dialog asking about saving the project before quitting.
      */
-    private void showSaveBeforeQuittingDialog() {
+    void showSaveBeforeQuittingDialog() {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(Helper.getResString(R.string.design_quit_title_exit_projet));
         dialog.setIcon(R.drawable.ic_mtrl_exit);
@@ -851,6 +849,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                     ProjectDataManager.getProjectDataManager(sc_id).syncFonts(ProjectDataManager.getResourceManager(sc_id));
                 }
                 refresh();
+                projectController.onBackupRestored();
                 isRestoringData = false;
                 v.dismiss();
             }
@@ -882,6 +881,10 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
 
     void onProjectDataLoaded() {
         isRestoringData = false;
+    }
+
+    boolean isProjectDataRestoring() {
+        return isRestoringData;
     }
 
     private void showCurrentActivitySrcCode() {

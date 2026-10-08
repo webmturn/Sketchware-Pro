@@ -2,6 +2,7 @@ package pro.sketchware.activities.design;
 
 import android.os.Bundle;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -12,6 +13,7 @@ import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.ProjectDataStore;
+import pro.sketchware.core.project.ProjectContentSnapshot;
 import pro.sketchware.core.project.ResourceManager;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.SketchToast;
@@ -24,9 +26,15 @@ import pro.sketchware.util.SketchToast;
  * asynchronous sequencing live here.</p>
  */
 final class DesignProjectController {
+    private static final String STATE_SAVED_CONTENT = "project_saved_content";
+    private static final String STATE_RESTORED_BACKUP = "project_restored_backup";
 
     private final WeakReference<DesignActivity> activityRef;
     private final String projectId;
+    private volatile String savedContent;
+    private volatile boolean restoredBackup;
+    private boolean ready;
+    private boolean checkingClose;
 
     DesignProjectController(DesignActivity activity, String projectId) {
         activityRef = new WeakReference<>(activity);
@@ -38,6 +46,9 @@ final class DesignProjectController {
         if (activity == null) {
             return;
         }
+        ready = false;
+        savedContent = savedInstanceState == null ? null : savedInstanceState.getString(STATE_SAVED_CONTENT);
+        restoredBackup = savedInstanceState != null && savedInstanceState.getBoolean(STATE_RESTORED_BACKUP);
         activity.onProjectLoadStarted();
         activity.showProjectLoadingDialog();
         BackgroundTasks.runIoIfAlive(
@@ -58,7 +69,7 @@ final class DesignProjectController {
                 TaskHost.of(activity),
                 "DesignActivity$ProjectSaver",
                 this::saveProjectDataAndCleanup,
-                dataSaved -> onProjectSaved(dataSaved, false),
+                result -> onProjectSaved(result, false),
                 error -> onProjectSaveFailed());
     }
 
@@ -72,9 +83,73 @@ final class DesignProjectController {
                 TaskHost.of(activity),
                 "DesignActivity$SaveChangesProjectCloser",
                 this::saveProjectDataAndCleanup,
-                dataSaved -> onProjectSaved(dataSaved, true),
+                result -> onProjectSaved(result, true),
                 error -> onProjectSaveFailed());
     }
+
+    void saveState(Bundle state) {
+        state.putString(STATE_SAVED_CONTENT, savedContent);
+        state.putBoolean(STATE_RESTORED_BACKUP, restoredBackup);
+    }
+
+    void onBackupRestored() {
+        // Restoring is an unsaved user choice, including recovery from unreadable originals.
+        restoredBackup = true;
+    }
+
+    void requestClose(boolean automaticSave) {
+        DesignActivity activity = getActivity();
+        if (activity == null || !ready || checkingClose || activity.isProjectDataRestoring()) return;
+        checkingClose = true;
+        activity.showProjectLoadingDialog();
+        BackgroundTasks.callIoIfAlive(TaskHost.of(activity), "DesignActivity$ProjectChanges", () -> {
+            if (!ProjectDataManager.canSaveProject(projectId)) return CloseState.UNREADABLE;
+            String current = ProjectContentSnapshot.capture(projectId);
+            if (restoredBackup || savedContent == null || !savedContent.equals(current)) {
+                return CloseState.CHANGED;
+            }
+            return CloseState.UNCHANGED;
+        }, state -> onCloseChecked(state, automaticSave), error -> onCloseCheckFailed(error, automaticSave));
+    }
+
+    private void onCloseChecked(CloseState state, boolean automaticSave) {
+        checkingClose = false;
+        DesignActivity activity = getActivity();
+        if (activity == null) return;
+        activity.dismissProjectLoadingDialog();
+        if (state == CloseState.UNREADABLE) {
+            onProjectLoadFailed();
+        } else if (state == CloseState.UNCHANGED) {
+            // Cleanup only after the live Activity receives the result, so recreation cannot
+            // let an old comparison discard the new editor's manager instances.
+            ProjectDataManager.discardAll();
+            activity.finish();
+        } else if (automaticSave) {
+            saveAndClose();
+        } else {
+            activity.showSaveBeforeQuittingDialog();
+        }
+    }
+
+    private void onCloseCheckFailed(Throwable error, boolean automaticSave) {
+        checkingClose = false;
+        DesignActivity activity = getActivity();
+        if (activity == null) return;
+        activity.dismissProjectLoadingDialog();
+        recordSnapshotFailure("Project change check failed", error);
+        // An uncertain comparison must never authorize discarding edits.
+        if (!ProjectDataManager.canSaveProject(projectId)) onProjectLoadFailed();
+        else if (automaticSave) saveAndClose();
+        else activity.showSaveBeforeQuittingDialog();
+    }
+
+    private void recordSnapshotFailure(String message, Throwable error) {
+        DesignActivity activity = getActivity();
+        if (activity != null) activity.recordProjectControllerFailure(message,
+                error instanceof RuntimeException runtime ? runtime : new RuntimeException(error));
+    }
+
+    private enum CloseState { UNCHANGED, CHANGED, UNREADABLE }
 
     void discardAndClose() {
         DesignActivity activity = getActivity();
@@ -136,6 +211,24 @@ final class DesignProjectController {
         }
         activity.updateBottomMenu();
         activity.refresh();
+        if (savedInstanceState == null && !restoredBackup) {
+            BackgroundTasks.callIoIfAlive(TaskHost.of(activity), "DesignActivity$ProjectBaseline",
+                    () -> ProjectContentSnapshot.capture(projectId), content -> {
+                        savedContent = content;
+                        finishLoading(savedInstanceState);
+                    }, error -> {
+                        recordSnapshotFailure("Project baseline failed", error);
+                        finishLoading(savedInstanceState);
+                    });
+        } else {
+            finishLoading(savedInstanceState);
+        }
+    }
+
+    private void finishLoading(Bundle savedInstanceState) {
+        DesignActivity activity = getActivity();
+        if (activity == null) return;
+        ready = true;
         activity.onProjectDataLoaded();
         activity.dismissProjectLoadingDialog();
         if (savedInstanceState == null) {
@@ -144,6 +237,7 @@ final class DesignProjectController {
     }
 
     private void onProjectLoadFailed() {
+        ready = false;
         DesignActivity activity = getActivity();
         if (activity != null) {
             activity.dismissProjectLoadingDialog();
@@ -161,6 +255,7 @@ final class DesignProjectController {
             return true;
         }, restored -> {
             if (restored) {
+                onBackupRestored();
                 onProjectLoaded(new Bundle());
             } else {
                 onProjectLoadFailed();
@@ -168,12 +263,14 @@ final class DesignProjectController {
         }, error -> onProjectLoadFailed());
     }
 
-    private void onProjectSaved(boolean dataSaved, boolean closeAfterSave) {
+    private void onProjectSaved(SaveResult result, boolean closeAfterSave) {
         DesignActivity activity = getActivity();
         if (activity == null) {
             return;
         }
-        if (dataSaved) {
+        if (result.saved()) {
+            savedContent = result.content();
+            restoredBackup = false;
             SketchToast.toast(
                     activity.getApplicationContext(),
                     Helper.getResString(R.string.common_message_complete_save),
@@ -239,13 +336,22 @@ final class DesignProjectController {
         }
     }
 
-    private boolean saveProjectDataAndCleanup() {
+    private SaveResult saveProjectDataAndCleanup() {
         boolean dataSaved = saveProjectDataToFiles(projectId);
         if (dataSaved) {
             ProjectDataManager.getResourceManager(projectId).deleteTempDirs();
+            try {
+                return new SaveResult(true, ProjectContentSnapshot.capture(projectId));
+            } catch (IOException | RuntimeException error) {
+                recordSnapshotFailure("Saved project baseline failed", error);
+                // A failed comparison must not turn a completed write into a failed save.
+                return new SaveResult(true, null);
+            }
         }
-        return dataSaved;
+        return new SaveResult(false, null);
     }
+
+    private record SaveResult(boolean saved, String content) { }
 
     /** Persists views, logic, files, resources, and libraries in parallel. */
     private static boolean saveProjectDataToFiles(String projectId) {
@@ -274,6 +380,14 @@ final class DesignProjectController {
 
     private void saveUnsavedChangesInBackground() {
         if (!ProjectDataManager.canSaveProject(projectId)) return;
+        if (!restoredBackup && savedContent != null) {
+            try {
+                if (savedContent.equals(ProjectContentSnapshot.capture(projectId))) return;
+            } catch (IOException | RuntimeException error) {
+                // Uncertain resource content must not prevent backing up healthy metadata.
+                recordSnapshotFailure("Unsaved project change check failed", error);
+            }
+        }
         ProjectDataStore projectDataStore =
                 ProjectDataManager.getProjectDataManager(projectId);
         synchronized (projectDataStore) {
