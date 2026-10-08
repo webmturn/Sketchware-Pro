@@ -559,7 +559,7 @@ public class LayoutGenerator {
             }
         }
         if (!viewBean.inject.isEmpty()) {
-            widgetTag.addAttributeValue(viewBean.inject.replace(" ", ""));
+            widgetTag.addAttributeValue(viewBean.inject);
         }
 
         if (!viewBean.parentAttributes.isEmpty()) {
@@ -626,7 +626,7 @@ public class LayoutGenerator {
         }
         addCommonAttributes(floatingActionButtonTag, viewBean);
         if (!viewBean.inject.isEmpty()) {
-            floatingActionButtonTag.addAttributeValue(viewBean.inject.replace(" ", ""));
+            floatingActionButtonTag.addAttributeValue(viewBean.inject);
         }
         xmlTag.addChildNode(floatingActionButtonTag);
     }
