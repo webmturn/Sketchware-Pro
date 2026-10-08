@@ -42,6 +42,12 @@ public class ItemTabLayout extends TabLayout implements ItemView {
     }
 
     @Override
+    public void onRtlPropertiesChanged(int layoutDirection) {
+        super.onRtlPropertiesChanged(layoutDirection);
+        pro.sketchware.activities.editor.view.PreviewPadding.onLayoutDirectionChanged(this, layoutDirection);
+    }
+
+    @Override
     public ViewBean getBean() {
         return viewBean;
     }
@@ -83,6 +89,11 @@ public class ItemTabLayout extends TabLayout implements ItemView {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
         return true;
+    }
+
+    @Override
+    public void setPaddingPixels(int left, int top, int right, int bottom) {
+        super.setPadding(left, top, right, bottom);
     }
 
     @Override

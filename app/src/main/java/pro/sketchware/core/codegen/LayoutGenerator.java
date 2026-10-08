@@ -20,17 +20,9 @@ import pro.sketchware.beans.TextBean;
 import pro.sketchware.beans.ViewBean;
 import pro.sketchware.core.library.Material3LibraryManager;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
-
-import java.io.IOException;
-import java.io.StringReader;
 import java.nio.CharBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -42,6 +34,7 @@ import pro.sketchware.SketchApplication;
 import pro.sketchware.core.resources.ColorResourceResolver;
 import pro.sketchware.core.project.InjectRootLayoutManager;
 import pro.sketchware.core.layout.InjectAttributeHandler;
+import pro.sketchware.core.layout.PaddingAttributes;
 import pro.sketchware.util.PropertiesUtil;
 import pro.sketchware.util.xml.XmlBuilder;
 
@@ -810,71 +803,18 @@ public class LayoutGenerator {
      * @see View#getPaddingBottom()
      */
     private void writeCardViewPadding(XmlBuilder xmlTag, ViewBean viewBean) {
-        var injectHandler = new InjectAttributeHandler(viewBean);
-        Set<String> toNotAdd = readAttributesToReplace(viewBean);
-        LayoutBean layoutBean = viewBean.layout;
-        int paddingLeft = layoutBean.paddingLeft;
-        int paddingTop = layoutBean.paddingTop;
-        int paddingRight = layoutBean.paddingRight;
-        int paddingBottom = layoutBean.paddingBottom;
-
-        if (paddingLeft == paddingRight && paddingTop == paddingBottom
-                && paddingLeft == paddingTop && paddingLeft > 0) {
-            if (!toNotAdd.contains("app:contentPadding") && !injectHandler.contains("contentPadding")) {
-                xmlTag.addAttribute("app", "contentPadding", paddingLeft + "dp");
-            }
-            return;
-        }
-
-        if (paddingLeft > 0 && !toNotAdd.contains("app:contentPaddingLeft") && !injectHandler.contains("contentPaddingLeft")) {
-            xmlTag.addAttribute("app", "contentPaddingLeft", paddingLeft + "dp");
-        }
-        if (paddingTop > 0 && !toNotAdd.contains("app:contentPaddingTop") && !injectHandler.contains("contentPaddingTop")) {
-            xmlTag.addAttribute("app", "contentPaddingTop", paddingTop + "dp");
-        }
-        if (paddingRight > 0 && !toNotAdd.contains("app:contentPaddingRight") && !injectHandler.contains("contentPaddingRight")) {
-            xmlTag.addAttribute("app", "contentPaddingRight", paddingRight + "dp");
-        }
-        if (paddingBottom > 0 && !toNotAdd.contains("app:contentPaddingBottom") && !injectHandler.contains("contentPaddingBottom")) {
-            xmlTag.addAttribute("app", "contentPaddingBottom", paddingBottom + "dp");
-        }
+        writePadding(xmlTag, PaddingAttributes.generated(viewBean, true));
     }
 
-    /**
-     * @see View#getPaddingLeft()
-     * @see View#getPaddingTop()
-     * @see View#getPaddingRight()
-     * @see View#getPaddingBottom()
-     */
     private void writeViewPadding(XmlBuilder xmlTag, ViewBean viewBean) {
-        var injectHandler = new InjectAttributeHandler(viewBean);
-        Set<String> toNotAdd = readAttributesToReplace(viewBean);
-        LayoutBean layoutBean = viewBean.layout;
-        int paddingLeft = layoutBean.paddingLeft;
-        int paddingTop = layoutBean.paddingTop;
-        int paddingRight = layoutBean.paddingRight;
-        int paddingBottom = layoutBean.paddingBottom;
+        writePadding(xmlTag, PaddingAttributes.generated(viewBean, false));
+    }
 
-        if (paddingLeft == paddingRight && paddingTop == paddingBottom
-                && paddingLeft == paddingTop && paddingLeft > 0) {
-            if (!toNotAdd.contains("android:padding") && !injectHandler.contains("padding")) {
-                xmlTag.addAttribute("android", "padding", paddingLeft + "dp");
-            }
-            return;
-        }
-
-        if (paddingLeft > 0 && !toNotAdd.contains("android:paddingLeft") && !injectHandler.contains("paddingLeft")) {
-            xmlTag.addAttribute("android", "paddingLeft", paddingLeft + "dp");
-        }
-        if (paddingTop > 0 && !toNotAdd.contains("android:paddingTop") && !injectHandler.contains("paddingTop")) {
-            xmlTag.addAttribute("android", "paddingTop", paddingTop + "dp");
-        }
-        if (paddingRight > 0 && !toNotAdd.contains("android:paddingRight") && !injectHandler.contains("paddingRight")) {
-            xmlTag.addAttribute("android", "paddingRight", paddingRight + "dp");
-        }
-        if (paddingBottom > 0 && !toNotAdd.contains("android:paddingBottom") && !injectHandler.contains("paddingBottom")) {
-            xmlTag.addAttribute("android", "paddingBottom", paddingBottom + "dp");
-        }
+    private void writePadding(XmlBuilder xmlTag, Map<String, String> attributes) {
+        attributes.forEach((name, value) -> {
+            int separator = name.indexOf(':');
+            xmlTag.addAttribute(name.substring(0, separator), name.substring(separator + 1), value);
+        });
     }
 
     private void writeTextAttributes(XmlBuilder xmlTag, ViewBean viewBean) {
@@ -1277,38 +1217,6 @@ public class LayoutGenerator {
     }
 
     public Set<String> readAttributesToReplace(ViewBean viewBean) {
-        if (viewBean.inject == null || viewBean.inject.isEmpty()) {
-            return Set.of();
-        }
-
-        Set<String> toReplace = new HashSet<>();
-
-        try {
-            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-            factory.setNamespaceAware(true);
-            XmlPullParser parser = factory.newPullParser();
-            parser.setInput(new StringReader("<tag xmlns:android=\"http://schemas.android.com/apk/res/android\" " +
-                    "xmlns:app=\"http://schemas.android.com/apk/res-auto\" " +
-                    "xmlns:tools=\"http://schemas.android.com/tools\"" +
-                    viewBean.inject + "></tag>"));
-
-            int eventType = parser.getEventType();
-            while (eventType != XmlPullParser.END_DOCUMENT) {
-                if (eventType == XmlPullParser.START_TAG) {
-                    for (int i = 0; i < parser.getAttributeCount(); i++) {
-                        if ("http://schemas.android.com/tools".equals(parser.getAttributeNamespace(i)) &&
-                                "replace".equals(parser.getAttributeName(i))) {
-                            toReplace.addAll(Arrays.asList(parser.getAttributeValue(i).split("\\s*,\\s*")));
-                        }
-                    }
-                }
-
-                eventType = parser.next();
-            }
-        } catch (XmlPullParserException | IOException | RuntimeException e) {
-            LogUtil.e("LayoutGenerator", "Failed to parse inject property of View " + viewBean.id, e);
-        }
-
-        return toReplace;
+        return PaddingAttributes.attributesToReplace(viewBean);
     }
 }

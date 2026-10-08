@@ -11,6 +11,8 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -47,6 +49,15 @@ public class InjectAttributeHandler {
 
     public Set<Pair<String, String>> getAttributes() {
         Set<Pair<String, String>> attributePairs = new HashSet<>();
+        getNamespacedAttributes().forEach((name, value) ->
+                attributePairs.add(new Pair<>(name.substring(name.indexOf(':') + 1), value)));
+        return attributePairs;
+    }
+
+    /** Uses canonical prefixes so Android and tools attributes retain their namespace. */
+    public Map<String, String> getNamespacedAttributes() {
+        Map<String, String> attributes = new LinkedHashMap<>();
+        if (viewBean.inject == null || viewBean.inject.isEmpty()) return attributes;
 
         try {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
@@ -64,7 +75,13 @@ public class InjectAttributeHandler {
                     for (int i = 0; i < parser.getAttributeCount(); i++) {
                         String name = parser.getAttributeName(i);
                         String value = parser.getAttributeValue(i);
-                        attributePairs.add(new Pair<>(name, value));
+                        String prefix = switch (parser.getAttributeNamespace(i)) {
+                            case "http://schemas.android.com/apk/res/android" -> "android";
+                            case "http://schemas.android.com/apk/res-auto" -> "app";
+                            case "http://schemas.android.com/tools" -> "tools";
+                            default -> parser.getAttributePrefix(i);
+                        };
+                        attributes.put(prefix == null || prefix.isEmpty() ? name : prefix + ":" + name, value);
                     }
                 }
 
@@ -75,6 +92,6 @@ public class InjectAttributeHandler {
                     + viewBean.id, e);
         }
 
-        return attributePairs;
+        return attributes;
     }
 }

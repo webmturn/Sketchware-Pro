@@ -130,4 +130,8 @@ public class ItemCardView extends MaterialCardView implements ItemView, ScrollCo
                 (int) ViewUtil.dpToPx(getContext(), (float) right),
                 (int) ViewUtil.dpToPx(getContext(), (float) bottom));
     }
+
+    public void setContentPaddingPixels(int left, int top, int right, int bottom) {
+        super.setContentPadding(left, top, right, bottom);
+    }
 }

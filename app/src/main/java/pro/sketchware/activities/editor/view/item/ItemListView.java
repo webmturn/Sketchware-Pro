@@ -48,6 +48,12 @@ public class ItemListView extends ListView implements ItemView {
     }
 
     @Override
+    public void onRtlPropertiesChanged(int layoutDirection) {
+        super.onRtlPropertiesChanged(layoutDirection);
+        pro.sketchware.activities.editor.view.PreviewPadding.onLayoutDirectionChanged(this, layoutDirection);
+    }
+
+    @Override
     public ViewBean getBean() {
         return viewBean;
     }
@@ -92,6 +98,11 @@ public class ItemListView extends ListView implements ItemView {
             canvas.drawLine(0.0f, (float) measuredHeight, (float) measuredWidth, (float) measuredHeight, paint);
         }
         super.onDraw(canvas);
+    }
+
+    @Override
+    public void setPaddingPixels(int left, int top, int right, int bottom) {
+        super.setPadding(left, top, right, bottom);
     }
 
     @Override

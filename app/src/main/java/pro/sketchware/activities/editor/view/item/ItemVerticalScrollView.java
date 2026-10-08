@@ -143,6 +143,12 @@ public class ItemVerticalScrollView extends FrameLayout implements ItemView, Scr
     }
 
     @Override
+    public void onRtlPropertiesChanged(int layoutDirection) {
+        super.onRtlPropertiesChanged(layoutDirection);
+        pro.sketchware.activities.editor.view.PreviewPadding.onLayoutDirectionChanged(this, layoutDirection);
+    }
+
+    @Override
     public ViewBean getBean() {
         return viewBean;
     }
@@ -307,6 +313,11 @@ public class ItemVerticalScrollView extends FrameLayout implements ItemView, Scr
                 ((ItemVerticalScrollView) child).setScrollEnabled(scrollEnabled);
             }
         }
+    }
+
+    @Override
+    public void setPaddingPixels(int left, int top, int right, int bottom) {
+        super.setPadding(left, top, right, bottom);
     }
 
     @Override

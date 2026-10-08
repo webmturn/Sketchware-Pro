@@ -70,6 +70,12 @@ public class ItemHorizontalScrollView extends FrameLayout implements ItemView, S
     }
 
     @Override
+    public void onRtlPropertiesChanged(int layoutDirection) {
+        super.onRtlPropertiesChanged(layoutDirection);
+        pro.sketchware.activities.editor.view.PreviewPadding.onLayoutDirectionChanged(this, layoutDirection);
+    }
+
+    @Override
     public ViewBean getBean() {
         return viewBean;
     }
@@ -238,6 +244,11 @@ public class ItemHorizontalScrollView extends FrameLayout implements ItemView, S
     @Override
     public void setPadding(int paddingLeft, int paddingTop, int paddingRight, int paddingBottom) {
         super.setPadding((int) ViewUtil.dpToPx(getContext(), (float) paddingLeft), (int) ViewUtil.dpToPx(getContext(), (float) paddingTop), (int) ViewUtil.dpToPx(getContext(), (float) paddingRight), (int) ViewUtil.dpToPx(getContext(), (float) paddingBottom));
+    }
+
+    @Override
+    public void setPaddingPixels(int left, int top, int right, int bottom) {
+        super.setPadding(left, top, right, bottom);
     }
 
     public void setScrollEnabled(boolean isEnabled) {

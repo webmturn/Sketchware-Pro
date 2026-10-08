@@ -49,6 +49,12 @@ public class ItemAdView extends LinearLayout implements ItemView {
     }
 
     @Override
+    public void onRtlPropertiesChanged(int layoutDirection) {
+        super.onRtlPropertiesChanged(layoutDirection);
+        pro.sketchware.activities.editor.view.PreviewPadding.onLayoutDirectionChanged(this, layoutDirection);
+    }
+
+    @Override
     public ViewBean getBean() {
         return viewBean;
     }
@@ -105,6 +111,11 @@ public class ItemAdView extends LinearLayout implements ItemView {
                 imgView.getLayoutParams().height = (int) (dip * 100.0F);
             }
         }
+    }
+
+    @Override
+    public void setPaddingPixels(int left, int top, int right, int bottom) {
+        super.setPadding(left, top, right, bottom);
     }
 
     @Override

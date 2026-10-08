@@ -6,14 +6,12 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.NinePatch;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.NinePatchDrawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -482,15 +480,9 @@ public class ViewPane extends RelativeLayout {
                     String backgroundRes = resourcesManager.getImagePath(viewBean.layout.backgroundResource);
                     if (backgroundRes != null && new File(backgroundRes).exists()) {
                         if (backgroundRes.endsWith(".9.png")) {
-                            Bitmap decodedBitmap = NinePatchDecoder.decodeFile(backgroundRes);
-                            if (decodedBitmap != null) {
-                                byte[] ninePatchChunk = decodedBitmap.getNinePatchChunk();
-                                if (NinePatch.isNinePatchChunk(ninePatchChunk)) {
-                                    view.setBackground(new NinePatchDrawable(getResources(), decodedBitmap, ninePatchChunk, new Rect(), null));
-                                } else {
-                                    view.setBackground(new BitmapDrawable(getResources(), backgroundRes));
-                                }
-                            }
+                            Drawable background = NinePatchDecoder.decodeDrawable(getResources(), backgroundRes,
+                                    android.util.DisplayMetrics.DENSITY_XHIGH);
+                            if (background != null) view.setBackground(background);
                         } else {
                             Bitmap bgBitmap = FileUtil.decodeSampleBitmapFromPath(backgroundRes, 512, 512);
                             if (bgBitmap != null) {
@@ -603,11 +595,6 @@ public class ViewPane extends RelativeLayout {
         }
         if (classInfo.isExactType("CardView")) {
             var cardView = (ItemCardView) view;
-            cardView.setContentPadding(
-                    viewBean.layout.paddingLeft,
-                    viewBean.layout.paddingTop,
-                    viewBean.layout.paddingRight,
-                    viewBean.layout.paddingBottom);
             updateCardView(cardView, injectHandler);
         }
         if (classInfo.isExactType("TabLayout")) {
@@ -662,6 +649,7 @@ public class ViewPane extends RelativeLayout {
         if (!classInfo.isExactType("CardView")) {
             applyElevation(view, resolvePreviewElevation(injectHandler, viewBean.layout.elevation));
         }
+        PreviewPadding.apply(view, viewBean);
         view.setVisibility(VISIBLE);
         if (view instanceof EditorListItem listItem) {
             String listitem = injectHandler.getAttributeValueOf("listitem");
@@ -1183,8 +1171,6 @@ public class ViewPane extends RelativeLayout {
         if (effectiveParentType == ViewBean.VIEW_TYPE_LAYOUT_LINEAR) {
             LinearLayout.LayoutParams layoutParams2 = new LinearLayout.LayoutParams(width, height);
             layoutParams2.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
-            LayoutBean layoutBean3 = viewBean.layout;
-            view.setPadding(layoutBean3.paddingLeft, layoutBean3.paddingTop, layoutBean3.paddingRight, layoutBean3.paddingBottom);
             int layoutGravity = viewBean.layout.layoutGravity;
             if (layoutGravity != LayoutBean.GRAVITY_NONE) {
                 layoutParams2.gravity = layoutGravity;
@@ -1194,14 +1180,10 @@ public class ViewPane extends RelativeLayout {
         } else if (effectiveParentType == ViewBean.VIEW_TYPE_LAYOUT_RELATIVE) {
             RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(width, height);
             layoutParams2.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
-            LayoutBean layoutBean3 = viewBean.layout;
-            view.setPadding(layoutBean3.paddingLeft, layoutBean3.paddingTop, layoutBean3.paddingRight, layoutBean3.paddingBottom);
             view.setLayoutParams(layoutParams2);
         } else {
             FrameLayout.LayoutParams layoutParams3 = new FrameLayout.LayoutParams(width, height);
             layoutParams3.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
-            LayoutBean layoutBean4 = viewBean.layout;
-            view.setPadding(layoutBean4.paddingLeft, layoutBean4.paddingTop, layoutBean4.paddingRight, layoutBean4.paddingBottom);
             int layoutGravity = viewBean.layout.layoutGravity;
             if (layoutGravity != LayoutBean.GRAVITY_NONE) {
                 layoutParams3.gravity = layoutGravity;

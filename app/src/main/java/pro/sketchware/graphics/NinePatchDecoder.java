@@ -4,6 +4,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.NinePatch;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.NinePatchDrawable;
+import android.content.res.Resources;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -47,6 +52,19 @@ public class NinePatchDecoder {
         try (FileInputStream fileInputStream = new FileInputStream(input)) {
             return decode(fileInputStream);
         }
+    }
+
+    /** File resources are copied into a density-qualified drawable directory by the builder. */
+    public static Drawable decodeDrawable(Resources resources, String input, int sourceDensity) throws Exception {
+        Bitmap bitmap = decodeFile(input);
+        if (bitmap == null) return null;
+        bitmap.setDensity(sourceDensity);
+        byte[] chunk = bitmap.getNinePatchChunk();
+        if (!NinePatch.isNinePatchChunk(chunk)) return new BitmapDrawable(resources, bitmap);
+        ByteBuffer data = ByteBuffer.wrap(chunk).order(ByteOrder.nativeOrder());
+        Rect padding = new Rect(data.getInt(PADDING_LEFT_OFFSET), data.getInt(PADDING_TOP_OFFSET),
+                data.getInt(PADDING_RIGHT_OFFSET), data.getInt(PADDING_BOTTOM_OFFSET));
+        return new NinePatchDrawable(resources, bitmap, chunk, padding, null);
     }
 
     public static void extractPadding(Bitmap bitmap, byte[] data) {

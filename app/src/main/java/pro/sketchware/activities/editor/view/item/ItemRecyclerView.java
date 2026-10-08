@@ -61,6 +61,12 @@ public class ItemRecyclerView extends RecyclerView implements ItemView, EditorLi
     }
 
     @Override
+    public void onRtlPropertiesChanged(int layoutDirection) {
+        super.onRtlPropertiesChanged(layoutDirection);
+        pro.sketchware.activities.editor.view.PreviewPadding.onLayoutDirectionChanged(this, layoutDirection);
+    }
+
+    @Override
     public ViewBean getBean() {
         return viewBean;
     }
@@ -108,6 +114,11 @@ public class ItemRecyclerView extends RecyclerView implements ItemView, EditorLi
             canvas.drawLine(0.0f, heightF, widthF, heightF, paint);
         }
         super.onDraw(canvas);
+    }
+
+    @Override
+    public void setPaddingPixels(int left, int top, int right, int bottom) {
+        super.setPadding(left, top, right, bottom);
     }
 
     @Override
