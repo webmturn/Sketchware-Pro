@@ -7,10 +7,12 @@ import androidx.annotation.Nullable;
 
 import com.android.apksigner.ApkSignerTool;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -19,7 +21,7 @@ import pro.sketchware.core.library.BuiltInLibraries;
 
 public class ApkSigner {
 
-    private static final File EXTRACTED_TESTKEY_FILES_DIRECTORY = new File(BuiltInLibraries.EXTRACTED_COMPILE_ASSETS_PATH, "testkey");
+    private static final Object SIGNING_OUTPUT_LOCK = new Object();
 
     /**
      * Sign an APK with testkey.
@@ -31,7 +33,7 @@ public class ApkSigner {
     public void signWithTestKey(@NonNull String inputPath, @NonNull String outputPath, @Nullable LogCallback callback) {
         try (LogWriter logger = new LogWriter(callback)) {
             long savedTimeMillis = System.currentTimeMillis();
-            PrintStream oldOut = System.out;
+            File testkeyDirectory = new File(BuiltInLibraries.EXTRACTED_COMPILE_ASSETS_PATH, "testkey");
 
             List<String> args = Arrays.asList(
                     "sign",
@@ -40,34 +42,23 @@ public class ApkSigner {
                     "--out",
                     outputPath,
                     "--key",
-                    new File(EXTRACTED_TESTKEY_FILES_DIRECTORY, "testkey.pk8").getAbsolutePath(),
+                    new File(testkeyDirectory, "testkey.pk8").getAbsolutePath(),
                     "--cert",
-                    new File(EXTRACTED_TESTKEY_FILES_DIRECTORY, "testkey.x509.pem").getAbsolutePath()
+                    new File(testkeyDirectory, "testkey.x509.pem").getAbsolutePath()
             );
 
-            logger.write("Signing an APK file with these arguments: " + args);
-
-            /* If the signing has a callback, we need to change System.out to our logger */
-            if (callback != null) {
-                try (PrintStream stream = new PrintStream(logger)) {
-                    System.setOut(stream);
+            logger.write("Signing an APK file with these arguments: " + args + "\n");
+            runWithOutput(logger, () -> {
+                try {
+                    ApkSignerTool.main(args.toArray(new String[0]));
+                } catch (Exception e) {
+                    LogCallback.errorCount.incrementAndGet();
+                    logger.write("An error occurred while trying to sign the APK file " + inputPath +
+                            " and outputting it to " + outputPath + ": " + e.getMessage() + "\n" +
+                            "Stack trace: " + Log.getStackTraceString(e));
                 }
-            }
-
-            try {
-                ApkSignerTool.main(args.toArray(new String[0]));
-            } catch (Exception e) {
-                LogCallback.errorCount.incrementAndGet();
-                logger.write("An error occurred while trying to sign the APK file " + inputPath +
-                        " and outputting it to " + outputPath + ": " + e.getMessage() + "\n" +
-                        "Stack trace: " + Log.getStackTraceString(e));
-            }
-
-            logger.write("Signing an APK file took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
-
-            if (callback != null) {
-                System.setOut(oldOut);
-            }
+                logger.write("Signing an APK file took " + (System.currentTimeMillis() - savedTimeMillis) + " ms\n");
+            });
         } catch (IOException e) {
             Log.e("ApkSigner", e.getMessage(), e);
         }
@@ -78,7 +69,6 @@ public class ApkSigner {
                                  @NonNull String keyStoreKeyAlias, @NonNull String keyPassword, @Nullable LogCallback callback) {
         try (LogWriter logger = new LogWriter(callback)) {
             long savedTimeMillis = System.currentTimeMillis();
-            PrintStream oldOut = System.out;
 
             List<String> args = Arrays.asList(
                     "sign",
@@ -96,28 +86,37 @@ public class ApkSigner {
                     "pass:" + keyPassword
             );
 
-            logger.write("Signing an APK with a JKS keystore and these arguments: ");
-
-            if (callback != null) {
-                try (PrintStream stream = new PrintStream(logger)) {
-                    System.setOut(stream);
+            logger.write("Signing an APK with a JKS keystore\n");
+            runWithOutput(logger, () -> {
+                try {
+                    ApkSignerTool.main(args.toArray(new String[0]));
+                } catch (Exception e) {
+                    LogCallback.errorCount.incrementAndGet();
+                    logger.write("Failed to sign APK with JKS keystore: " + Log.getStackTraceString(e));
                 }
-            }
-
-            try {
-                ApkSignerTool.main(args.toArray(new String[0]));
-            } catch (Exception e) {
-                LogCallback.errorCount.incrementAndGet();
-                logger.write("Failed to sign APK with JKS keystore: " + Log.getStackTraceString(e));
-            }
-
-            logger.write("Signing an APK took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
-
-            if (callback != null) {
-                System.setOut(oldOut);
-            }
+                logger.write("Signing an APK took " + (System.currentTimeMillis() - savedTimeMillis) + " ms\n");
+            });
         } catch (IOException e) {
             Log.e("ApkSigner", e.getMessage(), e);
+        }
+    }
+
+    static void runWithOutput(LogWriter logger, Runnable signing) throws IOException {
+        // System.out is shared by all signer instances, including signing without a callback.
+        synchronized (SIGNING_OUTPUT_LOCK) {
+            if (logger.isLoggingDisabled()) {
+                signing.run();
+                return;
+            }
+            PrintStream oldOut = System.out;
+            try (PrintStream stream = new PrintStream(logger, false, StandardCharsets.UTF_8.name())) {
+                System.setOut(stream);
+                try {
+                    signing.run();
+                } finally {
+                    System.setOut(oldOut);
+                }
+            }
         }
     }
 
@@ -127,12 +126,12 @@ public class ApkSigner {
         void onNewLineLogged(String line);
     }
 
-    private static class LogWriter extends OutputStream {
+    static class LogWriter extends OutputStream {
 
         private final LogCallback mCallback;
-        private String mCache = "";
+        private final ByteArrayOutputStream mCache = new ByteArrayOutputStream();
 
-        private LogWriter(LogCallback callback) {
+        LogWriter(LogCallback callback) {
             mCallback = callback;
         }
 
@@ -140,20 +139,28 @@ public class ApkSigner {
         public void write(int b) {
             if (isLoggingDisabled()) return;
 
-            mCache += (char) b;
-
-            if (((char) b) == '\n') {
-                mCallback.onNewLineLogged(mCache);
-                mCache = "";
-            }
+            mCache.write(b);
+            if (b == '\n') dispatchPendingLine();
         }
 
         private void write(String s) {
             if (isLoggingDisabled()) return;
 
-            for (byte b : s.getBytes()) {
+            for (byte b : s.getBytes(StandardCharsets.UTF_8)) {
                 write(b);
             }
+        }
+
+        @Override
+        public void close() {
+            dispatchPendingLine();
+        }
+
+        private void dispatchPendingLine() {
+            if (isLoggingDisabled() || mCache.size() == 0) return;
+            String line = new String(mCache.toByteArray(), StandardCharsets.UTF_8);
+            mCache.reset();
+            mCallback.onNewLineLogged(line);
         }
 
         private boolean isLoggingDisabled() {
