@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+    <LinearLayout android:id="@+id/negative_uniform_half"
+        android:layout_width="100dp" android:layout_height="100dp" android:padding="-0.5dp" />
+    <LinearLayout android:id="@+id/negative_uniform_negative"
+        android:layout_width="100dp" android:layout_height="100dp" android:padding="-2dp" />
+    <LinearLayout android:id="@+id/negative_left"
+        android:layout_width="100dp" android:layout_height="100dp" android:paddingLeft="-2dp" />
+    <LinearLayout android:id="@+id/negative_right"
+        android:layout_width="100dp" android:layout_height="100dp" android:paddingRight="-2dp" />
+    <LinearLayout android:id="@+id/negative_top"
+        android:layout_width="100dp" android:layout_height="100dp" android:paddingTop="-2dp" />
+    <LinearLayout android:id="@+id/negative_bottom"
+        android:layout_width="100dp" android:layout_height="100dp" android:paddingBottom="-2dp" />
+    <LinearLayout android:id="@+id/negative_four_sides"
+        android:layout_width="100dp" android:layout_height="100dp" android:paddingLeft="-2dp" android:paddingTop="-2dp" android:paddingRight="-2dp" android:paddingBottom="-2dp" />
+    <LinearLayout android:id="@+id/negative_horizontal"
+        android:layout_width="100dp" android:layout_height="100dp" android:paddingHorizontal="-2dp" />
+    <LinearLayout android:id="@+id/negative_vertical"
+        android:layout_width="100dp" android:layout_height="100dp" android:paddingVertical="-2dp" />
+    <LinearLayout android:id="@+id/negative_start"
+        android:layout_width="100dp" android:layout_height="100dp" android:paddingStart="-2dp" />
+    <LinearLayout android:id="@+id/negative_end"
+        android:layout_width="100dp" android:layout_height="100dp" android:paddingEnd="-2dp" />
+    <LinearLayout android:id="@+id/negative_relative_pair"
+        android:layout_width="100dp" android:layout_height="100dp" android:paddingStart="-2dp" android:paddingEnd="-0.5dp" />
+    <LinearLayout android:id="@+id/negative_uniform_and_left"
+        android:layout_width="100dp" android:layout_height="100dp" android:padding="-2dp" android:paddingLeft="7dp" />
+    <LinearLayout android:id="@+id/negative_uniform_and_horizontal"
+        android:layout_width="100dp" android:layout_height="100dp" android:padding="-2dp" android:paddingHorizontal="7dp" />
+    <LinearLayout android:id="@+id/negative_uniform_and_start"
+        android:layout_width="100dp" android:layout_height="100dp" android:padding="-2dp" android:paddingStart="7dp" />
+    <LinearLayout android:id="@+id/negative_uniform_and_negative_start"
+        android:layout_width="100dp" android:layout_height="100dp" android:padding="-2dp" android:paddingStart="-0.5dp" />
+    <LinearLayout android:id="@+id/negative_left_and_start"
+        android:layout_width="100dp" android:layout_height="100dp" android:paddingLeft="-2dp" android:paddingStart="7dp" />
+    <LinearLayout android:id="@+id/negative_horizontal_and_left"
+        android:layout_width="100dp" android:layout_height="100dp" android:paddingHorizontal="-2dp" android:paddingLeft="7dp" />
+    <LinearLayout android:id="@+id/negative_horizontal_and_start"
+        android:layout_width="100dp" android:layout_height="100dp" android:paddingHorizontal="-2dp" android:paddingStart="7dp" />
+    <LinearLayout android:id="@+id/negative_positive_uniform"
+        android:layout_width="100dp" android:layout_height="100dp" android:padding="7dp" android:paddingLeft="-2dp" android:paddingTop="-2dp" android:paddingStart="-0.5dp" />
+    <LinearLayout android:id="@+id/negative_positive_horizontal"
+        android:layout_width="100dp" android:layout_height="100dp" android:paddingHorizontal="7dp" android:paddingLeft="-2dp" android:paddingRight="-2dp" />
+    <LinearLayout android:id="@+id/negative_explicit_zero"
+        android:layout_width="100dp" android:layout_height="100dp" android:padding="0dp" android:paddingLeft="-2dp" android:paddingStart="-0.5dp" />
+    <LinearLayout android:id="@+id/negative_positive_only"
+        android:layout_width="100dp" android:layout_height="100dp" android:padding="7dp" />
+    <LinearLayout android:id="@+id/negative_empty"
+        android:layout_width="100dp" android:layout_height="100dp"  />
+    <LinearLayout android:id="@+id/negative_background_uniform_half"
+        android:layout_width="100dp" android:layout_height="100dp" android:background="@drawable/preview_padding_background" android:padding="-0.5dp" />
+    <LinearLayout android:id="@+id/negative_background_uniform_negative"
+        android:layout_width="100dp" android:layout_height="100dp" android:background="@drawable/preview_padding_background" android:padding="-2dp" />
+    <LinearLayout android:id="@+id/negative_background_left"
+        android:layout_width="100dp" android:layout_height="100dp" android:background="@drawable/preview_padding_background" android:paddingLeft="-2dp" />
+    <LinearLayout android:id="@+id/negative_background_right"
+        android:layout_width="100dp" android:layout_height="100dp" android:background="@drawable/preview_padding_background" android:paddingRight="-2dp" />
+    <LinearLayout android:id="@+id/negative_background_top"
+        android:layout_width="100dp" android:layout_height="100dp" android:background="@drawable/preview_padding_background" android:paddingTop="-2dp" />
+    <LinearLayout android:id="@+id/negative_background_bottom"
+        android:layout_width="100dp" android:layout_height="100dp" android:background="@drawable/preview_padding_background" android:paddingBottom="-2dp" />
+    <LinearLayout android:id="@+id/negative_background_four_sides"
+        android:layout_width="100dp" android:layout_height="100dp" android:background="@drawable/preview_padding_background" android:paddingLeft="-2dp" android:paddingTop="-2dp" android:paddingRight="-2dp" android:paddingBottom="-2dp" />
+    <LinearLayout android:id="@+id/negative_background_horizontal"
+        android:layout_width="100dp" android:layout_height="100dp" android:background="@drawable/preview_padding_background" android:paddingHorizontal="-2dp" />
+    <LinearLayout android:id="@+id/negative_background_vertical"
+        android:layout_width="100dp" android:layout_height="100dp" android:background="@drawable/preview_padding_background" android:paddingVertical="-2dp" />
+    <LinearLayout android:id="@+id/negative_background_start"
+        android:layout_width="100dp" android:layout_height="100dp" android:background="@drawable/preview_padding_background" android:paddingStart="-2dp" />
+    <LinearLayout android:id="@+id/negative_background_end"
+        android:layout_width="100dp" android:layout_height="100dp" android:background="@drawable/preview_padding_background" android:paddingEnd="-2dp" />
+    <LinearLayout android:id="@+id/negative_background_relative_pair"
+        android:layout_width="100dp" android:layout_height="100dp" android:background="@drawable/preview_padding_background" android:paddingStart="-2dp" android:paddingEnd="-0.5dp" />
+    <LinearLayout android:id="@+id/negative_background_uniform_and_left"
+        android:layout_width="100dp" android:layout_height="100dp" android:background="@drawable/preview_padding_background" android:padding="-2dp" android:paddingLeft="7dp" />
+    <LinearLayout android:id="@+id/negative_background_uniform_and_horizontal"
+        android:layout_width="100dp" android:layout_height="100dp" android:background="@drawable/preview_padding_background" android:padding="-2dp" android:paddingHorizontal="7dp" />
+    <LinearLayout android:id="@+id/negative_background_uniform_and_start"
+        android:layout_width="100dp" android:layout_height="100dp" android:background="@drawable/preview_padding_background" android:padding="-2dp" android:paddingStart="7dp" />
+    <LinearLayout android:id="@+id/negative_background_uniform_and_negative_start"
+        android:layout_width="100dp" android:layout_height="100dp" android:background="@drawable/preview_padding_background" android:padding="-2dp" android:paddingStart="-0.5dp" />
+    <LinearLayout android:id="@+id/negative_background_left_and_start"
+        android:layout_width="100dp" android:layout_height="100dp" android:background="@drawable/preview_padding_background" android:paddingLeft="-2dp" android:paddingStart="7dp" />
+    <LinearLayout android:id="@+id/negative_background_horizontal_and_left"
+        android:layout_width="100dp" android:layout_height="100dp" android:background="@drawable/preview_padding_background" android:paddingHorizontal="-2dp" android:paddingLeft="7dp" />
+    <LinearLayout android:id="@+id/negative_background_horizontal_and_start"
+        android:layout_width="100dp" android:layout_height="100dp" android:background="@drawable/preview_padding_background" android:paddingHorizontal="-2dp" android:paddingStart="7dp" />
+    <LinearLayout android:id="@+id/negative_background_positive_uniform"
+        android:layout_width="100dp" android:layout_height="100dp" android:background="@drawable/preview_padding_background" android:padding="7dp" android:paddingLeft="-2dp" android:paddingTop="-2dp" android:paddingStart="-0.5dp" />
+    <LinearLayout android:id="@+id/negative_background_positive_horizontal"
+        android:layout_width="100dp" android:layout_height="100dp" android:background="@drawable/preview_padding_background" android:paddingHorizontal="7dp" android:paddingLeft="-2dp" android:paddingRight="-2dp" />
+    <LinearLayout android:id="@+id/negative_background_explicit_zero"
+        android:layout_width="100dp" android:layout_height="100dp" android:background="@drawable/preview_padding_background" android:padding="0dp" android:paddingLeft="-2dp" android:paddingStart="-0.5dp" />
+    <LinearLayout android:id="@+id/negative_background_positive_only"
+        android:layout_width="100dp" android:layout_height="100dp" android:background="@drawable/preview_padding_background" android:padding="7dp" />
+    <LinearLayout android:id="@+id/negative_background_empty"
+        android:layout_width="100dp" android:layout_height="100dp" android:background="@drawable/preview_padding_background"  />
+    <LinearLayout android:id="@+id/negative_start_sentinel"
+        android:layout_width="100dp" android:layout_height="100dp" android:paddingStart="-6000000in" />
+    <LinearLayout android:id="@+id/negative_end_sentinel"
+        android:layout_width="100dp" android:layout_height="100dp" android:paddingEnd="-6000000in" />
+    <LinearLayout android:id="@+id/negative_background_start_sentinel"
+        android:layout_width="100dp" android:layout_height="100dp" android:background="@drawable/preview_padding_background" android:paddingStart="-6000000in" />
+    <LinearLayout android:id="@+id/negative_background_end_sentinel"
+        android:layout_width="100dp" android:layout_height="100dp" android:background="@drawable/preview_padding_background" android:paddingEnd="-6000000in" />
+</LinearLayout>

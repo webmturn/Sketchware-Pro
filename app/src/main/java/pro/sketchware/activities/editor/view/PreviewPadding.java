@@ -18,6 +18,7 @@ import pro.sketchware.core.layout.PaddingAttributes;
 
 /** Applies the generator's padding attributes after the preview background is installed. */
 public final class PreviewPadding {
+    private static final int UNSPECIFIED_PADDING = -1;
     private static final int COMPLEX_FRACTION_BITS = 23;
     private static final int COMPLEX_INTEGER_LIMIT = 1 << COMPLEX_FRACTION_BITS;
     private static final long COMPLEX_FRACTION_MASK = COMPLEX_INTEGER_LIMIT - 1L;
@@ -35,38 +36,62 @@ public final class PreviewPadding {
         String prefix = card ? "app:contentPadding" : "android:padding";
         Rect padding = new Rect();
         boolean backgroundPadding = !card && view.getBackground() != null && view.getBackground().getPadding(padding);
-        int backgroundLeft = padding.left;
-        int backgroundRight = padding.right;
         Integer uniform = dimension(view.getContext(), attributes.get(prefix));
-        if (card && uniform != null) padding.set(uniform, uniform, uniform, uniform);
-        padding.left = value(view, attributes, prefix + "Left", padding.left);
-        padding.top = value(view, attributes, prefix + "Top", padding.top);
-        padding.right = value(view, attributes, prefix + "Right", padding.right);
-        padding.bottom = value(view, attributes, prefix + "Bottom", padding.bottom);
+        Integer left = dimension(view.getContext(), attributes.get(prefix + "Left"));
+        Integer top = dimension(view.getContext(), attributes.get(prefix + "Top"));
+        Integer right = dimension(view.getContext(), attributes.get(prefix + "Right"));
+        Integer bottom = dimension(view.getContext(), attributes.get(prefix + "Bottom"));
         RELATIVE.remove(view);
         if (card) {
+            // CardView accepts negative content padding, including individual side overrides.
+            if (uniform != null) padding.set(uniform, uniform, uniform, uniform);
+            padding.set(value(left, padding.left), value(top, padding.top),
+                    value(right, padding.right), value(bottom, padding.bottom));
             ((ItemCardView) view).setContentPaddingPixels(padding.left, padding.top, padding.right, padding.bottom);
             return;
         }
         Integer horizontal = dimension(view.getContext(), attributes.get(prefix + "Horizontal"));
         Integer vertical = dimension(view.getContext(), attributes.get(prefix + "Vertical"));
-        if (horizontal != null && horizontal >= 0) padding.left = padding.right = horizontal;
-        if (vertical != null && vertical >= 0) padding.top = padding.bottom = vertical;
-        if (uniform != null && uniform >= 0) padding.set(uniform, uniform, uniform, uniform);
-        Integer start = dimension(view.getContext(), attributes.get(prefix + "Start"));
-        Integer end = dimension(view.getContext(), attributes.get(prefix + "End"));
+        // View reads the aggregate, then absolute sides, then horizontal padding in framework
+        // attribute order. A padding-bearing background subsequently replaces these initial sides.
+        int initialLeft = backgroundPadding ? padding.left : value(horizontal, value(left, value(uniform, 0)));
+        int initialRight = backgroundPadding ? padding.right : value(horizontal, value(right, value(uniform, 0)));
+        int leftPadding = value(left, UNSPECIFIED_PADDING);
+        int rightPadding = value(right, UNSPECIFIED_PADDING);
+        int topPadding = value(top, UNSPECIFIED_PADDING);
+        int bottomPadding = value(bottom, UNSPECIFIED_PADDING);
+        if (uniform != null && uniform >= 0) {
+            leftPadding = topPadding = rightPadding = bottomPadding = uniform;
+            initialLeft = initialRight = uniform;
+        } else {
+            if (horizontal != null && horizontal >= 0) {
+                leftPadding = rightPadding = horizontal;
+                initialLeft = initialRight = horizontal;
+            }
+            if (vertical != null && vertical >= 0) topPadding = bottomPadding = vertical;
+        }
+        if (topPadding >= 0) padding.top = topPadding;
+        if (bottomPadding >= 0) padding.bottom = bottomPadding;
+        Integer start = relativeValue(dimension(view.getContext(), attributes.get(prefix + "Start")));
+        Integer end = relativeValue(dimension(view.getContext(), attributes.get(prefix + "End")));
+        boolean leftDefined = uniform != null || horizontal != null || left != null;
+        boolean rightDefined = uniform != null || horizontal != null || right != null;
         boolean supportsRtl = (view.getContext().getApplicationInfo().flags & ApplicationInfo.FLAG_SUPPORTS_RTL) != 0;
         if (!supportsRtl) {
-            if (!defined(view, attributes, prefix, "Left", uniform, horizontal) && start != null) padding.left = start;
-            if (!defined(view, attributes, prefix, "Right", uniform, horizontal) && end != null) padding.right = end;
-            setPixels(view, padding.left, padding.top, padding.right, padding.bottom);
-        } else if (start != null || end != null) {
-            // Android installs background padding after parsing absolute sides. With relative
-            // padding, it restores only aggregate/horizontal attributes before resolving RTL.
-            if (backgroundPadding && (uniform == null || uniform < 0) && (horizontal == null || horizontal < 0)) {
-                padding.left = backgroundLeft;
-                padding.right = backgroundRight;
-            }
+            if (!leftDefined && start != null) leftPadding = start;
+            if (!rightDefined && end != null) rightPadding = end;
+            // RTL compatibility mode retains the initial side when its final value is negative.
+            if (leftPadding >= 0) initialLeft = leftPadding;
+            if (rightPadding >= 0) initialRight = rightPadding;
+        } else if (start == null && end == null) {
+            // Without relative attributes, View restores defined absolute sides even when negative.
+            // Negative aggregates leave the constructor's unspecified (-1px) side values here.
+            if (leftDefined) initialLeft = leftPadding;
+            if (rightDefined) initialRight = rightPadding;
+        }
+        padding.left = initialLeft;
+        padding.right = initialRight;
+        if (supportsRtl && (start != null || end != null)) {
             RelativePadding relative = new RelativePadding(padding, start, end);
             RELATIVE.put(view, relative);
             relative.apply(view, view.getLayoutDirection());
@@ -75,14 +100,13 @@ public final class PreviewPadding {
         }
     }
 
-    private static boolean defined(View view, Map<String, String> attributes, String prefix, String side,
-                                   Integer uniform, Integer horizontal) {
-        return uniform != null || horizontal != null || dimension(view.getContext(), attributes.get(prefix + side)) != null;
+    private static int value(Integer value, int fallback) {
+        return value == null ? fallback : value;
     }
 
-    private static int value(View view, Map<String, String> attributes, String name, int fallback) {
-        Integer value = dimension(view.getContext(), attributes.get(name));
-        return value == null || value < 0 ? fallback : value;
+    private static Integer relativeValue(Integer value) {
+        // View uses this pixel value as the sentinel for an unspecified start/end attribute.
+        return value != null && value == Integer.MIN_VALUE ? null : value;
     }
 
     private static Integer dimension(Context context, String text) {

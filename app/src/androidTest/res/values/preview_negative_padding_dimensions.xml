@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="negative_padding_dp">-2dp</dimen>
+    <dimen name="negative_padding_half_dp">-0.5dp</dimen>
+    <dimen name="negative_padding_half_px">-0.5px</dimen>
+    <dimen name="negative_padding_positive">7dp</dimen>
+</resources>
