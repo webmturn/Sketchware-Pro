@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Read through Resources as the independent oracle for whole-dp layout properties. -->
+    <dimen name="preview_layout_dp_0">0dp</dimen>
+    <dimen name="preview_layout_dp_1">1dp</dimen>
+    <dimen name="preview_layout_dp_3">3dp</dimen>
+    <dimen name="preview_layout_dp_4">4dp</dimen>
+    <dimen name="preview_layout_dp_5">5dp</dimen>
+    <dimen name="preview_layout_dp_6">6dp</dimen>
+    <dimen name="preview_layout_dp_7">7dp</dimen>
+    <dimen name="preview_layout_dp_9">9dp</dimen>
+    <dimen name="preview_layout_dp_11">11dp</dimen>
+    <dimen name="preview_layout_dp_13">13dp</dimen>
+    <dimen name="preview_layout_dp_15">15dp</dimen>
+    <dimen name="preview_layout_dp_16">16dp</dimen>
+    <dimen name="preview_layout_dp_17">17dp</dimen>
+    <dimen name="preview_layout_dp_999">999dp</dimen>
+</resources>

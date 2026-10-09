@@ -375,10 +375,10 @@ public class ViewPane extends RelativeLayout {
             LayoutParams layoutParams = new LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.leftMargin = (int) ViewUtil.dpToPx(getContext(), (float) viewBean.layout.marginLeft);
-            layoutParams.topMargin = (int) ViewUtil.dpToPx(getContext(), (float) viewBean.layout.marginTop);
-            layoutParams.rightMargin = (int) ViewUtil.dpToPx(getContext(), (float) viewBean.layout.marginRight);
-            layoutParams.bottomMargin = (int) ViewUtil.dpToPx(getContext(), (float) viewBean.layout.marginBottom);
+            layoutParams.leftMargin = layoutDpToPixels(viewBean.layout.marginLeft);
+            layoutParams.topMargin = layoutDpToPixels(viewBean.layout.marginTop);
+            layoutParams.rightMargin = layoutDpToPixels(viewBean.layout.marginRight);
+            layoutParams.bottomMargin = layoutDpToPixels(viewBean.layout.marginBottom);
             int layoutGravity = viewBean.layout.layoutGravity;
             if ((layoutGravity & Gravity.LEFT) == Gravity.LEFT) {
                 layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
@@ -1120,22 +1120,29 @@ public class ViewPane extends RelativeLayout {
         }
     }
 
+    private int layoutDpToPixels(int dp) {
+        // LayoutBean stores whole dp. Match Android's positive dimension pixel-size rounding.
+        float pixels = ViewUtil.dpToPx(getContext(), (float) dp);
+        if (dp <= 0) return (int) pixels;
+        return Math.max(1, (int) (pixels + 0.5f));
+    }
+
     private void updateLayout(View view, ViewBean viewBean) {
         if (crashlytics != null) crashlytics.log("ViewPane: Updating layout");
         LayoutBean layoutBean = viewBean.layout;
         int width = layoutBean.width;
         int height = layoutBean.height;
         if (width > 0) {
-            width = (int) ViewUtil.dpToPx(getContext(), (float) viewBean.layout.width);
+            width = layoutDpToPixels(viewBean.layout.width);
         }
         if (height > 0) {
-            height = (int) ViewUtil.dpToPx(getContext(), (float) viewBean.layout.height);
+            height = layoutDpToPixels(viewBean.layout.height);
         }
 
-        int leftMargin = (int) ViewUtil.dpToPx(getContext(), (float) viewBean.layout.marginLeft);
-        int topMargin = (int) ViewUtil.dpToPx(getContext(), (float) viewBean.layout.marginTop);
-        int rightMargin = (int) ViewUtil.dpToPx(getContext(), (float) viewBean.layout.marginRight);
-        int bottomMargin = (int) ViewUtil.dpToPx(getContext(), (float) viewBean.layout.marginBottom);
+        int leftMargin = layoutDpToPixels(viewBean.layout.marginLeft);
+        int topMargin = layoutDpToPixels(viewBean.layout.marginTop);
+        int rightMargin = layoutDpToPixels(viewBean.layout.marginRight);
+        int bottomMargin = layoutDpToPixels(viewBean.layout.marginBottom);
 
         if (viewBean.layout.backgroundResColor == null) {
             int bg = viewBean.layout.backgroundColor;
