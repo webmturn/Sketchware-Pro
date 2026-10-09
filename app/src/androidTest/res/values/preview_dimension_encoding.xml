@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- AAPT2 compiles these literals; the tests read their Android pixel sizes. -->
+    <dimen name="preview_encoding_dp_1_66667">1.66667dp</dimen>
+    <dimen name="preview_encoding_dp_3_666667">3.666667dp</dimen>
+    <dimen name="preview_encoding_dp_2_33334">2.33334dp</dimen>
+    <dimen name="preview_encoding_dp_1_33334">1.33334dp</dimen>
+    <dimen name="preview_encoding_dp_1_71429">1.71429dp</dimen>
+    <dimen name="preview_encoding_dp_1_16667">1.16667dp</dimen>
+    <dimen name="preview_encoding_dp_1_83334">1.83334dp</dimen>
+    <dimen name="preview_encoding_sp_1_66667">1.66667sp</dimen>
+    <dimen name="preview_encoding_px_tiny">0.00000001px</dimen>
+
+    <dimen name="preview_encoding_px_zero">0px</dimen>
+    <dimen name="preview_encoding_dp_4">4dp</dimen>
+    <dimen name="preview_encoding_dp_6">6dp</dimen>
+    <dimen name="preview_encoding_dp_0_2">0.2dp</dimen>
+    <dimen name="preview_encoding_dp_0_25">0.25dp</dimen>
+    <dimen name="preview_encoding_px_0_5">0.5px</dimen>
+
+    <dimen name="preview_encoding_dip_1_66667">1.66667dip</dimen>
+    <dimen name="preview_encoding_px_1_66667">1.66667px</dimen>
+    <dimen name="preview_encoding_pt_1_16667">1.16667pt</dimen>
+    <dimen name="preview_encoding_in_fraction">0.010416687in</dimen>
+    <dimen name="preview_encoding_mm_fraction">0.26458332mm</dimen>
+    <dimen name="preview_encoding_dp_positive_sign">+1.66667dp</dimen>
+    <dimen name="preview_encoding_dp_without_integer">.25dp</dimen>
+    <dimen name="preview_encoding_px_exponent">1e-8px</dimen>
+    <dimen name="preview_encoding_dp_integer_float">1.0dp</dimen>
+
+    <dimen name="preview_encoding_px_below_1">0.99999px</dimen>
+    <dimen name="preview_encoding_px_above_1">1.00001px</dimen>
+    <dimen name="preview_encoding_px_255">255px</dimen>
+    <dimen name="preview_encoding_px_below_256">255.99998px</dimen>
+    <dimen name="preview_encoding_px_256">256px</dimen>
+    <dimen name="preview_encoding_px_above_256">256.0001px</dimen>
+    <dimen name="preview_encoding_px_65535">65535px</dimen>
+    <dimen name="preview_encoding_px_below_65536">65535.99px</dimen>
+    <dimen name="preview_encoding_px_65536">65536px</dimen>
+    <dimen name="preview_encoding_px_above_65536">65536.25px</dimen>
+    <dimen name="preview_encoding_px_max_integer">8388607px</dimen>
+
+    <!-- Raw complex encoding only: negative padding application is reviewed separately. -->
+    <dimen name="preview_encoding_px_negative_zero">-0px</dimen>
+    <dimen name="preview_encoding_dp_positive_zero">+0dp</dimen>
+    <dimen name="preview_encoding_dp_negative_zero">-0dp</dimen>
+    <dimen name="preview_encoding_px_negative_tiny">-0.00000001px</dimen>
+    <dimen name="preview_encoding_dp_negative_half">-0.5dp</dimen>
+    <dimen name="preview_encoding_dp_negative_fraction">-1.66667dp</dimen>
+    <dimen name="preview_encoding_px_negative_below_1">-0.99999px</dimen>
+    <dimen name="preview_encoding_px_negative_below_256">-255.99998px</dimen>
+    <dimen name="preview_encoding_px_negative_above_256">-256.0001px</dimen>
+    <dimen name="preview_encoding_px_negative_below_65536">-65535.99px</dimen>
+    <dimen name="preview_encoding_px_negative_above_65536">-65536.25px</dimen>
+    <dimen name="preview_encoding_px_min_integer">-8388608px</dimen>
+    <dimen name="preview_encoding_px_scientific_integer">1e6px</dimen>
+</resources>

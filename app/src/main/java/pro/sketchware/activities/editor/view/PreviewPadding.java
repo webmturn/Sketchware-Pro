@@ -18,6 +18,9 @@ import pro.sketchware.core.layout.PaddingAttributes;
 
 /** Applies the generator's padding attributes after the preview background is installed. */
 public final class PreviewPadding {
+    private static final int COMPLEX_FRACTION_BITS = 23;
+    private static final int COMPLEX_INTEGER_LIMIT = 1 << COMPLEX_FRACTION_BITS;
+    private static final long COMPLEX_FRACTION_MASK = COMPLEX_INTEGER_LIMIT - 1L;
     private static final Pattern DIMENSION = Pattern.compile(
             "([+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?)(dp|dip|px|sp|pt|in|mm)");
     // Only relative padding needs to be resolved again when a parent changes direction.
@@ -101,13 +104,41 @@ public final class PreviewPadding {
                 case "mm" -> TypedValue.COMPLEX_UNIT_MM;
                 default -> TypedValue.COMPLEX_UNIT_PX;
             };
-            float pixels = TypedValue.applyDimension(unit, number, context.getResources().getDisplayMetrics());
-            if (!Float.isFinite(pixels)) return null;
-            int rounded = (int) (pixels >= 0 ? pixels + 0.5f : pixels - 0.5f);
-            return rounded != 0 || number == 0 ? rounded : number > 0 ? 1 : -1;
+            Integer data = dimensionData(number, unit);
+            return data == null ? null : TypedValue.complexToDimensionPixelSize(
+                    data, context.getResources().getDisplayMetrics());
         } catch (NumberFormatException | Resources.NotFoundException exception) {
             return null;
         }
+    }
+
+    private static Integer dimensionData(float number, int unit) {
+        // Reject values outside Android's signed complex range instead of reproducing overflow.
+        if (!Float.isFinite(number) || number < -COMPLEX_INTEGER_LIMIT || number >= COMPLEX_INTEGER_LIMIT) return null;
+        // Match AAPT2's float intermediate and truncation before selecting a complex radix.
+        long bits = (long) (Math.abs(number) * COMPLEX_INTEGER_LIMIT + 0.5f);
+        int radix;
+        int shift;
+        if ((bits & COMPLEX_FRACTION_MASK) == 0) {
+            radix = TypedValue.COMPLEX_RADIX_23p0;
+            shift = COMPLEX_FRACTION_BITS;
+        } else if ((bits >>> COMPLEX_FRACTION_BITS) == 0) {
+            radix = TypedValue.COMPLEX_RADIX_0p23;
+            shift = 0;
+        } else if ((bits >>> (COMPLEX_FRACTION_BITS + Byte.SIZE)) == 0) {
+            radix = TypedValue.COMPLEX_RADIX_8p15;
+            shift = Byte.SIZE;
+        } else if ((bits >>> (COMPLEX_FRACTION_BITS + Short.SIZE)) == 0) {
+            radix = TypedValue.COMPLEX_RADIX_16p7;
+            shift = Short.SIZE;
+        } else {
+            radix = TypedValue.COMPLEX_RADIX_23p0;
+            shift = COMPLEX_FRACTION_BITS;
+        }
+        int mantissa = (int) ((bits >>> shift) & TypedValue.COMPLEX_MANTISSA_MASK);
+        if (number < 0) mantissa = -mantissa & TypedValue.COMPLEX_MANTISSA_MASK;
+        return (mantissa << TypedValue.COMPLEX_MANTISSA_SHIFT)
+                | (radix << TypedValue.COMPLEX_RADIX_SHIFT) | unit;
     }
 
     private static void setPixels(View view, int left, int top, int right, int bottom) {
