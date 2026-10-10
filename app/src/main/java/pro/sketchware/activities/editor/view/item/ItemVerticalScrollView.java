@@ -241,7 +241,7 @@ public class ItemVerticalScrollView extends FrameLayout implements ItemView, Scr
 
                             scrollDelta = Math.max(-getScrollY(), scrollDelta);
                         } else {
-                            int maxScroll = firstChild.getBottom() - getScrollY() - getHeight() + getPaddingRight();
+                            int maxScroll = firstChild.getBottom() - getScrollY() - getHeight() + getPaddingBottom();
                             if (maxScroll > 0) {
                                 scrollDelta = Math.min(maxScroll, scrollDelta);
                             } else {
