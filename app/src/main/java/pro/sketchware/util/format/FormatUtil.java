@@ -63,7 +63,7 @@ public class FormatUtil {
     int length = hexString.length();
     byte[] bytes = new byte[(length + 1) / 2];
     int charIdx = 0;
-    byte byteIdx = 1;
+    int byteIdx = 1;
     if (length % 2 == 1) {
       bytes[0] = (byte)hexCharToInt(hexString.charAt(0));
       charIdx = 1;
