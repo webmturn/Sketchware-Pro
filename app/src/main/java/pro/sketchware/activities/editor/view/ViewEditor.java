@@ -296,6 +296,9 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
         } else if (actionMasked != MotionEvent.ACTION_UP) {
             if (actionMasked != MotionEvent.ACTION_MOVE) {
                 if (actionMasked == MotionEvent.ACTION_CANCEL || actionMasked == MotionEvent.ACTION_SCROLL) {
+                    if (isDragged && currentTouchedView instanceof ItemView) {
+                        currentTouchedView.setVisibility(View.VISIBLE);
+                    }
                     paletteWidget.setScrollEnabled(true);
                     paletteFavorite.setScrollEnabled(true);
                     if (draggingListener != null) {
@@ -303,6 +306,7 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
                     }
                     showDeleteView(false, false);
                     dummyView.setDummyVisibility(View.GONE);
+                    currentTouchedView = null;
                     viewPane.clearViews();
                     handler.removeCallbacks(longPressRunnable);
                     isDragged = false;
