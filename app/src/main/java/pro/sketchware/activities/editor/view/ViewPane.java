@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -126,6 +128,7 @@ public class ViewPane extends RelativeLayout {
     private int viewIdCounter = 99;
     private ArrayList<ViewInfo> viewInfos = new ArrayList<>();
     private ViewInfo viewInfo;
+    private String draggedViewId;
     private TextView highlightedTextView;
     private ResourceManager resourcesManager;
     private String sc_id;
@@ -150,6 +153,7 @@ public class ViewPane extends RelativeLayout {
     public void clearViews() {
         resetView(true);
         viewInfos = new ArrayList<>();
+        draggedViewId = null;
         if (rootLayout != null) {
             ((ScrollContainer) rootLayout).setChildScrollEnabled(true);
         }
@@ -260,6 +264,7 @@ public class ViewPane extends RelativeLayout {
 
     public void addRootLayout(ViewBean viewBean) {
         viewInfo = null;
+        draggedViewId = viewBean == null ? null : viewBean.id;
         if (rootLayout != null) {
             if (rootLayout instanceof ItemLinearLayout linearLayout) {
                 addDroppableForLinearLayout(viewBean, linearLayout);
@@ -791,13 +796,17 @@ public class ViewPane extends RelativeLayout {
         } else if (this.viewInfo != viewInfo) {
             resetView(true);
             ViewGroup viewGroup = (ViewGroup) viewInfo.view();
-            viewGroup.addView(highlightedTextView, viewInfo.index());
-            if (viewGroup instanceof LinearLayout) {
-                highlightedTextView.setLayoutParams(new LinearLayout.LayoutParams(width, height));
-            } else if (viewGroup instanceof FrameLayout) {
-                highlightedTextView.setLayoutParams(new FrameLayout.LayoutParams(width, height));
+            if (viewGroup instanceof ItemLinearLayout linearLayout) {
+                int childIndex = getLinearInsertionChildIndex(linearLayout, viewInfo.index(), draggedViewId);
+                // Use the actual child position, without the legacy addView overload's GONE adjustment.
+                linearLayout.addView(highlightedTextView, childIndex, new LinearLayout.LayoutParams(width, height));
             } else {
-                highlightedTextView.setLayoutParams(new LayoutParams(width, height));
+                viewGroup.addView(highlightedTextView, viewInfo.index());
+                if (viewGroup instanceof FrameLayout) {
+                    highlightedTextView.setLayoutParams(new FrameLayout.LayoutParams(width, height));
+                } else {
+                    highlightedTextView.setLayoutParams(new LayoutParams(width, height));
+                }
             }
             highlightedTextView.setVisibility(View.VISIBLE);
             this.viewInfo = viewInfo;
@@ -816,155 +825,85 @@ public class ViewPane extends RelativeLayout {
         return result;
     }
 
-    private void addDroppableForLinearLayout(ViewBean view, ItemLinearLayout linearLayout) {
-        float scaleX = getScaleX();
-        float scaleY = getScaleY();
-        int[] locationOnScreen = new int[2];
-        linearLayout.getLocationOnScreen(locationOnScreen);
-        int layoutGravity = linearLayout.getLayoutGravity();
-        int horizontalGravity = layoutGravity & Gravity.FILL_HORIZONTAL;
-        int verticalGravity = layoutGravity & Gravity.FILL_VERTICAL;
-        Rect parentRect = new Rect(locationOnScreen[0], locationOnScreen[1], (int) (linearLayout.getWidth() * getScaleX()) + locationOnScreen[0], (int) (linearLayout.getHeight() * getScaleY()) + locationOnScreen[1]);
-        addViewInfo(parentRect, linearLayout, -1, calculateViewDepth(linearLayout));
-
-        int parentWidth = (int) (linearLayout.getMeasuredWidth() * scaleX);
-        int parentHeight = (int) (linearLayout.getMeasuredHeight() * scaleY);
-        int paddingLeft = parentRect.left + (int) (linearLayout.getPaddingLeft() * scaleX);
-        int paddingTop = parentRect.top + (int) (linearLayout.getPaddingTop() * scaleY);
-
+    private void addDroppableForLinearLayout(ViewBean draggedView, ItemLinearLayout linearLayout) {
+        Rect parentRect = getBoundsOnScreen(linearLayout);
+        int depth = calculateViewDepth(linearLayout);
+        addViewInfo(parentRect, linearLayout, -1, depth);
+        boolean vertical = linearLayout.getOrientation() == LinearLayout.VERTICAL;
+        boolean rtl = !vertical && linearLayout.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
+        float scale = vertical ? parentRect.height() / (float) Math.max(1, linearLayout.getHeight())
+                : parentRect.width() / (float) Math.max(1, linearLayout.getWidth());
+        int previousEnd = vertical ? parentRect.top : rtl ? parentRect.right : parentRect.left;
         int childIndex = 0;
         for (int i = 0; i < linearLayout.getChildCount(); i++) {
             View child = linearLayout.getChildAt(i);
-            if (child != null && child.getTag() != null && (view == null || view.id == null || !child.getTag().equals(view.id)) && child.getVisibility() == View.VISIBLE) {
-                int[] childLocationOnScreen = new int[2];
-                linearLayout.getLocationOnScreen(childLocationOnScreen);
-                Rect childRect = new Rect();
-                var layoutParams = (LinearLayout.LayoutParams) child.getLayoutParams();
-                int leftMargin = layoutParams.leftMargin;
-                int rightMargin = layoutParams.rightMargin;
-                int topMargin = layoutParams.topMargin;
-                int bottomMargin = layoutParams.bottomMargin;
-                int childWidth = (int) (child.getMeasuredWidth() * linearLayout.getScaleX());
-                int childHeight = (int) (child.getMeasuredHeight() * linearLayout.getScaleY());
-                if (linearLayout.getOrientation() == LinearLayout.VERTICAL) {
-                    if (verticalGravity == Gravity.CENTER_VERTICAL) {
-                        int childTopY;
-                        if (i == 0) {
-                            childTopY = childLocationOnScreen[1] - (int) (topMargin * scaleY);
-                            int parentLeft = parentRect.left;
-                            addViewInfo(
-                                    new Rect(
-                                            parentLeft,
-                                            paddingTop,
-                                            parentWidth + parentLeft,
-                                            childTopY),
-                                    linearLayout,
-                                    0,
-                                    calculateViewDepth(linearLayout) + 1);
-                        } else {
-                            childTopY = paddingTop;
-                        }
-                        paddingTop =
-                                (int) ((topMargin + childHeight + bottomMargin) * scaleY)
-                                        + childTopY;
-                        int parentLeft = parentRect.left;
-                        childRect.left = paddingLeft;
-                        childRect.top = childTopY;
-                        childRect.right = parentWidth + parentLeft;
-                        childRect.bottom = paddingTop;
-                        paddingLeft = parentLeft;
-                    } else if (verticalGravity == Gravity.BOTTOM) {
-                        int childTopY = (int) (topMargin * scaleY);
-                        paddingLeft = parentRect.left;
-                        childRect.left = paddingLeft;
-                        childRect.top = paddingTop;
-                        childRect.right = parentWidth + paddingLeft;
-                        childRect.bottom = paddingTop - childTopY;
-                        paddingTop = (int) ((paddingTop + childHeight + bottomMargin) * scaleY);
-                    } else {
-                        int childBottomY =
-                                (int) ((childHeight + topMargin + bottomMargin) * scaleY)
-                                        + paddingTop;
-                        paddingLeft = parentRect.left;
-                        childRect.left = paddingLeft;
-                        childRect.top = paddingTop;
-                        childRect.right = parentWidth + paddingLeft;
-                        childRect.bottom = childBottomY;
-                        paddingTop = childBottomY;
-                    }
-                } else {
-                    if (horizontalGravity == Gravity.CENTER_HORIZONTAL) {
-                        if (i == 0) {
-                            int childStartX = childLocationOnScreen[0] - (int) (leftMargin * scaleX);
-                            int parentTop = parentRect.top;
-                            addViewInfo(
-                                    new Rect(
-                                            paddingLeft,
-                                            parentTop,
-                                            childStartX,
-                                            parentHeight + parentTop),
-                                    linearLayout,
-                                    0,
-                                    calculateViewDepth(linearLayout) + 1);
-                            paddingLeft = childStartX;
-                        }
-                        paddingTop = parentRect.top;
-                        childRect.left = paddingLeft;
-                        childRect.top = paddingTop;
-                        childRect.right =
-                                (int) ((childWidth + leftMargin + rightMargin) * scaleX)
-                                        + paddingLeft;
-                        childRect.bottom = parentHeight + paddingTop;
-                        paddingLeft = childRect.right;
-                    } else if (horizontalGravity == Gravity.RIGHT) {
-                        paddingTop = parentRect.top;
-                        childRect.left = paddingLeft;
-                        childRect.top = paddingTop;
-                        childRect.right = paddingLeft - (int) (leftMargin * scaleX);
-                        childRect.bottom = parentHeight + paddingTop;
-                        paddingLeft = (int) ((paddingLeft + childWidth + rightMargin) * scaleX);
-                    } else {
-                        paddingTop = parentRect.top;
-                        childRect.left = paddingLeft;
-                        childRect.top = paddingTop;
-                        childRect.right =
-                                (int) ((childWidth + leftMargin + rightMargin) * scaleX)
-                                        + paddingLeft;
-                        childRect.bottom = parentHeight + paddingTop;
-                        paddingLeft = childRect.right;
-                    }
-                }
-                addViewInfo(
-                        childRect, linearLayout, childIndex, calculateViewDepth(linearLayout) + 1);
-
-                if (child instanceof ItemLinearLayout) {
-                    addDroppableForLinearLayout(view, (ItemLinearLayout) child);
-                } else if (child instanceof ItemHorizontalScrollView) {
-                    addDroppableForScrollableContainer(view, (ViewGroup) child);
-                } else if (child instanceof ItemVerticalScrollView) {
-                    addDroppableForScrollableContainer(view, (ViewGroup) child);
-                } else if (child instanceof ItemCardView) {
-                    addDroppableForScrollableContainer(view, (ViewGroup) child);
-                } else if (child instanceof ItemRelativeLayout relativeLayout) {
-                    addDroppableForViewGroup(view, relativeLayout);
-                }
-                childIndex++;
+            if (!(child instanceof ItemView) || (draggedView != null && draggedView.id != null
+                    && draggedView.id.equals(child.getTag()))) {
+                continue;
             }
+            if (child.getVisibility() == View.VISIBLE) {
+                Rect childRect = getBoundsOnScreen(child);
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) child.getLayoutParams();
+                int end = vertical ? childRect.bottom + Math.round(params.bottomMargin * scale)
+                        : rtl ? childRect.left - Math.round(params.leftMargin * scale)
+                        : childRect.right + Math.round(params.rightMargin * scale);
+                Rect insertionRect = vertical
+                        ? new Rect(parentRect.left, Math.min(previousEnd, childRect.top), parentRect.right, end)
+                        : rtl ? new Rect(end, parentRect.top, Math.max(previousEnd, childRect.right), parentRect.bottom)
+                        : new Rect(Math.min(previousEnd, childRect.left), parentRect.top, end, parentRect.bottom);
+                addViewInfo(insertionRect, linearLayout, childIndex, depth + 1);
+                previousEnd = end;
 
-
+                if (child instanceof ItemLinearLayout layout) {
+                    addDroppableForLinearLayout(draggedView, layout);
+                } else if (child instanceof ItemHorizontalScrollView || child instanceof ItemVerticalScrollView
+                        || child instanceof ItemCardView) {
+                    addDroppableForScrollableContainer(draggedView, (ViewGroup) child);
+                } else if (child instanceof ItemRelativeLayout layout) {
+                    addDroppableForViewGroup(draggedView, layout);
+                }
+            }
+            // GONE and INVISIBLE items still occupy a logical position in the saved child order.
+            childIndex++;
         }
     }
 
+    private Rect getBoundsOnScreen(View view) {
+        Matrix transform = new Matrix();
+        View current = view;
+        while (true) {
+            transform.postConcat(current.getMatrix());
+            if (!(current.getParent() instanceof View parent)) break;
+            current = parent;
+        }
+        RectF bounds = new RectF(0, 0, view.getWidth(), view.getHeight());
+        transform.mapRect(bounds);
+        float[] origin = {0, 0};
+        transform.mapPoints(origin);
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+        // getLocationOnScreen supplies ancestor offsets and scrolling; the matrix supplies size and scale.
+        bounds.offset(location[0] - origin[0], location[1] - origin[1]);
+        Rect result = new Rect();
+        bounds.roundOut(result);
+        return result;
+    }
+
+    private int getLinearInsertionChildIndex(ItemLinearLayout layout, int index, String excludedId) {
+        if (index < 0) return -1;
+        int itemIndex = 0;
+        for (int i = 0; i < layout.getChildCount(); i++) {
+            View child = layout.getChildAt(i);
+            if (child instanceof ItemView && (excludedId == null || !excludedId.equals(child.getTag()))) {
+                if (itemIndex == index) return i;
+                itemIndex++;
+            }
+        }
+        return -1;
+    }
+
     private void addDroppableForViewGroup(ViewBean viewBean, ViewGroup viewGroup) {
-        int[] viewLocationOnScreen = new int[2];
-        viewGroup.getLocationOnScreen(viewLocationOnScreen);
-        int xCoordinate = viewLocationOnScreen[0];
-        int yCoordinate = viewLocationOnScreen[1];
-        addViewInfo(new Rect(xCoordinate, yCoordinate,
-                        (int) (viewGroup.getWidth() * getScaleX()) + xCoordinate,
-                        (int) (viewGroup.getHeight() * getScaleY()) + yCoordinate),
-                viewGroup, -1, calculateViewDepth(viewGroup)
-        );
+        addViewInfo(getBoundsOnScreen(viewGroup), viewGroup, -1, calculateViewDepth(viewGroup));
         for (int i = 0; i < viewGroup.getChildCount(); i++) {
             View childAt = viewGroup.getChildAt(i);
             if (childAt != null && childAt.getTag() != null && (viewBean == null || viewBean.id == null || !childAt.getTag().equals(viewBean.id)) && childAt.getVisibility() == View.VISIBLE) {
@@ -1004,15 +943,7 @@ public class ViewPane extends RelativeLayout {
             }
         }
         if (index < 1) {
-            int[] viewLocationOnScreen = new int[2];
-            viewGroup.getLocationOnScreen(viewLocationOnScreen);
-            int xCoordinate = viewLocationOnScreen[0];
-            int yCoordinate = viewLocationOnScreen[1];
-            addViewInfo(new Rect(xCoordinate, yCoordinate,
-                            (int) (viewGroup.getWidth() * getScaleX()) + xCoordinate,
-                            (int) (viewGroup.getHeight() * getScaleY()) + yCoordinate),
-                    viewGroup, -1, calculateViewDepth(viewGroup)
-            );
+            addViewInfo(getBoundsOnScreen(viewGroup), viewGroup, -1, calculateViewDepth(viewGroup));
         }
     }
 
@@ -1024,7 +955,12 @@ public class ViewPane extends RelativeLayout {
         ViewBean bean = ((ItemView) view).getBean();
         if (rootLayout != null) {
             ViewGroup viewGroup = rootLayout.findViewWithTag(bean.parent);
-            viewGroup.addView(view, bean.index);
+            if (viewGroup instanceof ItemLinearLayout linearLayout) {
+                int childIndex = getLinearInsertionChildIndex(linearLayout, bean.index, null);
+                linearLayout.addView(view, childIndex, view.getLayoutParams());
+            } else {
+                viewGroup.addView(view, bean.index);
+            }
             if (bean.parentType == ViewBean.VIEW_TYPE_LAYOUT_RELATIVE) {
                 updateRelativeParentViews(view, new InjectAttributeHandler(bean));
             }
