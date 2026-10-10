@@ -140,11 +140,9 @@ public class ItemHorizontalScrollView extends FrameLayout implements ItemView, S
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent touchEvent) {
-        int scrollOffset;
         if (!isScrollEnabled || getChildCount() <= 0) {
             return false;
         }
-        View view = getChildAt(0);
         int eventAction = touchEvent.getAction();
         float currentTouchX = touchEvent.getX();
         if (eventAction == MotionEvent.ACTION_DOWN) {
@@ -157,15 +155,8 @@ public class ItemHorizontalScrollView extends FrameLayout implements ItemView, S
             }
             int scrollDelta = (int) (lastTouchX - currentTouchX);
             lastTouchX = currentTouchX;
-            if (scrollDelta <= 0) {
-                if (getScrollX() <= 0) {
-                    scrollDelta = 0;
-                }
-                scrollOffset = Math.max(-getScrollX(), scrollDelta);
-            } else {
-                int paddingRight = ((view.getRight() - getScrollX()) - getWidth()) + getPaddingRight();
-                scrollOffset = paddingRight > 0 ? Math.min(paddingRight, scrollDelta) : 0;
-            }
+            int scrollOffset = Math.max(getMinScrollX() - getScrollX(),
+                    Math.min(getMaxScrollX() - getScrollX(), scrollDelta));
             if (scrollOffset != 0) {
                 scrollBy(scrollOffset, 0);
             }
@@ -205,14 +196,22 @@ public class ItemHorizontalScrollView extends FrameLayout implements ItemView, S
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        int maxScroll = 0;
-        if (getChildCount() > 0) {
-            View child = getChildAt(0);
-            if (child.getVisibility() != View.GONE) {
-                maxScroll = Math.max(0, child.getRight() + getPaddingRight() - getWidth());
-            }
+        scrollTo(Math.max(getMinScrollX(), Math.min(getScrollX(), getMaxScrollX())), getScrollY());
+    }
+
+    private int getMinScrollX() {
+        if (getChildCount() == 0 || getChildAt(0).getVisibility() == View.GONE) {
+            return 0;
         }
-        scrollTo(Math.max(0, Math.min(getScrollX(), maxScroll)), getScrollY());
+        // FrameLayout can place wide RTL or right/center aligned children left of the origin.
+        return Math.min(0, getChildAt(0).getLeft() - getPaddingLeft());
+    }
+
+    private int getMaxScrollX() {
+        if (getChildCount() == 0 || getChildAt(0).getVisibility() == View.GONE) {
+            return 0;
+        }
+        return Math.max(0, getChildAt(0).getRight() + getPaddingRight() - getWidth());
     }
 
     @Override
@@ -318,7 +317,7 @@ public class ItemHorizontalScrollView extends FrameLayout implements ItemView, S
                     ? targetRect.left - currentScrollX
                     : targetRect.right - rightScrollBound;
 
-            return Math.min(scrollAmount, Math.max(0, firstChild.getRight() - rightScrollBound));
+            return Math.min(scrollAmount, getMaxScrollX() - getScrollX());
         }
 
         if (targetRect.left < currentScrollX && targetRect.right < rightScrollBound) {
@@ -326,7 +325,7 @@ public class ItemHorizontalScrollView extends FrameLayout implements ItemView, S
                     ? -(rightScrollBound - targetRect.right)
                     : -(currentScrollX - targetRect.left);
 
-            return Math.max(scrollAmount, -currentScrollX);
+            return Math.max(scrollAmount, getMinScrollX() - getScrollX());
         }
 
         return 0;
