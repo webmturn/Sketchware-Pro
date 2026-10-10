@@ -179,8 +179,12 @@ public class FormatUtil {
       while (position < input.length() && input.charAt(position) != ' ') {
         char c = input.charAt(position);
         if (c == '\\') {
-          token = token + (c + input.charAt(position + 1));
-          position += 2;
+          token = token + c;
+          position++;
+          if (position < input.length()) {
+            token = token + input.charAt(position);
+            position++;
+          }
           continue;
         } 
         if (c == '%') {
