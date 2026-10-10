@@ -203,6 +203,19 @@ public class ItemHorizontalScrollView extends FrameLayout implements ItemView, S
     }
 
     @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        int maxScroll = 0;
+        if (getChildCount() > 0) {
+            View child = getChildAt(0);
+            if (child.getVisibility() != View.GONE) {
+                maxScroll = Math.max(0, child.getRight() + getPaddingRight() - getWidth());
+            }
+        }
+        scrollTo(Math.max(0, Math.min(getScrollX(), maxScroll)), getScrollY());
+    }
+
+    @Override
     public void onSizeChanged(int newWidth, int newHeight, int oldWidth, int oldHeight) {
         super.onSizeChanged(newWidth, newHeight, oldWidth, oldHeight);
         View focusedView = findFocus();
