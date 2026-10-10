@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Build;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -267,16 +268,23 @@ public class ItemVerticalScrollView extends FrameLayout implements ItemView, Scr
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        if (MeasureSpec.getMode(heightMeasureSpec) != MeasureSpec.UNSPECIFIED) {
-            if (getChildCount() > 0) {
-                View child = getChildAt(0);
-                ViewGroup.LayoutParams childParams = child.getLayoutParams();
-                heightMeasureSpec = getPaddingLeft();
-                int measuringSize = getMeasuredHeight() - (getPaddingTop() + getPaddingBottom());
-                if (child.getMeasuredHeight() < measuringSize) {
-                    child.measure(FrameLayout.getChildMeasureSpec(widthMeasureSpec, heightMeasureSpec + getPaddingRight(), childParams.width), MeasureSpec.makeMeasureSpec(measuringSize, MeasureSpec.EXACTLY));
-                }
-            }
+        if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.UNSPECIFIED || getChildCount() == 0) {
+            return;
+        }
+        View child = getChildAt(0);
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) child.getLayoutParams();
+        int widthPadding = getPaddingLeft() + getPaddingRight();
+        int heightPadding = getPaddingTop() + getPaddingBottom();
+        if (getContext().getApplicationInfo().targetSdkVersion >= Build.VERSION_CODES.M) {
+            widthPadding += layoutParams.leftMargin + layoutParams.rightMargin;
+            heightPadding += layoutParams.topMargin + layoutParams.bottomMargin;
+        }
+        int desiredHeight = getMeasuredHeight() - heightPadding;
+        if (child.getMeasuredHeight() < desiredHeight) {
+            child.measure(
+                    FrameLayout.getChildMeasureSpec(widthMeasureSpec, widthPadding, layoutParams.width),
+                    MeasureSpec.makeMeasureSpec(desiredHeight, MeasureSpec.EXACTLY)
+            );
         }
     }
 
