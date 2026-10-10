@@ -29,6 +29,7 @@ import android.widget.TextView;
 import androidx.annotation.StringRes;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.OneShotPreDrawListener;
 
 import pro.sketchware.util.Helper;
 import pro.sketchware.beans.EventBean;
@@ -412,7 +413,7 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
                                 }
                                 ProjectDataManager.getProjectDataManager(scId).addView(xmlName, next);
                             }
-                            setSelectedItem(addViews(widgetViews, true), true);
+                            selectDroppedItem(addViews(widgetViews, true));
                         }
                     } else if (currentTouchedView instanceof IconBase icon) {
                         ViewBean bean = icon.getBean();
@@ -423,11 +424,11 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
                             ProjectDataManager.getProjectDataManager(scId).addEvent(projectFileBean.getJavaName(),
                                     EventBean.EVENT_TYPE_VIEW, bean.type, bean.id, "onClick");
                         }
-                        setSelectedItem(addView(bean, true), true);
+                        selectDroppedItem(addView(bean, true));
                     } else if (currentTouchedView instanceof ItemView sy) {
                         ViewBean bean = sy.getBean();
                         viewPane.updateViewBeanProperties(bean, (int) motionEvent.getRawX(), (int) motionEvent.getRawY());
-                        setSelectedItem(moveView(bean, true), true);
+                        selectDroppedItem(moveView(bean, true));
                     }
                 }
             } else {
@@ -1048,6 +1049,18 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
         selectedItem.setSelection(true);
         if (widgetSelectedListener != null) {
             widgetSelectedListener.onViewSelectedWithProperty(showProperties, selectedItem.getBean().id);
+        }
+    }
+
+    private void selectDroppedItem(ItemView itemView) {
+        setSelectedItem(itemView, true);
+        if (itemView != null && viewPane.isAttachedToWindow()) {
+            // Wait until removal of the drag marker and insertion/move have their final geometry.
+            OneShotPreDrawListener.add(viewPane, () -> {
+                if (!isDragged && selectedItem == itemView) {
+                    PreviewDropVisibility.reveal(viewPane, (View) itemView);
+                }
+            });
         }
     }
 
