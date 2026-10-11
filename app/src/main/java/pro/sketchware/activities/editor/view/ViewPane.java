@@ -509,7 +509,7 @@ public class ViewPane extends RelativeLayout {
                 ((ItemLinearLayout) view).setLayoutGravity(viewBean.layout.gravity);
             }
         }
-        if (viewBean.parentType == ViewBean.VIEW_TYPE_LAYOUT_RELATIVE) {
+        if (getActualParentType(view, viewBean.parentType) == ViewBean.VIEW_TYPE_LAYOUT_RELATIVE) {
             updateRelative(view, injectHandler);
         }
         if (classInfo.matchesType("TextView")) {
@@ -961,7 +961,7 @@ public class ViewPane extends RelativeLayout {
             } else {
                 viewGroup.addView(view, bean.index);
             }
-            if (bean.parentType == ViewBean.VIEW_TYPE_LAYOUT_RELATIVE) {
+            if (viewGroup instanceof RelativeLayout) {
                 updateRelativeParentViews(view, new InjectAttributeHandler(bean));
             }
             if (viewGroup instanceof ScrollContainer scrollContainer) {
@@ -971,11 +971,11 @@ public class ViewPane extends RelativeLayout {
     }
 
     private int getActualParentType(View view, int defaultValue) {
-        var parent = (ViewGroup) view.getParent();
+        var parent = view.getParent();
         if (parent != null) {
-            if (parent instanceof ItemLinearLayout) {
+            if (parent instanceof LinearLayout) {
                 return ViewBean.VIEW_TYPE_LAYOUT_LINEAR;
-            } else if (parent instanceof ItemRelativeLayout) {
+            } else if (parent instanceof RelativeLayout) {
                 return ViewBean.VIEW_TYPE_LAYOUT_RELATIVE;
             } else if (parent instanceof ItemCardView) {
                 return ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW;
@@ -1102,7 +1102,8 @@ public class ViewPane extends RelativeLayout {
         } else {
             view.setBackgroundColor(PropertiesUtil.parseColor(colorResourceResolver.getColorValue(context, viewBean.layout.backgroundResColor, 3, material3LibraryManager.canUseNightVariantColors())));
         }
-        int effectiveParentType = viewBean.parentType;
+        // Attached children must use their real parent's parameters, even if stored metadata is stale.
+        int effectiveParentType = getActualParentType(view, viewBean.parentType);
         switch (effectiveParentType) {
             case ViewBeans.VIEW_TYPE_LAYOUT_COLLAPSINGTOOLBARLAYOUT,
                  ViewBeans.VIEW_TYPE_LAYOUT_TEXTINPUTLAYOUT,
