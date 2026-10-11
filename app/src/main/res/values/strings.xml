@@ -1186,6 +1186,10 @@
     <!-- ========== Block管理 (Block Management) ========== -->
     <string name="block_move_to_bin">Move to recycle bin</string>
     <string name="block_type_regular">regular</string>
+    <string name="block_code_template_invalid_format">Code template warning: %1$s at position %2$d is invalid (%3$s). For a literal percent sign, write %%%%.</string>
+    <string name="block_code_template_string_conversion">Code template warning: %1$s cannot format a block argument (Java code string). Insert arguments with %%s; write %%%% for a literal percent sign.</string>
+    <string name="block_code_template_missing_previous">Code template warning: %1$s has no previous argument to reuse.</string>
+    <string name="block_code_template_missing_arguments">Code template warning: %1$d arguments are required, but only %2$d are available (including 2 substacks).</string>
     <string name="blocks_add_title">Add a new block</string>
     <string name="blocks_button_create_palette">Create new palette</string>
     <string name="blocks_config_title">Block configuration</string>

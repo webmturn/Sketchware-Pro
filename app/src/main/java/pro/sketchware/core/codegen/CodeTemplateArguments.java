@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 /** Analyzes argument selection without formatting or allocating the template's output. */
 final class CodeTemplateArguments {
-    private static final Pattern FORMAT_SPECIFIER = Pattern.compile(
+    static final Pattern FORMAT_SPECIFIER = Pattern.compile(
             "%(\\d+\\$)?([-#+ 0,(<]*)(\\d+)?(?:\\.(\\d+))?([tT])?([a-zA-Z%])");
     private static final int ORDINARY_INDEX = 0;
     private static final int PREVIOUS_INDEX = -1;

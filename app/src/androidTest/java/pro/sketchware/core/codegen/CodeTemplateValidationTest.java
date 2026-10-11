@@ -103,7 +103,7 @@ public class CodeTemplateValidationTest {
         sample("%2$s %999999999999999999999999$s", 2, false, 0);
         sample("%2147483648s", 1, false, 0);
         sample("%.2147483648s", 1, false, 0);
-        for (String template : List.of("%z", "%", "%--s", "%#s", "%d", "%tY")) sample(template, -1, false, 0);
+        for (String template : List.of("%z", "%", "%--s", "%#s", "%d", "%tY")) sample(template, -1, false, 0, true);
     }
 
     @Test public void matchesFormatterArgumentSelectionForAllThreeTokenCombinations() throws Exception {
@@ -126,6 +126,10 @@ public class CodeTemplateValidationTest {
     }
 
     private void sample(String template, int required, boolean missingPrevious, int fields) throws Exception {
+        sample(template, required, missingPrevious, fields, false);
+    }
+
+    private void sample(String template, int required, boolean missingPrevious, int fields, boolean invalidFormat) throws Exception {
         ExtraBlockInfo info = new ExtraBlockInfo(); info.setName("F31" + UUID.randomUUID().toString().replace("-", "")); info.setCode(template);
         StringBuilder spec = new StringBuilder("call");
         BlockBean bean = new BlockBean(); bean.id = "1"; bean.opCode = info.getName(); bean.type = " "; bean.typeName = ""; bean.nextBlock = -1;
@@ -146,7 +150,7 @@ public class CodeTemplateValidationTest {
         row.put("formatted", formatted); row.put("generated", generated);
         status("f31_fixed_row", new Gson().toJson(row));
         if (required >= 0) assertEquals(template, required, actualCount);
-        assertEquals(template, missingPrevious || required > args.size(), warning);
+        assertEquals(template, invalidFormat || missingPrevious || required > args.size(), warning);
         if (error == null) assertEquals(template, formatted, generated);
         else assertTrue(generated, generated.startsWith("/* Failed to resolve Custom Block's code:") && generated.contains(error.split(":", 2)[0]));
     }

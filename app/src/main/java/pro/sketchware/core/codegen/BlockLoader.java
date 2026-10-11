@@ -247,27 +247,20 @@ public class BlockLoader {
     }
 
     /**
-     * Validates that a block's code template argument references don't exceed
-     * the available parameters (spec params + 2 for subStack1/subStack2).
-     * Logs a warning if there's a mismatch.
+     * Checks format syntax, String conversions, and available template arguments.
+     * Warnings do not prevent loading or change code generation.
      *
      * @param info   the block to validate
      * @param source description of where the block was loaded from
      */
     private static void validateBlock(ExtraBlockInfo info, String source) {
         int specParams = countSpecParams(info.getSpec());
-        CodeTemplateArguments.Analysis template = CodeTemplateArguments.analyze(info.getCode());
         // getCodeExtraBlock always adds subStack1 + subStack2 to params
         int availableParams = specParams + 2;
-        if (template.missingPreviousSpecifier != null) {
-            LogUtil.w("BlockLoader", String.format(
-                    "Block '%s' (%s) uses '%s' before selecting an argument to reuse. String.format will fail at runtime.",
-                    info.getName(), source, template.missingPreviousSpecifier));
-        } else if (template.requiredCount > availableParams) {
-            LogUtil.w("BlockLoader",
-                    String.format("Block '%s' (%s) requires %d code arguments but only %d available params " +
-                                    "(spec=%d + 2 substacks). String.format will fail at runtime.",
-                            info.getName(), source, template.requiredCount, availableParams, specParams));
+        CodeTemplateValidator.Problem problem = CodeTemplateValidator.findProblem(info.getCode(), availableParams);
+        if (problem != null) {
+            LogUtil.w("BlockLoader", String.format("Block '%s' (%s): %s String.format will fail at runtime.",
+                    info.getName(), source, problem.describe()));
         }
     }
 }

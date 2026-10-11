@@ -36,6 +36,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import pro.sketchware.core.block.BlockSpecParser;
 import pro.sketchware.core.block.BlockTypeUtils;
 import pro.sketchware.core.block.view.BlockView;
+import pro.sketchware.core.codegen.CodeTemplateValidator;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.ColorTextViewListener;
 import pro.sketchware.util.LogUtil;
@@ -135,6 +136,14 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 updateBlockSpec(selectedBlockType, Helper.getText(binding.colour));
+                updateCodeTemplateWarning();
+            }
+        });
+
+        binding.code.addTextChangedListener(new BaseTextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                updateCodeTemplateWarning();
             }
         });
 
@@ -199,10 +208,28 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
         inputProperties();
         addParameters();
         receiveIntents();
+        updateCodeTemplateWarning();
         new SimpleHighlighter(binding.code);
 
         UI.addWindowInsetToPadding(binding.content, WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.ime() | WindowInsetsCompat.Type.displayCutout(), true, false, true, true);
         UI.addSystemWindowInsetToPadding(binding.appBarLayout, true, true, true, true);
+    }
+
+    private void updateCodeTemplateWarning() {
+        int available = BlockSpecParser.parseParameters(Helper.getText(binding.spec)).size() + 2;
+        CodeTemplateValidator.Problem problem = CodeTemplateValidator.findProblem(Helper.getText(binding.code), available);
+        String warning = null;
+        if (problem != null) {
+            warning = switch (problem.kind) {
+                case INVALID_FORMAT -> getString(R.string.block_code_template_invalid_format,
+                        problem.specifier, problem.position, problem.errorType);
+                case STRING_CONVERSION -> getString(R.string.block_code_template_string_conversion, problem.specifier);
+                case MISSING_PREVIOUS_ARGUMENT -> getString(R.string.block_code_template_missing_previous, problem.specifier);
+                case NOT_ENOUGH_ARGUMENTS -> getString(R.string.block_code_template_missing_arguments,
+                        problem.requiredArguments, problem.availableArguments);
+            };
+        }
+        binding.codeLayout.setHelperText(warning);
     }
 
     private View addBlockMenu(String menu, String name) {

@@ -476,6 +476,10 @@
     <string name="block_manager_search_result_format">找到 %d 个调色板</string>
     <string name="block_move_to_bin">移到回收站</string>
     <string name="block_type_regular">常规</string>
+    <string name="block_code_template_invalid_format">代码模板警告：位置 %2$d 的 %1$s 格式无效（%3$s）。字面百分号请写 %%%%。</string>
+    <string name="block_code_template_string_conversion">代码模板警告：%1$s 无法格式化积木块的代码字符串参数。插入参数请用 %%s；字面百分号请写 %%%%。</string>
+    <string name="block_code_template_missing_previous">代码模板警告：%1$s 没有可复用的前一个参数。</string>
+    <string name="block_code_template_missing_arguments">代码模板警告：需要 %1$d 个参数，当前只有 %2$d 个（含 2 个子堆栈）。</string>
     <string name="blocks_add_title">添加新积木块</string>
     <string name="blocks_button_create_palette">创建新调色板</string>
     <string name="blocks_config_title">积木块配置</string>
