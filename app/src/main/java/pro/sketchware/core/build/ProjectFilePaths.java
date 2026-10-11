@@ -1437,7 +1437,7 @@ public class ProjectFilePaths {
 
         appendFileInfo(key, new File(dataPath, "project_config"));
 
-        appendFileInfo(key, ExtraBlockFile.EXTRA_BLOCKS_DATA_FILE);
+        appendFileInfo(key, ExtraBlockFile.getExtraBlocksDataFile());
 
         appendFileInfo(key, new File(dataPath, "custom_blocks"));
 

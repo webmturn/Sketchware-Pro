@@ -1,6 +1,5 @@
 package pro.sketchware.activities.design;
 
-import pro.sketchware.core.settings.ApplicationSettings;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -21,16 +20,21 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.block.view.BlockView;
-import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.block.ExtraBlockInfo;
 import pro.sketchware.core.codegen.BlockLoader;
+import pro.sketchware.core.codegen.ExtraBlockFile;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.LogUtil;
 
@@ -113,8 +117,9 @@ public class CustomBlocksDialog {
                     return;
                 }
 
-                importAll(context, customBlocksManager, selectedBeans);
-                dialog.dismiss();
+                if (importAll(context, customBlocksManager, selectedBeans)) {
+                    dialog.dismiss();
+                }
             });
         }, error -> {
             dialogBinding.subtitle.setText(Helper.getResString(R.string.common_error_an_error_occurred));
@@ -122,27 +127,43 @@ public class CustomBlocksDialog {
         });
     }
 
-    private void importAll(Context context, CustomBlocksManager customBlocksManager, ArrayList<BlockBean> list) {
+    private boolean importAll(Context context, CustomBlocksManager customBlocksManager, ArrayList<BlockBean> list) {
         ArrayList<HashMap<String, Object>> blocksList = new ArrayList<>();
-        String paletteDir = getConfigPath(ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH);
-        String blocksDir = getConfigPath(ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH);
+        String paletteDir = ExtraBlockFile.getExtraBlocksPaletteFile().getAbsolutePath();
+        String blocksDir = ExtraBlockFile.getExtraBlocksDataFile().getAbsolutePath();
 
-        ArrayList<HashMap<String, Object>> allBlocksList = loadJsonList(blocksDir);
-        ArrayList<HashMap<String, Object>> paletteList = loadJsonList(paletteDir);
-
-        if (paletteList.isEmpty()) {
-            showCreatePaletteDialog(context, paletteList, paletteDir, customBlocksManager, list, blocksList, allBlocksList, blocksDir);
-            return;
+        ArrayList<HashMap<String, Object>> allBlocksList;
+        ArrayList<HashMap<String, Object>> paletteList;
+        try {
+            allBlocksList = loadJsonList(blocksDir);
+            paletteList = loadJsonList(paletteDir);
+        } catch (IOException | JsonParseException e) {
+            LogUtil.w("CustomBlocksDialog", "Failed to read import destination", e);
+            String message = Helper.getResString(R.string.blocks_error_import, e.getMessage());
+            if (context instanceof Activity activity) {
+                SketchwareUtil.showAnErrorOccurredDialog(activity, message);
+            } else {
+                SketchwareUtil.toastError(message);
+            }
+            return false;
         }
 
         ArrayList<String> paletteNames = new ArrayList<>();
-        for (HashMap<String, Object> map : paletteList) {
-            if (map.get("name") instanceof String) {
-                paletteNames.add((String) map.get("name"));
+        ArrayList<Integer> paletteIndices = new ArrayList<>();
+        for (int i = 0; i < paletteList.size(); i++) {
+            HashMap<String, Object> map = paletteList.get(i);
+            if (map != null && map.get("name") instanceof String name) {
+                paletteNames.add(name);
+                paletteIndices.add(i + 9);
             }
         }
 
-        AtomicInteger selectedPalette = new AtomicInteger(paletteList.size() - 1);
+        if (paletteNames.isEmpty()) {
+            showCreatePaletteDialog(context, paletteList, paletteDir, customBlocksManager, list, blocksList, allBlocksList, blocksDir);
+            return true;
+        }
+
+        AtomicInteger selectedPalette = new AtomicInteger(paletteNames.size() - 1);
 
         new MaterialAlertDialogBuilder(context)
                 .setTitle(R.string.blocks_title_import_to)
@@ -152,35 +173,30 @@ public class CustomBlocksDialog {
                     dialog.dismiss();
                 })
                 .setPositiveButton(R.string.common_word_import, (dialog, which) -> {
-                    addBlocksToList(customBlocksManager, list, blocksList, selectedPalette.get() + 9);
+                    addBlocksToList(customBlocksManager, list, blocksList, paletteIndices.get(selectedPalette.get()));
                     allBlocksList.addAll(blocksList);
                     FileUtil.writeFile(blocksDir, new Gson().toJson(allBlocksList));
                     BlockLoader.refresh();
                     SketchwareUtil.toast(Helper.getResString(R.string.blocks_toast_blocks_imported));
                 })
                 .show();
+        return true;
     }
 
-    private String getConfigPath(String settingKey) {
-        return SketchwarePaths.resolveExternalStorageRelativePath(
-                ApplicationSettings.getStringSettingValueOrSetAndGet(
-                        settingKey, (String) ApplicationSettings.getDefaultValue(settingKey)));
-    }
-
-    private ArrayList<HashMap<String, Object>> loadJsonList(String path) {
-        ArrayList<HashMap<String, Object>> result = new ArrayList<>();
-        if (FileUtil.isExistFile(path)) {
-
-            try {
-                String content = FileUtil.readFile(path);
-                if (!content.isEmpty()) {
-                    result = new Gson().fromJson(content, Helper.TYPE_MAP_LIST);
-                }
-            } catch (JsonParseException | NullPointerException e) {
-                LogUtil.w("CustomBlocksDialog", "Failed to parse JSON from file: " + path, e);
-            }
+    private ArrayList<HashMap<String, Object>> loadJsonList(String path) throws IOException {
+        String content;
+        try {
+            content = new String(Files.readAllBytes(new File(path).toPath()), StandardCharsets.UTF_8);
+        } catch (NoSuchFileException e) {
+            return new ArrayList<>();
         }
-        return result;
+        if (content.trim().isEmpty()) return new ArrayList<>();
+        try {
+            ArrayList<HashMap<String, Object>> parsed = new Gson().fromJson(content, Helper.TYPE_MAP_LIST);
+            return parsed != null ? parsed : new ArrayList<>();
+        } catch (JsonParseException e) {
+            throw new JsonParseException(path + ": " + e.getMessage(), e);
+        }
     }
 
     private void showCreatePaletteDialog(Context context,
@@ -215,7 +231,10 @@ public class CustomBlocksDialog {
         });
 
         dialog.setView(binding.getRoot());
-        dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (dialogInterface, which) -> {
+        dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), null);
+        dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
+        var paletteDialog = dialog.show();
+        paletteDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
             String name = Helper.getText(binding.nameEditText);
             String color = Helper.getText(binding.colorEditText);
 
@@ -223,7 +242,7 @@ public class CustomBlocksDialog {
 
             HashMap<String, Object> newPalette = new HashMap<>();
             newPalette.put("name", name);
-            newPalette.put("color", color);
+            newPalette.put("color", "#" + color);
             paletteList.add(newPalette);
             FileUtil.writeFile(paletteDir, new Gson().toJson(paletteList));
 
@@ -232,10 +251,8 @@ public class CustomBlocksDialog {
             FileUtil.writeFile(blocksDir, new Gson().toJson(allBlocksList));
             BlockLoader.refresh();
             SketchwareUtil.toast(Helper.getResString(R.string.blocks_toast_blocks_imported));
-            dialogInterface.dismiss();
+            paletteDialog.dismiss();
         });
-        dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
-        dialog.show();
     }
 
     private boolean isMissingBlock(@NonNull BlockBean block) {
@@ -244,6 +261,8 @@ public class CustomBlocksDialog {
     }
 
     private boolean validateInput(DialogPaletteBinding binding, String name, String color) {
+        binding.name.setError(null);
+        binding.color.setError(null);
         if (name.isEmpty()) {
             binding.name.setError(Helper.getResString(R.string.error_name_cannot_be_empty));
             binding.name.requestFocus();
@@ -255,7 +274,7 @@ public class CustomBlocksDialog {
             return false;
         }
         try {
-            Color.parseColor(color);
+            Color.parseColor("#" + color);
         } catch (IllegalArgumentException e) {
             binding.color.setError(Helper.getResString(R.string.error_invalid_hex_color));
             binding.color.requestFocus();

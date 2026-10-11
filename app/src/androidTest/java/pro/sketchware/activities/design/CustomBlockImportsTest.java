@@ -68,6 +68,7 @@ public class CustomBlockImportsTest {
             String name = "BackupRt" + scope.token;
             HashMap<String, Object> global = definition(name, "GLOBAL", GLOBAL_IMPORT);
             HashMap<String, Object> local = definition(name, "PROJECT", PROJECT_IMPORT);
+            if (mode.equals("duplicate-project")) global.put("spec2", "first definition branch");
             boolean hasGlobal = !List.of("project-only", "duplicate-project", "legacy-project", "null-project").contains(mode);
             boolean hasProject = !List.of("global-only", "duplicate-global", "repeated-imports").contains(mode);
             if (mode.equals("empty-global")) global.put("imports", "");
@@ -104,6 +105,14 @@ public class CustomBlockImportsTest {
             String before = generate(source.id(), chain);
             assertTrue(before, before.contains(hasGlobal ? "GLOBAL" : "PROJECT"));
 
+            if (mode.equals("duplicate-project")) {
+                // Test the original project before backup has removed duplicate definitions.
+                ArrayList<HashMap<String, Object>> copiedSource = copyToPalette(source.id(), chain);
+                assertEquals(selected.get("code"), copiedSource.get(0).get("code"));
+                assertEquals(expectedImports, copiedSource.get(0).get("imports"));
+                assertEquals(selected.get("spec2"), copiedSource.get(0).get("spec2"));
+            }
+
             BackupFactory backup = new BackupFactory(source.id());
             backup.setBackupCustomBlocks(true);
             backup.backup(new ContextThemeWrapper(CONTEXT, R.style.Theme_SketchwarePro), name);
@@ -134,12 +143,7 @@ public class CustomBlockImportsTest {
             assertEquals(expectedImports, saved.getImports());
             assertEquals(mode, expectedLines, importsForActivity(restored.id()));
 
-            ArrayList<HashMap<String, Object>> copied = new ArrayList<>();
-            Method copy = CustomBlocksDialog.class.getDeclaredMethod("addBlocksToList",
-                    CustomBlocksManager.class, ArrayList.class, ArrayList.class, int.class);
-            copy.setAccessible(true);
-            copy.invoke(new CustomBlocksDialog(), new CustomBlocksManager(
-                    new ContextThemeWrapper(CONTEXT, R.style.Theme_SketchwarePro), restored.id()), reread, copied, 9);
+            ArrayList<HashMap<String, Object>> copied = copyToPalette(restored.id(), reread);
             assertEquals(1, copied.size());
             assertEquals(saved.getCode(), copied.get(0).get("code"));
             assertEquals(expectedImports.isEmpty() ? null : expectedImports, copied.get(0).get("imports"));
@@ -148,6 +152,16 @@ public class CustomBlockImportsTest {
             assertEquals(expectedImports, BlockLoader.getBlockInfo(name).getImports());
             assertEquals(mode, expectedLines, importsForActivity(restored.id()));
         }
+    }
+
+    private static ArrayList<HashMap<String, Object>> copyToPalette(String id, ArrayList<BlockBean> chain) throws Exception {
+        ArrayList<HashMap<String, Object>> copied = new ArrayList<>();
+        Method copy = CustomBlocksDialog.class.getDeclaredMethod("addBlocksToList",
+                CustomBlocksManager.class, ArrayList.class, ArrayList.class, int.class);
+        copy.setAccessible(true);
+        copy.invoke(new CustomBlocksDialog(), new CustomBlocksManager(
+                new ContextThemeWrapper(CONTEXT, R.style.Theme_SketchwarePro), id), chain, copied, 9);
+        return copied;
     }
 
     private static HashMap<String, Object> definition(String name, String label, String imports) {

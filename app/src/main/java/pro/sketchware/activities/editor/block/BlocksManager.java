@@ -51,6 +51,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import pro.sketchware.core.codegen.BlockLoader;
+import pro.sketchware.core.codegen.ExtraBlockFile;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.core.project.SketchwarePaths;
@@ -122,8 +123,10 @@ public class BlocksManager extends BaseAppCompatActivity {
         itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                if (hasActiveSearchQuery()) return false;
                 oldPos = viewHolder.getBindingAdapterPosition();
                 newPos = target.getBindingAdapterPosition();
+                if (oldPos == RecyclerView.NO_POSITION || newPos == RecyclerView.NO_POSITION) return false;
 
                 Collections.swap(pallet_listmap, oldPos, newPos);
 
@@ -255,7 +258,7 @@ public class BlocksManager extends BaseAppCompatActivity {
             String lowerQuery = query.toLowerCase(Locale.ROOT);
             for (int i = 0; i < pallet_listmap.size(); i++) {
                 HashMap<String, Object> palette = pallet_listmap.get(i);
-                String name = String.valueOf(palette.get("name")).toLowerCase(Locale.ROOT);
+                String name = getPaletteName(palette, i).toLowerCase(Locale.ROOT);
                 if (name.contains(lowerQuery)) {
                     filtered_pallet_list.add(palette);
                     filtered_palette_indices.add(i);
@@ -288,6 +291,7 @@ public class BlocksManager extends BaseAppCompatActivity {
     }
 
     private double getPaletteValueDouble(Map<String, Object> block) {
+        if (block == null) return Double.NaN;
         Object paletteObj = block.get("palette");
         if (paletteObj == null) return Double.NaN;
         try {
@@ -333,6 +337,7 @@ public class BlocksManager extends BaseAppCompatActivity {
 
             readSettings();
             refreshList();
+            BlockLoader.refresh();
             view.dismiss();
         });
 
@@ -344,6 +349,7 @@ public class BlocksManager extends BaseAppCompatActivity {
 
             readSettings();
             refreshList();
+            BlockLoader.refresh();
             view.dismiss();
         });
 
@@ -373,14 +379,8 @@ public class BlocksManager extends BaseAppCompatActivity {
     }
 
     private void readSettings() {
-        pallet_dir = SketchwarePaths.resolveExternalStorageRelativePath(
-                ApplicationSettings.getStringSettingValueOrSetAndGet(
-                        ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH,
-                        (String) ApplicationSettings.getDefaultValue(ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH)));
-        blocks_dir = SketchwarePaths.resolveExternalStorageRelativePath(
-                ApplicationSettings.getStringSettingValueOrSetAndGet(
-                        ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH,
-                        (String) ApplicationSettings.getDefaultValue(ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH)));
+        pallet_dir = ExtraBlockFile.getExtraBlocksPaletteFile().getAbsolutePath();
+        blocks_dir = ExtraBlockFile.getExtraBlocksDataFile().getAbsolutePath();
 
         if (FileUtil.isExistFile(blocks_dir) && isValidJson(FileUtil.readFile(blocks_dir))) {
             try {
@@ -444,7 +444,8 @@ public class BlocksManager extends BaseAppCompatActivity {
         if (all_blocks_list == null) return 0;
 
         for (int i = 0; i < all_blocks_list.size(); i++) {
-            if (String.valueOf(all_blocks_list.get(i).get("palette")).equals(String.valueOf((long) _p))) {
+            Map<String, Object> block = all_blocks_list.get(i);
+            if (block != null && String.valueOf(block.get("palette")).equals(String.valueOf((long) _p))) {
                 n++;
             }
         }
@@ -479,6 +480,7 @@ public class BlocksManager extends BaseAppCompatActivity {
     }
 
     private double getPaletteValue(Map<String, Object> block) {
+        if (block == null) return Double.NaN;
         Object paletteObj = block.get("palette");
         if (paletteObj == null) return Double.NaN;
         try {
@@ -509,6 +511,7 @@ public class BlocksManager extends BaseAppCompatActivity {
     private void swapRelatedBlocks(double f, double s) {
         final String TEMP_PALETTE = "TEMP_SWAP";
         for (Map<String, Object> block : all_blocks_list) {
+            if (block == null) continue;
             Object paletteObj = block.get("palette");
 
             if (paletteObj == null) continue;
@@ -526,7 +529,7 @@ public class BlocksManager extends BaseAppCompatActivity {
             }
         }
         for (Map<String, Object> block : all_blocks_list) {
-            if (TEMP_PALETTE.equals(block.get("palette"))) {
+            if (block != null && TEMP_PALETTE.equals(block.get("palette"))) {
                 block.put("palette", String.valueOf((long) s));
             }
         }
@@ -632,8 +635,13 @@ public class BlocksManager extends BaseAppCompatActivity {
                         insertBlocksAt(insertAtPosition + 9);
                     }
                 } else {
-                    pallet_listmap.get(oldPosition).put("name", nameInput);
-                    pallet_listmap.get(oldPosition).put("color", colorInput);
+                    HashMap<String, Object> palette = pallet_listmap.get(oldPosition);
+                    if (palette == null) {
+                        palette = new HashMap<>();
+                        pallet_listmap.set(oldPosition, palette);
+                    }
+                    palette.put("name", nameInput);
+                    palette.put("color", colorInput);
                     FileUtil.writeFile(pallet_dir, getGson().toJson(pallet_listmap));
                     readSettings();
                     refreshList();
@@ -682,6 +690,15 @@ public class BlocksManager extends BaseAppCompatActivity {
     private static final int PALETTE_MENU_DELETE = 2;
     private static final int PALETTE_MENU_INSERT = 3;
 
+    private boolean hasPaletteName(Map<String, Object> palette) {
+        return palette != null && palette.get("name") instanceof String;
+    }
+
+    private String getPaletteName(Map<String, Object> palette, int sourceIndex) {
+        return hasPaletteName(palette) ? (String) palette.get("name")
+                : Helper.getResString(R.string.blocks_error_invalid_name, sourceIndex + 1);
+    }
+
     public class PaletteAdapter extends RecyclerView.Adapter<PaletteAdapter.ViewHolder> {
 
         public PaletteAdapter() {
@@ -700,11 +717,11 @@ public class BlocksManager extends BaseAppCompatActivity {
             ArrayList<HashMap<String, Object>> displayedPalettes = getDisplayedPalettes();
             HashMap<String, Object> palette = displayedPalettes.get(position);
             int sourceIndex = getDisplayedSourceIndex(position);
-            String paletteColorValue = String.valueOf(palette.get("color"));
+            String paletteColorValue = palette != null ? String.valueOf(palette.get("color")) : "#8a55d7";
             int backgroundColor = PropertiesUtil.parseColor(paletteColorValue);
 
             holder.itemView.setVisibility(View.VISIBLE);
-            holder.itemBinding.title.setText(String.valueOf(palette.get("name")));
+            holder.itemBinding.title.setText(getPaletteName(palette, sourceIndex));
             holder.itemBinding.sub.setText(Helper.getResString(R.string.blocks_count_format, (long) getN(sourceIndex + 9)));
             holder.itemBinding.color.setBackgroundColor(backgroundColor);
             holder.itemBinding.dragHandler.setVisibility(hasActiveSearchQuery() ? View.GONE : View.VISIBLE);
@@ -722,16 +739,17 @@ public class BlocksManager extends BaseAppCompatActivity {
                         return false;
                     }
                     int selectedSourceIndex = getDisplayedSourceIndex(pos);
+                    HashMap<String, Object> selectedPalette = pallet_listmap.get(selectedSourceIndex);
                     switch (item.getItemId()) {
                         case PALETTE_MENU_EDIT:
                             showPaletteDialog(true, selectedSourceIndex,
-                                    String.valueOf(pallet_listmap.get(selectedSourceIndex).get("name")),
-                                    String.valueOf(pallet_listmap.get(selectedSourceIndex).get("color")), null);
+                                    hasPaletteName(selectedPalette) ? (String) selectedPalette.get("name") : "",
+                                    selectedPalette != null ? String.valueOf(selectedPalette.get("color")) : "#8a55d7", null);
                             break;
 
                         case PALETTE_MENU_DELETE:
                             new MaterialAlertDialogBuilder(BlocksManager.this)
-                                    .setTitle(String.valueOf(pallet_listmap.get(selectedSourceIndex).get("name")))
+                                    .setTitle(getPaletteName(selectedPalette, selectedSourceIndex))
                                     .setMessage(R.string.blocks_remove_palette_msg)
                                     .setPositiveButton(R.string.blocks_remove_permanently, (dialog, which) -> {
                                         pallet_listmap.remove(selectedSourceIndex);
@@ -778,8 +796,13 @@ public class BlocksManager extends BaseAppCompatActivity {
                 if (pos == RecyclerView.NO_POSITION) {
                     return;
                 }
+                int selectedSourceIndex = getDisplayedSourceIndex(pos);
+                if (!hasPaletteName(pallet_listmap.get(selectedSourceIndex))) {
+                    SketchwareUtil.toastError(getPaletteName(pallet_listmap.get(selectedSourceIndex), selectedSourceIndex));
+                    return;
+                }
                 Intent intent = new Intent(getApplicationContext(), BlocksManagerDetailsActivity.class);
-                intent.putExtra("position", String.valueOf((long) (getDisplayedSourceIndex(pos) + 9)));
+                intent.putExtra("position", String.valueOf((long) (selectedSourceIndex + 9)));
                 intent.putExtra("dirB", blocks_dir);
                 intent.putExtra("dirP", pallet_dir);
                 startActivity(intent);

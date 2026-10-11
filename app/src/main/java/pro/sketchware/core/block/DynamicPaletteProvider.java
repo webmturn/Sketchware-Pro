@@ -14,13 +14,13 @@ import pro.sketchware.util.SketchwareUtil;
 public class DynamicPaletteProvider {
 
     private final ArrayList<HashMap<String, Object>> list = new ArrayList<>();
-    private int start = 9;
 
     public ArrayList<HashMap<String, Object>> getPaletteSelector() {
         ArrayList<HashMap<String, Object>> palettes = ExtraBlockFile.getPaletteBlockData();
         if (!palettes.isEmpty()) {
             for (int i = 0; i < palettes.size(); i++) {
                 HashMap<String, Object> item = palettes.get(i);
+                if (item == null) continue;
                 Object name = item.get("name");
                 if (!(name instanceof String paletteName)) {
                     continue;
@@ -34,8 +34,8 @@ public class DynamicPaletteProvider {
                     color = 0xff8a55d7;
                 }
 
-                setPaletteData(start, paletteName, color);
-                start++;
+                // Palette IDs refer to positions in the file, including hidden invalid records.
+                setPaletteData(i + 9, paletteName, color);
             }
         }
 

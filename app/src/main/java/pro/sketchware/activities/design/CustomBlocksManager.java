@@ -12,7 +12,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 import pro.sketchware.core.project.ProjectDataStore;
@@ -24,7 +23,6 @@ import pro.sketchware.core.codegen.ExtraBlockFile;
 import pro.sketchware.core.block.ExtraBlockInfo;
 import pro.sketchware.core.codegen.BlockLoader;
 import pro.sketchware.util.Helper;
-import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
@@ -74,7 +72,9 @@ public class CustomBlocksManager {
 
     private Optional<ExtraBlockInfo> getExtraBlockInfoByName(String name) {
         if (custom_blocks != null && !custom_blocks.isEmpty()) {
-            for (ExtraBlockInfo info : custom_blocks) {
+            // Match BlockLoader's last definition wins policy for duplicate project names.
+            for (int i = custom_blocks.size() - 1; i >= 0; i--) {
+                ExtraBlockInfo info = custom_blocks.get(i);
                 if (info.getName().equals(name)) {
                     return Optional.of(info);
                 }
@@ -124,28 +124,12 @@ public class CustomBlocksManager {
     }
 
     public String getCustomBlockCode(String opCode) {
-        try {
-            for (ExtraBlockInfo info : custom_blocks) {
-                if (info.getName().equals(opCode)) {
-                    return info.getCode();
-                }
-            }
-        } catch (NullPointerException e) {
-            LogUtil.e("CustomBlocksManager", "Failed to get code for custom block: " + opCode, e);
-        }
-        return "";
+        ExtraBlockInfo info = getExtraBlockInfo(opCode);
+        return info == null ? "" : info.getCode();
     }
 
     public String getCustomBlockSpec2(String opCode) {
-        try {
-            for (ExtraBlockInfo info : custom_blocks) {
-                if (info.getName().equals(opCode)) {
-                    return info.getSpec2();
-                }
-            }
-        } catch (NullPointerException e) {
-            LogUtil.e("CustomBlocksManager", "Failed to get spec2 for custom block: " + opCode, e);
-        }
-        return "";
+        ExtraBlockInfo info = getExtraBlockInfo(opCode);
+        return info == null ? "" : info.getSpec2();
     }
 }

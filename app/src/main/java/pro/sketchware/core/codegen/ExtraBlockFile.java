@@ -10,12 +10,15 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.core.codegen.BuiltInBlockDefinitions;
 import pro.sketchware.R;
 import pro.sketchware.core.project.SketchwarePaths;
+import pro.sketchware.core.settings.ApplicationSettings;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 
 public class ExtraBlockFile {
 
+    /** Default location. Use {@link #getExtraBlocksDataFile()} for the active configuration. */
     public static final File EXTRA_BLOCKS_DATA_FILE = new File(SketchwarePaths.getBlockManagerBlockFilePath());
+    /** Default location. Use {@link #getExtraBlocksPaletteFile()} for the active configuration. */
     public static final File EXTRA_BLOCKS_PALETTE_FILE = new File(SketchwarePaths.getBlockManagerPaletteFilePath());
 
     public static ArrayList<HashMap<String, Object>> buildInBlocks = new ArrayList<>();
@@ -26,6 +29,21 @@ public class ExtraBlockFile {
     private static long cachedExtraBlocksLength = Long.MIN_VALUE;
     private static long cachedPaletteBlocksLastModified = Long.MIN_VALUE;
     private static long cachedPaletteBlocksLength = Long.MIN_VALUE;
+    private static File cachedExtraBlocksFile;
+    private static File cachedPaletteBlocksFile;
+
+    public static File getExtraBlocksDataFile() {
+        return getConfiguredFile(ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH);
+    }
+
+    public static File getExtraBlocksPaletteFile() {
+        return getConfiguredFile(ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH);
+    }
+
+    private static File getConfiguredFile(String settingKey) {
+        return new File(SketchwarePaths.resolveExternalStorageRelativePath(ApplicationSettings.getString(
+                settingKey, (String) ApplicationSettings.getDefaultValue(settingKey))));
+    }
 
     public static synchronized ArrayList<HashMap<String, Object>> getExtraBlockData() {
         ensureExtraBlocksCache();
@@ -48,18 +66,22 @@ public class ExtraBlockFile {
         cachedExtraBlocksLength = Long.MIN_VALUE;
         cachedPaletteBlocksLastModified = Long.MIN_VALUE;
         cachedPaletteBlocksLength = Long.MIN_VALUE;
+        cachedExtraBlocksFile = null;
+        cachedPaletteBlocksFile = null;
         cachedExtraBlocks.clear();
         cachedExtraBlocksByPalette.clear();
         cachedPaletteBlocks.clear();
     }
 
     private static void ensureExtraBlocksCache() {
-        long lastModified = EXTRA_BLOCKS_DATA_FILE.exists() ? EXTRA_BLOCKS_DATA_FILE.lastModified() : -1L;
-        long length = EXTRA_BLOCKS_DATA_FILE.exists() ? EXTRA_BLOCKS_DATA_FILE.length() : 0L;
-        if (lastModified == cachedExtraBlocksLastModified && length == cachedExtraBlocksLength) {
+        File file = getExtraBlocksDataFile();
+        long lastModified = file.exists() ? file.lastModified() : -1L;
+        long length = file.exists() ? file.length() : 0L;
+        if (file.equals(cachedExtraBlocksFile) && lastModified == cachedExtraBlocksLastModified && length == cachedExtraBlocksLength) {
             return;
         }
 
+        cachedExtraBlocksFile = file;
         cachedExtraBlocksLastModified = lastModified;
         cachedExtraBlocksLength = length;
         cachedExtraBlocks.clear();
@@ -67,8 +89,9 @@ public class ExtraBlockFile {
 
         ArrayList<HashMap<String, Object>> extraBlocks;
         try {
-            extraBlocks = new Gson().fromJson(getExtraBlockFile(), Helper.TYPE_MAP_LIST);
+            extraBlocks = new Gson().fromJson(readJsonFile(file), Helper.TYPE_MAP_LIST);
             if (extraBlocks == null) extraBlocks = new ArrayList<>();
+            extraBlocks.removeIf(java.util.Objects::isNull);
         } catch (com.google.gson.JsonSyntaxException e) {
             extraBlocks = new ArrayList<>();
         }
@@ -90,18 +113,20 @@ public class ExtraBlockFile {
     }
 
     private static void ensurePaletteBlocksCache() {
-        long lastModified = EXTRA_BLOCKS_PALETTE_FILE.exists() ? EXTRA_BLOCKS_PALETTE_FILE.lastModified() : -1L;
-        long length = EXTRA_BLOCKS_PALETTE_FILE.exists() ? EXTRA_BLOCKS_PALETTE_FILE.length() : 0L;
-        if (lastModified == cachedPaletteBlocksLastModified && length == cachedPaletteBlocksLength) {
+        File file = getExtraBlocksPaletteFile();
+        long lastModified = file.exists() ? file.lastModified() : -1L;
+        long length = file.exists() ? file.length() : 0L;
+        if (file.equals(cachedPaletteBlocksFile) && lastModified == cachedPaletteBlocksLastModified && length == cachedPaletteBlocksLength) {
             return;
         }
 
+        cachedPaletteBlocksFile = file;
         cachedPaletteBlocksLastModified = lastModified;
         cachedPaletteBlocksLength = length;
         cachedPaletteBlocks.clear();
 
         try {
-            ArrayList<HashMap<String, Object>> paletteBlocks = new Gson().fromJson(getPaletteBlockFile(), Helper.TYPE_MAP_LIST);
+            ArrayList<HashMap<String, Object>> paletteBlocks = new Gson().fromJson(readJsonFile(file), Helper.TYPE_MAP_LIST);
             if (paletteBlocks != null) {
                 cachedPaletteBlocks.addAll(paletteBlocks);
             }
@@ -111,22 +136,20 @@ public class ExtraBlockFile {
     }
 
     /**
-     * @return Non-empty content of {@link ExtraBlockFile#EXTRA_BLOCKS_DATA_FILE},
+     * @return Non-empty content of {@link #getExtraBlocksDataFile()},
      * as cases of <code>""</code> as file content return <code>"[]"</code>
      */
     public static String getExtraBlockFile() {
-        String fileContent;
-
-        if (EXTRA_BLOCKS_DATA_FILE.exists() && !(fileContent = FileUtil.readFile(EXTRA_BLOCKS_DATA_FILE.getAbsolutePath())).isEmpty()) {
-            return fileContent;
-        } else {
-            return "[]";
-        }
+        return readJsonFile(getExtraBlocksDataFile());
     }
 
     public static String getPaletteBlockFile() {
+        return readJsonFile(getExtraBlocksPaletteFile());
+    }
+
+    private static String readJsonFile(File file) {
         String fileContent;
-        if (EXTRA_BLOCKS_PALETTE_FILE.exists() && !(fileContent = FileUtil.readFile(EXTRA_BLOCKS_PALETTE_FILE.getAbsolutePath())).isEmpty()) {
+        if (file.exists() && !(fileContent = FileUtil.readFile(file.getAbsolutePath())).isEmpty()) {
             return fileContent;
         }
         return "[]";

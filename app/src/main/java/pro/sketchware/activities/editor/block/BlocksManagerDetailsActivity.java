@@ -283,6 +283,7 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
 
         for (int i = 0; i < all_blocks_list.size(); i++) {
             HashMap<String, Object> block = all_blocks_list.get(i);
+            if (block == null) continue;
 
             Object blockPalette = block.get("palette");
             if (blockPalette instanceof String) {
