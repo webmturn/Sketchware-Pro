@@ -416,10 +416,13 @@ public class BackupFactory {
             for (BlockBean bean : cbm.getUsedBlocks()) {
                 if (!block_names.contains(bean.opCode)) {
                     block_names.add(bean.opCode);
-                    if (cbm.contains(bean.opCode)) {
-                        blocks.add(cbm.getExtraBlockInfo(bean.opCode));
-                    } else {
-                        var block = BlockLoader.getBlockInfo(bean.opCode);
+                    // Match BlockInterpreter: global definition first, project definition as fallback.
+                    ExtraBlockInfo block = BlockLoader.getBlockInfo(bean.opCode);
+                    if (block.isMissing) {
+                        block = BlockLoader.getBlockFromProject(sc_id, bean.opCode);
+                    }
+                    // A missing placeholder loses its transient flag when serialized.
+                    if (!block.isMissing) {
                         blocks.add(block);
                     }
                 }
