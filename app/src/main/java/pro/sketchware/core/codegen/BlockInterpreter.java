@@ -11,11 +11,13 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import pro.sketchware.core.block.BlockSpecParser;
 import pro.sketchware.core.block.ExtraBlockInfo;
 import pro.sketchware.core.codegen.BlockLoader;
 import pro.sketchware.core.build.ViewBindingBuilder;
 import pro.sketchware.core.project.BuildConfig;
 import pro.sketchware.core.project.ClassInfo;
+import pro.sketchware.util.format.FormatUtil;
 
 /**
  * Converts a chain of {@link BlockBean}s into executable Java source code.
@@ -41,8 +43,6 @@ public class BlockInterpreter {
     private static final int PARAM_TYPE_STRING = 2;
     private static final int PARAM_TYPE_OTHER = 3;
 
-    private static final Pattern PARAM_PATTERN = Pattern.compile("%m(?!\\.[\\w]+)");
-    private static final Pattern SPEC_PARAM_PATTERN = Pattern.compile("%[bdsm]");
     private static final Pattern EXTRACT_PARAMS_PATTERN = Pattern.compile("%\\w+(?:\\.\\w+)?|%\\w");
     public final boolean isViewBindingEnabled;
     public final CodeContext codeContext;
@@ -134,28 +134,12 @@ public class BlockInterpreter {
     }
 
     private boolean hasEmptySelectorParam(ArrayList<String> params, String spec) {
-        var paramMatcher = PARAM_PATTERN.matcher(spec);
-        if (!paramMatcher.find()) {
-            var matcher = SPEC_PARAM_PATTERN.matcher(spec);
-            int count = 0;
-            ArrayList<Integer> selectorParamPositions = new ArrayList<>();
-            while (matcher.find()) {
-                String param = matcher.group();
-                if ("%m".equals(param)) {
-                    selectorParamPositions.add(count);
-                }
-                count++;
-            }
-            if (!selectorParamPositions.isEmpty()) {
-                for (int position : selectorParamPositions) {
-                    if (position >= params.size()) {
-                        continue;
-                    }
-                    var param = params.get(position);
-                    if (param == null || param.isEmpty()) {
-                        return true;
-                    }
-                }
+        if (BlockSpecParser.findInvalidMenuParameterEnd(spec) >= 0) return false;
+        ArrayList<String> parameters = BlockSpecParser.parseParameters(spec);
+        for (int i = 0; i < parameters.size() && i < params.size(); i++) {
+            if (parameters.get(i).startsWith("%m")) {
+                String param = params.get(i);
+                if (param == null || param.isEmpty()) return true;
             }
         }
         return false;
@@ -327,12 +311,11 @@ public class BlockInterpreter {
 
     ArrayList<String> extractParamsTypes(String input) {
         ArrayList<String> matches = new ArrayList<>();
-        Matcher matcher = EXTRACT_PARAMS_PATTERN.matcher(input);
-
-        while (matcher.find()) {
-            matches.add(matcher.group().toLowerCase());
+        for (String token : FormatUtil.parseBlockSpec(input)) {
+            // Keep legacy type prefixes and extensions, but ignore escaped labels and suffixes.
+            Matcher matcher = EXTRACT_PARAMS_PATTERN.matcher(token);
+            if (matcher.lookingAt()) matches.add(matcher.group().toLowerCase());
         }
-
         return matches;
     }
 
