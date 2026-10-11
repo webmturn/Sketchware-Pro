@@ -278,6 +278,10 @@ public class CustomBlocksDialog {
                 blockData.put("color", getHexColor(block.color));
                 blockData.put("spec2", customBlocksManager.getCustomBlockSpec2(block.opCode));
                 blockData.put("code", customBlocksManager.getCustomBlockCode(block.opCode));
+                ExtraBlockInfo definition = customBlocksManager.getExtraBlockInfo(block.opCode);
+                if (definition != null && !definition.getImports().isEmpty()) {
+                    blockData.put("imports", definition.getImports());
+                }
                 blockData.put("palette", String.valueOf(paletteIndex));
                 blocksList.add(blockData);
             } catch (Exception e) {

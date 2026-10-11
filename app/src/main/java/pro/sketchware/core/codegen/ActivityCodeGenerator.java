@@ -3,8 +3,6 @@ import pro.sketchware.core.project.BuildConfig;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.ProjectDataStore;
 
-import static pro.sketchware.core.codegen.ExtraBlockFile.getExtraBlockData;
-
 import android.text.TextUtils;
 import android.util.Pair;
 
@@ -12,6 +10,7 @@ import pro.sketchware.beans.BlockBean;
 import pro.sketchware.beans.ComponentBean;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ViewBean;
+import pro.sketchware.core.block.ExtraBlockInfo;
 import pro.sketchware.core.library.Material3LibraryManager;
 
 import java.util.ArrayList;
@@ -85,7 +84,6 @@ public class ActivityCodeGenerator {
      */
     private final ArrayList<String> filePickerRequestCodes = new ArrayList<>();
 
-    private final HashMap<String, Map<String, Object>> extraBlocksMap;
     private final CodeContext codeContext;
     private EventCodeGenerator eventManager;
     private ArrayList<String> imports = new ArrayList<>();
@@ -96,13 +94,11 @@ public class ActivityCodeGenerator {
         this(jqVar, projectFileBean, eCVar,
                 new ManageLocalLibrary(eCVar.projectId),
                 new ProjectSettings(eCVar.projectId),
-                buildExtraBlocksMap(getExtraBlockData()),
                 new Material3LibraryManager(eCVar.projectId));
     }
 
     public ActivityCodeGenerator(BuildConfig jqVar, ProjectFileBean projectFileBean, ProjectDataStore eCVar,
                                  ManageLocalLibrary sharedMll, ProjectSettings sharedSettings,
-                                 HashMap<String, Map<String, Object>> sharedExtraBlocksMap,
                                  Material3LibraryManager sharedMaterialLibraryManager) {
         packageName = jqVar.packageName;
         this.projectFileBean = projectFileBean;
@@ -112,23 +108,11 @@ public class ActivityCodeGenerator {
         settings = sharedSettings;
         permissionManager = new PermissionManager(eCVar.projectId, projectFileBean.getJavaName());
         layoutGenerator = new LayoutGenerator(buildConfig, projectFileBean);
-        extraBlocksMap = sharedExtraBlocksMap;
         isViewBindingEnabled = settings.getValue(ProjectSettings.SETTING_ENABLE_VIEWBINDING, BuildSettings.SETTING_GENERIC_VALUE_FALSE)
                 .equals(BuildSettings.SETTING_GENERIC_VALUE_TRUE);
         materialLibraryManager = sharedMaterialLibraryManager;
         boolean isFragment = projectFileBean.fileName.contains("_fragment");
         codeContext = new CodeContext(projectFileBean.getActivityName(), isFragment);
-    }
-
-    public static HashMap<String, Map<String, Object>> buildExtraBlocksMap(ArrayList<HashMap<String, Object>> extraBlocksList) {
-        HashMap<String, Map<String, Object>> map = new HashMap<>(extraBlocksList.size());
-        for (Map<String, Object> block : extraBlocksList) {
-            Object nameValue = block.get("name");
-            if (nameValue != null) {
-                map.putIfAbsent(nameValue.toString(), block);
-            }
-        }
-        return map;
     }
 
     public String activityResult() {
@@ -1015,24 +999,18 @@ public class ActivityCodeGenerator {
                         addImport("com.google.android.gms.ads.LoadAdError");
                         break;
                     default:
-                        var block = getExtraBlockByName(blockBean.opCode);
-                        if (block != null && block.containsKey("imports")) {
-                            Object importsValue = block.get("imports");
-                            if (importsValue != null) {
-                                var imports = importsValue.toString().split("\n");
-                                for (String importCode : imports) {
-                                    addImport(importCode);
-                                }
-                            }
+                        ExtraBlockInfo block = BlockLoader.getBlockInfo(blockBean.opCode);
+                        if (block.isMissing) {
+                            block = BlockLoader.getBlockFromProject(buildConfig.sc_id, blockBean.opCode);
+                        }
+                        // Imports must come from the same definition as BlockInterpreter's code.
+                        for (String importCode : block.getImports().split("\n")) {
+                            addImport(importCode);
                         }
                         break;
                 }
             }
         }
-    }
-
-    private Map<String, Object> getExtraBlockByName(String name) {
-        return extraBlocksMap.get(name);
     }
 
     /**

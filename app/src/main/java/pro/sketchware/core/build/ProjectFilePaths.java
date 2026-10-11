@@ -20,7 +20,6 @@ import pro.sketchware.util.io.ZipUtil;
 
 import static pro.sketchware.core.build.BuildDefaults.VAR_DEFAULT_MIN_SDK_VERSION;
 import static pro.sketchware.core.build.BuildDefaults.VAR_DEFAULT_TARGET_SDK_VERSION;
-import static pro.sketchware.core.codegen.ExtraBlockFile.getExtraBlockData;
 
 import static pro.sketchware.core.project.ProjectThemeColors.getDefaultColor;
 
@@ -970,7 +969,6 @@ public class ProjectFilePaths {
 
                 // Pre-build shared objects once for all Activities (optimization)
                 ManageLocalLibrary sharedMll = new ManageLocalLibrary(projectDataManager.projectId);
-                HashMap<String, Map<String, Object>> sharedExtraBlocksMap = ActivityCodeGenerator.buildExtraBlocksMap(getExtraBlockData());
                 Material3LibraryManager sharedMaterialLibraryManager = new Material3LibraryManager(projectDataManager.projectId);
 
                 // Pre-warm BlockLoader caches to avoid race conditions during parallel execution
@@ -981,7 +979,7 @@ public class ProjectFilePaths {
                 if (threadCount <= 1) {
                     for (ProjectFileBean activity : activitiesToGenerate) {
                         String phase1Code = new ActivityCodeGenerator(buildConfig, activity, projectDataManager,
-                                sharedMll, projectSettings, sharedExtraBlocksMap, sharedMaterialLibraryManager)
+                                sharedMll, projectSettings, sharedMaterialLibraryManager)
                                 .generateCode(isAndroidStudioExport, sc_id, false);
                         srcCodeBeans.add(new SrcCodeBean(activity.getJavaName(),
                                 ActivityCodeGenerator.applyCommands(phase1Code)));
@@ -995,7 +993,7 @@ public class ProjectFilePaths {
                         for (ProjectFileBean activity : activitiesToGenerate) {
                             futures.add(executor.submit(() -> {
                                 String rawCode = new ActivityCodeGenerator(buildConfig, activity, projectDataManager,
-                                        sharedMll, projectSettings, sharedExtraBlocksMap, sharedMaterialLibraryManager)
+                                        sharedMll, projectSettings, sharedMaterialLibraryManager)
                                         .generateCode(isAndroidStudioExport, sc_id, false);
                                 return new Pair<>(activity.getJavaName(), rawCode);
                             }));
@@ -1015,7 +1013,7 @@ public class ProjectFilePaths {
                                 ProjectFileBean activity = activitiesToGenerate.get(i);
                                 Log.e("ProjectFilePaths", "Parallel code generation failed for " + activity.getJavaName() + " in project " + sc_id + "; falling back to serial generation", e);
                                 String phase1Code = new ActivityCodeGenerator(buildConfig, activity, projectDataManager,
-                                        sharedMll, projectSettings, sharedExtraBlocksMap, sharedMaterialLibraryManager)
+                                        sharedMll, projectSettings, sharedMaterialLibraryManager)
                                         .generateCode(isAndroidStudioExport, sc_id, false);
                                 srcCodeBeans.add(new SrcCodeBean(activity.getJavaName(),
                                         ActivityCodeGenerator.applyCommands(phase1Code)));

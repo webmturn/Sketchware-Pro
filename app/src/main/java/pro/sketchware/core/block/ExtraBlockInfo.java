@@ -4,6 +4,8 @@ public class ExtraBlockInfo {
 
     public transient boolean isMissing;
     private String code = "";
+    // Optional in older project definitions and backups.
+    private String imports;
     private int color = 0;
     private String name = "";
     private int paletteColor = 0;
@@ -24,6 +26,14 @@ public class ExtraBlockInfo {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getImports() {
+        return imports == null ? "" : imports;
+    }
+
+    public void setImports(String imports) {
+        this.imports = imports;
     }
 
     public int getColor() {

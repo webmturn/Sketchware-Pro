@@ -155,6 +155,11 @@ public class BlockLoader {
                 }
             }
 
+            Object imports = map.get("imports");
+            if (imports != null) {
+                info.setImports(imports.toString());
+            }
+
             if (map.containsKey("color")) {
                 Object color = map.get("color");
 

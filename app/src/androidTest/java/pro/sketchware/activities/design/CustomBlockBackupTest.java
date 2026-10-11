@@ -41,6 +41,7 @@ import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.core.block.ExtraBlockInfo;
 import pro.sketchware.core.codegen.BlockInterpreter;
 import pro.sketchware.core.codegen.BlockLoader;
+import pro.sketchware.core.codegen.ExtraBlockFile;
 import pro.sketchware.core.project.BuildConfig;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.ProjectDataStore;
@@ -158,7 +159,7 @@ public class CustomBlockBackupTest {
         return output.toByteArray();
     }
 
-    private static final class OwnedProject implements AutoCloseable {
+    static final class OwnedProject implements AutoCloseable {
         final ProjectEditorPersistenceTest.Fixture fixture;
         final File icons;
 
@@ -196,7 +197,7 @@ public class CustomBlockBackupTest {
     }
 
     /** Redirects backup settings in memory without writing the user's settings file. */
-    private static final class Scope implements AutoCloseable {
+    static final class Scope implements AutoCloseable {
         final String token = UUID.randomUUID().toString().replace("-", "");
         final File output = new File(CONTEXT.getCacheDir(), "BackupRt." + token);
         final File backups = new File(Environment.getExternalStorageDirectory(), ".sketchware/BackupRt." + token);
@@ -207,12 +208,20 @@ public class CustomBlockBackupTest {
         final File actualSettings;
         final byte[] settingsBytes;
         final long settingsMtime;
+        final ArrayList<HashMap<String, Object>> extraData;
+        final ArrayList<HashMap<String, Object>> originalExtraData;
+        final HashMap<String, ArrayList<HashMap<String, Object>>> extraByPalette;
+        final HashMap<String, ArrayList<HashMap<String, Object>>> originalExtraByPalette;
 
         @SuppressWarnings("unchecked") Scope() throws Exception {
             BlockLoader.getBlockInfo("BackupRt.initialize." + token);
             for (String name : List.of("blocks", "blocksByName", "cachedProjectId", "projectBlockCache")) {
                 Field field = field(BlockLoader.class, name); loaderState.put(field, field.get(null));
             }
+            extraData = (ArrayList<HashMap<String, Object>>) field(ExtraBlockFile.class, "cachedExtraBlocks").get(null);
+            originalExtraData = new ArrayList<>(extraData);
+            extraByPalette = (HashMap<String, ArrayList<HashMap<String, Object>>>) field(ExtraBlockFile.class, "cachedExtraBlocksByPalette").get(null);
+            originalExtraByPalette = new HashMap<>(extraByPalette);
             ApplicationSettings.getBackupPath();
             store = field(Class.forName("pro.sketchware.core.settings.ApplicationSettings$Holder"), "STORE").get(null);
             settingsFile = field(store.getClass(), "file"); actualSettings = (File) settingsFile.get(store);
@@ -237,8 +246,16 @@ public class CustomBlockBackupTest {
             return (HashMap<String, ExtraBlockInfo>) field(BlockLoader.class, "blocksByName").get(null);
         }
 
+        void loadGlobals(List<HashMap<String, Object>> definitions) {
+            extraData.clear(); extraData.addAll(definitions);
+            extraByPalette.clear();
+            BlockLoader.refresh();
+        }
+
         @Override public void close() throws Exception {
             ProjectDataManager.clearAll();
+            extraData.clear(); extraData.addAll(originalExtraData);
+            extraByPalette.clear(); extraByPalette.putAll(originalExtraByPalette);
             for (Map.Entry<Field, Object> state : loaderState.entrySet()) state.getKey().set(null, state.getValue());
             synchronized (store) {
                 settings.clear(); settings.putAll(originalSettings); settingsFile.set(store, actualSettings);
