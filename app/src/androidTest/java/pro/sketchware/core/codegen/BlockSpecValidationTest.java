@@ -195,7 +195,7 @@ public class BlockSpecValidationTest {
         info.setSpec(spec);
         info.setCode("System.out.println(%s);" + "\n%s".repeat(placeholders - 1));
         assertEquals(loaderCount, BlockLoader.countSpecParams(spec));
-        assertEquals(placeholders, BlockLoader.countCodePlaceholders(info.getCode()));
+        assertEquals(placeholders, BlockLoader.countCodeArguments(info.getCode()));
         assertEquals(fields, ComponentTypeMapper.getParamClassInfoList(spec).size());
         Method validate = BlockLoader.class.getDeclaredMethod("validateBlock", ExtraBlockInfo.class, String.class);
         validate.setAccessible(true);

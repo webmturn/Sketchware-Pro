@@ -14,8 +14,6 @@ import com.google.gson.reflect.TypeToken;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import pro.sketchware.core.codegen.ExtraBlockFile;
 import pro.sketchware.core.block.ExtraBlockInfo;
@@ -42,9 +40,6 @@ public class BlockLoader {
     /** Per-project custom block cache: sc_id to (block_name to ExtraBlockInfo). */
     private static String cachedProjectId;
     private static HashMap<String, ExtraBlockInfo> projectBlockCache;
-
-    // Matches String.format placeholders: %s, %1$s, %2$s, etc.
-    private static final Pattern CODE_PLACEHOLDER_PATTERN = Pattern.compile("%(\\d+\\$)?s");
 
     static {
         loadCustomBlocks();
@@ -244,19 +239,15 @@ public class BlockLoader {
     }
 
     /**
-     * Counts the number of String.format placeholders in a code template.
-     * Placeholders are %s or positional like %1$s.
+     * Returns the argument count required by ordinary, explicit, and relative references.
+     * Literal percent signs and line separators do not consume arguments.
      */
-    static int countCodePlaceholders(String code) {
-        if (code == null || code.isEmpty()) return 0;
-        int count = 0;
-        Matcher matcher = CODE_PLACEHOLDER_PATTERN.matcher(code);
-        while (matcher.find()) count++;
-        return count;
+    static int countCodeArguments(String code) {
+        return CodeTemplateArguments.analyze(code).requiredCount;
     }
 
     /**
-     * Validates that a block's code template placeholders don't exceed
+     * Validates that a block's code template argument references don't exceed
      * the available parameters (spec params + 2 for subStack1/subStack2).
      * Logs a warning if there's a mismatch.
      *
@@ -265,14 +256,18 @@ public class BlockLoader {
      */
     private static void validateBlock(ExtraBlockInfo info, String source) {
         int specParams = countSpecParams(info.getSpec());
-        int codePlaceholders = countCodePlaceholders(info.getCode());
+        CodeTemplateArguments.Analysis template = CodeTemplateArguments.analyze(info.getCode());
         // getCodeExtraBlock always adds subStack1 + subStack2 to params
         int availableParams = specParams + 2;
-        if (codePlaceholders > availableParams) {
+        if (template.missingPreviousSpecifier != null) {
+            LogUtil.w("BlockLoader", String.format(
+                    "Block '%s' (%s) uses '%s' before selecting an argument to reuse. String.format will fail at runtime.",
+                    info.getName(), source, template.missingPreviousSpecifier));
+        } else if (template.requiredCount > availableParams) {
             LogUtil.w("BlockLoader",
-                    String.format("Block '%s' (%s) has %d code placeholders but only %d available params " +
+                    String.format("Block '%s' (%s) requires %d code arguments but only %d available params " +
                                     "(spec=%d + 2 substacks). String.format will fail at runtime.",
-                            info.getName(), source, codePlaceholders, availableParams, specParams));
+                            info.getName(), source, template.requiredCount, availableParams, specParams));
         }
     }
 }
