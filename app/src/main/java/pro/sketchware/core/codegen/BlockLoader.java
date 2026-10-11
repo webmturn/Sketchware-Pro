@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 
 import pro.sketchware.core.codegen.ExtraBlockFile;
 import pro.sketchware.core.block.ExtraBlockInfo;
+import pro.sketchware.core.block.BlockSpecParser;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
@@ -42,8 +43,6 @@ public class BlockLoader {
     private static String cachedProjectId;
     private static HashMap<String, ExtraBlockInfo> projectBlockCache;
 
-    // Matches %s, %d, %b, %m in spec strings
-    private static final Pattern SPEC_PARAM_PATTERN = Pattern.compile("%[sdbm]");
     // Matches String.format placeholders: %s, %1$s, %2$s, etc.
     private static final Pattern CODE_PLACEHOLDER_PATTERN = Pattern.compile("%(\\d+\\$)?s");
 
@@ -241,11 +240,7 @@ public class BlockLoader {
      * Parameters are denoted by %s, %d, %b, or %m.
      */
     static int countSpecParams(String spec) {
-        if (spec == null || spec.isEmpty()) return 0;
-        int count = 0;
-        Matcher matcher = SPEC_PARAM_PATTERN.matcher(spec);
-        while (matcher.find()) count++;
-        return count;
+        return BlockSpecParser.parseParameters(spec).size();
     }
 
     /**

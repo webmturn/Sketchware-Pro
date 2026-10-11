@@ -32,9 +32,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+import pro.sketchware.core.block.BlockSpecParser;
 import pro.sketchware.core.block.BlockTypeUtils;
 import pro.sketchware.core.block.view.BlockView;
 import pro.sketchware.util.Helper;
@@ -51,7 +50,6 @@ import pro.sketchware.util.UI;
 
 public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
 
-    private static final Pattern PARAM_PATTERN = Pattern.compile("%m(?!\\.[\\w]+)");
     private final ArrayList<String> id_detector = new ArrayList<>();
     private ActivityBlocksManagerCreatorBinding binding;
     private ArrayList<HashMap<String, Object>> blocksList = new ArrayList<>();
@@ -166,8 +164,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
                 SketchwareUtil.showMessage(getApplicationContext(), Helper.getResString(R.string.error_invalid_hex_color_toast));
                 return;
             }
-            Matcher matcher = PARAM_PATTERN.matcher(Helper.getText(binding.spec));
-            if (matcher.find()) {
+            if (BlockSpecParser.findInvalidMenuParameterEnd(Helper.getText(binding.spec)) >= 0) {
                 SketchwareUtil.showMessage(getApplicationContext(), Helper.getResString(R.string.error_invalid_block_params));
                 return;
             }
@@ -427,9 +424,8 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
             var block = new TextView(this);
             block.setTextColor(Color.RED);
             var input = Helper.getText(binding.spec);
-            Matcher matcher = PARAM_PATTERN.matcher(input);
-            if (matcher.find()) {
-                int position = matcher.end();
+            int position = BlockSpecParser.findInvalidMenuParameterEnd(input);
+            if (position >= 0) {
                 // Show a readable error for a malformed menu placeholder.
                 block.setText("Error: '%m' must be followed by '.param' at position " + position);
             } else {
