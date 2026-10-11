@@ -83,26 +83,26 @@ public class CompileLogActivity extends BaseAppCompatActivity {
             setErrorText();
         });
 
-        final String wrapTextLabel = "Wrap text";
-        final String monospacedFontLabel = "Monospaced font";
-        final String fontSizeLabel = "Font size";
+        final String wrapTextLabel = Helper.getResString(R.string.menu_word_wrap);
+        final String monospacedFontLabel = Helper.getResString(R.string.compile_log_monospaced_font);
+        final String fontSizeLabel = Helper.getResString(R.string.code_editor_menu_font_size);
 
         PopupMenu options = new PopupMenu(this, binding.formatButton);
-        options.getMenu().add(wrapTextLabel).setCheckable(true).setChecked(getWrappedTextPreference());
-        options.getMenu().add(monospacedFontLabel).setCheckable(true).setChecked(getMonospacedFontPreference());
-        options.getMenu().add(fontSizeLabel);
+        options.getMenu().add(0, 1, 1, wrapTextLabel).setCheckable(true).setChecked(getWrappedTextPreference());
+        options.getMenu().add(0, 2, 2, monospacedFontLabel).setCheckable(true).setChecked(getMonospacedFontPreference());
+        options.getMenu().add(0, 3, 3, fontSizeLabel);
 
         options.setOnMenuItemClickListener(menuItem -> {
-            switch (menuItem.getTitle().toString()) {
-                case wrapTextLabel -> {
+            switch (menuItem.getItemId()) {
+                case 1 -> {
                     menuItem.setChecked(!menuItem.isChecked());
                     toggleWrapText(menuItem.isChecked());
                 }
-                case monospacedFontLabel -> {
+                case 2 -> {
                     menuItem.setChecked(!menuItem.isChecked());
                     toggleMonospacedText(menuItem.isChecked());
                 }
-                case fontSizeLabel -> changeFontSizeDialog();
+                case 3 -> changeFontSizeDialog();
                 default -> {
                     return false;
                 }

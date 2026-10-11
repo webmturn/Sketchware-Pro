@@ -1,5 +1,6 @@
 package pro.sketchware.core.project;
 
+import pro.sketchware.R;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -67,7 +68,7 @@ public class StringfogHandler {
      */
     public void start(BuildProgressReceiver progressReceiver, ProjectBuilder builder) {
         if (isStringfogEnabled()) {
-            progressReceiver.onProgress("Running StringFog...", BuildStage.OBFUSCATE_STRINGS);
+            progressReceiver.onProgress(Helper.getResString(R.string.build_progress_running_stringfog), BuildStage.OBFUSCATE_STRINGS);
             builder.runStringfog();
         }
     }

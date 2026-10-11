@@ -234,9 +234,11 @@ public class CodeEditorPreferences {
      */
     public void showThemeDialog(Activity activity, CodeEditor editor) {
         int currentTheme = detectThemeIndex(editor);
+        String[] themeLabels = THEME_NAMES.clone();
+        themeLabels[THEME_DEFAULT] = activity.getString(R.string.code_editor_theme_default);
         new MaterialAlertDialogBuilder(activity)
                 .setTitle(R.string.code_editor_select_theme)
-                .setSingleChoiceItems(THEME_NAMES, currentTheme, (dialog, which) -> {
+                .setSingleChoiceItems(themeLabels, currentTheme, (dialog, which) -> {
                     applyTheme(editor, which);
                     setTheme(which);
                     dialog.dismiss();

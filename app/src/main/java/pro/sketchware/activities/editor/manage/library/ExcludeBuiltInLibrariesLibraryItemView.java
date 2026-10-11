@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor.manage.library;
 
+import pro.sketchware.R;
+import pro.sketchware.util.Helper;
 import android.content.Context;
 
 import androidx.annotation.Nullable;
@@ -31,7 +33,7 @@ public class ExcludeBuiltInLibrariesLibraryItemView extends LibraryItemView {
                         : String.format(ExcludeBuiltInLibrariesActivity.getSelectedLibrariesItemDescription(),
                         excludedLibraries.size(), BuiltInLibraries.KNOWN_BUILT_IN_LIBRARIES.length)
         );
-        enabled.setText(excludingEnabled ? "ON" : "OFF");
+        enabled.setText(excludingEnabled ? Helper.getResString(R.string.library_status_on) : Helper.getResString(R.string.library_status_off));
         enabled.setSelected(excludingEnabled);
     }
 }

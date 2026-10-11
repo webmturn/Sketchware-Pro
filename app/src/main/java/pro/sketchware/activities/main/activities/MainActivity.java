@@ -308,7 +308,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
 
                 @Override
                 public void onFinish() {
-                    bottomSheetDialog.setPositiveButtonText("View changes");
+                    bottomSheetDialog.setPositiveButtonText(Helper.getResString(R.string.update_view_changes));
                     bottomSheetDialog.getPositiveButton().setEnabled(true);
                 }
             };

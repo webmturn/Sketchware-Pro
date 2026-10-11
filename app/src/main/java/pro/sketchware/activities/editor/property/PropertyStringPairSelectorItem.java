@@ -17,6 +17,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import pro.sketchware.core.callback.PropertyChangedCallback;
 import pro.sketchware.util.UIHelper;
 import pro.sketchware.core.project.SketchwareConstants;
+import pro.sketchware.util.locale.PropertyDisplayNames;
 import pro.sketchware.util.ViewUtil;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
@@ -67,7 +68,14 @@ public class PropertyStringPairSelectorItem extends RelativeLayout implements Vi
 
     public void setValue(String value) {
         this.value = value;
-        tvValue.setText(value);
+        String display = value;
+        for (Pair<String, String> pair : SketchwareConstants.getStringPropertyPairs(key)) {
+            if (pair.first.equals(value)) {
+                display = PropertyDisplayNames.get(getContext(), key, pair.second);
+                break;
+            }
+        }
+        tvValue.setText(display);
     }
 
     @Override
@@ -146,7 +154,7 @@ public class PropertyStringPairSelectorItem extends RelativeLayout implements Vi
 
     private RadioButton getOption(Pair<String, String> pair) {
         RadioButton radioButton = new RadioButton(getContext());
-        radioButton.setText(pair.second);
+        radioButton.setText(PropertyDisplayNames.get(getContext(), key, pair.second));
         radioButton.setTag(pair.first);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,

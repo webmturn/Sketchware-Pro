@@ -497,7 +497,7 @@ public class BackupFactory {
 
         // Unzip
         if (!unzip(swbPath, outFolder)) {
-            error = "couldn't unzip the backup";
+            error = Helper.getResString(R.string.backup_unzip_failed);
             restoreSuccess = false;
             FileUtil.deleteFile(outFolder.getAbsolutePath());
             return;
@@ -511,7 +511,7 @@ public class BackupFactory {
         HashMap<String, Object> map = getProject(project);
 
         if (map == null) {
-            error = "couldn't read the project file";
+            error = Helper.getResString(R.string.backup_read_project_failed);
             restoreSuccess = false;
             FileUtil.deleteFile(outFolder.getAbsolutePath());
             return;
@@ -522,7 +522,7 @@ public class BackupFactory {
 
         // Write new file
         if (!writeEncrypted(project, new Gson().toJson(map))) {
-            error = "couldn't write to the project file";
+            error = Helper.getResString(R.string.backup_write_project_failed);
             restoreSuccess = false;
             FileUtil.deleteFile(outFolder.getAbsolutePath());
             return;

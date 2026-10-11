@@ -40,7 +40,6 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -325,14 +324,14 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
                             binding.slider.setValue(inputValue);
                             binding.tiInput.setError(null);
                         } else {
-                            binding.tiInput.setError(String.format("Value must be between 0 and %.0f", maxLimit));
+                            binding.tiInput.setError(String.format(Helper.getResString(R.string.property_range_zero), maxLimit));
                         }
                     } else {
                         if (inputValue >= minValue && inputValue <= maxValue) {
                             binding.slider.setValue(inputValue);
                             binding.tiInput.setError(null);
                         } else {
-                            binding.tiInput.setError(String.format("Value must be between %.1f and %.1f", minValue, maxValue));
+                            binding.tiInput.setError(String.format(Helper.getResString(R.string.property_range_decimal), minValue, maxValue));
                         }
                     }
                 } catch (NumberFormatException e) {
@@ -495,7 +494,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
 
         PropertyPopupInputTextBinding binding = PropertyPopupInputTextBinding.inflate(LayoutInflater.from(getContext()));
 
-        binding.tiInput.setHint(String.format(Helper.getResString(R.string.property_enter_value), "widget ID"));
+        binding.tiInput.setHint(String.format(Helper.getResString(R.string.property_enter_value), Helper.getResString(R.string.property_widget_id)));
 
         binding.edInput.setSingleLine();
         PropertyNameValidator validator = new PropertyNameValidator(context, binding.tiInput, BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, ProjectDataManager.getProjectDataManager(sc_id).getAllIdentifiers(projectFileBean), value);
@@ -607,11 +606,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
 
                 if (inputText.equals(stringsStart)) {
 
-                    String errorMessage = MessageFormat.format(
-                            "Please select a String\n" +
-                                    "or remove \"{0}\" and add the value directly",
-                            stringsStart
-                    );
+                    String errorMessage = Helper.getResString(R.string.property_select_string_resource, stringsStart);
                     textAutoCompleteInput.setError(errorMessage);
                 } else {
                     valueChangeListener.onPropertyChanged(key, value);
@@ -654,7 +649,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
                 }
 
                 boolean isExactMatch = keysList.contains(text);
-                textAutoCompleteInput.setError(isExactMatch ? null : "Not found in strings.xml");
+                textAutoCompleteInput.setError(isExactMatch ? null : Helper.getResString(R.string.property_string_not_found));
             }
         });
     }

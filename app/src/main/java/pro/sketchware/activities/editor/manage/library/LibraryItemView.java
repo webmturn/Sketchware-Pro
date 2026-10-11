@@ -1,5 +1,6 @@
 package pro.sketchware.activities.editor.manage.library;
 
+import pro.sketchware.util.Helper;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +44,7 @@ public class LibraryItemView extends FrameLayout {
 
     public void setData(ProjectLibraryBean projectLibraryBean) {
         boolean enabledChecked = ProjectLibraryBean.LIB_USE_Y.equals(projectLibraryBean.useYn);
-        CharSequence enabledLabel = enabledChecked ? "ON" : "OFF";
+        CharSequence enabledLabel = enabledChecked ? Helper.getResString(R.string.library_status_on) : Helper.getResString(R.string.library_status_off);
 
         icon.setImageResource(ProjectLibraryBean.getLibraryIcon(projectLibraryBean.libType));
         title.setText(ProjectLibraryBean.getLibraryResName(projectLibraryBean.libType));

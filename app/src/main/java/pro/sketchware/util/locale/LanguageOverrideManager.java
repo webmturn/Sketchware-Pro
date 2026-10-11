@@ -30,6 +30,7 @@ public class LanguageOverrideManager {
     private volatile Map<Integer, String> resIdOverrides = Collections.emptyMap();
     private volatile boolean loaded = false;
     private volatile boolean active = false;
+    private volatile long revision;
 
     private LanguageOverrideManager() {
     }
@@ -68,6 +69,7 @@ public class LanguageOverrideManager {
             resIdOverrides = Collections.emptyMap();
             active = false;
             loaded = true;
+            revision++;
             return;
         }
 
@@ -87,6 +89,7 @@ public class LanguageOverrideManager {
         resIdOverrides = Collections.unmodifiableMap(newMap);
         active = !newMap.isEmpty();
         loaded = true;
+        revision++;
     }
 
     private Map<String, Integer> buildNameToIdMap() {
@@ -122,6 +125,10 @@ public class LanguageOverrideManager {
      */
     public boolean isActive() {
         return active;
+    }
+
+    public long getRevision() {
+        return revision;
     }
 
     /**

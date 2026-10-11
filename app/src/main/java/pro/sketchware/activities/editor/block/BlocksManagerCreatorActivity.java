@@ -278,29 +278,29 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
     }
 
     private void addParameters() {
-        binding.parametersHolder.addView(addBlockMenu("%s.inputOnly ", "inputOnly"));
-        binding.parametersHolder.addView(addBlockMenu("%s ", "string"));
-        binding.parametersHolder.addView(addBlockMenu("%b ", "boolean"));
-        binding.parametersHolder.addView(addBlockMenu("%d ", "number"));
-        binding.parametersHolder.addView(addBlockMenu("%m.varMap ", "map"));
-        binding.parametersHolder.addView(addBlockMenu("%m.view ", "view"));
-        binding.parametersHolder.addView(addBlockMenu("%m.textview ", "textView"));
-        binding.parametersHolder.addView(addBlockMenu("%m.edittext ", "editText"));
-        binding.parametersHolder.addView(addBlockMenu("%m.imageview ", "ImageView"));
-        binding.parametersHolder.addView(addBlockMenu("%m.listview ", "listView"));
-        binding.parametersHolder.addView(addBlockMenu("%m.list ", "list"));
-        binding.parametersHolder.addView(addBlockMenu("%m.listMap ", "listMap"));
-        binding.parametersHolder.addView(addBlockMenu("%m.listStr ", "listString"));
-        binding.parametersHolder.addView(addBlockMenu("%m.listInt ", "listNumber"));
-        binding.parametersHolder.addView(addBlockMenu("%m.intent ", "intent"));
-        binding.parametersHolder.addView(addBlockMenu("%m.color ", "color"));
-        binding.parametersHolder.addView(addBlockMenu("%m.activity ", "activity"));
-        binding.parametersHolder.addView(addBlockMenu("%m.resource ", "resource"));
-        binding.parametersHolder.addView(addBlockMenu("%m.customViews ", "custom views"));
-        binding.parametersHolder.addView(addBlockMenu("%m.layout ", "layout"));
-        binding.parametersHolder.addView(addBlockMenu("%m.anim ", "anim"));
-        binding.parametersHolder.addView(addBlockMenu("%m.drawable ", "drawable"));
-        binding.parametersHolder.addView(addBlockMenu("%m.ResString ", "ResStrings"));
+        binding.parametersHolder.addView(addBlockMenu("%s.inputOnly ", Helper.getResString(R.string.block_parameter_inputonly)));
+        binding.parametersHolder.addView(addBlockMenu("%s ", Helper.getResString(R.string.block_parameter_string)));
+        binding.parametersHolder.addView(addBlockMenu("%b ", Helper.getResString(R.string.block_parameter_boolean)));
+        binding.parametersHolder.addView(addBlockMenu("%d ", Helper.getResString(R.string.block_parameter_number)));
+        binding.parametersHolder.addView(addBlockMenu("%m.varMap ", Helper.getResString(R.string.block_parameter_map)));
+        binding.parametersHolder.addView(addBlockMenu("%m.view ", Helper.getResString(R.string.block_parameter_view)));
+        binding.parametersHolder.addView(addBlockMenu("%m.textview ", Helper.getResString(R.string.block_parameter_textview)));
+        binding.parametersHolder.addView(addBlockMenu("%m.edittext ", Helper.getResString(R.string.block_parameter_edittext)));
+        binding.parametersHolder.addView(addBlockMenu("%m.imageview ", Helper.getResString(R.string.block_parameter_imageview)));
+        binding.parametersHolder.addView(addBlockMenu("%m.listview ", Helper.getResString(R.string.block_parameter_listview)));
+        binding.parametersHolder.addView(addBlockMenu("%m.list ", Helper.getResString(R.string.block_parameter_list)));
+        binding.parametersHolder.addView(addBlockMenu("%m.listMap ", Helper.getResString(R.string.block_parameter_listmap)));
+        binding.parametersHolder.addView(addBlockMenu("%m.listStr ", Helper.getResString(R.string.block_parameter_liststring)));
+        binding.parametersHolder.addView(addBlockMenu("%m.listInt ", Helper.getResString(R.string.block_parameter_listnumber)));
+        binding.parametersHolder.addView(addBlockMenu("%m.intent ", Helper.getResString(R.string.block_parameter_intent)));
+        binding.parametersHolder.addView(addBlockMenu("%m.color ", Helper.getResString(R.string.block_parameter_color)));
+        binding.parametersHolder.addView(addBlockMenu("%m.activity ", Helper.getResString(R.string.block_parameter_activity)));
+        binding.parametersHolder.addView(addBlockMenu("%m.resource ", Helper.getResString(R.string.block_parameter_resource)));
+        binding.parametersHolder.addView(addBlockMenu("%m.customViews ", Helper.getResString(R.string.block_parameter_custom_views)));
+        binding.parametersHolder.addView(addBlockMenu("%m.layout ", Helper.getResString(R.string.block_parameter_layout)));
+        binding.parametersHolder.addView(addBlockMenu("%m.anim ", Helper.getResString(R.string.block_parameter_anim)));
+        binding.parametersHolder.addView(addBlockMenu("%m.drawable ", Helper.getResString(R.string.block_parameter_drawable)));
+        binding.parametersHolder.addView(addBlockMenu("%m.ResString ", Helper.getResString(R.string.block_parameter_resstrings)));
     }
 
     private void receiveIntents() {
@@ -396,7 +396,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
         if (codeObject instanceof String) {
             binding.code.setText((String) codeObject);
         } else {
-            binding.code.setHint("(Invalid code block data)");
+            binding.code.setHint(Helper.getResString(R.string.block_invalid_data));
         }
     }
 
@@ -454,7 +454,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
             int position = BlockSpecParser.findInvalidMenuParameterEnd(input);
             if (position >= 0) {
                 // Show a readable error for a malformed menu placeholder.
-                block.setText("Error: '%m' must be followed by '.param' at position " + position);
+                block.setText(Helper.getResString(R.string.block_parameter_syntax_error, position));
             } else {
                 block.setText(e.toString());
             }

@@ -483,12 +483,12 @@ public class ExtraMenuBean {
                 break;
 
             case "notifImportance":
-                title = "Select importance";
+                title = Helper.getResString(R.string.notification_select_importance);
                 menus = new ArrayList<>(Arrays.asList(BlockConstants.NOTIFICATION_IMPORTANCE));
                 break;
 
             case "notifPriority":
-                title = "Select priority";
+                title = Helper.getResString(R.string.notification_select_priority);
                 menus = new ArrayList<>(Arrays.asList(BlockConstants.NOTIFICATION_PRIORITY));
                 break;
 

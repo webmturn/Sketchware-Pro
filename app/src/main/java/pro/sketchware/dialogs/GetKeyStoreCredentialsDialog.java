@@ -51,7 +51,7 @@ public class GetKeyStoreCredentialsDialog {
     private String[] getDropdownItems() {
         LinkedList<String> labels = new LinkedList<>();
         for (SigningMode mode : SigningMode.values()) {
-            labels.add(mode.label);
+            labels.add(Helper.getResString(mode.labelRes));
         }
         return labels.toArray(new String[0]);
     }
@@ -124,14 +124,14 @@ public class GetKeyStoreCredentialsDialog {
     }
 
     private enum SigningMode {
-        OWN_KEY_STORE("Sign using keystore"),
-        TESTKEY("Sign using a test key"),
-        DONT_SIGN("Don't sign");
+        OWN_KEY_STORE(R.string.signing_mode_own_key_store),
+        TESTKEY(R.string.signing_mode_testkey),
+        DONT_SIGN(R.string.signing_mode_dont_sign);
 
-        private final String label;
+        private final int labelRes;
 
-        SigningMode(String label) {
-            this.label = label;
+        SigningMode(int labelRes) {
+            this.labelRes = labelRes;
         }
     }
 

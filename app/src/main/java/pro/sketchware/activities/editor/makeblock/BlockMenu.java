@@ -1,5 +1,8 @@
 package pro.sketchware.activities.editor.makeblock;
 
+import pro.sketchware.util.locale.LocalizedDisplayNames;
+import pro.sketchware.R;
+import pro.sketchware.util.Helper;
 import android.util.Pair;
 
 import org.json.JSONArray;
@@ -20,7 +23,7 @@ public class BlockMenu {
 
     public static Pair<String, String[]> getMenu(String name) {
         Pair<String, String[]> result = null;
-        Pair<String, String[]> fallback = new Pair<>("Select a " + name + " Variable", new String[0]);
+        Pair<String, String[]> fallback = new Pair<>(Helper.getResString(R.string.block_select_variable, name), new String[0]);
         File file = new File(SketchwarePaths.getBlockSelectorMenuPath());
         if (!file.exists()) {
             result = fallback;
@@ -30,7 +33,11 @@ public class BlockMenu {
                 for (int i = 0; i < jSONArray.length(); i++) {
                     JSONObject jSONObject = jSONArray.getJSONObject(i);
                     if (jSONObject.getString("name").equals(name)) {
-                        result = new Pair<>(jSONObject.getString("title"), jsonarrayToArr(jSONObject.getJSONArray("data")));
+                        String title = jSONObject.getString("title");
+                        if ("typeview".equals(name) && "Select typeview:".equals(title)) {
+                            title = LocalizedDisplayNames.get(title);
+                        }
+                        result = new Pair<>(title, jsonarrayToArr(jSONObject.getJSONArray("data")));
                         break;
                     }
                 }

@@ -1,5 +1,6 @@
 package pro.sketchware.beans;
 
+import pro.sketchware.util.Helper;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -169,42 +170,42 @@ public class ComponentBean extends CollapsibleBean implements Parcelable {
     }
 
     /**
-     * @param context Can be null, as it's not used
+     * @param context Retained for caller compatibility; display labels use the app locale
      */
     public static String getComponentName(Context context, int type) {
         return switch (type) {
-            case COMPONENT_TYPE_INTENT -> "Intent";
-            case COMPONENT_TYPE_SHAREDPREF -> "SharedPreferences";
-            case COMPONENT_TYPE_CALENDAR -> "Calendar";
-            case COMPONENT_TYPE_VIBRATOR -> "Vibrator";
-            case COMPONENT_TYPE_TIMERTASK -> "Timer";
-            case COMPONENT_TYPE_FIREBASE -> "Firebase DB";
-            case COMPONENT_TYPE_DIALOG -> "Dialog";
-            case COMPONENT_TYPE_MEDIAPLAYER -> "MediaPlayer";
-            case COMPONENT_TYPE_SOUNDPOOL -> "SoundPool";
-            case COMPONENT_TYPE_OBJECTANIMATOR -> "ObjectAnimator";
-            case COMPONENT_TYPE_GYROSCOPE -> "Gyroscope";
-            case COMPONENT_TYPE_FIREBASE_AUTH -> "Firebase Auth";
-            case COMPONENT_TYPE_INTERSTITIAL_AD -> "Interstitial Ad";
-            case COMPONENT_TYPE_FIREBASE_STORAGE -> "Firebase Storage";
-            case COMPONENT_TYPE_CAMERA -> "Camera";
-            case COMPONENT_TYPE_FILE_PICKER -> "FilePicker";
-            case COMPONENT_TYPE_REQUEST_NETWORK -> "RequestNetwork";
-            case COMPONENT_TYPE_TEXT_TO_SPEECH -> "TextToSpeech";
-            case COMPONENT_TYPE_SPEECH_TO_TEXT -> "SpeechToText";
-            case COMPONENT_TYPE_BLUETOOTH_CONNECT -> "BluetoothConnect";
-            case COMPONENT_TYPE_LOCATION_MANAGER -> "LocationManager";
-            case COMPONENT_TYPE_REWARDED_VIDEO_AD -> "RewardedVideoAd";
-            case COMPONENT_TYPE_PROGRESS_DIALOG -> "ProgressDialog";
-            case COMPONENT_TYPE_DATE_PICKER_DIALOG -> "DatePickerDialog";
-            case COMPONENT_TYPE_TIME_PICKER_DIALOG -> "TimePickerDialog";
-            case COMPONENT_TYPE_NOTIFICATION -> "Notification";
-            case COMPONENT_TYPE_SQLITE -> "SQLiteDatabase";
+            case COMPONENT_TYPE_INTENT -> Helper.getResString(R.string.logic_editor_category_intent);
+            case COMPONENT_TYPE_SHAREDPREF -> Helper.getResString(R.string.logic_editor_category_shared_preferences);
+            case COMPONENT_TYPE_CALENDAR -> Helper.getResString(R.string.logic_editor_category_calendar);
+            case COMPONENT_TYPE_VIBRATOR -> Helper.getResString(R.string.logic_editor_category_vibrator);
+            case COMPONENT_TYPE_TIMERTASK -> Helper.getResString(R.string.logic_editor_category_timer);
+            case COMPONENT_TYPE_FIREBASE -> Helper.getResString(R.string.logic_editor_category_firebase);
+            case COMPONENT_TYPE_DIALOG -> Helper.getResString(R.string.logic_editor_category_dialog);
+            case COMPONENT_TYPE_MEDIAPLAYER -> Helper.getResString(R.string.logic_editor_category_media_player);
+            case COMPONENT_TYPE_SOUNDPOOL -> Helper.getResString(R.string.logic_editor_category_sound_pool);
+            case COMPONENT_TYPE_OBJECTANIMATOR -> Helper.getResString(R.string.logic_editor_category_object_animator);
+            case COMPONENT_TYPE_GYROSCOPE -> Helper.getResString(R.string.logic_editor_category_gyroscope);
+            case COMPONENT_TYPE_FIREBASE_AUTH -> Helper.getResString(R.string.logic_editor_category_firebase_auth);
+            case COMPONENT_TYPE_INTERSTITIAL_AD -> Helper.getResString(R.string.logic_editor_category_admob_interstitial);
+            case COMPONENT_TYPE_FIREBASE_STORAGE -> Helper.getResString(R.string.logic_editor_category_firebase_storage);
+            case COMPONENT_TYPE_CAMERA -> Helper.getResString(R.string.logic_editor_category_camera);
+            case COMPONENT_TYPE_FILE_PICKER -> Helper.getResString(R.string.logic_editor_category_file_picker);
+            case COMPONENT_TYPE_REQUEST_NETWORK -> Helper.getResString(R.string.logic_editor_category_request_network);
+            case COMPONENT_TYPE_TEXT_TO_SPEECH -> Helper.getResString(R.string.logic_editor_category_text_to_speech);
+            case COMPONENT_TYPE_SPEECH_TO_TEXT -> Helper.getResString(R.string.logic_editor_category_speech_to_text);
+            case COMPONENT_TYPE_BLUETOOTH_CONNECT -> Helper.getResString(R.string.logic_editor_category_bluetooth);
+            case COMPONENT_TYPE_LOCATION_MANAGER -> Helper.getResString(R.string.logic_editor_category_location_manager);
+            case COMPONENT_TYPE_REWARDED_VIDEO_AD -> Helper.getResString(R.string.logic_editor_category_rewarded_video_ad);
+            case COMPONENT_TYPE_PROGRESS_DIALOG -> Helper.getResString(R.string.logic_editor_category_progress_dialog);
+            case COMPONENT_TYPE_DATE_PICKER_DIALOG -> Helper.getResString(R.string.logic_editor_category_date_picker_dialog);
+            case COMPONENT_TYPE_TIME_PICKER_DIALOG -> Helper.getResString(R.string.logic_editor_category_time_picker_dialog);
+            case COMPONENT_TYPE_NOTIFICATION -> Helper.getResString(R.string.logic_editor_category_notification);
+            case COMPONENT_TYPE_SQLITE -> Helper.getResString(R.string.logic_editor_category_sqlite);
             case COMPONENT_TYPE_FRAGMENT_ADAPTER -> "FragmentAdapter";
-            case COMPONENT_TYPE_FIREBASE_AUTH_PHONE -> "PhoneAuth";
-            case COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE -> "Cloud Message";
-            case COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN -> "Google Login";
-            case COMPONENT_TYPE_ASYNC_TASK -> "AsyncTask";
+            case COMPONENT_TYPE_FIREBASE_AUTH_PHONE -> Helper.getResString(R.string.logic_editor_category_phone_auth);
+            case COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE -> Helper.getResString(R.string.logic_editor_category_cloud_message);
+            case COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN -> Helper.getResString(R.string.logic_editor_category_google_sign_in);
+            case COMPONENT_TYPE_ASYNC_TASK -> Helper.getResString(R.string.logic_editor_category_async_task);
             default -> ComponentsHandler.getNameById(type);
         };
     }

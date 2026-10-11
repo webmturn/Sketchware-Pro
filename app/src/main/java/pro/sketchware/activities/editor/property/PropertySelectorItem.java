@@ -17,6 +17,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import pro.sketchware.core.callback.PropertyChangedCallback;
 import pro.sketchware.util.UIHelper;
 import pro.sketchware.core.project.SketchwareConstants;
+import pro.sketchware.util.locale.PropertyDisplayNames;
 import pro.sketchware.util.ViewUtil;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
@@ -94,7 +95,7 @@ public class PropertySelectorItem extends RelativeLayout implements View.OnClick
 
     public void setValue(int value) {
         this.value = value;
-        tvValue.setText(SketchwareConstants.getPropertyValueString(key, value));
+        tvValue.setText(PropertyDisplayNames.get(getContext(), key, SketchwareConstants.getPropertyValueString(key, value)));
     }
 
     @Override
@@ -186,7 +187,7 @@ public class PropertySelectorItem extends RelativeLayout implements View.OnClick
 
     private RadioButton getOption(Pair<Integer, String> pair) {
         RadioButton radioButton = new RadioButton(getContext());
-        radioButton.setText(pair.second);
+        radioButton.setText(PropertyDisplayNames.get(getContext(), key, pair.second));
         radioButton.setTag(pair.first);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,

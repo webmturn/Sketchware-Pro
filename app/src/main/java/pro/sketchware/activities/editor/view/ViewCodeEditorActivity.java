@@ -127,7 +127,7 @@ public class ViewCodeEditorActivity extends BaseAppCompatActivity {
         editorPrefs.applyToEditor(editor, false);
         if (projectFile.fileType == ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY
                 && projectLibrary.isEnabled()) {
-            setNote("Use AppCompat Manager to modify attributes for CoordinatorLayout, Toolbar, and other appcompat layout/widget.");
+            setNote(Helper.getResString(R.string.view_code_appcompat_note));
         }
         binding.close.setOnClickListener(v -> {
             prefs.edit().putInt("note_" + sc_id, 1).apply();

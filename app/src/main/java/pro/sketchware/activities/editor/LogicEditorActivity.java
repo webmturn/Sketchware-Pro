@@ -1497,7 +1497,8 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.weight = 1.0f;
         name.setLayoutParams(layoutParams);
-        name.setText(fontName);
+        name.setText(fontName.equalsIgnoreCase("default_font")
+                ? getString(R.string.font_default_label) : fontName);
         linearLayout.addView(name);
         TextView preview = new TextView(this);
         preview.setLayoutParams(layoutParams);

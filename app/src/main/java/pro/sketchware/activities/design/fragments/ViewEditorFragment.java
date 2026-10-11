@@ -553,7 +553,7 @@ public class ViewEditorFragment extends DesignProjectFragment implements MenuPro
         container.setPadding(pad, pad, pad, 0);
 
         TextView layoutLabel = new TextView(requireContext());
-        layoutLabel.setText("Layout XML");
+        layoutLabel.setText(Helper.getResString(R.string.layout_xml_label));
         layoutLabel.setTextSize(12);
         container.addView(layoutLabel);
 

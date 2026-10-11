@@ -176,11 +176,11 @@ public class LogicClickListener implements View.OnClickListener {
 
         List<Item> data = new LinkedList<>();
         List<Pair<List<Integer>, String>> variableTypes = List.of(
-                new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_BOOLEAN), "Boolean (%d)"),
-                new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_NUMBER), "Number (%d)"),
-                new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_STRING), "String (%d)"),
-                new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_MAP), "Map (%d)"),
-                new Pair<>(List.of(5, 6), "Custom Variable (%d)")
+                new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_BOOLEAN), Helper.getResString(R.string.logic_group_boolean)),
+                new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_NUMBER), Helper.getResString(R.string.logic_group_number)),
+                new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_STRING), Helper.getResString(R.string.logic_group_string)),
+                new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_MAP), Helper.getResString(R.string.logic_group_map)),
+                new Pair<>(List.of(5, 6), Helper.getResString(R.string.logic_group_custom))
         );
         for (Pair<List<Integer>, String> variableType : variableTypes) {
             List<String> instances = new LinkedList<>();
@@ -237,7 +237,7 @@ public class LogicClickListener implements View.OnClickListener {
             }
 
             CharSequence nameError = listBinding.nameLayout.getError();
-            if (nameError == null || "Name can't be empty".contentEquals(nameError)) {
+            if (nameError == null || Helper.getResString(R.string.error_name_empty).contentEquals(nameError)) {
                 if (validName) {
                     listBinding.nameLayout.setError(null);
                     listBinding.nameLayout.setErrorEnabled(false);
@@ -268,10 +268,10 @@ public class LogicClickListener implements View.OnClickListener {
 
         List<Item> data = new LinkedList<>();
         List<Pair<Integer, String>> listTypes = List.of(
-                new Pair<>(ExtraMenuBean.LIST_TYPE_NUMBER, "List Integer (%d)"),
-                new Pair<>(ExtraMenuBean.LIST_TYPE_STRING, "List String (%d)"),
-                new Pair<>(ExtraMenuBean.LIST_TYPE_MAP, "List Map (%d)"),
-                new Pair<>(4, "List Custom (%d)")
+                new Pair<>(ExtraMenuBean.LIST_TYPE_NUMBER, Helper.getResString(R.string.logic_group_list_integer)),
+                new Pair<>(ExtraMenuBean.LIST_TYPE_STRING, Helper.getResString(R.string.logic_group_list_string)),
+                new Pair<>(ExtraMenuBean.LIST_TYPE_MAP, Helper.getResString(R.string.logic_group_list_map)),
+                new Pair<>(4, Helper.getResString(R.string.logic_group_list_custom))
         );
         for (Pair<Integer, String> listType : listTypes) {
             ArrayList<String> lists = getUsedList(listType.first);
@@ -397,10 +397,10 @@ public class LogicClickListener implements View.OnClickListener {
         List<Item> data = new LinkedList<>();
         if (isList) {
             List<Pair<Integer, String>> listTypes = List.of(
-                    new Pair<>(ExtraMenuBean.LIST_TYPE_NUMBER, "List Integer (%d)"),
-                    new Pair<>(ExtraMenuBean.LIST_TYPE_STRING, "List String (%d)"),
-                    new Pair<>(ExtraMenuBean.LIST_TYPE_MAP, "List Map (%d)"),
-                    new Pair<>(4, "List Custom (%d)")
+                    new Pair<>(ExtraMenuBean.LIST_TYPE_NUMBER, Helper.getResString(R.string.logic_group_list_integer)),
+                    new Pair<>(ExtraMenuBean.LIST_TYPE_STRING, Helper.getResString(R.string.logic_group_list_string)),
+                    new Pair<>(ExtraMenuBean.LIST_TYPE_MAP, Helper.getResString(R.string.logic_group_list_map)),
+                    new Pair<>(4, Helper.getResString(R.string.logic_group_list_custom))
             );
             for (Pair<Integer, String> listType : listTypes) {
                 ArrayList<String> lists = getUsedList(listType.first);
@@ -411,11 +411,11 @@ public class LogicClickListener implements View.OnClickListener {
             }
         } else {
             List<Pair<List<Integer>, String>> variableTypes = List.of(
-                    new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_BOOLEAN), "Boolean (%d)"),
-                    new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_NUMBER), "Number (%d)"),
-                    new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_STRING), "String (%d)"),
-                    new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_MAP), "Map (%d)"),
-                    new Pair<>(List.of(5, 6), "Custom Variable (%d)")
+                    new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_BOOLEAN), Helper.getResString(R.string.logic_group_boolean)),
+                    new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_NUMBER), Helper.getResString(R.string.logic_group_number)),
+                    new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_STRING), Helper.getResString(R.string.logic_group_string)),
+                    new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_MAP), Helper.getResString(R.string.logic_group_map)),
+                    new Pair<>(List.of(5, 6), Helper.getResString(R.string.logic_group_custom))
             );
             for (Pair<List<Integer>, String> variableType : variableTypes) {
                 List<String> instances = new LinkedList<>();

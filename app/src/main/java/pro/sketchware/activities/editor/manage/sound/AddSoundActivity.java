@@ -388,7 +388,7 @@ public class AddSoundActivity extends BaseDialogActivity implements View.OnClick
         Optional<String> displayName = SketchwareUtil.getSafDocumentDisplayName(input);
 
         //noinspection SimplifyOptionalCallChains
-        if (!displayName.isPresent()) return "Unknown filename";
+        if (!displayName.isPresent()) return Helper.getResString(R.string.sound_unknown_filename);
         String name = displayName.get();
 
         if (name.contains(".")) {

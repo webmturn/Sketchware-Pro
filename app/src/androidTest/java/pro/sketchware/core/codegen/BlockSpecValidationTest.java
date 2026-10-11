@@ -106,7 +106,7 @@ public class BlockSpecValidationTest {
             input(activity, prefix + "%m");
             View error = ((ViewGroup) activity.findViewById(R.id.block_area)).getChildAt(0);
             assertTrue(error instanceof android.widget.TextView);
-            assertEquals("Error: '%m' must be followed by '.param' at position " + (prefix.length() + 2),
+            assertEquals(activity.getString(R.string.block_parameter_syntax_error, prefix.length() + 2),
                     ((android.widget.TextView) error).getText().toString());
             assertEquals(initial, read(palette));
             input(activity, prefix + "%m.textview");

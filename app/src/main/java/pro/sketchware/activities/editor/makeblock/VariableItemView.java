@@ -18,7 +18,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 
-import pro.sketchware.core.block.view.BlockColorMapper;
+import pro.sketchware.util.locale.LocalizedDisplayNames;
 import pro.sketchware.util.UIHelper;
 import pro.sketchware.util.ViewUtil;
 import pro.sketchware.util.Helper;
@@ -62,7 +62,7 @@ public class VariableItemView extends LinearLayout {
                 break;
 
             default:
-                type = BlockColorMapper.getComponentDisplayName(name);
+                type = LocalizedDisplayNames.getMenuDisplayName(getContext(), name);
         }
 
         switch (name) {

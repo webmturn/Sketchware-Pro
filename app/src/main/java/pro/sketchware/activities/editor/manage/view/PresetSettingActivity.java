@@ -1,5 +1,6 @@
 package pro.sketchware.activities.editor.manage.view;
 
+import pro.sketchware.util.locale.LocalizedDisplayNames;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -34,7 +35,7 @@ public class PresetSettingActivity extends BaseDialogActivity implements View.On
         };
 
         activity.setImageResource(resDrawable);
-        activityName.setText(presetName);
+        activityName.setText(LocalizedDisplayNames.get(presetName));
     }
 
     private void close() {

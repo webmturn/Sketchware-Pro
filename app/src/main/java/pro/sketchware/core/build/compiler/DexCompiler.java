@@ -1,5 +1,7 @@
 package pro.sketchware.core.build.compiler;
 
+import pro.sketchware.R;
+import pro.sketchware.util.Helper;
 import com.android.tools.r8.CompilationFailedException;
 import com.android.tools.r8.CompilationMode;
 import com.android.tools.r8.D8;
@@ -24,7 +26,7 @@ public class DexCompiler {
             minApiLevel = Integer.parseInt(builder.settings.getValue(
                     ProjectSettings.SETTING_MINIMUM_SDK_VERSION, "21"));
         } catch (NumberFormatException e) {
-            throw new CompilationFailedException("Invalid minSdkVersion specified in Project Settings" + e.getMessage());
+            throw new CompilationFailedException(Helper.getResString(R.string.build_invalid_min_sdk) + e.getMessage());
         }
 
         Collection<Path> programFiles = new LinkedList<>();

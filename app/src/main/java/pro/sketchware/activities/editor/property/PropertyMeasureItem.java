@@ -14,6 +14,7 @@ import pro.sketchware.util.format.FormatUtil;
 import pro.sketchware.core.callback.PropertyChangedCallback;
 import pro.sketchware.util.UIHelper;
 import pro.sketchware.core.project.SketchwareConstants;
+import pro.sketchware.util.locale.PropertyDisplayNames;
 import pro.sketchware.util.ViewUtil;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
@@ -74,11 +75,11 @@ public class PropertyMeasureItem extends RelativeLayout implements View.OnClickL
     public void setValue(int value) {
         measureValue = value;
         if (!isWrapContent && value == LayoutParams.WRAP_CONTENT) {
-            tvValue.setText(SketchwareConstants.getPropertyValueString(key, LayoutParams.MATCH_PARENT));
+            tvValue.setText(PropertyDisplayNames.get(getContext(), key, SketchwareConstants.getPropertyValueString(key, LayoutParams.MATCH_PARENT)));
         } else if (isCustomValue || value < 0) {
-            tvValue.setText(SketchwareConstants.getPropertyValueString(key, value));
+            tvValue.setText(PropertyDisplayNames.get(getContext(), key, SketchwareConstants.getPropertyValueString(key, value)));
         } else {
-            tvValue.setText(SketchwareConstants.getPropertyValueString(key, LayoutParams.WRAP_CONTENT));
+            tvValue.setText(PropertyDisplayNames.get(getContext(), key, SketchwareConstants.getPropertyValueString(key, LayoutParams.WRAP_CONTENT)));
         }
     }
 

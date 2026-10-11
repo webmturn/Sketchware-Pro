@@ -222,19 +222,19 @@ public class WidgetsCreatorManager {
                 String widgetClass = Objects.requireNonNull(binding.addWidgetTo.getText()).toString().trim();
 
                 if (widgetTitle.isEmpty()) {
-                    binding.inputTitle.setError(String.format(Helper.getResString(R.string.var_is_required, "Widget title")));
+                    binding.inputTitle.setError(String.format(Helper.getResString(R.string.var_is_required, Helper.getResString(R.string.widget_field_title))));
                     return;
                 }
                 if (widgetName.isEmpty()) {
-                    binding.inputName.setError(String.format(Helper.getResString(R.string.var_is_required), "Widget class name"));
+                    binding.inputName.setError(String.format(Helper.getResString(R.string.var_is_required), Helper.getResString(R.string.widget_field_class_name)));
                     return;
                 }
                 if (widgetType.isEmpty()) {
-                    binding.inputType.setError(String.format(Helper.getResString(R.string.var_is_required), "Widget type"));
+                    binding.inputType.setError(String.format(Helper.getResString(R.string.var_is_required), Helper.getResString(R.string.widget_field_type)));
                     return;
                 }
                 if (widgetClass.isEmpty()) {
-                    binding.inputClass.setError(String.format(Helper.getResString(R.string.var_is_required), "Category"));
+                    binding.inputClass.setError(String.format(Helper.getResString(R.string.var_is_required), Helper.getResString(R.string.widget_field_category)));
                     return;
                 }
 

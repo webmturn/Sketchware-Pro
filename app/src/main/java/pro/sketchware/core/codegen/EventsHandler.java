@@ -387,20 +387,20 @@ public class EventsHandler {
 
     public static String getSpec(String name, String event) {
         return switch (event) {
-            case "Import" -> "create new import";
+            case "Import" -> Helper.getResString(R.string.event_create_import);
             case "onActivityResult" ->
-                    "OnActivityResult %d.requestCode %d.resultCode %m.intent.data";
+                    Helper.getResString(R.string.event_activity_result);
             case "initializeLogic" -> "initializeLogic";
-            case "onSwipeRefreshLayout" -> "when " + name + " refresh";
-            case " onLongClick" -> "when " + name + " long clicked";
-            case "onTabLayoutNewTabAdded" -> name + " return tab title %d.position";
-            case "onPreExecute" -> name + " onPreExecute ";
-            case "doInBackground" -> name + " doInBackground %s.param";
-            case "onProgressUpdate" -> name + " onProgressUpdate progress %d.value";
-            case "onPostExecute" -> name + " onPostExecute result %s.result";
+            case "onSwipeRefreshLayout" -> Helper.getResString(R.string.event_when_prefix) + name + Helper.getResString(R.string.event_refresh_suffix);
+            case " onLongClick" -> Helper.getResString(R.string.event_when_prefix) + name + Helper.getResString(R.string.event_long_click_suffix);
+            case "onTabLayoutNewTabAdded" -> name + Helper.getResString(R.string.event_tab_title_suffix);
+            case "onPreExecute" -> name + Helper.getResString(R.string.event_pre_execute_suffix);
+            case "doInBackground" -> name + Helper.getResString(R.string.event_background_suffix);
+            case "onProgressUpdate" -> name + Helper.getResString(R.string.event_progress_suffix);
+            case "onPostExecute" -> name + Helper.getResString(R.string.event_post_execute_suffix);
             default -> {
                 EventMatch match = findCustomEventByName(event);
-                yield match != null ? match.event.getHeaderSpec().replace("###", name) : "no spec";
+                yield match != null ? match.event.getHeaderSpec().replace("###", name) : Helper.getResString(R.string.event_no_spec);
             }
         };
     }

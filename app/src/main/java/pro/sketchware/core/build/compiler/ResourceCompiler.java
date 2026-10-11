@@ -1,5 +1,7 @@
 package pro.sketchware.core.build.compiler;
 
+import pro.sketchware.R;
+import pro.sketchware.util.Helper;
 import static pro.sketchware.core.build.BuildDefaults.VAR_DEFAULT_TARGET_SDK_VERSION;
 
 import android.content.Context;
@@ -122,7 +124,7 @@ public class ResourceCompiler {
 
             long savedTimeMillis = System.currentTimeMillis();
             if (progressListener != null) {
-                progressListener.onProgressUpdate("Compiling resources with AAPT2...", BuildStage.COMPILE_RESOURCES);
+                progressListener.onProgressUpdate(Helper.getResString(R.string.build_progress_compiling_resources_with_aapt2), BuildStage.COMPILE_RESOURCES);
             }
             compileBuiltInLibraryResources();
             LogUtil.d(TAG + ":c", "Compiling built-in library resources took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
@@ -149,7 +151,7 @@ public class ResourceCompiler {
         public void link() throws SimpleException, MissingFileException {
             String resourcesPath = buildHelper.projectFilePaths.binDirectoryPath + File.separator + "res";
             if (progressListener != null)
-                progressListener.onProgressUpdate("Linking resources with AAPT2...", BuildStage.LINK_RESOURCES);
+                progressListener.onProgressUpdate(Helper.getResString(R.string.build_progress_linking_resources_with_aapt2), BuildStage.LINK_RESOURCES);
 
             ArrayList<String> args = new ArrayList<>();
             args.add(aapt2.getAbsolutePath());

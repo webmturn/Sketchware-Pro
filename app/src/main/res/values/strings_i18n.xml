@@ -1,0 +1,620 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="builtin_block_commandblockjava" formatted="false">Java Command Block: reference %s distance %d frontend %d backend %d command %m.Command</string>
+    <string name="builtin_block_commandblockxml" formatted="false">XML Command Block: reference %s distance %d frontend %d backend %d command %m.Command xml name %s.inputOnly</string>
+    <string name="builtin_block_setrecyclerviewlayoutparams" formatted="false">set RecyclerViewLayoutParams width %m.LayoutParam height %m.LayoutParam</string>
+    <string name="builtin_block_refreshinglist" formatted="false">%m.listview invalidate views</string>
+    <string name="builtin_block_listviewaddheader" formatted="false">%m.listview add Header view %m.view data %s selectable? %b</string>
+    <string name="builtin_block_listviewaddfooter" formatted="false">%m.listview add Footer view %m.view data %s selectable? %b</string>
+    <string name="builtin_block_listviewremoveheader" formatted="false">%m.listview remove Header %m.view</string>
+    <string name="builtin_block_listviewremovefooter" formatted="false">%m.listview remove Footer %m.view</string>
+    <string name="builtin_block_progressdialogcreate" formatted="false">%m.progressdialog Create in %m.activity</string>
+    <string name="builtin_block_listviewsetselection" formatted="false">%m.listview set selection %d</string>
+    <string name="builtin_block_edittextdiablesuggestion" formatted="false">%m.edittext disable suggestions</string>
+    <string name="builtin_block_edittextlines" formatted="false">%m.edittext set lines %d</string>
+    <string name="builtin_block_edittextsingleline" formatted="false">%m.edittext singleLine? %b</string>
+    <string name="builtin_block_edittextshowerror" formatted="false">%m.edittext show error %s</string>
+    <string name="builtin_block_edittextselectall" formatted="false">%m.edittext select all text</string>
+    <string name="builtin_block_edittextsetselection" formatted="false">%m.edittext set selection start %d end %d</string>
+    <string name="builtin_block_edittextsetmaxlines" formatted="false">%m.edittext set max lines %d</string>
+    <string name="builtin_block_edittextgetselectionstart" formatted="false">%m.edittext get selection start</string>
+    <string name="builtin_block_edittextgetselectionend" formatted="false">%m.edittext get selection end</string>
+    <string name="builtin_block_performclick" formatted="false">%m.view performClick</string>
+    <string name="builtin_block_asynctaskexecute" formatted="false">%m.asynctask execute message %s</string>
+    <string name="builtin_block_asynctaskpublishprogress" formatted="false">publish progress %d</string>
+    <string name="builtin_block_progressdialogsetcanceledoutside" formatted="false">%m.progressdialog setCancelableWhenTouchOutside %b</string>
+    <string name="builtin_block_datepickerdialogshow" formatted="false">DatePickerDialog show</string>
+    <string name="builtin_block_timepickerdialogshow" formatted="false">%m.timepickerdialog show</string>
+    <string name="builtin_block_imagecrop" formatted="false">CropImageView fromFilePath %s RequestCode %d</string>
+    <string name="builtin_block_isconnected" formatted="false">isConnected</string>
+    <string name="builtin_block_getclipboard" formatted="false">get clipboard text</string>
+    <string name="builtin_block_customimport" formatted="false">import %s.import</string>
+    <string name="builtin_block_customimport2" formatted="false">import %m.import</string>
+    <string name="builtin_block_customtoast" formatted="false">CustomToast %s textColor %m.color textSize %d bgColor %m.color cornerRadius %d gravity %m.gravity_t</string>
+    <string name="builtin_block_customtoastwithicon" formatted="false">CustomToastWithIcon %s textColor %m.color textSize %d bgColor %m.color cornerRadius %d gravity %m.gravity_t Icon %m.resource</string>
+    <string name="builtin_block_lightstatusbar" formatted="false">LightStatusBar</string>
+    <string name="builtin_block_hidekeyboard" formatted="false">Hide keyboard</string>
+    <string name="builtin_block_showkeyboard" formatted="false">Show keyboard</string>
+    <string name="builtin_block_progressdialogsettitle" formatted="false">%m.progressdialog setTitle %s</string>
+    <string name="builtin_block_progressdialogsetmessage" formatted="false">%m.progressdialog setMessage %s</string>
+    <string name="builtin_block_progressdialogsetmax" formatted="false">%m.progressdialog setMax %d</string>
+    <string name="builtin_block_progressdialogsetprogress" formatted="false">%m.progressdialog setProgress %d</string>
+    <string name="builtin_block_progressdialogsetcancelable" formatted="false">%m.progressdialog setCancelable %b</string>
+    <string name="builtin_block_progressdialogsetcanceled" formatted="false">%m.progressdialog setCanceledOnTouchOutside %b</string>
+    <string name="builtin_block_progressdialogsetstyle" formatted="false">%m.progressdialog setProgressStyle %m.styleprogress</string>
+    <string name="builtin_block_progressdialogdismiss" formatted="false">%m.progressdialog dismiss</string>
+    <string name="builtin_block_progressdialogshow" formatted="false">%m.progressdialog show</string>
+    <string name="builtin_block_startservice" formatted="false">startService %m.activity</string>
+    <string name="builtin_block_stopservice" formatted="false">stopService %m.activity</string>
+    <string name="builtin_block_sendbroadcast" formatted="false">sendBroadcast %s</string>
+    <string name="builtin_block_startactivitywithchooser" formatted="false">StartActivity %m.intent with Chooser %s</string>
+    <string name="builtin_block_finishaffinity" formatted="false">Finish Affinity</string>
+    <string name="builtin_block_ternarystring" formatted="false">%b ? %s : %s</string>
+    <string name="builtin_block_ternarynumber" formatted="false">%b ? %d : %d</string>
+    <string name="builtin_block_forloopincrease" formatted="false">for %m.varInt = %d; %b; %m.varInt++</string>
+    <string name="builtin_block_notifydatasetchanged" formatted="false">RefreshData</string>
+    <string name="builtin_block_getlastvisibleposition" formatted="false">%m.listview getLastVisiblePosition</string>
+    <string name="builtin_block_listscrollparam" formatted="false">%m.listscrollparam</string>
+    <string name="builtin_block_menuinflater" formatted="false">Menu get menu from file %m.menu</string>
+    <string name="builtin_block_menuadditem" formatted="false">Menu add id %d title %s</string>
+    <string name="builtin_block_menuaddmenuitem" formatted="false">%m.menuitem add id %d title %s icon %m.resource showAsAction %m.menuaction</string>
+    <string name="builtin_block_menuaddsubmenu" formatted="false">Menu add %m.submenu title %s;</string>
+    <string name="builtin_block_submenuadditem" formatted="false">%m.submenu add id %d title %s</string>
+    <string name="builtin_block_getassetfile" formatted="false">%m.inputstream getFileFromAsset path %s</string>
+    <string name="builtin_block_renamefile" formatted="false">rename file path %s to %s</string>
+    <string name="builtin_block_copyassetfile" formatted="false">%m.inputstream to String</string>
+    <string name="builtin_block_sortlistmap" formatted="false">sort %m.listMap key %s isNumber %b isAscending %b</string>
+    <string name="builtin_block_deletemapfromlistmap" formatted="false">delete %m.varMap of %m.listMap</string>
+    <string name="builtin_block_html" formatted="false">html %s</string>
+    <string name="builtin_block_reverse" formatted="false">reverse %s</string>
+    <string name="builtin_block_tohashcode" formatted="false">toHashCode %s</string>
+    <string name="builtin_block_stringmatches" formatted="false">%s matches RegExp %s</string>
+    <string name="builtin_block_stringreplacefirst" formatted="false">%s replace first RegExp %s with %s</string>
+    <string name="builtin_block_stringreplaceall" formatted="false">%s replace all RegExp %s with %s</string>
+    <string name="builtin_block_stringsplittolist" formatted="false">split %s RegExp %s into %m.listStr</string>
+    <string name="builtin_block_mapcontainvalue" formatted="false">%m.varMap contain value %s</string>
+    <string name="builtin_block_getheight" formatted="false">%m.view getHeight</string>
+    <string name="builtin_block_getwidth" formatted="false">%m.view getWidth</string>
+    <string name="builtin_block_removeview" formatted="false">%m.view removeView %m.view</string>
+    <string name="builtin_block_removeviews" formatted="false">%m.view removeAllViews</string>
+    <string name="builtin_block_addview" formatted="false">%m.view addView %m.view</string>
+    <string name="builtin_block_addviews" formatted="false">%m.view addView %m.view index %d</string>
+    <string name="builtin_block_setgravity" formatted="false">%m.view setGravity %m.gravity_v %m.gravity_h</string>
+    <string name="builtin_block_setimageidentifier" formatted="false">%m.imageview set image by name %s</string>
+    <string name="builtin_block_setimagecustomres" formatted="false">%m.imageview setImage %m.image</string>
+    <string name="builtin_block_getrating" formatted="false">%m.ratingbar getRating</string>
+    <string name="builtin_block_setrating" formatted="false">%m.ratingbar setRating%d</string>
+    <string name="builtin_block_setnumstars" formatted="false">%m.ratingbar setNumStars %d</string>
+    <string name="builtin_block_setstepsize" formatted="false">%m.ratingbar setStepSize %d</string>
+    <string name="builtin_block_timepickersetis24hour" formatted="false">%m.timepicker setIs24Hour %b</string>
+    <string name="builtin_block_timepickersetcurrenthour" formatted="false">%m.timepicker setCurrentHour %d</string>
+    <string name="builtin_block_timepickersetcurrentminute" formatted="false">%m.timepicker setCurrentMinute%d</string>
+    <string name="builtin_block_timepickersethour" formatted="false">%m.timepicker setHour %d</string>
+    <string name="builtin_block_timepickersetminute" formatted="false">%m.timepicker setMinute%d</string>
+    <string name="builtin_block_autocomsetdata" formatted="false">%m.actv setListData %m.listStr</string>
+    <string name="builtin_block_setthreshold" formatted="false">%m.mactv setThreshold %d</string>
+    <string name="builtin_block_settokenizer" formatted="false">%m.mactv CommaTokenizer</string>
+    <string name="builtin_block_multiautocomsetdata" formatted="false">%m.mactv setListData %m.listStr</string>
+    <string name="builtin_block_listsetselector" formatted="false">%m.listview setSelector %m.color</string>
+    <string name="builtin_block_gridsetcustomviewdata" formatted="false">%m.gridview setGridCustomViewData %m.listMap</string>
+    <string name="builtin_block_gridsetnumcolumns" formatted="false">%m.gridview setNumColumns %d</string>
+    <string name="builtin_block_gridsetcolumnwidth" formatted="false">%m.gridview setColumnWidth %d</string>
+    <string name="builtin_block_gridsetverticalspacing" formatted="false">%m.gridview setVerticalSpacing %d</string>
+    <string name="builtin_block_gridsethorizontalspacing" formatted="false">%m.gridview setHorizontalSpacing %d</string>
+    <string name="builtin_block_gridsetstretchmode" formatted="false">%m.gridview setStretchMode %m.gridstretchmode</string>
+    <string name="builtin_block_videoviewsetvideouri" formatted="false">%m.videoview setVideoUri %s</string>
+    <string name="builtin_block_videoviewstart" formatted="false">%m.videoview start</string>
+    <string name="builtin_block_videoviewpause" formatted="false">%m.videoview pause</string>
+    <string name="builtin_block_videoviewstop" formatted="false">%m.videoview stopPlayback</string>
+    <string name="builtin_block_videoviewisplaying" formatted="false">%m.videoview isPlaying</string>
+    <string name="builtin_block_videoviewcanpause" formatted="false">%m.videoview canPause</string>
+    <string name="builtin_block_videoviewcanseekforward" formatted="false">%m.videoview canSeekForward</string>
+    <string name="builtin_block_videoviewcanseekbackward" formatted="false">%m.videoview canSeekBackward</string>
+    <string name="builtin_block_videoviewgetduration" formatted="false">%m.videoview getDuration</string>
+    <string name="builtin_block_videoviewgetcurrentposition" formatted="false">%m.videoview getCurrentPosition</string>
+    <string name="builtin_block_listsettranscriptmode" formatted="false">%m.listview setTranscriptMode %m.transcriptmode</string>
+    <string name="builtin_block_listsetstackfrombottom" formatted="false">%m.listview setStackFromBottom %b</string>
+    <string name="builtin_block_setelevation" formatted="false">%m.view setElevation %d</string>
+    <string name="builtin_block_settextsize" formatted="false">%m.textview setTextSize %d</string>
+    <string name="builtin_block_setcolorfilterview" formatted="false">%m.view setColorFilter %m.color with %m.porterduff</string>
+    <string name="builtin_block_setcornerradiusview" formatted="false">%m.view setCornerRadius %d color %m.color</string>
+    <string name="builtin_block_setgradientbackground" formatted="false">%m.view setGradientBackground %m.color and %m.color</string>
+    <string name="builtin_block_setstrokeview" formatted="false">%m.view setStroke %d strokeColor %m.color bgColor %m.color</string>
+    <string name="builtin_block_setradiusandstrokeview" formatted="false">%m.view setCornerRadius %d stroke %d strokeColor %m.color bgColor %m.color</string>
+    <string name="builtin_block_showsnackbar" formatted="false">%m.view showSnackbar text %s actionText %s onClick</string>
+    <string name="builtin_block_addtab" formatted="false">%m.tablayout addTabTitle %s</string>
+    <string name="builtin_block_setupwithviewpager" formatted="false">%m.tablayout setupWithViewPager %m.viewpager</string>
+    <string name="builtin_block_setinlinelabel" formatted="false">%m.tablayout setInlineLabel %b</string>
+    <string name="builtin_block_settabtextcolors" formatted="false">%m.tablayout setTabTextColors Normal %m.color Selected %m.color</string>
+    <string name="builtin_block_settabripplecolor" formatted="false">%m.tablayout setTabRippleColor %m.color</string>
+    <string name="builtin_block_setselectedtabindicatorcolor" formatted="false">%m.tablayout setSelectedTabIndicatorColor %m.color</string>
+    <string name="builtin_block_setselectedtabindicatorheight" formatted="false">%m.tablayout setSelectedTabIndicatorHeight %d</string>
+    <string name="builtin_block_returntitle" formatted="false">return Title %s</string>
+    <string name="builtin_block_returnfragment" formatted="false">return Fragment %m.activity</string>
+    <string name="builtin_block_bottommenuadditem" formatted="false">%m.bottomnavigation add item id %d title %s icon %m.resource</string>
+    <string name="builtin_block_codeviewsetcode" formatted="false">%m.codeview setCode %s</string>
+    <string name="builtin_block_codeviewsettheme" formatted="false">%m.codeview setTheme %m.cv_theme</string>
+    <string name="builtin_block_codeviewsetlanguage" formatted="false">%m.codeview setLanguage %m.cv_language</string>
+    <string name="builtin_block_codeviewapply" formatted="false">%m.codeview apply</string>
+    <string name="builtin_block_fabicon" formatted="false">FAB set icon %m.resource</string>
+    <string name="builtin_block_fabsize" formatted="false">FAB setSize %m.fabsize</string>
+    <string name="builtin_block_fabvisibility" formatted="false">FAB setVisibility %m.fabvisible</string>
+    <string name="builtin_block_setbgdrawable" formatted="false">%m.view setBackgroundDrawable %m.drawable</string>
+    <string name="builtin_block_setcardbackgroundcolor" formatted="false">%m.cardview setCardBackgroundColor %m.color</string>
+    <string name="builtin_block_setcardradius" formatted="false">%m.cardview setCornerRadius %d</string>
+    <string name="builtin_block_setcardelevation" formatted="false">%m.cardview setCardElevation %d</string>
+    <string name="builtin_block_setpreventcorneroverlap" formatted="false">%m.cardview setPreventCornerOverlap %b</string>
+    <string name="builtin_block_setusecompatpadding" formatted="false">%m.cardview setUseCompatPadding %b</string>
+    <string name="builtin_block_spnsetcustomviewdata" formatted="false">%m.spinner setSpinnerCustomViewData %m.listMap</string>
+    <string name="builtin_block_lottiesetanimationfromasset" formatted="false">%m.lottie setAnimationFromAsset %s</string>
+    <string name="builtin_block_lottiesetanimationfromjson" formatted="false">%m.lottie setAnimationFromJson %s</string>
+    <string name="builtin_block_lottiesetanimationfromurl" formatted="false">%m.lottie setAnimationFromUrl %s</string>
+    <string name="builtin_block_lottiesetrepeatcount" formatted="false">%m.lottie setRepeatCount %d</string>
+    <string name="builtin_block_lottiesetspeed" formatted="false">%m.lottie setSpeed %d</string>
+    <string name="builtin_block_recyclersetcustomviewdata" formatted="false">%m.recyclerview setRecyclerCustomViewData %m.listMap</string>
+    <string name="builtin_block_recyclersetlayoutmanager" formatted="false">%m.recyclerview setLayoutManager</string>
+    <string name="builtin_block_recyclersetlayoutmanagerhorizontal" formatted="false">%m.recyclerview set Horizontal LayoutManager</string>
+    <string name="builtin_block_recyclersethasfixedsize" formatted="false">%m.recyclerview setHasFixedSize %b</string>
+    <string name="builtin_block_recyclersmoothscrolltoposition" formatted="false">%m.recyclerview smoothScrollToPosition %d</string>
+    <string name="builtin_block_recyclerscrolltopositionwithoffset" formatted="false">"%m.recyclerview scrollToPosition %d offset %d "</string>
+    <string name="builtin_block_recyclerscrollparam" formatted="false">%m.recyclerscrollparam</string>
+    <string name="builtin_block_pagerscrollparam" formatted="false">%m.pagerscrollparam</string>
+    <string name="builtin_block_pagersetcustomviewdata" formatted="false">%m.viewpager setPagerCustomViewData %m.listMap</string>
+    <string name="builtin_block_pagersetfragmentadapter" formatted="false">%m.viewpager setFragmentAdapter %m.fragmentAdapter TabCount %d</string>
+    <string name="builtin_block_pagergetoffscreenpagelimit" formatted="false">%m.viewpager getOffscreenPageLimit</string>
+    <string name="builtin_block_pagersetoffscreenpagelimit" formatted="false">%m.viewpager setOffscreenPageLimit %d</string>
+    <string name="builtin_block_pagergetcurrentitem" formatted="false">%m.viewpager getCurrentItem</string>
+    <string name="builtin_block_pagersetcurrentitem" formatted="false">%m.viewpager setCurrentItem %d</string>
+    <string name="builtin_block_onswiperefreshlayout" formatted="false">When %m.swiperefreshlayout refreshed</string>
+    <string name="builtin_block_setrefreshing" formatted="false">%m.swiperefreshlayout setRefreshing %b</string>
+    <string name="builtin_block_viewonlongclick" formatted="false">When %m.view long clicked</string>
+    <string name="builtin_block_viewontouch" formatted="false">When %m.view touched</string>
+    <string name="builtin_block_checkboxonchecked" formatted="false">When %m.checkbox checked</string>
+    <string name="builtin_block_checkboxischecked" formatted="false">isChecked</string>
+    <string name="builtin_block_getbadgecount" formatted="false">%m.badgeview getBadgeCount</string>
+    <string name="builtin_block_setbadgenumber" formatted="false">%m.badgeview setBadgeNumber %d</string>
+    <string name="builtin_block_setbadgestring" formatted="false">%m.badgeview setBadgeString %s</string>
+    <string name="builtin_block_setbadgebackground" formatted="false">%m.badgeview setBadgeBackground %m.color</string>
+    <string name="builtin_block_setbadgetextcolor" formatted="false">%m.badgeview setBadgeTextColor %m.color</string>
+    <string name="builtin_block_setbadgetextsize" formatted="false">%m.badgeview setBadgeTextSize %d</string>
+    <string name="builtin_block_setcustomletter" formatted="false">%m.sidebar setCustomLetter String[] %s.inputOnly</string>
+    <string name="builtin_block_setbubblecolor" formatted="false">BubbleLayout %m.view setBubbleColor %m.color</string>
+    <string name="builtin_block_setbubblestrokecolor" formatted="false">BubbleLayout %m.view setStrokeColor %m.color</string>
+    <string name="builtin_block_setbubblestrokewidth" formatted="false">BubbleLayout %m.view setStrokeWidth %d</string>
+    <string name="builtin_block_setbubblecornerradius" formatted="false">BubbleLayout %m.view setCornerRadius %d</string>
+    <string name="builtin_block_setbubblearrowheight" formatted="false">BubbleLayout %m.view setArrowHeight %d</string>
+    <string name="builtin_block_setbubblearrowwidth" formatted="false">BubbleLayout %m.view setArrowWidth %d</string>
+    <string name="builtin_block_setbubblearrowposition" formatted="false">BubbleLayout %m.view setArrowPosition %d</string>
+    <string name="builtin_block_patterntostring" formatted="false">"%m.patternview getPattern from %m.listStr to String "</string>
+    <string name="builtin_block_patterntomd5" formatted="false">%m.patternview getPattern from %m.listStr to MD5</string>
+    <string name="builtin_block_patterntosha1" formatted="false">%m.patternview getPattern from %m.listStr to SHA1</string>
+    <string name="builtin_block_patternsetdotcount" formatted="false">"%m.patternview setDotCount %d "</string>
+    <string name="builtin_block_patternsetnormalstatecolor" formatted="false">%m.patternview setNormalStateColor %m.color</string>
+    <string name="builtin_block_patternsetcorrectstatecolor" formatted="false">%m.patternview setCorrectStateColor %m.color</string>
+    <string name="builtin_block_patternsetwrongstatecolor" formatted="false">%m.patternview setWrongStateColor %m.color</string>
+    <string name="builtin_block_patternsetviewmode" formatted="false">%m.patternview setViewMode %m.patternviewmode</string>
+    <string name="builtin_block_patternlockclear" formatted="false">%m.patternview clearPattern</string>
+    <string name="builtin_block_tilsetboxbgcolor" formatted="false">%m.textinputlayout setBoxBackgroundColor %m.color</string>
+    <string name="builtin_block_tilsetboxstrokecolor" formatted="false">%m.textinputlayout setBoxStrokeColor %m.color</string>
+    <string name="builtin_block_tilsetboxbgmode" formatted="false">%m.textinputlayout setBoxBackgroundMode %m.til_box_mode</string>
+    <string name="builtin_block_tilsetboxcornerradii" formatted="false">"%m.textinputlayout setBoxCornerRadius TL %d TR %d BL %d BR %d "</string>
+    <string name="builtin_block_tilseterror" formatted="false">"%m.textinputlayout setError %s "</string>
+    <string name="builtin_block_tilseterrorenabled" formatted="false">"%m.textinputlayout setErrorEnabled %b "</string>
+    <string name="builtin_block_tilsetcounterenabled" formatted="false">"%m.textinputlayout setCounterEnabled %b "</string>
+    <string name="builtin_block_tilsetcountermaxlength" formatted="false">"%m.textinputlayout setCounterMaxLength %d "</string>
+    <string name="builtin_block_tilgetcountermaxlength" formatted="false">%m.textinputlayout getCounterMaxLength</string>
+    <string name="builtin_block_ytpvlifecycle" formatted="false">%m.youtubeview getLifecycle</string>
+    <string name="builtin_block_ytpvsetlistener" formatted="false">%m.youtubeview addYouTubePlayerListener VideoID %s</string>
+    <string name="builtin_block_launchapp" formatted="false">%m.intent set app package %s</string>
+    <string name="builtin_block_changestatebarcolour" formatted="false">%m.activity set statebar color %m.color</string>
+    <string name="builtin_block_dialog_seticon" formatted="false">%m.dialog setIcon %m.resource_bg</string>
+    <string name="builtin_block_viewpagernotifyondtatchange" formatted="false">%m.viewpager notifyDataSetChanged</string>
+    <string name="builtin_block_returnmap" formatted="false">return %m.varMap</string>
+    <string name="builtin_block_returnliststr" formatted="false">return %m.listStr</string>
+    <string name="builtin_block_returnlistmap" formatted="false">return %m.listMap</string>
+    <string name="builtin_block_returnview" formatted="false">return %m.view</string>
+    <string name="builtin_block_repeatknownnum" formatted="false">repeat %d: %s.inputOnly ++</string>
+    <string name="builtin_block_whileloop" formatted="false">while %b</string>
+    <string name="builtin_block_trycatch" formatted="false">try</string>
+    <string name="builtin_block_trycatch_secondary" formatted="false">catch / finally</string>
+    <string name="builtin_block_catchblock" formatted="false">catch %s.inputOnly</string>
+    <string name="builtin_block_finallyblock" formatted="false">finally</string>
+    <string name="builtin_block_getexceptionmessage" formatted="false">exception message</string>
+    <string name="builtin_block_switchstr" formatted="false">switch %s</string>
+    <string name="builtin_block_switchnum" formatted="false">switch %d</string>
+    <string name="builtin_block_casestr" formatted="false">case %s</string>
+    <string name="builtin_block_casenum" formatted="false">case %d</string>
+    <string name="builtin_block_defaultswitch" formatted="false">default</string>
+    <string name="builtin_block_returnstring" formatted="false">return %s</string>
+    <string name="builtin_block_returnnumber" formatted="false">return %d</string>
+    <string name="builtin_block_returnboolean" formatted="false">return %b</string>
+    <string name="builtin_block_reverselist" formatted="false">reverse %m.list</string>
+    <string name="builtin_block_shufflelist" formatted="false">shuffle %m.list</string>
+    <string name="builtin_block_sortlist" formatted="false">sort %m.listStr</string>
+    <string name="builtin_block_sortlistnum" formatted="false">sort %m.listInt</string>
+    <string name="builtin_block_swapinlist" formatted="false">swap %m.list position %d with %d</string>
+    <string name="builtin_block_getmapatposlistmap" formatted="false">get Map at %d of %m.listMap</string>
+    <string name="builtin_block_setmapatposlistmap" formatted="false">set %m.varMap at %d of %m.listMap</string>
+    <string name="builtin_block_setatposliststr" formatted="false">set %s at %d of %m.listStr</string>
+    <string name="builtin_block_setatposlistnum" formatted="false">set %d at %d of %m.listInt</string>
+    <string name="builtin_block_gsonlisttojsonstring" formatted="false">%m.list to JSON String</string>
+    <string name="builtin_block_gsonstringtoliststring" formatted="false">JSON %s to %m.listStr</string>
+    <string name="builtin_block_gsonstringtolistnumber" formatted="false">JSON %s to %m.listInt</string>
+    <string name="builtin_block_hashmapgetnumber" formatted="false">%m.varMap get number key %s</string>
+    <string name="builtin_block_hashmapputnumber" formatted="false">%m.varMap put key %s value int %d</string>
+    <string name="builtin_block_hashmapputnumber2" formatted="false">%m.varMap put key %s value double %d</string>
+    <string name="builtin_block_hashmapgetboolean" formatted="false">%m.varMap get boolean key %s</string>
+    <string name="builtin_block_hashmapputboolean" formatted="false">%m.varMap put key %s value %b</string>
+    <string name="builtin_block_hashmapgetmap" formatted="false">%m.varMap get Map key %s</string>
+    <string name="builtin_block_hashmapputmap" formatted="false">%m.varMap put key %s value %m.varMap</string>
+    <string name="builtin_block_hashmapliststr" formatted="false">%m.varMap get List String key %s</string>
+    <string name="builtin_block_hashmapputliststr" formatted="false">%m.varMap put key %s value %m.listStr</string>
+    <string name="builtin_block_hashmapgetlistmap" formatted="false">%m.varMap get List Map key %s</string>
+    <string name="builtin_block_hashmapputlistmap" formatted="false">%m.varMap put key %s value %m.listMap</string>
+    <string name="builtin_block_addsourcedirectly" formatted="false">add source directly %s.inputOnly</string>
+    <string name="builtin_block_asdboolean" formatted="false">boolean %s.inputOnly</string>
+    <string name="builtin_block_asdnumber" formatted="false">number %s.inputOnly</string>
+    <string name="builtin_block_asdstring" formatted="false">string %s.inputOnly</string>
+    <string name="builtin_block_repeatknownnumdescending" formatted="false">repeat %d: %s.inputOnly --</string>
+    <string name="builtin_block_foreachstr" formatted="false">for each item %s.inputOnly in %m.listStr</string>
+    <string name="builtin_block_foreachnum" formatted="false">for each item %s.inputOnly in %m.listInt</string>
+    <string name="builtin_block_foreachmap" formatted="false">for each item %s.inputOnly in %m.listMap</string>
+    <string name="builtin_block_ifelsechain" formatted="false">if %b</string>
+    <string name="builtin_block_ifelsechain_secondary" formatted="false">else if / else</string>
+    <string name="builtin_block_elseif" formatted="false">else if %b</string>
+    <string name="builtin_block_elseblock" formatted="false">else</string>
+    <string name="builtin_block_interstitialadload" formatted="false">%m.interstitialad load in %m.activity</string>
+    <string name="builtin_block_interstitialadshow" formatted="false">%m.interstitialad show ad in %m.activity</string>
+    <string name="builtin_block_interstitialadisloaded" formatted="false">%m.interstitialad is loaded</string>
+    <string name="builtin_block_interstitialadregisterfullscreencontentcallback" formatted="false">%m.interstitialad register fullscreen content callbacks (This Block isn\'t needed anymore, please remove it)</string>
+    <string name="builtin_block_rewardedadregisterfullscreencontentcallback" formatted="false">%m.videoad register fullscreen content callbacks (This Block isn\'t needed anymore, please remove it)</string>
+    <string name="builtin_block_getresstring" formatted="false">get String from %m.ResString</string>
+    <string name="builtin_block_casestrand" formatted="false">case %s and</string>
+    <string name="builtin_block_casenumand" formatted="false">case %d and</string>
+    <string name="builtin_block_continue" formatted="false">continue</string>
+    <string name="builtin_block_isempty" formatted="false">%s isEmpty</string>
+    <string name="builtin_block_fileutilcopydir" formatted="false">copy dir path %s to path %s</string>
+    <string name="builtin_block_instanceofoperator" formatted="false">%s instanceOf %s</string>
+    <string name="builtin_block_checkviewvisibility" formatted="false">visibility of %m.view equals %m.visible</string>
+    <string name="builtin_block_intenthasextra" formatted="false">Activity hasExtra key %s</string>
+    <string name="builtin_block_intentsettype" formatted="false">%m.intent setType %s</string>
+    <string name="builtin_block_intentremoveextra" formatted="false">%m.intent removeExtra key %s</string>
+    <string name="builtin_block_filecontainsdata" formatted="false">%m.file contains %s</string>
+    <string name="builtin_block_viewgetchildat" formatted="false">%m.view getChildAt %d</string>
+    <string name="builtin_block_strparseinteger" formatted="false">parse int %s</string>
+    <string name="builtin_block_stringsubsingle" formatted="false">%s subString %d</string>
+    <string name="builtin_block_webviewgetprogress" formatted="false">%m.webview getProgress</string>
+    <string name="builtin_block_menuitemsetvisible" formatted="false">%m.MenuItem setVisible %b</string>
+    <string name="builtin_block_menuitemsetenabled" formatted="false">%m.MenuItem setEnabled %b</string>
+    <string name="builtin_block_menufinditem" formatted="false">MenuItem findItem %s.inputOnly</string>
+    <string name="builtin_block_listaddall" formatted="false">%m.listStr addAll from %m.list</string>
+    <string name="builtin_block_filecanexecute" formatted="false">%m.File canExecute</string>
+    <string name="builtin_block_filecanread" formatted="false">%m.File canRead</string>
+    <string name="builtin_block_filecanwrite" formatted="false">%m.File canWrite</string>
+    <string name="builtin_block_filegetname" formatted="false">%m.File getName</string>
+    <string name="builtin_block_filegetparent" formatted="false">%m.File getParent</string>
+    <string name="builtin_block_filegetpath" formatted="false">%m.File getPath</string>
+    <string name="builtin_block_fileishidden" formatted="false">%m.File isHidden</string>
+    <string name="builtin_block_addpermission" formatted="false">Permission Command Block: add %m.Permission</string>
+    <string name="builtin_block_removepermission" formatted="false">Permission Command Block: remove %m.Permission</string>
+    <string name="builtin_block_addcustomvariable" formatted="false">Custom Variable Block: add variable %s</string>
+    <string name="builtin_block_addinitializer" formatted="false">Initializer Block: add initializer %s</string>
+    <string name="builtin_block_otpviewsetfieldcount" formatted="false">%m.otpview setFieldCount %d</string>
+    <string name="builtin_block_otpviewsetotptext" formatted="false">%m.otpview setOTPText %s</string>
+    <string name="builtin_block_otpviewgetotptext" formatted="false">%m.otpview getOTPText</string>
+    <string name="builtin_block_otpviewsetotplistener" formatted="false">%m.otpview onOTPEntered -&gt; _otp</string>
+    <string name="builtin_block_signinbuttonsetcolorscheme" formatted="false">%m.signinbutton setColorScheme %m.SignButtonColor</string>
+    <string name="builtin_block_signinbuttonsetsize" formatted="false">%m.signinbutton setSize %m.SignButtonSize</string>
+    <string name="builtin_block_banneradviewloadad" formatted="false">%m.adview load</string>
+    <string name="builtin_block_rewardedvideoadload" formatted="false">%m.videoad load in %m.activity</string>
+    <string name="builtin_block_rewardedvideoadshow" formatted="false">%m.videoad show in %m.activity</string>
+    <string name="update_view_changes">View changes</string>
+    <string name="compile_log_monospaced_font">Monospaced font</string>
+    <string name="property_range_zero">Value must be between 0 and %.0f</string>
+    <string name="property_range_decimal">Value must be between %1$.1f and %2$.1f</string>
+    <string name="property_widget_id">widget ID</string>
+    <string name="property_string_not_found">Not found in strings.xml</string>
+    <string name="widget_field_title">Widget title</string>
+    <string name="widget_field_class_name">Widget class name</string>
+    <string name="widget_field_type">Widget type</string>
+    <string name="widget_field_category">Category</string>
+    <string name="block_invalid_data">(Invalid code block data)</string>
+    <string name="notification_select_importance">Select importance</string>
+    <string name="notification_select_priority">Select priority</string>
+    <string name="block_category_menu_item">Menu Item</string>
+    <string name="layout_xml_label">Layout XML</string>
+    <string name="view_code_appcompat_note">Use AppCompat Manager to modify attributes for CoordinatorLayout, Toolbar, and other appcompat layout/widget.</string>
+    <string name="library_broken_configuration">(broken library configuration)</string>
+    <string name="backup_unzip_failed">couldn\'t unzip the backup</string>
+    <string name="backup_read_project_failed">couldn\'t read the project file</string>
+    <string name="backup_write_project_failed">couldn\'t write to the project file</string>
+    <string name="sound_unknown_filename">Unknown filename</string>
+    <string name="library_built_in">Built-in</string>
+    <string name="firebase_config_missing">The google-services.json file you selected does not contain the following configurations:\n</string>
+    <string name="signing_mode_own_key_store">Sign using keystore</string>
+    <string name="signing_mode_testkey">Sign using a test key</string>
+    <string name="signing_mode_dont_sign">Don\'t sign</string>
+    <string name="property_select_string_resource">Please select a String\nor remove \"%1$s\" and add the value directly</string>
+    <string name="logic_group_boolean">Boolean (%d)</string>
+    <string name="logic_group_number">Number (%d)</string>
+    <string name="logic_group_string">String (%d)</string>
+    <string name="logic_group_map">Map (%d)</string>
+    <string name="logic_group_custom">Custom Variable (%d)</string>
+    <string name="logic_group_list_integer">List Integer (%d)</string>
+    <string name="logic_group_list_string">List String (%d)</string>
+    <string name="logic_group_list_map">List Map (%d)</string>
+    <string name="logic_group_list_custom">List Custom (%d)</string>
+    <string name="block_parameter_inputonly">inputOnly</string>
+    <string name="block_parameter_string">string</string>
+    <string name="block_parameter_boolean">boolean</string>
+    <string name="block_parameter_number">number</string>
+    <string name="block_parameter_map">map</string>
+    <string name="block_parameter_view">view</string>
+    <string name="block_parameter_textview">textView</string>
+    <string name="block_parameter_edittext">editText</string>
+    <string name="block_parameter_imageview">ImageView</string>
+    <string name="block_parameter_listview">listView</string>
+    <string name="block_parameter_list">list</string>
+    <string name="block_parameter_listmap">listMap</string>
+    <string name="block_parameter_liststring">listString</string>
+    <string name="block_parameter_listnumber">listNumber</string>
+    <string name="block_parameter_intent">intent</string>
+    <string name="block_parameter_color">color</string>
+    <string name="block_parameter_activity">activity</string>
+    <string name="block_parameter_resource">resource</string>
+    <string name="block_parameter_custom_views">custom views</string>
+    <string name="block_parameter_layout">layout</string>
+    <string name="block_parameter_anim">anim</string>
+    <string name="block_parameter_drawable">drawable</string>
+    <string name="block_parameter_resstrings">ResStrings</string>
+    <string name="block_parameter_syntax_error">Error: \'%%m\' must be followed by \'.param\' at position %1$d</string>
+    <string name="block_select_variable">Select a %1$s Variable</string>
+    <string name="library_status_on">ON</string>
+    <string name="library_status_off">OFF</string>
+    <string name="library_download_pending">Pending...</string>
+    <string name="library_download_resolving">Resolving dependency...</string>
+    <string name="library_download_downloading">Downloading...</string>
+    <string name="library_download_unzipping">Unzipping...</string>
+    <string name="library_download_dexing">Processing (DEX)...</string>
+    <string name="library_download_completed">Completed</string>
+    <string name="library_download_unknown_error">Unknown error</string>
+    <string name="library_download_error_prefix">"Error: "</string>
+    <string name="library_confirm_download_dependencies">Download %1$s and its sub-dependencies?</string>
+    <string name="library_confirm_download">Download %1$s?</string>
+    <string name="library_dependency_not_found">Dependency \'%1$s\' not found</string>
+    <string name="library_resolution_timeout">Dependency tree resolution timed out for %1$s. Only the main library was downloaded.</string>
+    <string name="library_resolution_failed">Failed to resolve dependency \'%1$s\': %2$s</string>
+    <string name="library_finalize_failed">Failed to finalize downloaded library \'%1$s\': %2$s</string>
+    <string name="library_storage_path">\n\nPath: %1$s</string>
+    <string name="library_dependency_counts">%1$d downloaded, %2$d built-in</string>
+    <string name="library_shared_dependencies_retained">Shared dependencies kept because other libraries also use them (%1$d):\n\n%2$s</string>
+    <string name="library_dependency_badge">" · Dependencies: %1$d"</string>
+    <string name="library_version_conflict_badge">" · ⚠ version conflict"</string>
+    <string name="library_save_configuration_failed">Couldn\'t save configuration: %1$s</string>
+    <string name="firebase_missing_storage_bucket">"StorageBucket, "</string>
+    <string name="firebase_missing_app_id">"App ID, "</string>
+    <string name="firebase_missing_api_key">"API Key, "</string>
+    <string name="firebase_missing_database">"Realtime Database, "</string>
+    <string name="build_progress_deleting_temporary_files">Deleting temporary files...</string>
+    <string name="build_progress_generating_source_code">Generating source code...</string>
+    <string name="build_progress_extracting_built_in_libraries">Extracting built-in libraries...</string>
+    <string name="build_progress_aapt2_is_running">AAPT2 is running...</string>
+    <string name="build_progress_generating_view_binding">Generating view binding...</string>
+    <string name="build_progress_java_is_compiling">Java is compiling...</string>
+    <string name="build_progress_merging_dex_files">Merging DEX files...</string>
+    <string name="build_progress_canceling_build">Canceling build...</string>
+    <string name="build_progress_dex_is_up_to_date__no_changes">DEX is up to date (no changes)</string>
+    <string name="build_progress_java_is_up_to_date__incremental_build__no_changes">Java is up to date (incremental build, no changes)</string>
+    <string name="build_progress_dex_merge_is_up_to_date__cached">DEX merge is up to date (cached)</string>
+    <string name="build_progress_extracting_built_in_libraries__dex_files">Extracting built-in libraries\' DEX files...</string>
+    <string name="build_progress_extracting_built_in_libraries__resources">Extracting built-in libraries\' resources...</string>
+    <string name="build_progress_extracting_built_in_signing_keys">Extracting built-in signing keys...</string>
+    <string name="build_progress_extracting_built_in_android_jar">Extracting built-in android.jar...</string>
+    <string name="build_progress_running_r8_on_classes">Running R8 on classes...</string>
+    <string name="build_progress_proguarding_classes">ProGuarding classes...</string>
+    <string name="build_progress_running_stringfog">Running StringFog...</string>
+    <string name="build_progress_kotlin_is_compiling">Kotlin is compiling...</string>
+    <string name="build_progress_compiling_resources_with_aapt2">Compiling resources with AAPT2...</string>
+    <string name="build_progress_linking_resources_with_aapt2">Linking resources with AAPT2...</string>
+    <string name="build_progress_java_incremental">Java is compiling... (incremental: %1$d of %2$d file(s) changed)</string>
+    <string name="display_name_number">Number</string>
+    <string name="display_name_string">String</string>
+    <string name="display_name_boolean">Boolean</string>
+    <string name="display_name_map">Map</string>
+    <string name="display_name_list">List</string>
+    <string name="display_name_view">View</string>
+    <string name="display_name_list_number">List Number</string>
+    <string name="display_name_list_string">List String</string>
+    <string name="display_name_list_map">List Map</string>
+    <string name="display_name_list_boolean">List Boolean</string>
+    <string name="display_name_color">Color</string>
+    <string name="display_name_image">Image</string>
+    <string name="display_name_customview">CustomView</string>
+    <string name="display_name_basic_activity">Basic Activity</string>
+    <string name="display_name_basic_list_item">Basic List Item</string>
+    <string name="display_name_basic_drawer">Basic Drawer</string>
+    <string name="display_name_empty_activity">Empty Activity</string>
+    <string name="display_name_material_purple">Material Purple</string>
+    <string name="display_name_material_blue">Material Blue</string>
+    <string name="display_name_material_green">Material Green</string>
+    <string name="display_name_material_red">Material Red</string>
+    <string name="display_name_material_orange">Material Orange</string>
+    <string name="display_name_material_teal">Material Teal</string>
+    <string name="display_name_material_indigo">Material Indigo</string>
+    <string name="display_name_material_pink">Material Pink</string>
+    <string name="display_name_dark_purple">Dark Purple</string>
+    <string name="display_name_dark_blue">Dark Blue</string>
+    <string name="display_name_light_purple">Light Purple</string>
+    <string name="display_name_light_blue">Light Blue</string>
+    <string name="display_name_random_theme">Random Theme</string>
+    <string name="display_name_default">Default</string>
+    <string name="display_name_select_typeview">Select typeview:</string>
+    <string name="event_display_onupdateprofilecomplete" formatted="false">onUpdateProfileComplete</string>
+    <string name="event_display_onemailverificationsent" formatted="false">onEmailVerificationSent</string>
+    <string name="event_display_ondeleteusercomplete" formatted="false">onDeleteUserComplete</string>
+    <string name="event_display_onupdateemailcomplete" formatted="false">onUpdateEmailComplete</string>
+    <string name="event_display_ongooglesignin" formatted="false">onGoogleSignIn</string>
+    <string name="event_display_onupdatepasswordcomplete" formatted="false">onUpdatePasswordComplete</string>
+    <string name="event_display_signinwithphoneauthcomplete" formatted="false">signInWithPhoneAuthComplete</string>
+    <string name="event_display_onscrolled" formatted="false">onScrolled</string>
+    <string name="event_display_ondatechanged" formatted="false">onDateChanged</string>
+    <string name="event_display_ondateset" formatted="false">onDateSet</string>
+    <string name="event_display_onfailurelink" formatted="false">onFailureLink</string>
+    <string name="event_display_onnavigationitemselected" formatted="false">onNavigationItemSelected</string>
+    <string name="event_display_onprepared" formatted="false">onPrepared</string>
+    <string name="event_display_oncompletion" formatted="false">onCompletion</string>
+    <string name="event_display_onpatternlockcleared" formatted="false">onPatternLockCleared</string>
+    <string name="event_display_onaccountpickercancelled" formatted="false">onAccountPickerCancelled</string>
+    <string name="event_display_onpatternlockstarted" formatted="false">onPatternLockStarted</string>
+    <string name="event_display_onsaveinstancestate" formatted="false">onSaveInstanceState</string>
+    <string name="event_display_oncreateoptionsmenu" formatted="false">onCreateOptionsMenu</string>
+    <string name="event_display_oncreatecontextmenu" formatted="false">onCreateContextMenu</string>
+    <string name="event_display_onrestoreinstancestate" formatted="false">onRestoreInstanceState</string>
+    <string name="event_display_oncontextitemselected" formatted="false">onContextItemSelected</string>
+    <string name="event_display_onquerytextchanged" formatted="false">onQueryTextChanged</string>
+    <string name="event_display_onquerytextsubmit" formatted="false">onQueryTextSubmit</string>
+    <string name="event_display_onerror" formatted="false">onError</string>
+    <string name="event_display_onverificationcompleted" formatted="false">onVerificationCompleted</string>
+    <string name="event_display_onrecyclerscrollchanged" formatted="false">onRecyclerScrollChanged</string>
+    <string name="event_display_onrecyclerscrolled" formatted="false">onRecyclerScrolled</string>
+    <string name="event_display_onsuccesslink" formatted="false">onSuccessLink</string>
+    <string name="event_display_onpagescrolled" formatted="false">onPageScrolled</string>
+    <string name="event_display_onverificationfailed" formatted="false">onVerificationFailed</string>
+    <string name="event_display_onaccountpicker" formatted="false">onAccountPicker</string>
+    <string name="event_display_ontimeset" formatted="false">onTimeSet</string>
+    <string name="event_display_onpagescrollstatechanged" formatted="false">onPageScrollStateChanged</string>
+    <string name="event_display_onratingchanged" formatted="false">onRatingChanged</string>
+    <string name="event_display_onpatternlockprogress" formatted="false">onPatternLockProgress</string>
+    <string name="event_display_onpatternlockcomplete" formatted="false">onPatternLockComplete</string>
+    <string name="event_display_ontabselected" formatted="false">onTabSelected</string>
+    <string name="event_display_ontabunselected" formatted="false">onTabUnselected</string>
+    <string name="event_display_ontabreselected" formatted="false">onTabReselected</string>
+    <string name="event_display_onpageselected" formatted="false">onPageSelected</string>
+    <string name="event_display_onletterselected" formatted="false">onLetterSelected</string>
+    <string name="event_display_oncompleteregister" formatted="false">onCompleteRegister</string>
+    <string name="event_display_oncodesent" formatted="false">onCodeSent</string>
+    <string name="event_display_ontimechanged" formatted="false">onTimeChanged</string>
+    <string name="event_display_onscrollchanged" formatted="false">onScrollChanged</string>
+    <string name="event_display_onbanneradfailedtoload" formatted="false">onBannerAdFailedToLoad</string>
+    <string name="event_display_oninterstitialadfailedtoload" formatted="false">onInterstitialAdFailedToLoad</string>
+    <string name="event_display_onrewardadfailedtoload" formatted="false">onRewardAdFailedToLoad</string>
+    <string name="event_display_onadfailedtoshowfullscreencontent" formatted="false">onAdFailedToShowFullScreenContent</string>
+    <string name="event_display_onuserearnedreward" formatted="false">onUserEarnedReward</string>
+    <string name="event_display_onadloaded" formatted="false">onAdLoaded</string>
+    <string name="event_display_onaddismissedfullscreencontent" formatted="false">onAdDismissedFullScreenContent</string>
+    <string name="event_display_onadshowedfullscreencontent" formatted="false">onAdShowedFullScreenContent</string>
+    <string name="event_display_onrewardadloaded" formatted="false">onRewardAdLoaded</string>
+    <string name="event_display_onadopened" formatted="false">onAdOpened</string>
+    <string name="event_display_onadclicked" formatted="false">onAdClicked</string>
+    <string name="event_display_onadclosed" formatted="false">onAdClosed</string>
+    <string name="event_display_onsqliteerror" formatted="false">onSQLiteError</string>
+    <string name="event_fragment_get_item" formatted="false">Fragment getItem %d.position</string>
+    <string name="event_get_page_title" formatted="false">CharSequence getPageTitle %d.position</string>
+    <string name="event_create_import" formatted="false">create new import</string>
+    <string name="event_activity_result" formatted="false">OnActivityResult %d.requestCode %d.resultCode %m.intent.data</string>
+    <string name="event_when_prefix" formatted="false">"when "</string>
+    <string name="event_refresh_suffix" formatted="false">" refresh"</string>
+    <string name="event_long_click_suffix" formatted="false">" long clicked"</string>
+    <string name="event_tab_title_suffix" formatted="false">" return tab title %d.position"</string>
+    <string name="event_pre_execute_suffix" formatted="false">" onPreExecute "</string>
+    <string name="event_background_suffix" formatted="false">" doInBackground %s.param"</string>
+    <string name="event_progress_suffix" formatted="false">" onProgressUpdate progress %d.value"</string>
+    <string name="event_post_execute_suffix" formatted="false">" onPostExecute result %s.result"</string>
+    <string name="event_no_spec" formatted="false">no spec</string>
+    <string name="crash_no_data" formatted="false">(No crash data available)</string>
+    <string name="crash_clipboard_truncated">\n\n[Crash report truncated for clipboard. Original length: %1$d chars]\n\n</string>
+    <string name="display_name_text_activity">Text Activity</string>
+    <string name="manifest_source_generation_failed">Failed to generate source.</string>
+    <string name="build_invalid_min_sdk">Invalid minSdkVersion specified in Project Settings</string>
+    <string name="build_bundle_failed_prefix">"Failed to build bundle: "</string>
+    <string name="copy_empty_file">Empty file (size = 0)</string>
+    <string name="copy_open_stream_failed">Failed to open input stream</string>
+    <string name="copy_unknown_error">Unknown error</string>
+    <string name="property_option_match_parent">match_parent</string>
+    <string name="property_option_wrap_content">wrap_content</string>
+    <string name="property_option_none">none</string>
+    <string name="property_option_horizontal">horizontal</string>
+    <string name="property_option_vertical">vertical</string>
+    <string name="property_option_normal">normal</string>
+    <string name="property_option_bold">bold</string>
+    <string name="property_option_italic">italic</string>
+    <string name="property_option_bold_italic">bold|italic</string>
+    <string name="property_option_default">normal</string>
+    <string name="property_option_go">go</string>
+    <string name="property_option_search">search</string>
+    <string name="property_option_send">send</string>
+    <string name="property_option_next">next</string>
+    <string name="property_option_done">done</string>
+    <string name="property_option_dialog">dialog</string>
+    <string name="property_option_dropdown">dropdown</string>
+    <string name="property_option_single">single</string>
+    <string name="property_option_multi">multi</string>
+    <string name="property_option_sunday">Sunday</string>
+    <string name="property_option_monday">Monday</string>
+    <string name="property_option_tuesday">Tuesday</string>
+    <string name="property_option_wednesday">Wednesday</string>
+    <string name="property_option_thursday">Thursday</string>
+    <string name="property_option_friday">Friday</string>
+    <string name="property_option_saturday">Saturday</string>
+    <string name="property_option_text">text</string>
+    <string name="property_option_number_signed">numberSigned</string>
+    <string name="property_option_number_decimal">numberDecimal</string>
+    <string name="property_option_number_signed_decimal">numberSigned|numberDecimal</string>
+    <string name="property_option_phone">phone</string>
+    <string name="property_option_password">textPassword</string>
+    <string name="property_option_circle">Circle</string>
+    <string name="property_option_horizontal_progress">Horizontal</string>
+    <string name="property_option_fit_xy">FIT_XY</string>
+    <string name="property_option_fit_start">FIT_START</string>
+    <string name="property_option_fit_center">FIT_CENTER</string>
+    <string name="property_option_fit_end">FIT_END</string>
+    <string name="property_option_center">CENTER</string>
+    <string name="property_option_center_crop">CENTER_CROP</string>
+    <string name="property_option_center_inside">CENTER_INSIDE</string>
+    <string name="property_option_ad_banner">BANNER</string>
+    <string name="property_option_ad_medium_rectangle">MEDIUM_RECTANGLE</string>
+    <string name="property_option_ad_large_banner">LARGE_BANNER</string>
+    <string name="property_option_ad_smart_banner">SMART_BANNER</string>
+    <string name="property_option_true">true</string>
+    <string name="property_option_false">false</string>
+    <string name="picker_color_group_custom">CUSTOM</string>
+    <string name="picker_color_group_material3">Material 3 Colors</string>
+    <string name="picker_color_group_red">RED</string>
+    <string name="picker_color_group_pink">PINK</string>
+    <string name="picker_color_group_purple">PURPLE</string>
+    <string name="picker_color_group_deep_purple">DEEP PURPLE</string>
+    <string name="picker_color_group_indigo">INDIGO</string>
+    <string name="picker_color_group_blue">BLUE</string>
+    <string name="picker_color_group_light_blue">LIGHT BLUE</string>
+    <string name="picker_color_group_cyan">CYAN</string>
+    <string name="picker_color_group_teal">TEAL</string>
+    <string name="picker_color_group_green">GREEN</string>
+    <string name="picker_color_group_light_green">LIGHT GREEN</string>
+    <string name="picker_color_group_lime">LIME</string>
+    <string name="picker_color_group_yellow">YELLOW</string>
+    <string name="picker_color_group_amber">AMBER</string>
+    <string name="picker_color_group_orange">ORANGE</string>
+    <string name="picker_color_group_deep_orange">DEEP ORANGE</string>
+    <string name="picker_color_group_brown">BROWN</string>
+    <string name="picker_color_group_grey">GREY</string>
+    <string name="picker_color_group_blue_grey">BLUE GREY</string>
+    <string name="picker_color_group_black">BLACK</string>
+    <string name="picker_color_group_white">WHITE</string>
+    <string name="picker_color_attrs_surface">Surface Colors :</string>
+    <string name="picker_color_attrs_primary">Primary Colors :</string>
+    <string name="picker_color_attrs_secondary">Secondary Colors :</string>
+    <string name="picker_color_attrs_tertiary">Tertiary Colors :</string>
+    <string name="picker_color_attrs_error">Error Colors :</string>
+    <string name="picker_color_attrs_custom">Custom Colors :</string>
+    <string name="images_additional_count">+ %1$d more</string>
+    <string name="apk_signatures_error">Error to get signatures: %1$s</string>
+    <string name="apk_signatures_missing_sha1">No SHA 1 key found.</string>
+    <string name="apk_signatures_missing_sha256">No SHA 256 key found.</string>
+    <string name="apk_signatures_missing_path">APK path must be set before computing signature.</string>
+    <string name="export_keystore_invalid">Either an incorrect password was entered, or your key store is corrupt.</string>
+    <string name="code_editor_theme_default">Default</string>
+    <string name="font_default_label">Default font</string>
+    <string name="array_type_string">STRING</string>
+    <string name="array_type_integer">INTEGER</string>
+    <string name="array_type_object">OBJECT</string>
+</resources>

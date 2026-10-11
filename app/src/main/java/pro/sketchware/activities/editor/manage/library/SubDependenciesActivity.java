@@ -1,5 +1,6 @@
 package pro.sketchware.activities.editor.manage.library;
 
+import pro.sketchware.util.Helper;
 import pro.sketchware.core.project.SketchwarePaths;
 
 import static pro.sketchware.core.library.LocalLibrariesUtil.buildEnabledRootDependencyState;
@@ -122,7 +123,7 @@ public class SubDependenciesActivity extends BaseAppCompatActivity {
             int depth = hasTreeData ? depths[i] : 1;
             String parent = hasTreeData && i < parents.size() ? parents.get(i) : null;
             File dir = resolveLibDir(folder);
-            String size = isBuiltIn ? "Built-in" : (dir != null ? formatFileSize(getFileSize(dir)) : "\u2014");
+            String size = isBuiltIn ? Helper.getResString(R.string.library_built_in) : (dir != null ? formatFileSize(getFileSize(dir)) : "\u2014");
 
             rawItems.add(new SubDepItem(folder, coord, size, isBuiltIn, depth, parent));
 
@@ -131,7 +132,7 @@ public class SubDependenciesActivity extends BaseAppCompatActivity {
         }
 
         // Set subtitle with summary stats
-        binding.toolbar.setSubtitle(downloadedCount + " downloaded, " + builtInCount + " built-in");
+        binding.toolbar.setSubtitle(Helper.getResString(R.string.library_dependency_counts, downloadedCount, builtInCount));
 
         // If tree data is available, sort into DFS order for proper tree display
         List<SubDepItem> orderedItems;

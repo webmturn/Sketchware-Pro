@@ -150,7 +150,7 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
     }
 
     private void onSaveError(Throwable throwable) {
-        String errorMessage = "Couldn't save configuration: " + throwable.getMessage();
+        String errorMessage = Helper.getResString(R.string.library_save_configuration_failed, throwable.getMessage());
         LogUtil.e(TAG, errorMessage, throwable);
         onSaveError(errorMessage);
     }
@@ -297,7 +297,7 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
         private void onError(Throwable error) {
             var act = activity.get();
             if (act == null) return;
-            act.onSaveError("Couldn't save configuration: " + buildErrorMessage(error));
+            act.onSaveError(Helper.getResString(R.string.library_save_configuration_failed, buildErrorMessage(error)));
         }
 
         private void doWork() {

@@ -299,7 +299,7 @@ public class AddImageActivity extends BaseDialogActivity implements View.OnClick
         layout_img_inform.setVisibility(View.VISIBLE);
         layout_img_modify.setVisibility(View.GONE);
         tv_imgcnt.setVisibility(View.VISIBLE);
-        tv_imgcnt.setText("+ " + (count - 1) + " more");
+        tv_imgcnt.setText(getString(R.string.images_additional_count, count - 1));
     }
 
     private void flipImageHorizontally() {

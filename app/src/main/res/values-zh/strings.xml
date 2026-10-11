@@ -630,9 +630,9 @@
     <string name="create_file_file">文件</string>
     <string name="create_file_folder">文件夹</string>
     <string name="create_file_hint_name">输入名称</string>
-    <string name="create_file_java_activity">Java Activity</string>
+    <string name="create_file_java_activity">Java 活动</string>
     <string name="create_file_java_class">Java 类</string>
-    <string name="create_file_kotlin_activity">Kotlin Activity</string>
+    <string name="create_file_kotlin_activity">Kotlin 活动</string>
     <string name="create_file_kotlin_class">Kotlin 类</string>
     <string name="delete_confirm_format">确定要删除此 %1$s 吗？%2$s此操作不可撤销。</string>
     <string name="delete_custom_activity_dialog_message">与 %1$s 相关的所有功能将被移除。确定吗？</string>
@@ -717,7 +717,7 @@
     <!-- ========== 构建 (Build) ========== -->
     <string name="build_settings_title">构建设置</string>
     <string name="build_settings_java_version">Java 版本</string>
-    <string name="build_settings_dexer">Dexer</string>
+    <string name="build_settings_dexer">DEX 编译器</string>
     <string name="build_settings_enable_logcat">启用调试 logcat 日志，可在日志查看器中查看。不包含在导出的 AAB/APK 中。</string>
     <string name="build_settings_hide_warnings">在错误日志中隐藏警告</string>
     <string name="build_settings_no_http_legacy">不包含 http-legacy-28.dex</string>
@@ -1179,7 +1179,7 @@
     <string name="design_library_firebase_title_firebase_settings">Firebase 设置</string>
     <string name="design_library_firebase_title_firebase_setup_tutorial">Firebase 设置教程</string>
     <string name="design_library_firebase_title_project_id">完整数据库 URL (例: sk-pro-default-rtdb.firebaseio.com)</string>
-    <string name="design_library_firebase_title_storage_bucket_url">Storage Bucket URL</string>
+    <string name="design_library_firebase_title_storage_bucket_url">存储桶网址</string>
     <string name="design_library_google_map_button_open_doc">打开文档</string>
     <string name="design_library_google_map_title">Google 地图</string>
     <string name="design_library_google_map_title_api_key">API 密钥</string>
@@ -1870,8 +1870,8 @@
     <string name="logic_editor_category_bluetooth">蓝牙</string>
     <string name="logic_editor_category_location_manager">LocationManager</string>
     <string name="logic_editor_category_google_sign_in">Google Sign-In</string>
-    <string name="logic_editor_category_phone_auth">Phone Auth</string>
-    <string name="logic_editor_category_cloud_message">Cloud Message</string>
+    <string name="logic_editor_category_phone_auth">手机号码认证</string>
+    <string name="logic_editor_category_cloud_message">云消息</string>
     <string name="logic_editor_category_notification">通知</string>
     <string name="logic_editor_category_sqlite">SQLiteDatabase</string>
     <string name="logic_editor_category_progress_dialog">ProgressDialog</string>
@@ -2267,9 +2267,9 @@
     <string name="color_picker_title">选择颜色</string>
 
     <!-- ========== 自定义属性/变量/列表 ========== -->
-    <string name="custom_attr_hint_attr">attr</string>
-    <string name="custom_attr_hint_res">res</string>
-    <string name="custom_attr_hint_value">value</string>
+    <string name="custom_attr_hint_attr">属性</string>
+    <string name="custom_attr_hint_res">资源</string>
+    <string name="custom_attr_hint_value">值</string>
     <string name="custom_list_hint_name">名称，例: dataList</string>
     <string name="custom_list_hint_type">类型，例: ArrayList&lt;Data&gt;</string>
     <string name="custom_var_hint_initializer">初始化器，例: new File()（可选）</string>
@@ -2419,9 +2419,9 @@
     <string name="new_class">或创建新分类</string>
     <string name="resource_create_new">新建</string>
     <string name="resource_create_or_import">新建或导入</string>
-    <string name="resource_type_string_lower">string</string>
-    <string name="resource_type_color">Color</string>
-    <string name="resource_type_color_lower">color</string>
+    <string name="resource_type_string_lower">字符串</string>
+    <string name="resource_type_color">颜色</string>
+    <string name="resource_type_color_lower">颜色</string>
     <string name="resources_editor_unsaved_changes_message">你在 \"%s\" 中有未保存的更改\n是否在退出前保存？</string>
     <string name="resources_editor_unsaved_changes_message_variant_change">你在 \"%s\" 中有未保存的更改\n是否在切换变体前保存？</string>
     <string name="resources_manager_xml_important_note_message_colors">更改主色调将影响应用的视觉主题，包括按钮和高亮</string>
@@ -2495,7 +2495,7 @@
     <string name="menu_select_variable_format">选择 %s</string>
 
     <!-- ========== Manifest - 精确补充 ========== -->
-    <string name="manifest_activities">Activities</string>
+    <string name="manifest_activities">Activity 列表</string>
     <string name="manifest_attrs_all_activities">所有 Activities 属性</string>
     <string name="manifest_attrs_application">Application 属性</string>
     <string name="manifest_attrs_permissions">权限</string>
@@ -2511,7 +2511,7 @@
     <string name="manifest_option_all_activities_desc">为所有 Activities 设置属性</string>
     <string name="manifest_option_app_components">应用组件</string>
     <string name="manifest_option_app_components_desc">管理应用组件</string>
-    <string name="manifest_option_application">Application</string>
+    <string name="manifest_option_application">应用</string>
     <string name="manifest_option_application_desc">设置 Application 属性</string>
     <string name="manifest_option_launcher_activity">启动 Activity</string>
     <string name="manifest_option_launcher_activity_desc">设置启动 Activity 属性</string>

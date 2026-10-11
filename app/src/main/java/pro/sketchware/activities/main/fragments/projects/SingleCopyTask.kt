@@ -1,5 +1,6 @@
 package pro.sketchware.activities.main.fragments.projects
 
+import pro.sketchware.R
 import android.annotation.SuppressLint
 import android.content.Context
 import android.database.Cursor
@@ -53,12 +54,12 @@ class SingleCopyTask(private val context: Context, private val callback: CallBac
                 } else -1
             } ?: -1
 
-            if (size == 0) throw IOException("Empty file (size = 0)")
+            if (size == 0) throw IOException(context.getString(R.string.copy_empty_file))
 
             pathPlusName = "${folder}/${getFileName(uri)}"
             val file = File(pathPlusName)
 
-            val input = inputStream ?: throw IOException("Failed to open input stream")
+            val input = inputStream ?: throw IOException(context.getString(R.string.copy_open_stream_failed))
             input.use {
                 BufferedInputStream(it).use { bis ->
                     FileOutputStream(file).use { fos ->
@@ -78,7 +79,7 @@ class SingleCopyTask(private val context: Context, private val callback: CallBac
             }
             success = true
         } catch (e: IOException) {
-            errorReason = e.message ?: "Unknown error"
+            errorReason = e.message ?: context.getString(R.string.copy_unknown_error)
         }
 
         return Triple(pathPlusName, success, errorReason)

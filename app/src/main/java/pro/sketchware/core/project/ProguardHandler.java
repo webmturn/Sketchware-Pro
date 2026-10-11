@@ -1,5 +1,6 @@
 package pro.sketchware.core.project;
 
+import pro.sketchware.R;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -240,10 +241,10 @@ public class ProguardHandler {
     public void start(BuildProgressReceiver progressReceiver, ProjectBuilder builder) throws IOException {
         if (isShrinkingEnabled()) {
             if (isR8Enabled()) {
-                progressReceiver.onProgress("Running R8 on classes...", BuildStage.SHRINK_WITH_R8);
+                progressReceiver.onProgress(Helper.getResString(R.string.build_progress_running_r8_on_classes), BuildStage.SHRINK_WITH_R8);
                 builder.runR8();
             } else {
-                progressReceiver.onProgress("ProGuarding classes...", BuildStage.SHRINK_WITH_PROGUARD);
+                progressReceiver.onProgress(Helper.getResString(R.string.build_progress_proguarding_classes), BuildStage.SHRINK_WITH_PROGUARD);
                 builder.runProguard();
             }
         }

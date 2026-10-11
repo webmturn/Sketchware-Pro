@@ -76,7 +76,7 @@ public class ArraysAdapter extends RecyclerView.Adapter<ArraysAdapter.ArrayViewH
 
         public void bind(ArrayModel array) {
             binding.title.setText(array.getArrayName());
-            binding.sub.setText(array.getArrayType().name());
+            binding.sub.setText(ArraysEditor.getArrayTypeLabel(itemView.getContext(), array.getArrayType()));
             int originalIndex = originalList.indexOf(array);
             if (originalIndex >= 0 && notesMap.containsKey(originalIndex)) {
                 binding.tvTitle.setText(notesMap.get(originalIndex));

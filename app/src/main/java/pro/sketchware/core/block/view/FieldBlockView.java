@@ -1,5 +1,6 @@
 package pro.sketchware.core.block.view;
 
+import pro.sketchware.util.locale.LocalizedDisplayNames;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -91,7 +92,7 @@ public class FieldBlockView extends BaseBlockView {
   }
   
   public final String getComponentLabel(String componentId) {
-    String displayName = BlockColorMapper.getComponentDisplayName(componentId);
+    String displayName = LocalizedDisplayNames.getMenuDisplayName(getContext(), componentId);
     if (displayName.length() > 0) {
       return displayName + " : ";
     } 

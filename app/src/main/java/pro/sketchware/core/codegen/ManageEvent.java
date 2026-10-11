@@ -1,5 +1,6 @@
 package pro.sketchware.core.codegen;
 
+import pro.sketchware.core.codegen.BuiltinEventLocalization;
 import java.util.ArrayList;
 
 import pro.sketchware.core.project.ClassInfo;
@@ -930,61 +931,61 @@ public class ManageEvent {
             case "onUpdateProfileComplete", "onEmailVerificationSent", "onDeleteUserComplete",
                  "onUpdateEmailComplete", "onGoogleSignIn", "onUpdatePasswordComplete",
                  "signInWithPhoneAuthComplete" ->
-                    "When " + targetId + " " + eventName + " %b.success %s.errorMessage";
+                    Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %b.success %s.errorMessage";
             case "onScrolled" ->
-                    "When " + targetId + " " + eventName + " %d.firstVisibleItem %d.visibleItemCount %d.totalItemCount";
+                    Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %d.firstVisibleItem %d.visibleItemCount %d.totalItemCount";
             case "onDateChanged", "onDateSet" ->
-                    "When " + targetId + " " + eventName + " %d.year %d.month %d.day";
-            case "onFailureLink" -> "When " + targetId + " " + eventName + " %s.errorMessage";
-            case "onNavigationItemSelected" -> "When " + targetId + " " + eventName + " %d.itemId";
+                    Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %d.year %d.month %d.day";
+            case "onFailureLink" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %s.errorMessage";
+            case "onNavigationItemSelected" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %d.itemId";
             case "onPrepared", "onCompletion", "onPatternLockCleared", "onAccountPickerCancelled",
-                 "onPatternLockStarted" -> "When " + targetId + " " + eventName;
+                 "onPatternLockStarted" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName);
             case "onSaveInstanceState", "onCreateOptionsMenu", "onCreateContextMenu",
-                 "onRestoreInstanceState", "onContextItemSelected" -> "When " + eventName;
+                 "onRestoreInstanceState", "onContextItemSelected" -> Helper.getResString(R.string.root_spec_common_when) + " " + BuiltinEventLocalization.getName(eventName);
             case "onQueryTextChanged", "onQueryTextSubmit" ->
-                    "When " + targetId + " " + eventName + " %s.charSeq";
-            case "onError" -> "When " + targetId + " " + eventName + " %d.what %d.extra";
+                    Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %s.charSeq";
+            case "onError" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %d.what %d.extra";
             case "onVerificationCompleted" ->
-                    "When " + targetId + " " + eventName + " %m.PhoneAuthCredential.credential";
+                    Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %m.PhoneAuthCredential.credential";
             case "onRecyclerScrollChanged" ->
-                    "When " + " " + targetId + " " + eventName + " %d.scrollState";
+                    Helper.getResString(R.string.root_spec_common_when) + " " + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %d.scrollState";
             case "onRecyclerScrolled" ->
-                    "When " + " " + targetId + " " + eventName + " %d.offsetX %d.offsetY";
-            case "onSuccessLink" -> "When " + targetId + " " + eventName + " %s.link";
+                    Helper.getResString(R.string.root_spec_common_when) + " " + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %d.offsetX %d.offsetY";
+            case "onSuccessLink" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %s.link";
             case "onPageScrolled" ->
-                    "When " + targetId + " " + eventName + " %d.position %d.positionOffset %d.positionOffsetPixels";
-            case "onVerificationFailed" -> "When " + targetId + " " + eventName + " %s.exception";
+                    Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %d.position %d.positionOffset %d.positionOffsetPixels";
+            case "onVerificationFailed" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %s.exception";
             case "onAccountPicker" ->
-                    "When " + targetId + " " + eventName + " %m.GoogleSignInAccount.task";
-            case "onFragmentAdded" -> "Fragment getItem %d.position";
-            case "onTimeSet" -> "When " + targetId + " " + eventName + " %d.hour %d.minute";
-            case "onPageChanged" -> "When " + targetId + " onPageScrollStateChanged %d.scrollState";
-            case "onRatingChanged" -> "When " + targetId + " " + eventName + " %d.value";
+                    Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %m.GoogleSignInAccount.task";
+            case "onFragmentAdded" -> Helper.getResString(R.string.event_fragment_get_item);
+            case "onTimeSet" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %d.hour %d.minute";
+            case "onPageChanged" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName("onPageScrollStateChanged") + " %d.scrollState";
+            case "onRatingChanged" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %d.value";
             case "onPatternLockProgress", "onPatternLockComplete" ->
-                    "When " + targetId + " " + eventName + " %m.listStr.pattern";
-            case "onOptionsItemSelected" -> "When " + targetId + " %d.id %s.title";
+                    Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %m.listStr.pattern";
+            case "onOptionsItemSelected" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " %d.id %s.title";
             case "onTabSelected", "onTabUnselected", "onTabReselected", "onPageSelected" ->
-                    targetId + ": " + eventName + " %d.position";
-            case "onLetterSelected" -> "When " + targetId + " " + eventName + " %s.index";
-            case "onTabAdded" -> "CharSequence getPageTitle %d.position";
+                    targetId + ": " + BuiltinEventLocalization.getName(eventName) + " %d.position";
+            case "onLetterSelected" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %s.index";
+            case "onTabAdded" -> Helper.getResString(R.string.event_get_page_title);
             case "onCompleteRegister" ->
-                    "When " + targetId + " " + eventName + " %b.success %s.token %s.errorMessage";
+                    Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %b.success %s.token %s.errorMessage";
             case "onCodeSent" ->
-                    "When " + targetId + " " + eventName + " %s.verificationId %m.FirebasePhoneAuth.token";
-            case "onTimeChanged" -> "When " + targetId + " " + eventName + " %d.hour %d.minute";
-            case "onScrollChanged" -> "When " + targetId + ": " + eventName + " %d.scrollState";
+                    Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %s.verificationId %m.FirebasePhoneAuth.token";
+            case "onTimeChanged" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %d.hour %d.minute";
+            case "onScrollChanged" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + ": " + BuiltinEventLocalization.getName(eventName) + " %d.scrollState";
             case "onBannerAdFailedToLoad", "onInterstitialAdFailedToLoad", "onRewardAdFailedToLoad",
                  "onAdFailedToShowFullScreenContent" ->
-                    targetId + ": " + eventName + " %d.errorCode %s.errorMessage";
+                    targetId + ": " + BuiltinEventLocalization.getName(eventName) + " %d.errorCode %s.errorMessage";
             case "onUserEarnedReward" ->
-                    targetId + ": " + eventName + " %d.rewardAmount %s.rewardType";
-            case "onInterstitialAdLoaded", "onBannerAdLoaded" -> targetId + ": onAdLoaded";
+                    targetId + ": " + BuiltinEventLocalization.getName(eventName) + " %d.rewardAmount %s.rewardType";
+            case "onInterstitialAdLoaded", "onBannerAdLoaded" -> targetId + ": " + BuiltinEventLocalization.getName("onAdLoaded");
             case "onAdDismissedFullScreenContent", "onAdShowedFullScreenContent",
-                 "onRewardAdLoaded" -> targetId + ": " + eventName;
-            case "onBannerAdOpened" -> targetId + ": onAdOpened";
-            case "onBannerAdClicked" -> targetId + ": onAdClicked";
-            case "onBannerAdClosed" -> targetId + ": onAdClosed";
-            case "onSQLiteError" -> "When " + targetId + " onSQLiteError %s.errorMessage";
+                 "onRewardAdLoaded" -> targetId + ": " + BuiltinEventLocalization.getName(eventName);
+            case "onBannerAdOpened" -> targetId + ": " + BuiltinEventLocalization.getName("onAdOpened");
+            case "onBannerAdClicked" -> targetId + ": " + BuiltinEventLocalization.getName("onAdClicked");
+            case "onBannerAdClosed" -> targetId + ": " + BuiltinEventLocalization.getName("onAdClosed");
+            case "onSQLiteError" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName("onSQLiteError") + " %s.errorMessage";
             default -> EventsHandler.getSpec(targetId, eventName);
         };
     }

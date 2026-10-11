@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Mirror dependency labels so they are also available in exported translation templates. -->
+    <string name="no_file_selected">No file selected</string>
+    <string name="no_folder_selected">No folder selected</string>
+    <string name="no_item_selected">No item selected</string>
+    <string name="pick_a_file">Pick a file</string>
+    <string name="pick_a_folder">Pick a folder</string>
+    <string name="pick_items">Pick items</string>
+    <string name="select_file">Select File</string>
+    <string name="select_folder">Select Folder</string>
+    <string name="select_items">Select Items</string>
+    <string name="sort_by">Sort by</string>
+    <string name="sort_date_asc">Date (oldest first)</string>
+    <string name="sort_date_desc">Date (newest first)</string>
+    <string name="sort_name_asc">Name (A to Z)</string>
+    <string name="sort_name_desc">Name (Z to A)</string>
+    <string name="sort_size_asc">Size (smallest first)</string>
+    <string name="sort_size_desc">Size (largest first)</string>
+    <string name="nav_rail_collapsed_a11y_label">Collapsed</string>
+    <string name="nav_rail_expanded_a11y_label">Expanded</string>
+    <string name="fcm_fallback_notification_channel_label">Miscellaneous</string>
+</resources>

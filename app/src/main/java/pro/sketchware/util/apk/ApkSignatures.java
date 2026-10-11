@@ -18,20 +18,22 @@ public class ApkSignatures {
         this.context = context;
         ApkUtils.setApkPath(path);
         try {
-            abMsg = "SHA-1: " + getSha1() + "\n\nSHA-256: " + getSha256();
+            abMsg = path == null || path.isEmpty()
+                    ? context.getString(R.string.apk_signatures_missing_path)
+                    : "SHA-1: " + getSha1() + "\n\nSHA-256: " + getSha256();
         } catch (Exception e) {
-            abMsg = "Error to get signatures: " + e.getMessage();
+            abMsg = context.getString(R.string.apk_signatures_error, e.getMessage());
         }
     }
 
     public String getSha1() {
         String sha1 = ApkUtils.getSHA1();
-        return sha1 != null ? sha1 : "No SHA 1 key found.";
+        return sha1 != null ? sha1 : context.getString(R.string.apk_signatures_missing_sha1);
     }
 
     public String getSha256() {
         String sha256 = ApkUtils.getSHA256();
-        return sha256 != null ? sha256 : "No SHA 256 key found.";
+        return sha256 != null ? sha256 : context.getString(R.string.apk_signatures_missing_sha256);
     }
 
     public void showSignaturesDialog() {

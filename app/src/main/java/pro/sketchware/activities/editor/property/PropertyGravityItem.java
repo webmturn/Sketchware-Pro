@@ -14,6 +14,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import pro.sketchware.core.callback.PropertyChangedCallback;
 import pro.sketchware.util.UIHelper;
 import pro.sketchware.core.project.SketchwareConstants;
+import pro.sketchware.util.locale.PropertyDisplayNames;
 import pro.sketchware.util.ViewUtil;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
@@ -61,7 +62,7 @@ public class PropertyGravityItem extends RelativeLayout implements View.OnClickL
 
     public void setValue(int value) {
         gravityValue = value;
-        tvValue.setText(SketchwareConstants.gravityToString(value));
+        tvValue.setText(PropertyDisplayNames.get(getContext(), key, SketchwareConstants.gravityToString(value)));
     }
 
     @Override

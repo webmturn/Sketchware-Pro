@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor.logic;
 
+import pro.sketchware.R;
+import pro.sketchware.util.Helper;
 import pro.sketchware.core.settings.ApplicationSettings;
 
 import android.util.Pair;
@@ -71,7 +73,7 @@ public class ExtraBlocks {
 
     public void eventBlocks() {
         if (eventName.equals("onCreateOptionsMenu")) {
-            logicEditor.addPaletteCategory("Menu Item", 0xff555555);
+            logicEditor.addPaletteCategory(Helper.getResString(R.string.block_category_menu_item), 0xff555555);
             logicEditor.createPaletteBlock(" ", "menuItemSetVisible");
             logicEditor.createPaletteBlock(" ", "menuItemSetEnabled");
             logicEditor.createPaletteBlock("v", "menuFindItem");
@@ -80,7 +82,7 @@ public class ExtraBlocks {
 
     public void fileBlocks() {
         if (isCustomVarUsed("File")) {
-            logicEditor.addPaletteCategory("File Blocks", 0xff555555);
+            logicEditor.addPaletteCategory(Helper.getResString(R.string.block_category_file), 0xff555555);
             logicEditor.createPaletteBlock("b", "fileCanExecute");
             logicEditor.createPaletteBlock("b", "fileCanRead");
             logicEditor.createPaletteBlock("b", "fileCanWrite");

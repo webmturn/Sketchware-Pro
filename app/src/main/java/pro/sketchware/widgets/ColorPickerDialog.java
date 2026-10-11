@@ -1,6 +1,7 @@
 package pro.sketchware.widgets;
 
 import android.app.Activity;
+import android.content.Context;
 import android.app.AlertDialog;
 import android.graphics.Color;
 import android.text.Editable;
@@ -33,6 +34,7 @@ import pro.sketchware.core.project.SketchwareConstants;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.build.ProjectFilePaths;
 import pro.sketchware.util.Helper;
+import pro.sketchware.util.locale.ColorDisplayNames;
 import pro.sketchware.R;
 import pro.sketchware.core.resources.ColorModel;
 import pro.sketchware.core.resources.ColorResourceResolver;
@@ -218,7 +220,7 @@ public class ColorPickerDialog extends PopupWindow {
                     binding.colorList.setAdapter(colorsAdapter);
                 }
             });
-            colorGroupItem.tvColorName.setText(colorBean.colorName);
+            colorGroupItem.tvColorName.setText(ColorDisplayNames.getGroup(activity, colorBean.colorName));
             colorGroupItem.tvColorName.setTextColor(colorBean.displayNameColor);
             colorGroupItem.tvColorName.setBackgroundColor(colorBean.colorCode);
             binding.layoutColorTitle.addView(colorGroupItem);
@@ -615,7 +617,11 @@ public class ColorPickerDialog extends PopupWindow {
         }
 
         public String attrTitle() {
-            return title + " Colors :";
+            return attrTitle(pro.sketchware.SketchApplication.getContext());
+        }
+
+        public String attrTitle(Context context) {
+            return ColorDisplayNames.getAttributeTitle(context, title);
         }
     }
 
@@ -638,7 +644,7 @@ public class ColorPickerDialog extends PopupWindow {
 
             holder.tvColorCode.setText(colorBean.getColorCode(currentGroupIndex == 0));
             if (position == 0) {
-                holder.tvColorName.setText(((ColorBean[]) colorGroups.get(currentGroupIndex))[0].colorName);
+                holder.tvColorName.setText(ColorDisplayNames.getGroup(activity, colorBean.colorName));
             } else {
                 holder.tvColorName.setText("");
             }
@@ -732,7 +738,7 @@ public class ColorPickerDialog extends PopupWindow {
             holder.binding.lightTtl.setTextColor(darkColor);
             holder.binding.title.setVisibility(attribute.hasTitle() ? View.VISIBLE : View.GONE);
             if (attribute.hasTitle()) {
-                holder.binding.title.setText(attribute.attrTitle());
+                holder.binding.title.setText(attribute.attrTitle(activity));
             }
             holder.binding.checkedImg.setVisibility(selectedPosition == position ? View.VISIBLE : View.GONE);
 

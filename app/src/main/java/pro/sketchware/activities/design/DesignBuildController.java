@@ -106,7 +106,7 @@ final class DesignBuildController implements BuildProgressReceiver {
             if (activity == null) return;
             var q = activity.getProjectFilePaths();
             var sc_id = projectId;
-            onProgress("Deleting temporary files...", BuildStage.DELETE_TEMPORARY_FILES);
+            onProgress(Helper.getResString(R.string.build_progress_deleting_temporary_files), BuildStage.DELETE_TEMPORARY_FILES);
             FileUtil.deleteFile(q.generatedFilesPath);
 
             q.createBuildDirectories(activity.getApplicationContext());
@@ -127,7 +127,7 @@ final class DesignBuildController implements BuildProgressReceiver {
                 }
             }
 
-            onProgress("Generating source code...", BuildStage.GENERATE_SOURCES);
+            onProgress(Helper.getResString(R.string.build_progress_generating_source_code), BuildStage.GENERATE_SOURCES);
             long generateSourceStepStarted = System.currentTimeMillis();
             long copyImagesStarted = System.currentTimeMillis();
             ResourceManager resourceManager = ProjectDataManager.getResourceManager(sc_id);
@@ -214,19 +214,19 @@ final class DesignBuildController implements BuildProgressReceiver {
                 return;
             }
 
-            onProgress("Extracting built-in libraries...", BuildStage.EXTRACT_LIBRARIES);
+            onProgress(Helper.getResString(R.string.build_progress_extracting_built_in_libraries), BuildStage.EXTRACT_LIBRARIES);
             BuiltInLibraries.extractCompileAssets(this);
             if (canceled) {
                 return;
             }
 
-            onProgress("AAPT2 is running...", BuildStage.PREPARE_RESOURCE_COMPILATION);
+            onProgress(Helper.getResString(R.string.build_progress_aapt2_is_running), BuildStage.PREPARE_RESOURCE_COMPILATION);
             builder.compileResources();
             if (canceled) {
                 return;
             }
 
-            onProgress("Generating view binding...", BuildStage.GENERATE_VIEW_BINDING);
+            onProgress(Helper.getResString(R.string.build_progress_generating_view_binding), BuildStage.GENERATE_VIEW_BINDING);
             builder.generateViewBinding();
             if (canceled) {
                 return;
@@ -237,7 +237,7 @@ final class DesignBuildController implements BuildProgressReceiver {
                 return;
             }
 
-            onProgress("Java is compiling...", BuildStage.COMPILE_JAVA);
+            onProgress(Helper.getResString(R.string.build_progress_java_is_compiling), BuildStage.COMPILE_JAVA);
             builder.compileJavaCode();
             if (canceled) {
                 return;
@@ -261,19 +261,19 @@ final class DesignBuildController implements BuildProgressReceiver {
                 return;
             }
 
-            onProgress("Merging DEX files...", BuildStage.MERGE_DEX);
+            onProgress(Helper.getResString(R.string.build_progress_merging_dex_files), BuildStage.MERGE_DEX);
             builder.getDexFilesReady();
             if (canceled) {
                 return;
             }
 
-            onProgress("Building APK...", BuildStage.PACKAGE_APK);
+            onProgress(Helper.getResString(R.string.build_progress_building_apk), BuildStage.PACKAGE_APK);
             builder.buildApk();
             if (canceled) {
                 return;
             }
 
-            onProgress("Signing APK...", BuildStage.SIGN_APK);
+            onProgress(Helper.getResString(R.string.build_progress_signing_apk), BuildStage.SIGN_APK);
             builder.signDebugApk();
             if (canceled) {
                 return;
@@ -369,7 +369,7 @@ final class DesignBuildController implements BuildProgressReceiver {
 
     public void cancelBuild() {
         canceled = true;
-        onProgress("Canceling build...", BuildStage.INDETERMINATE);
+        onProgress(Helper.getResString(R.string.build_progress_canceling_build), BuildStage.INDETERMINATE);
         if (isShowingNotification) {
             notificationManager.cancel(notificationId);
             isShowingNotification = false;

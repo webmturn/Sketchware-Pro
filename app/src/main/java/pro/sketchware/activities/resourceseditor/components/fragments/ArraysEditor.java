@@ -1,5 +1,6 @@
 package pro.sketchware.activities.resourceseditor.components.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -62,6 +63,35 @@ public class ArraysEditor extends Fragment {
 
     public enum ARRAYS_TYPES {
         STRING, INTEGER, OBJECT
+    }
+
+    public static String getArrayTypeLabel(Context context, ARRAYS_TYPES type) {
+        return context.getString(switch (type) {
+            case STRING -> R.string.array_type_string;
+            case INTEGER -> R.string.array_type_integer;
+            case OBJECT -> R.string.array_type_object;
+        });
+    }
+
+    private static void configureArrayTypePicker(Context context, ArraysEditorAddBinding binding,
+                                                 ARRAYS_TYPES selectedType) {
+        binding.arrayType.setTag(selectedType);
+        if (selectedType != null) binding.arrayType.setText(getArrayTypeLabel(context, selectedType));
+        binding.arrayType.setOnClickListener(view -> {
+            ARRAYS_TYPES[] types = ARRAYS_TYPES.values();
+            String[] labels = new String[types.length];
+            for (int i = 0; i < types.length; i++) labels[i] = getArrayTypeLabel(context, types[i]);
+            Object currentType = binding.arrayType.getTag();
+            int selectedIndex = currentType instanceof ARRAYS_TYPES type ? type.ordinal() : -1;
+            new MaterialAlertDialogBuilder(context)
+                    .setTitle(R.string.array_select_type)
+                    .setSingleChoiceItems(labels, selectedIndex, (dialog, which) -> {
+                        binding.arrayType.setTag(types[which]);
+                        binding.arrayType.setText(labels[which]);
+                        dialog.dismiss();
+                    })
+                    .show();
+        });
     }
 
     @Nullable
@@ -136,20 +166,11 @@ public class ArraysEditor extends Fragment {
         ArraysEditorAddBinding binding = ArraysEditorAddBinding.inflate(getLayoutInflater());
         dialog.setTitle(R.string.array_title_create);
 
-        binding.arrayType.setOnClickListener(view -> {
-            String[] arrayTypes = {"STRING", "INTEGER", "OBJECT"};
-            new MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(R.string.array_select_type)
-                    .setSingleChoiceItems(arrayTypes, -1, (dialogInterface, which) -> {
-                        binding.arrayType.setText(arrayTypes[which]);
-                        dialogInterface.dismiss();
-                    })
-                    .show();
-        });
+        configureArrayTypePicker(requireContext(), binding, null);
 
         dialog.setPositiveButton(R.string.common_word_create, (d, which) -> {
             String arrayName = Objects.requireNonNull(binding.arrayName.getText()).toString();
-            String arrayTypeString = Objects.requireNonNull(binding.arrayType.getText()).toString();
+            Object selectedType = binding.arrayType.getTag();
             String header = Objects.requireNonNull(binding.arrayHeaderInput.getText()).toString();
 
             if (arrayName.isEmpty()) {
@@ -157,16 +178,8 @@ public class ArraysEditor extends Fragment {
                 return;
             }
 
-            if (arrayTypeString.isEmpty()) {
+            if (!(selectedType instanceof ARRAYS_TYPES arrayType)) {
                 SketchwareUtil.toastError(Helper.getResString(R.string.error_array_type_not_selected));
-                return;
-            }
-
-            ARRAYS_TYPES arrayType;
-            try {
-                arrayType = ARRAYS_TYPES.valueOf(arrayTypeString.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_value));
                 return;
             }
 
@@ -230,25 +243,14 @@ public class ArraysEditor extends Fragment {
         ArraysEditorAddBinding binding = ArraysEditorAddBinding.inflate(getLayoutInflater());
 
         binding.arrayName.setText(array.getArrayName());
-        binding.arrayType.setText(array.getArrayType().name());
+        configureArrayTypePicker(requireContext(), binding, array.getArrayType());
         if (notesMap.containsKey(originalIndex)) {
             binding.arrayHeaderInput.setText(notesMap.get(originalIndex));
         }
-        binding.arrayType.setOnClickListener(view -> {
-            String[] arrayTypes = {"STRING", "INTEGER", "OBJECT"};
-            new MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(R.string.array_select_type)
-                    .setSingleChoiceItems(arrayTypes, -1, (dialogInterface, which) -> {
-                        binding.arrayType.setText(arrayTypes[which]);
-                        dialogInterface.dismiss();
-                    })
-                    .show();
-        });
-
         dialog.setTitle(R.string.array_title_edit);
         dialog.setPositiveButton(R.string.common_word_edit, (d, which) -> {
             String arrayName = Objects.requireNonNull(binding.arrayName.getText()).toString();
-            String arrayType = Objects.requireNonNull(binding.arrayType.getText()).toString();
+            Object selectedType = binding.arrayType.getTag();
             String header = Objects.requireNonNull(binding.arrayHeaderInput.getText()).toString();
             int currentIndex = arraysList.indexOf(array);
 
@@ -262,18 +264,13 @@ public class ArraysEditor extends Fragment {
                 return;
             }
 
-            if (arrayType.isEmpty()) {
+            if (!(selectedType instanceof ARRAYS_TYPES arrayType)) {
                 SketchwareUtil.toastError(Helper.getResString(R.string.error_array_type_not_selected));
                 return;
             }
 
             array.setArrayName(arrayName);
-            try {
-                array.setArrayType(ARRAYS_TYPES.valueOf(arrayType.toUpperCase()));
-            } catch (IllegalArgumentException e) {
-                SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_value));
-                return;
-            }
+            array.setArrayType(arrayType);
             if (header.isEmpty()) {
                 notesMap.remove(currentIndex);
             } else {

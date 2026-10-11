@@ -1,5 +1,6 @@
 package pro.sketchware.activities.design;
 
+import pro.sketchware.util.Helper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -51,7 +52,7 @@ public class ManageProguardActivity extends BaseAppCompatActivity
                 libraries[i] = (String) name;
                 enabledLibraries[i] = proguardHandler.libIsProguardFMEnabled(libraries[i]);
             } else {
-                libraries[i] = "(broken library configuration)";
+                libraries[i] = Helper.getResString(R.string.library_broken_configuration);
                 enabledLibraries[i] = false;
             }
         }

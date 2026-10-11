@@ -400,7 +400,7 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
                         ProjectDataManager.getLibraryManager(sc_id)), source -> {
             dismissLoadingDialog();
             var intent = new Intent(this, CodeViewerActivity.class);
-            intent.putExtra("code", !source.isEmpty() ? source : "Failed to generate source.");
+            intent.putExtra("code", !source.isEmpty() ? source : Helper.getResString(R.string.manifest_source_generation_failed));
             intent.putExtra("sc_id", sc_id);
             intent.putExtra("scheme", CodeViewerActivity.SCHEME_XML);
             startActivity(intent);

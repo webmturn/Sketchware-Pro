@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor.manage.library.downloader;
 
+import pro.sketchware.R;
+import pro.sketchware.util.Helper;
 import androidx.annotation.NonNull;
 import java.util.Locale;
 import java.util.Objects;
@@ -50,6 +52,7 @@ public class DependencyDownloadItem {
     }
 
     public String getStatusMessage() {
+        updateStatusMessage();
         return statusMessage;
     }
 
@@ -69,35 +72,35 @@ public class DependencyDownloadItem {
     public void setError(String errorMessage) {
         this.state = DownloadState.ERROR;
         this.errorMessage = errorMessage;
-        this.statusMessage = "Error: " + errorMessage;
+        this.statusMessage = Helper.getResString(R.string.library_download_error_prefix) + errorMessage;
     }
 
     private void updateStatusMessage() {
         switch (state) {
             case PENDING:
-                statusMessage = "Pending...";
+                statusMessage = Helper.getResString(R.string.library_download_pending);
                 break;
             case RESOLVING:
-                statusMessage = "Resolving dependency...";
+                statusMessage = Helper.getResString(R.string.library_download_resolving);
                 break;
             case DOWNLOADING:
                 if (totalBytes > 0) {
                     statusMessage = formatBytes(bytesDownloaded) + " / " + formatBytes(totalBytes);
                 } else {
-                    statusMessage = "Downloading...";
+                    statusMessage = Helper.getResString(R.string.library_download_downloading);
                 }
                 break;
             case UNZIPPING:
-                statusMessage = "Unzipping...";
+                statusMessage = Helper.getResString(R.string.library_download_unzipping);
                 break;
             case DEXING:
-                statusMessage = "Processing (DEX)...";
+                statusMessage = Helper.getResString(R.string.library_download_dexing);
                 break;
             case COMPLETED:
-                statusMessage = "Completed";
+                statusMessage = Helper.getResString(R.string.library_download_completed);
                 break;
             case ERROR:
-                statusMessage = "Error: " + (errorMessage != null ? errorMessage : "Unknown error");
+                statusMessage = Helper.getResString(R.string.library_download_error_prefix) + (errorMessage != null ? errorMessage : Helper.getResString(R.string.library_download_unknown_error));
                 break;
         }
     }

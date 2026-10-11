@@ -691,7 +691,7 @@ public class ExportProjectActivity extends BaseAppCompatActivity {
                 failed = true;
                 if (throwable instanceof LoadKeystoreException &&
                         "Incorrect password, or integrity check failed.".equals(throwable.getMessage())) {
-                    errorMessage = "Either an incorrect password was entered, or your key store is corrupt.";
+                    errorMessage = Helper.getResString(R.string.export_keystore_invalid);
                 } else {
                     Log.e("AppExporter", throwable.getMessage(), throwable);
                     errorMessage = Log.getStackTraceString(throwable);

@@ -166,10 +166,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
                         } else {
                             new MaterialAlertDialogBuilder(ManageLocalLibraryActivity.this)
                                     .setTitle(Helper.getResString(R.string.toast_deleted_successfully))
-                                    .setMessage(retained.size() + " shared sub-dependenc"
-                                            + (retained.size() == 1 ? "y was" : "ies were")
-                                            + " kept because other libraries also use them:\n\n"
-                                            + String.join("\n", retained))
+                                    .setMessage(Helper.getResString(R.string.library_shared_dependencies_retained, retained.size(), String.join("\n", retained)))
                                     .setPositiveButton(Helper.getResString(R.string.common_word_ok), null)
                                     .show();
                         }
@@ -550,11 +547,11 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
             String sizeText = library.getSize();
             if (library.isRootLibrary() && !library.getAllDependencies().isEmpty()) {
                 int depCount = library.getAllDependencies().size();
-                sizeText += " \u00b7 " + depCount + (depCount == 1 ? " dep" : " deps");
+                sizeText += Helper.getResString(R.string.library_dependency_badge, depCount);
             }
             // Step 6: show version conflict indicator
             if (conflictingLibNames.contains(library.getName())) {
-                sizeText += " \u00b7 \u26a0 version conflict";
+                sizeText += Helper.getResString(R.string.library_version_conflict_badge);
             }
             binding.librarySize.setText(sizeText);
             binding.libraryName.setSelected(true);

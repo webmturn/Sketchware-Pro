@@ -33,7 +33,7 @@ public class DefinitionBlockView extends BlockView {
     TextView textView = new TextView(context);
     String labelText = input;
     if (componentType != null && componentType.length() > 0) {
-      labelText = componentType + " : " + input;
+      labelText = getComponentTypeDisplayName() + " : " + input;
     } 
     textView.setText(labelText);
     textView.setTextSize(10.0F);

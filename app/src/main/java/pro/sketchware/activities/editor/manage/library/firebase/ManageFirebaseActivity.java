@@ -311,33 +311,33 @@ public class ManageFirebaseActivity extends BaseAppCompatActivity implements Vie
 
         StringBuilder notFoundLog = new StringBuilder();
         boolean hasNullConfig = false;
-        notFoundLog.append("The google-services.json file you selected does not contain the following configurations:\n");
+        notFoundLog.append(Helper.getResString(R.string.firebase_config_missing));
 
         if (storageBucketMatcher.find()) {
             configureImportFirebaseConfigFromJson(storage_bucket, storageBucketMatcher.group(1));
         } else {
-            notFoundLog.append("StorageBucket, ");
+            notFoundLog.append(Helper.getResString(R.string.firebase_missing_storage_bucket));
             configureImportFirebaseConfigFromJson(storage_bucket, "");
             hasNullConfig = true;
         }
         if (appIdMatcher.find()) {
             configureImportFirebaseConfigFromJson(app_id, appIdMatcher.group(1));
         } else {
-            notFoundLog.append("App ID, ");
+            notFoundLog.append(Helper.getResString(R.string.firebase_missing_app_id));
             configureImportFirebaseConfigFromJson(app_id, "");
             hasNullConfig = true;
         }
         if (apiKeyMatcher.find()) {
             configureImportFirebaseConfigFromJson(api_key, apiKeyMatcher.group(1));
         } else {
-            notFoundLog.append("API Key, ");
+            notFoundLog.append(Helper.getResString(R.string.firebase_missing_api_key));
             configureImportFirebaseConfigFromJson(api_key, "");
             hasNullConfig = true;
         }
         if (rtdbMatcher.find()) {
             configureImportFirebaseConfigFromJson(realtime_db, rtdbMatcher.group(1).replace("https://", ""));
         } else {
-            notFoundLog.append("Realtime Database, ");
+            notFoundLog.append(Helper.getResString(R.string.firebase_missing_database));
             configureImportFirebaseConfigFromJson(realtime_db, "");
             hasNullConfig = true;
 

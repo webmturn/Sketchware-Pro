@@ -37,7 +37,7 @@ public class CollectErrorActivity extends BaseAppCompatActivity {
         // Read crash report: prefer file-based (includes device info), fall back to legacy extra
         String crashReport = loadCrashReport(intent);
         if (crashReport == null || crashReport.isEmpty()) {
-            crashReport = "(No crash data available)";
+            crashReport = Helper.getResString(R.string.crash_no_data);
         }
         final String report = crashReport;
 
@@ -85,8 +85,7 @@ public class CollectErrorActivity extends BaseAppCompatActivity {
             return formattedReport;
         }
 
-        String truncatedNotice = "\n\n[Crash report truncated for clipboard. Original length: "
-                + report.length() + " chars]\n\n";
+        String truncatedNotice = Helper.getResString(R.string.crash_clipboard_truncated, report.length());
         int availableReportLength = maxLength - truncatedNotice.length() - 8;
         if (availableReportLength <= 0) {
             return formatClipboardText(truncatedNotice.trim());

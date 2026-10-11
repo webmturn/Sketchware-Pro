@@ -1,5 +1,7 @@
 package pro.sketchware.core.build.compiler;
 
+import pro.sketchware.R;
+import pro.sketchware.util.Helper;
 import com.android.bundle.Config;
 import com.android.tools.build.bundletool.commands.BuildBundleCommand;
 import com.google.common.collect.ImmutableList;
@@ -88,7 +90,7 @@ public class AppBundleCompiler {
             LogUtil.d(TAG, "Now running " + command);
             command.execute();
         } catch (Exception e) {
-            throw new SimpleException("Failed to build bundle: " + e.getMessage());
+            throw new SimpleException(Helper.getResString(R.string.build_bundle_failed_prefix) + e.getMessage());
         }
         LogUtil.d(TAG, "Building app bundle took " + (System.currentTimeMillis() - savedTimeMillis) + " ms");
     }

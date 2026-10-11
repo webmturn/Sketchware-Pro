@@ -27,7 +27,7 @@ public class Material3LibraryItemView extends LibraryItemView {
         description.setText(Helper.getResString(R.string.material3_description));
         assert projectLibraryBean != null;
         boolean isEnabled = new Material3LibraryManager(projectLibraryBean).isMaterial3Enabled();
-        enabled.setText(isEnabled ? "ON" : "OFF");
+        enabled.setText(isEnabled ? Helper.getResString(R.string.library_status_on) : Helper.getResString(R.string.library_status_off));
         enabled.setSelected(isEnabled);
     }
 }

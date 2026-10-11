@@ -1,0 +1,1195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="block_add_list_int_body_1">到</string>
+    <string name="block_add_list_int_head">添加</string>
+    <string name="block_add_list_map_body_1">值</string>
+    <string name="block_add_list_map_body_2">到</string>
+    <string name="block_add_list_map_head">添加键</string>
+    <string name="block_add_list_str_body_1">到</string>
+    <string name="block_add_list_str_head">添加</string>
+    <string name="block_add_map_to_list_body_1">到</string>
+    <string name="block_add_map_to_list_head">添加</string>
+    <string name="block_add_source_directly_head">直接添加源码</string>
+    <string name="block_adview_load_ad_tail">加载</string>
+    <string name="block_and_body_1">且</string>
+    <string name="block_bluetoothconnect_activate_bluetooth_tail">启用蓝牙</string>
+    <string name="block_bluetoothconnect_get_paired_devices_body_1">获取已配对设备到</string>
+    <string name="block_bluetoothconnect_get_random_uuid_tail">获取随机 UUID</string>
+    <string name="block_bluetoothconnect_is_bluetooth_activated_tail">蓝牙是否已启用</string>
+    <string name="block_bluetoothconnect_is_bluetooth_enabled_tail">蓝牙是否可用</string>
+    <string name="block_bluetoothconnect_ready_connection_body_1">准备连接，标签</string>
+    <string name="block_bluetoothconnect_ready_connection_to_uuid_body_1">准备连接，UUID</string>
+    <string name="block_bluetoothconnect_ready_connection_to_uuid_body_2">使用标签</string>
+    <string name="block_bluetoothconnect_send_data_body_1">发送数据</string>
+    <string name="block_bluetoothconnect_send_data_body_2">使用标签</string>
+    <string name="block_bluetoothconnect_start_connection_body_1">开始连接，地址</string>
+    <string name="block_bluetoothconnect_start_connection_body_2">使用标签</string>
+    <string name="block_bluetoothconnect_start_connection_to_uuid_body_1">开始连接，UUID</string>
+    <string name="block_bluetoothconnect_start_connection_to_uuid_body_2">和地址</string>
+    <string name="block_bluetoothconnect_start_connection_to_uuid_body_3">使用标签</string>
+    <string name="block_bluetoothconnect_stop_connection_body_1">停止连接，标签</string>
+    <string name="block_break_head">停止</string>
+    <string name="block_continue_head">跳过本次循环</string>
+    <string name="block_calendar_add_body_1">添加</string>
+    <string name="block_calendar_add_body_2">值</string>
+    <string name="block_calendar_diff_head">差值</string>
+    <string name="block_calendar_format_body_1">格式</string>
+    <string name="block_calendar_get_now_tail">获取当前时间</string>
+    <string name="block_calendar_get_time_tail">获取时间（毫秒）</string>
+    <string name="block_calendar_set_body_1">设置</string>
+    <string name="block_calendar_set_body_2">值</string>
+    <string name="block_calendar_set_time_body_1">设置时间</string>
+    <string name="block_calendar_set_time_tail">毫秒</string>
+    <string name="block_calendarview_get_date_tail">获取日期（毫秒）</string>
+    <string name="block_calendarview_set_date_body_1">设置日期</string>
+    <string name="block_calendarview_set_date_tail">毫秒</string>
+    <string name="block_calendarview_set_max_date_body_1">设置最大日期</string>
+    <string name="block_calendarview_set_max_date_tail">毫秒</string>
+    <string name="block_calendarview_set_min_date_body_1">设置最小日期</string>
+    <string name="block_calendarview_set_min_date_tail">毫秒</string>
+    <string name="block_camera_start_take_picture_tail">拍照</string>
+    <string name="block_clear_list_head">清空</string>
+    <string name="block_close_drawer_head">关闭抽屉</string>
+    <string name="block_contain_list_int_body_1">包含</string>
+    <string name="block_contain_list_map_body_1">在位置</string>
+    <string name="block_contain_list_map_body_2">键</string>
+    <string name="block_contain_list_str_body_1">包含</string>
+    <string name="block_copy_to_clipboard_head">复制到剪贴板</string>
+    <string name="block_crop_bitmap_center_body_1">到路径</string>
+    <string name="block_crop_bitmap_center_body_2">宽度</string>
+    <string name="block_crop_bitmap_center_body_3">高度</string>
+    <string name="block_crop_bitmap_center_head">从中心裁剪图片，源路径</string>
+    <string name="block_decrease_int_tail">减 1</string>
+    <string name="block_delete_list_body_1">属于</string>
+    <string name="block_delete_list_head">删除位置</string>
+    <string name="block_dialog_cancel_button_body_1">取消按钮</string>
+    <string name="block_dialog_cancel_button_tail">被点击时</string>
+    <string name="block_dialog_dismiss_tail">关闭</string>
+    <string name="block_dialog_neutral_button_body_1">中立按钮</string>
+    <string name="block_dialog_neutral_button_tail">被点击时</string>
+    <string name="block_dialog_ok_button_body_1">确定按钮</string>
+    <string name="block_dialog_ok_button_tail">被点击时</string>
+    <string name="block_dialog_set_message_body_1">设置消息</string>
+    <string name="block_dialog_set_title_body_1">设置标题</string>
+    <string name="block_dialog_show_tail">显示</string>
+    <string name="block_do_toast_head">提示消息</string>
+    <string name="block_else_head">否则</string>
+    <string name="block_error_get_custom">获取项目 %1$s 的自定义积木失败：%2$s</string>
+    <string name="block_error_invalid_color">自定义积木 #%d 的颜色无效</string>
+    <string name="block_error_invalid_name">自定义积木 #%d 的名称无效</string>
+    <string name="block_error_invalid_palette_color">自定义积木分类 #%d 的颜色无效</string>
+    <string name="block_error_invalid_palette_color_type">自定义积木分类 #%d 的颜色值类型无效</string>
+    <string name="block_error_invalid_palette_index_type">自定义积木分类 #%d 的索引值类型无效</string>
+    <string name="block_error_invalid_palette_number">自定义积木 #%d 的分类编号无效</string>
+    <string name="block_error_invalid_palette_number_type">自定义积木 #%d 的分类编号值类型无效</string>
+    <string name="block_false_head">假</string>
+    <string name="block_file_get_data_body_1">获取数据，键</string>
+    <string name="block_file_picker_start_pick_files_tail">选择文件</string>
+    <string name="block_file_remove_data_body_1">移除数据，键</string>
+    <string name="block_file_set_data_body_1">设置数据，键</string>
+    <string name="block_file_set_data_body_2">值</string>
+    <string name="block_fileutil_copy_body_1">到路径</string>
+    <string name="block_fileutil_copy_head">复制文件，路径</string>
+    <string name="block_fileutil_delete_head">删除文件，路径</string>
+    <string name="block_fileutil_ends_with_body_1">结尾为</string>
+    <string name="block_fileutil_get_last_segment_path_head">获取路径最后一段</string>
+    <string name="block_fileutil_is_dir_head">路径</string>
+    <string name="block_fileutil_is_dir_tail">是否为目录</string>
+    <string name="block_fileutil_is_exist_head">文件是否存在，路径</string>
+    <string name="block_fileutil_is_file_head">路径</string>
+    <string name="block_fileutil_is_file_tail">是否为文件</string>
+    <string name="block_fileutil_length_head">获取文件长度，路径</string>
+    <string name="block_fileutil_list_dir_body_1">到</string>
+    <string name="block_fileutil_list_dir_head">列出目录中的文件，路径</string>
+    <string name="block_fileutil_make_dir_head">创建目录，路径</string>
+    <string name="block_fileutil_move_body_1">到路径</string>
+    <string name="block_fileutil_move_head">移动文件，路径</string>
+    <string name="block_fileutil_read_head">读取文件，路径</string>
+    <string name="block_fileutil_starts_with_body_1">开头为</string>
+    <string name="block_fileutil_write_body_1">到文件路径</string>
+    <string name="block_fileutil_write_head">写入字符串</string>
+    <string name="block_finish_activity_head">结束</string>
+    <string name="block_finish_activity_tail">Activity</string>
+    <string name="block_firebase_add_body_1">添加键</string>
+    <string name="block_firebase_add_body_2">值</string>
+    <string name="block_firebase_delete_body_1">删除键</string>
+    <string name="block_firebase_get_children_body_1">获取子项到</string>
+    <string name="block_firebase_get_children_tail">那么</string>
+    <string name="block_firebase_get_key_tail">推送并获取键</string>
+    <string name="block_firebase_push_body_1">推送值</string>
+    <string name="block_firebase_start_listen_tail">开始监听</string>
+    <string name="block_firebase_stop_listen_tail">停止监听</string>
+    <string name="block_firebaseauth_create_user_body_1">创建用户，邮箱</string>
+    <string name="block_firebaseauth_create_user_body_2">和密码</string>
+    <string name="block_firebaseauth_get_email_tail">FirebaseAuth 获取邮箱</string>
+    <string name="block_firebaseauth_get_uid_tail">FirebaseAuth 获取用户 ID</string>
+    <string name="block_firebaseauth_is_logged_in_tail">FirebaseAuth 是否已登录</string>
+    <string name="block_firebaseauth_reset_password_body_1">发送重置密码邮件到</string>
+    <string name="block_firebaseauth_signin_anonymously_tail">匿名登录</string>
+    <string name="block_firebaseauth_signin_user_body_1">登录，邮箱</string>
+    <string name="block_firebaseauth_signin_user_body_2">和密码</string>
+    <string name="block_firebaseauth_signout_tail">FirebaseAuth 退出登录</string>
+    <string name="block_firebasestorage_delete_body_1">删除文件，URL</string>
+    <string name="block_firebasestorage_download_file_body_1">下载文件，URL</string>
+    <string name="block_firebasestorage_download_file_body_2">到文件路径</string>
+    <string name="block_firebasestorage_upload_file_body_1">上传文件，路径</string>
+    <string name="block_firebasestorage_upload_file_body_2">名称设为</string>
+    <string name="block_forever_head">无限循环</string>
+    <string name="block_get_alpha_tail">获取不透明度</string>
+    <string name="block_get_at_list_int_body_1">属于</string>
+    <string name="block_get_at_list_int_head">获取位置</string>
+    <string name="block_get_at_list_map_body_1">键</string>
+    <string name="block_get_at_list_map_body_2">属于</string>
+    <string name="block_get_at_list_map_head">获取位置的值</string>
+    <string name="block_get_at_list_str_body_1">属于</string>
+    <string name="block_get_at_list_str_head">获取位置</string>
+    <string name="block_get_checked_tail">获取选中状态</string>
+    <string name="block_get_enable_tail">获取启用状态</string>
+    <string name="block_get_external_storage_dir_head">获取外部存储目录</string>
+    <string name="block_get_jpeg_rotate_head">获取 JPEG 旋转角度，文件路径</string>
+    <string name="block_get_location_x_tail">获取 X 坐标</string>
+    <string name="block_get_location_y_tail">获取 Y 坐标</string>
+    <string name="block_get_map_in_list_body_1">属于</string>
+    <string name="block_get_map_in_list_body_2">到</string>
+    <string name="block_get_map_in_list_head">获取位置</string>
+    <string name="block_get_package_data_dir_head">获取应用数据目录</string>
+    <string name="block_get_public_dir_head">获取公共目录，类型</string>
+    <string name="block_get_rotate_tail">获取旋转角度</string>
+    <string name="block_get_scale_x_tail">获取 X 轴缩放比例</string>
+    <string name="block_get_scale_y_tail">获取 Y 轴缩放比例</string>
+    <string name="block_get_text_tail">获取文本</string>
+    <string name="block_get_translation_x_tail">获取 X 轴平移量</string>
+    <string name="block_get_translation_y_tail">获取 Y 轴平移量</string>
+    <string name="block_gyroscope_start_listen_tail">启动传感器</string>
+    <string name="block_gyroscope_stop_listen_tail">停止传感器</string>
+    <string name="block_helper_spec" formatted="false">m.name（不含 % 符号）</string>
+    <string name="block_if_else_head">如果</string>
+    <string name="block_if_else_tail">那么</string>
+    <string name="block_if_head">如果</string>
+    <string name="block_if_tail">那么</string>
+    <string name="block_increase_int_tail">加 1</string>
+    <string name="block_indexof_list_int_body_1">在</string>
+    <string name="block_indexof_list_int_head">索引</string>
+    <string name="block_indexof_list_str_body_1">在</string>
+    <string name="block_indexof_list_str_head">索引</string>
+    <string name="block_insert_list_int_body_1">位置</string>
+    <string name="block_insert_list_int_body_2">到</string>
+    <string name="block_insert_list_int_head">插入</string>
+    <string name="block_insert_list_map_body_1">值</string>
+    <string name="block_insert_list_map_body_2">位置</string>
+    <string name="block_insert_list_map_body_3">到</string>
+    <string name="block_insert_list_map_head">插入键</string>
+    <string name="block_insert_list_str_body_1">位置</string>
+    <string name="block_insert_list_str_body_2">到</string>
+    <string name="block_insert_list_str_head">插入</string>
+    <string name="block_insert_map_to_list_body_1">位置</string>
+    <string name="block_insert_map_to_list_body_2">到</string>
+    <string name="block_insert_map_to_list_head">插入</string>
+    <string name="block_intent_get_string_head">获取 Activity 附加数据，键</string>
+    <string name="block_intent_put_extra_body_1">设置附加数据，键</string>
+    <string name="block_intent_put_extra_body_2">值</string>
+    <string name="block_intent_set_action_body_1">设置动作</string>
+    <string name="block_intent_set_data_body_1">设置数据</string>
+    <string name="block_intent_set_flags_body_1">设置标志</string>
+    <string name="block_intent_set_screen_body_1">设置目标 Activity</string>
+    <string name="block_interstitialad_create_tail">创建</string>
+    <string name="block_interstitialad_load_ad_tail">加载</string>
+    <string name="block_interstitialad_show_tail">显示</string>
+    <string name="block_is_drawer_open_head">抽屉是否已打开</string>
+    <string name="block_length_list_head">长度</string>
+    <string name="block_list_get_checked_count_tail">获取选中项数量</string>
+    <string name="block_list_get_checked_position_tail">获取选中项位置</string>
+    <string name="block_list_get_checked_positions_body_1">获取选中项位置到</string>
+    <string name="block_list_map_to_str_tail">转为 JSON 字符串</string>
+    <string name="block_list_refresh_tail">刷新数据</string>
+    <string name="block_list_set_custom_view_data_body_1">设置列表自定义视图数据</string>
+    <string name="block_list_set_data_body_1">设置列表数据</string>
+    <string name="block_list_set_item_checked_body_1">设置选中项，位置</string>
+    <string name="block_list_set_item_checked_body_2">值</string>
+    <string name="block_list_smooth_scrollto_body_1">平滑滚动到位置</string>
+    <string name="block_locationmanager_remove_updates_tail">停止位置更新</string>
+    <string name="block_locationmanager_request_location_updates_body_1">请求位置更新，类型</string>
+    <string name="block_locationmanager_request_location_updates_body_2">最短时间</string>
+    <string name="block_locationmanager_request_location_updates_body_3">最小距离</string>
+    <string name="block_map_clear_tail">清空</string>
+    <string name="block_map_contain_key_body_1">包含键</string>
+    <string name="block_map_create_new_tail">创建新映射</string>
+    <string name="block_map_get_all_keys_body_1">获取所有键到</string>
+    <string name="block_map_get_body_1">获取键</string>
+    <string name="block_map_is_empty_tail">是否为空</string>
+    <string name="block_map_put_body_1">写入键</string>
+    <string name="block_map_put_body_2">值</string>
+    <string name="block_map_remove_key_body_1">移除键</string>
+    <string name="block_map_size_tail">大小</string>
+    <string name="block_map_to_str_tail">转为 JSON 字符串</string>
+    <string name="block_mapview_add_marker_body_1">添加标记，ID</string>
+    <string name="block_mapview_add_marker_body_2">位置，纬度</string>
+    <string name="block_mapview_add_marker_body_3">经度</string>
+    <string name="block_mapview_move_camera_body_1">移动地图视角，纬度</string>
+    <string name="block_mapview_move_camera_body_2">经度</string>
+    <string name="block_mapview_set_map_type_body_1">设置地图类型</string>
+    <string name="block_mapview_set_marker_color_body_1">标记 ID</string>
+    <string name="block_mapview_set_marker_color_body_2">设置颜色</string>
+    <string name="block_mapview_set_marker_color_body_3">不透明度</string>
+    <string name="block_mapview_set_marker_icon_body_1">标记 ID</string>
+    <string name="block_mapview_set_marker_icon_body_2">设置图标</string>
+    <string name="block_mapview_set_marker_info_body_1">标记 ID</string>
+    <string name="block_mapview_set_marker_info_body_2">设置标题</string>
+    <string name="block_mapview_set_marker_info_body_3">摘要</string>
+    <string name="block_mapview_set_marker_position_body_1">标记 ID</string>
+    <string name="block_mapview_set_marker_position_body_2">设置位置，纬度</string>
+    <string name="block_mapview_set_marker_position_body_3">经度</string>
+    <string name="block_mapview_set_marker_visible_body_1">标记 ID</string>
+    <string name="block_mapview_set_marker_visible_body_2">设置可见性</string>
+    <string name="block_mapview_zoom_in_tail">放大</string>
+    <string name="block_mapview_zoom_out_tail">缩小</string>
+    <string name="block_mapview_zoom_to_body_1">缩放到</string>
+    <string name="block_math_abs_head">绝对值</string>
+    <string name="block_math_acos_head">反余弦</string>
+    <string name="block_math_asin_head">反正弦</string>
+    <string name="block_math_atan_head">反正切</string>
+    <string name="block_math_ceil_head">向上取整</string>
+    <string name="block_math_cos_head">余弦</string>
+    <string name="block_math_e_head">自然常数 e</string>
+    <string name="block_math_exp_head">自然指数</string>
+    <string name="block_math_floor_head">向下取整</string>
+    <string name="block_math_get_dip_head">将 dp 转为像素</string>
+    <string name="block_math_get_display_height_head">获取屏幕高度（像素）</string>
+    <string name="block_math_get_display_width_head">获取屏幕宽度（像素）</string>
+    <string name="block_math_log10_head">常用对数</string>
+    <string name="block_math_log_head">自然对数</string>
+    <string name="block_math_max_body_1">且</string>
+    <string name="block_math_max_head">最大值</string>
+    <string name="block_math_min_body_1">且</string>
+    <string name="block_math_min_head">最小值</string>
+    <string name="block_math_pi_head">圆周率 π</string>
+    <string name="block_math_pow_body_1">到</string>
+    <string name="block_math_pow_tail">幂</string>
+    <string name="block_math_round_head">四舍五入</string>
+    <string name="block_math_sin_head">正弦</string>
+    <string name="block_math_sqrt_head">平方根</string>
+    <string name="block_math_tan_head">正切</string>
+    <string name="block_math_to_degree_head">弧度</string>
+    <string name="block_math_to_degree_tail">转为角度</string>
+    <string name="block_math_to_radian_head">角度</string>
+    <string name="block_math_to_radian_tail">转为弧度</string>
+    <string name="block_mediaplayer_create_body_1">创建</string>
+    <string name="block_mediaplayer_get_current_tail">获取当前播放时间</string>
+    <string name="block_mediaplayer_get_duration_tail">获取音频总时长</string>
+    <string name="block_mediaplayer_is_looping_tail">是否循环播放</string>
+    <string name="block_mediaplayer_is_playing_tail">是否正在播放</string>
+    <string name="block_mediaplayer_pause_tail">暂停</string>
+    <string name="block_mediaplayer_release_tail">释放资源</string>
+    <string name="block_mediaplayer_reset_tail">重置</string>
+    <string name="block_mediaplayer_seek_body_1">跳转到</string>
+    <string name="block_mediaplayer_set_looping_body_1">设置循环播放</string>
+    <string name="block_mediaplayer_start_tail">开始</string>
+    <string name="block_notif_cancel_body_1">取消通知，ID</string>
+    <string name="block_notif_create_channel_body_1">创建通知渠道，ID</string>
+    <string name="block_notif_create_channel_body_2">名称</string>
+    <string name="block_notif_create_channel_body_3">重要程度</string>
+    <string name="block_notif_set_auto_cancel_body_1">设置自动取消</string>
+    <string name="block_notif_set_channel_body_1">设置通知渠道</string>
+    <string name="block_notif_set_click_intent_body_1">设置点击 Intent</string>
+    <string name="block_notif_set_content_body_1">设置内容</string>
+    <string name="block_notif_set_priority_body_1">设置优先级</string>
+    <string name="block_notif_set_small_icon_body_1">设置小图标</string>
+    <string name="block_notif_set_title_body_1">设置标题</string>
+    <string name="block_notif_show_body_1">显示通知，ID</string>
+    <string name="block_sqlite_open_body_1">打开数据库</string>
+    <string name="block_sqlite_close_tail">关闭</string>
+    <string name="block_sqlite_exec_sql_body_1">执行 SQL</string>
+    <string name="block_sqlite_raw_query_body_1">执行查询</string>
+    <string name="block_sqlite_move_to_first_tail">移动到第一行</string>
+    <string name="block_sqlite_move_to_next_tail">移动到下一行</string>
+    <string name="block_sqlite_is_after_last_tail">是否已到最后一行之后</string>
+    <string name="block_sqlite_get_string_body_1">获取字符串，列</string>
+    <string name="block_sqlite_get_number_body_1">获取数值，列</string>
+    <string name="block_sqlite_get_count_tail">获取数量</string>
+    <string name="block_sqlite_close_cursor_tail">关闭游标</string>
+    <string name="block_sqlite_is_open_tail">是否已打开</string>
+    <string name="block_sqlite_begin_transaction_tail">开始事务</string>
+    <string name="block_sqlite_set_transaction_successful_tail">标记事务成功</string>
+    <string name="block_sqlite_end_transaction_tail">结束事务</string>
+    <string name="block_sqlite_for_each_row_tail">遍历每一行</string>
+    <string name="block_sqlite_enable_wal_tail">启用预写日志</string>
+    <string name="block_sqlite_cursor_is_null_tail">游标值是否为空</string>
+    <string name="block_name">积木名称</string>
+    <string name="block_not_head">非</string>
+    <string name="block_objectanimator_cancel_tail">取消</string>
+    <string name="block_objectanimator_is_running_tail">是否正在运行</string>
+    <string name="block_objectanimator_set_duration_body_1">设置时长</string>
+    <string name="block_objectanimator_set_from_to_body_1">设置数据源</string>
+    <string name="block_objectanimator_set_from_to_body_2">到</string>
+    <string name="block_objectanimator_set_interpolator_body_1">设置插值器</string>
+    <string name="block_objectanimator_set_property_body_1">设置属性</string>
+    <string name="block_objectanimator_set_repeat_count_body_1">设置重复次数</string>
+    <string name="block_objectanimator_set_repeat_mode_body_1">设置重复模式</string>
+    <string name="block_objectanimator_set_target_body_1">设置目标</string>
+    <string name="block_objectanimator_set_value_body_1">设置值</string>
+    <string name="block_objectanimator_start_tail">开始</string>
+    <string name="block_open_drawer_head">打开抽屉</string>
+    <string name="block_or_body_1">或</string>
+    <string name="block_progressbar_set_indeterminate_body_1">设置不确定进度模式</string>
+    <string name="block_random_body_1">到</string>
+    <string name="block_random_head">随机选择</string>
+    <string name="block_repeat_head">重复</string>
+    <string name="block_request_focus_tail">请求焦点</string>
+    <string name="block_requestnetwork_set_headers_body_1">设置请求头</string>
+    <string name="block_requestnetwork_set_params_body_1">设置参数</string>
+    <string name="block_requestnetwork_set_params_body_2">请求参数类型</string>
+    <string name="block_requestnetwork_start_request_network_body_1">发起网络请求，方法</string>
+    <string name="block_requestnetwork_start_request_network_body_2">到 URL</string>
+    <string name="block_requestnetwork_start_request_network_body_3">使用标签</string>
+    <string name="block_requestnetwork_upload_file_body_1">上传文件到 URL</string>
+    <string name="block_requestnetwork_upload_file_body_2">文件，键</string>
+    <string name="block_requestnetwork_upload_file_body_3">文件路径</string>
+    <string name="block_requestnetwork_upload_file_body_4">使用标签</string>
+    <string name="block_google_sign_in_init_body_1">初始化，Web 客户端 ID</string>
+    <string name="block_google_sign_in_launch_tail">启动登录</string>
+    <string name="block_google_sign_out_tail">退出登录</string>
+    <string name="block_phone_auth_send_code_body_1">发送验证码到</string>
+    <string name="block_phone_auth_resend_code_body_1">重新发送验证码到</string>
+    <string name="block_phone_auth_sign_in_body_1">使用电话凭据登录，验证 ID</string>
+    <string name="block_phone_auth_sign_in_body_2">代码</string>
+    <string name="block_fcm_get_token_tail">获取令牌</string>
+    <string name="block_fcm_subscribe_topic_body_1">订阅主题</string>
+    <string name="block_fcm_unsubscribe_topic_body_1">取消订阅主题</string>
+    <string name="block_resize_bitmap_circle_body_1">到路径</string>
+    <string name="block_resize_bitmap_circle_head">将图片裁为圆形，源路径</string>
+    <string name="block_resize_bitmap_ratio_body_1">到路径</string>
+    <string name="block_resize_bitmap_ratio_body_2">最大尺寸</string>
+    <string name="block_resize_bitmap_ratio_head">保持比例调整图片尺寸，源路径</string>
+    <string name="block_resize_bitmap_rounded_body_1">到路径</string>
+    <string name="block_resize_bitmap_rounded_body_2">圆角像素</string>
+    <string name="block_resize_bitmap_rounded_head">将图片裁为圆角，源路径</string>
+    <string name="block_resize_bitmap_square_body_1">到路径</string>
+    <string name="block_resize_bitmap_square_body_2">最大尺寸</string>
+    <string name="block_resize_bitmap_square_head">将图片裁为正方形，源路径</string>
+    <string name="block_rotate_bitmap_body_1">到路径</string>
+    <string name="block_rotate_bitmap_body_2">角度</string>
+    <string name="block_rotate_bitmap_head">旋转图片，源路径</string>
+    <string name="block_scale_bitmap_body_1">到路径</string>
+    <string name="block_scale_bitmap_body_2">X</string>
+    <string name="block_scale_bitmap_body_3">Y</string>
+    <string name="block_scale_bitmap_head">缩放图片，源路径</string>
+    <string name="block_seekbar_get_max_tail">获取最大值</string>
+    <string name="block_seekbar_get_progress_tail">获取进度</string>
+    <string name="block_seekbar_set_max_body_1">设置最大值</string>
+    <string name="block_seekbar_set_progress_body_1">设置进度</string>
+    <string name="block_set_alpha_body_1">设置不透明度</string>
+    <string name="block_set_at_list_map_body_1">值</string>
+    <string name="block_set_at_list_map_body_2">位置</string>
+    <string name="block_set_at_list_map_body_3">到</string>
+    <string name="block_set_at_list_map_head">设置键</string>
+    <string name="block_set_bg_color_body_1">设置背景颜色</string>
+    <string name="block_set_bg_resource_body_1">设置背景资源</string>
+    <string name="block_set_bitmap_brightness_body_1">到路径</string>
+    <string name="block_set_bitmap_brightness_body_2">值</string>
+    <string name="block_set_bitmap_brightness_head">设置图片亮度，源路径</string>
+    <string name="block_set_bitmap_color_filter_body_1">到路径</string>
+    <string name="block_set_bitmap_color_filter_body_2">颜色</string>
+    <string name="block_set_bitmap_color_filter_head">设置图片颜色滤镜，源路径</string>
+    <string name="block_set_bitmap_contrast_body_1">到路径</string>
+    <string name="block_set_bitmap_contrast_body_2">值</string>
+    <string name="block_set_bitmap_contrast_head">设置图片对比度，源路径</string>
+    <string name="block_set_checked_body_1">设置选中状态</string>
+    <string name="block_set_clickable_body_1">设置可点击状态</string>
+    <string name="block_set_color_filter_body_1">设置颜色滤镜</string>
+    <string name="block_set_enable_body_1">设置启用状态</string>
+    <string name="block_set_hint_body_1">设置提示文本为</string>
+    <string name="block_set_hint_text_color_body_1">设置提示文本颜色为</string>
+    <string name="block_set_image_body_1">设置图片</string>
+    <string name="block_set_image_file_path_body_1">从文件设置图片，路径</string>
+    <string name="block_set_image_url_body_1">从 URL 设置图片</string>
+    <string name="block_set_rotate_body_1">设置旋转角度</string>
+    <string name="block_set_scale_x_body_1">设置 X 轴缩放比例</string>
+    <string name="block_set_scale_y_body_1">设置 Y 轴缩放比例</string>
+    <string name="block_set_text_body_1">设置文本</string>
+    <string name="block_set_text_color_body_1">设置文本颜色</string>
+    <string name="block_set_thumb_resource_body_1">设置滑块资源</string>
+    <string name="block_set_title_head">设置 Activity 标题</string>
+    <string name="block_set_track_resource_body_1">设置轨道资源</string>
+    <string name="block_set_translation_x_body_1">设置 X 轴平移量</string>
+    <string name="block_set_translation_y_body_1">设置 Y 轴平移量</string>
+    <string name="block_set_typeface_body_1">设置字体</string>
+    <string name="block_set_typeface_body_2">使用样式</string>
+    <string name="block_set_var_bool_body_1">到</string>
+    <string name="block_set_var_bool_head">设置</string>
+    <string name="block_set_var_int_body_1">到</string>
+    <string name="block_set_var_int_head">设置</string>
+    <string name="block_set_var_str_body_1">到</string>
+    <string name="block_set_var_str_head">设置</string>
+    <string name="block_set_visible_body_1">设置可见性</string>
+    <string name="block_skew_bitmap_body_1">到路径</string>
+    <string name="block_skew_bitmap_body_2">X</string>
+    <string name="block_skew_bitmap_body_3">Y</string>
+    <string name="block_skew_bitmap_head">斜切图片，源路径</string>
+    <string name="block_soundpool_create_body_1">创建，最大音频流数</string>
+    <string name="block_soundpool_load_body_1">加载</string>
+    <string name="block_soundpool_load_head">声音 ID：</string>
+    <string name="block_soundpool_stream_play_body_1">播放声音，ID</string>
+    <string name="block_soundpool_stream_play_head">音频流 ID：</string>
+    <string name="block_soundpool_stream_play_tail">次</string>
+    <string name="block_soundpool_stream_stop_body_1">停止音频流，ID</string>
+    <string name="block_speechtotext_shutdown_tail">关闭</string>
+    <string name="block_speechtotext_start_listening_tail">开始监听</string>
+    <string name="block_speechtotext_stop_listening_tail">停止监听</string>
+    <string name="block_spn_get_selection_tail">获取选中项位置</string>
+    <string name="block_spn_refresh_tail">刷新数据</string>
+    <string name="block_spn_set_data_body_1">设置下拉列表数据</string>
+    <string name="block_spn_set_selection_body_1">设置选中项位置</string>
+    <string name="block_start_activity_head">启动 Activity</string>
+    <string name="block_str_to_list_map_body_1">到</string>
+    <string name="block_str_to_list_map_head">JSON</string>
+    <string name="block_str_to_map_body_1">到</string>
+    <string name="block_str_to_map_head">JSON</string>
+    <string name="block_string_contains_body_1">包含</string>
+    <string name="block_string_equals_body_1">等于</string>
+    <string name="block_string_index_body_1">属于</string>
+    <string name="block_string_index_head">索引</string>
+    <string name="block_string_join_body_1">且</string>
+    <string name="block_string_join_head">连接</string>
+    <string name="block_string_last_index_body_1">属于</string>
+    <string name="block_string_last_index_head">最后一个索引</string>
+    <string name="block_string_length_head">长度</string>
+    <string name="block_string_replace_all_body_1">按正则表达式替换全部</string>
+    <string name="block_string_replace_all_body_2">使用</string>
+    <string name="block_string_replace_body_1">替换全部</string>
+    <string name="block_string_replace_body_2">使用</string>
+    <string name="block_string_replace_first_body_1">按正则表达式替换第一项</string>
+    <string name="block_string_replace_first_body_2">使用</string>
+    <string name="block_string_sub_body_1">截取字符串</string>
+    <string name="block_string_sub_body_2">到</string>
+    <string name="block_texttospeech_is_speaking_tail">是否正在朗读</string>
+    <string name="block_texttospeech_set_pitch_body_1">设置音调</string>
+    <string name="block_texttospeech_set_speech_rate_body_1">设置语速</string>
+    <string name="block_texttospeech_shutdown_tail">关闭</string>
+    <string name="block_texttospeech_speak_body_1">朗读文本</string>
+    <string name="block_texttospeech_stop_tail">停止</string>
+    <string name="block_timer_after_body_1">延迟</string>
+    <string name="block_timer_after_tail">毫秒</string>
+    <string name="block_timer_cancel_tail">取消</string>
+    <string name="block_timer_every_body_1">延迟</string>
+    <string name="block_timer_every_body_2">毫秒，每隔</string>
+    <string name="block_timer_every_tail">毫秒</string>
+    <string name="block_to_lower_case_head">转为小写</string>
+    <string name="block_to_number_head">转为数值</string>
+    <string name="block_to_string_format_body_1">格式化小数</string>
+    <string name="block_to_string_head">转为字符串</string>
+    <string name="block_to_string_tail">不保留小数</string>
+    <string name="block_to_string_with_decimal_head">转为字符串</string>
+    <string name="block_to_string_with_decimal_tail">保留小数</string>
+    <string name="block_to_upper_case_head">转为大写</string>
+    <string name="block_trim_head">去除首尾空白</string>
+    <string name="block_true_head">真</string>
+    <string name="block_vibrator_action_body_1">振动时长</string>
+    <string name="block_vibrator_action_tail">毫秒</string>
+    <string name="block_view_on_click_head">当</string>
+    <string name="block_view_on_click_tail">被点击</string>
+    <string name="block_webview_can_go_back_tail">能否后退</string>
+    <string name="block_webview_can_go_forward_tail">能否前进</string>
+    <string name="block_webview_clear_cache_tail">清除缓存</string>
+    <string name="block_webview_clear_history_tail">清除历史记录</string>
+    <string name="block_webview_get_url_tail">获取 URL</string>
+    <string name="block_webview_go_back_tail">后退</string>
+    <string name="block_webview_go_forward_tail">前进</string>
+    <string name="block_webview_load_url_body_1">加载 URL</string>
+    <string name="block_webview_set_cache_mode_body_1">设置缓存模式</string>
+    <string name="block_webview_stop_loading_tail">停止加载</string>
+    <string name="block_webview_zoom_in_tail">放大</string>
+    <string name="block_webview_zoom_out_tail">缩小</string>
+    <string name="root_spec_common_define">定义</string>
+    <string name="root_spec_common_when">当</string>
+    <string name="root_spec_initialize_head">Activity 创建时</string>
+    <string name="root_spec_on_ad_closed_head">广告关闭时</string>
+    <string name="root_spec_on_ad_failed_to_load_head">广告加载失败时</string>
+    <string name="root_spec_on_ad_loaded_head">广告加载完成时</string>
+    <string name="root_spec_on_ad_opened_head">广告打开时</string>
+    <string name="root_spec_on_animation_cancel_head">动画取消时</string>
+    <string name="root_spec_on_animation_end_head">动画结束时</string>
+    <string name="root_spec_on_animation_start_head">动画开始时</string>
+    <string name="root_spec_on_back_pressed_head">按下返回键时</string>
+    <string name="root_spec_on_bind_custom_view_head">绑定自定义视图时</string>
+    <string name="root_spec_on_cancelled_head">取消时</string>
+    <string name="root_spec_on_check_changed_head">选中状态改变</string>
+    <string name="root_spec_on_child_added_head">添加子项时</string>
+    <string name="root_spec_on_child_changed_head">子项改变时</string>
+    <string name="root_spec_on_child_removed_head">移除子项时</string>
+    <string name="root_spec_on_clicked_head">被点击</string>
+    <string name="root_spec_on_connected_head">连接成功时</string>
+    <string name="root_spec_on_connection_error_head">连接出错时</string>
+    <string name="root_spec_on_connection_stopped_head">连接停止时</string>
+    <string name="root_spec_on_create_user_complete_head">创建用户完成时</string>
+    <string name="root_spec_on_data_received_head">收到数据时</string>
+    <string name="root_spec_on_data_sent_head">数据发送完成时</string>
+    <string name="root_spec_on_date_change_head">日期改变时</string>
+    <string name="root_spec_on_delete_success_head">删除成功时</string>
+    <string name="root_spec_on_destroy_head">Activity 销毁时</string>
+    <string name="root_spec_on_download_success_head">下载成功时</string>
+    <string name="root_spec_on_error_response_head">收到错误响应时</string>
+    <string name="root_spec_on_failure_head">失败时</string>
+    <string name="root_spec_on_files_picked_cancel_head">取消文件选择时</string>
+    <string name="root_spec_on_files_picked_head">文件选择完成时</string>
+    <string name="root_spec_on_item_clicked_head">项目被点击</string>
+    <string name="root_spec_on_item_long_clicked_head">项目被长按</string>
+    <string name="root_spec_on_item_selected_head">项目被选中</string>
+    <string name="root_spec_on_location_changed_head">位置改变时</string>
+    <string name="root_spec_on_map_ready_head">地图准备完成时</string>
+    <string name="root_spec_on_marker_clicked_head">标记被点击时</string>
+    <string name="root_spec_on_page_finished_head">页面加载完成时</string>
+    <string name="root_spec_on_page_started_head">页面开始加载时</string>
+    <string name="root_spec_on_pause_head">Activity 暂停时</string>
+    <string name="root_spec_on_picture_taken_cancel_head">取消拍照时</string>
+    <string name="root_spec_on_picture_taken_head">拍照完成时</string>
+    <string name="root_spec_on_post_created_head">Activity 启动完成时</string>
+    <string name="root_spec_on_progress_changed_head">进度改变时</string>
+    <string name="root_spec_on_reset_password_email_sent_head">重置密码邮件发送完成时</string>
+    <string name="root_spec_on_response_head">收到响应时</string>
+    <string name="root_spec_on_resume_head">Activity 恢复时</string>
+    <string name="root_spec_on_sensor_changed_head">传感器数据改变时</string>
+    <string name="root_spec_on_sign_in_user_complete_head">用户登录完成时</string>
+    <string name="root_spec_on_speech_error_head">语音识别出错时</string>
+    <string name="root_spec_on_speech_result_head">获得语音识别结果时</string>
+    <string name="root_spec_on_start_head">Activity 变为可见时</string>
+    <string name="root_spec_on_start_tracking_touch_head">开始拖动时</string>
+    <string name="root_spec_on_stop_head">Activity 不再可见时</string>
+    <string name="root_spec_on_stop_tracking_touch_head">结束拖动时</string>
+    <string name="root_spec_on_text_changed_head">文本改变时</string>
+    <string name="root_spec_on_upload_progress_head">上传进度改变时</string>
+    <string name="root_spec_on_upload_success_head">上传成功时</string>
+    <string name="common_message_save_failed">保存失败！请检查存储空间后重试。</string>
+    <string name="s1">保存图片</string>
+    <string name="s2">允许广告将图片保存到相册吗？</string>
+    <string name="s3">接受</string>
+    <string name="s4">拒绝</string>
+    <string name="s5">创建日历事件</string>
+    <string name="s6">允许广告创建日历事件吗？</string>
+    <string name="s7">测试广告</string>
+    <string name="error_crash_previous_session">Sketchware Pro 在上次使用时崩溃。是否查看崩溃日志？</string>
+    <string name="toast_failed_to_create_file">创建文件失败</string>
+    <string name="toast_failed_to_create_folder">创建文件夹失败</string>
+    <string name="about_crash_logs">崩溃日志</string>
+    <string name="about_crash_logs_empty">没有找到崩溃日志</string>
+    <string name="about_crash_logs_clear">全部清除</string>
+    <string name="about_crash_logs_cleared">崩溃日志已清除</string>
+    <string name="search_blocks_min_length">请至少输入 %1$d 个字符</string>
+    <string name="search_blocks_result_limit">显示前 %1$d 个匹配结果</string>
+    <string name="builtin_block_commandblockjava" formatted="false">Java 命令积木：参照 %s 距离 %d 前方 %d 后方 %d 命令 %m.Command</string>
+    <string name="builtin_block_commandblockxml" formatted="false">XML 命令积木：参照 %s 距离 %d 前方 %d 后方 %d 命令 %m.Command XML 名称 %s.inputOnly</string>
+    <string name="builtin_block_setrecyclerviewlayoutparams" formatted="false">设置 RecyclerView 布局参数，宽度 %m.LayoutParam 高度 %m.LayoutParam</string>
+    <string name="builtin_block_refreshinglist" formatted="false">%m.listview 重绘视图</string>
+    <string name="builtin_block_listviewaddheader" formatted="false">%m.listview 添加头部视图 %m.view 数据 %s 可选择 %b</string>
+    <string name="builtin_block_listviewaddfooter" formatted="false">%m.listview 添加尾部视图 %m.view 数据 %s 可选择 %b</string>
+    <string name="builtin_block_listviewremoveheader" formatted="false">%m.listview 移除头部视图 %m.view</string>
+    <string name="builtin_block_listviewremovefooter" formatted="false">%m.listview 移除尾部视图 %m.view</string>
+    <string name="builtin_block_progressdialogcreate" formatted="false">%m.progressdialog 创建于 %m.activity</string>
+    <string name="builtin_block_listviewsetselection" formatted="false">%m.listview 设置选中项 %d</string>
+    <string name="builtin_block_edittextdiablesuggestion" formatted="false">%m.edittext 禁用输入建议</string>
+    <string name="builtin_block_edittextlines" formatted="false">%m.edittext 设置行数 %d</string>
+    <string name="builtin_block_edittextsingleline" formatted="false">%m.edittext 设置单行模式 %b</string>
+    <string name="builtin_block_edittextshowerror" formatted="false">%m.edittext 显示错误 %s</string>
+    <string name="builtin_block_edittextselectall" formatted="false">%m.edittext 选中全部文本</string>
+    <string name="builtin_block_edittextsetselection" formatted="false">%m.edittext 设置选中范围，起点 %d 终点 %d</string>
+    <string name="builtin_block_edittextsetmaxlines" formatted="false">%m.edittext 设置最大行数 %d</string>
+    <string name="builtin_block_edittextgetselectionstart" formatted="false">%m.edittext 获取选中范围起点</string>
+    <string name="builtin_block_edittextgetselectionend" formatted="false">%m.edittext 获取选中范围终点</string>
+    <string name="builtin_block_performclick" formatted="false">%m.view 执行点击</string>
+    <string name="builtin_block_asynctaskexecute" formatted="false">%m.asynctask 执行任务，消息 %s</string>
+    <string name="builtin_block_asynctaskpublishprogress" formatted="false">发布进度 %d</string>
+    <string name="builtin_block_progressdialogsetcanceledoutside" formatted="false">%m.progressdialog 设置点击外部可取消 %b</string>
+    <string name="builtin_block_datepickerdialogshow" formatted="false">显示日期选择对话框</string>
+    <string name="builtin_block_timepickerdialogshow" formatted="false">%m.timepickerdialog 显示</string>
+    <string name="builtin_block_imagecrop" formatted="false">裁剪图片，文件路径 %s 请求码 %d</string>
+    <string name="builtin_block_isconnected" formatted="false">网络是否已连接</string>
+    <string name="builtin_block_getclipboard" formatted="false">获取剪贴板文本</string>
+    <string name="builtin_block_customimport" formatted="false">导入 %s.import</string>
+    <string name="builtin_block_customimport2" formatted="false">导入 %m.import</string>
+    <string name="builtin_block_customtoast" formatted="false">自定义提示 %s 文本颜色 %m.color 字号 %d 背景颜色 %m.color 圆角半径 %d 对齐方式 %m.gravity_t</string>
+    <string name="builtin_block_customtoastwithicon" formatted="false">带图标的自定义提示 %s 文本颜色 %m.color 字号 %d 背景颜色 %m.color 圆角半径 %d 对齐方式 %m.gravity_t 图标 %m.resource</string>
+    <string name="builtin_block_lightstatusbar" formatted="false">设置浅色状态栏</string>
+    <string name="builtin_block_hidekeyboard" formatted="false">隐藏键盘</string>
+    <string name="builtin_block_showkeyboard" formatted="false">显示键盘</string>
+    <string name="builtin_block_progressdialogsettitle" formatted="false">%m.progressdialog 设置标题 %s</string>
+    <string name="builtin_block_progressdialogsetmessage" formatted="false">%m.progressdialog 设置消息 %s</string>
+    <string name="builtin_block_progressdialogsetmax" formatted="false">%m.progressdialog 设置最大值 %d</string>
+    <string name="builtin_block_progressdialogsetprogress" formatted="false">%m.progressdialog 设置进度 %d</string>
+    <string name="builtin_block_progressdialogsetcancelable" formatted="false">%m.progressdialog 设置可取消 %b</string>
+    <string name="builtin_block_progressdialogsetcanceled" formatted="false">%m.progressdialog 设置点击外部取消 %b</string>
+    <string name="builtin_block_progressdialogsetstyle" formatted="false">%m.progressdialog 设置进度样式 %m.styleprogress</string>
+    <string name="builtin_block_progressdialogdismiss" formatted="false">%m.progressdialog 关闭</string>
+    <string name="builtin_block_progressdialogshow" formatted="false">%m.progressdialog 显示</string>
+    <string name="builtin_block_startservice" formatted="false">启动服务 %m.activity</string>
+    <string name="builtin_block_stopservice" formatted="false">停止服务 %m.activity</string>
+    <string name="builtin_block_sendbroadcast" formatted="false">发送广播 %s</string>
+    <string name="builtin_block_startactivitywithchooser" formatted="false">启动 Activity %m.intent 使用选择器 %s</string>
+    <string name="builtin_block_finishaffinity" formatted="false">结束当前任务中的 Activity</string>
+    <string name="builtin_block_ternarystring" formatted="false">%b ? %s : %s</string>
+    <string name="builtin_block_ternarynumber" formatted="false">%b ? %d : %d</string>
+    <string name="builtin_block_forloopincrease" formatted="false">循环 %m.varInt = %d; %b; %m.varInt++</string>
+    <string name="builtin_block_notifydatasetchanged" formatted="false">刷新数据</string>
+    <string name="builtin_block_getlastvisibleposition" formatted="false">%m.listview 获取最后一个可见项的位置</string>
+    <string name="builtin_block_listscrollparam" formatted="false">%m.listscrollparam</string>
+    <string name="builtin_block_menuinflater" formatted="false">菜单：从文件加载 %m.menu</string>
+    <string name="builtin_block_menuadditem" formatted="false">菜单：添加项目，ID %d 标题 %s</string>
+    <string name="builtin_block_menuaddmenuitem" formatted="false">%m.menuitem 添加项目，ID %d 标题 %s 图标 %m.resource 显示方式 %m.menuaction</string>
+    <string name="builtin_block_menuaddsubmenu" formatted="false">菜单：添加子菜单 %m.submenu 标题 %s;</string>
+    <string name="builtin_block_submenuadditem" formatted="false">%m.submenu 添加项目，ID %d 标题 %s</string>
+    <string name="builtin_block_getassetfile" formatted="false">%m.inputstream 获取 assets 文件，路径 %s</string>
+    <string name="builtin_block_renamefile" formatted="false">重命名文件，路径 %s 改为 %s</string>
+    <string name="builtin_block_copyassetfile" formatted="false">%m.inputstream 转为字符串</string>
+    <string name="builtin_block_sortlistmap" formatted="false">排序 %m.listMap 键 %s 按数值 %b 升序 %b</string>
+    <string name="builtin_block_deletemapfromlistmap" formatted="false">删除映射 %m.varMap 从列表 %m.listMap</string>
+    <string name="builtin_block_html" formatted="false">解析 HTML %s</string>
+    <string name="builtin_block_reverse" formatted="false">反转 %s</string>
+    <string name="builtin_block_tohashcode" formatted="false">获取哈希值 %s</string>
+    <string name="builtin_block_stringmatches" formatted="false">%s 匹配正则表达式 %s</string>
+    <string name="builtin_block_stringreplacefirst" formatted="false">%s 按正则表达式 %s 替换第一项为 %s</string>
+    <string name="builtin_block_stringreplaceall" formatted="false">%s 按正则表达式 %s 替换全部为 %s</string>
+    <string name="builtin_block_stringsplittolist" formatted="false">拆分 %s 正则表达式 %s 结果存入 %m.listStr</string>
+    <string name="builtin_block_mapcontainvalue" formatted="false">%m.varMap 是否包含值 %s</string>
+    <string name="builtin_block_getheight" formatted="false">%m.view 获取高度</string>
+    <string name="builtin_block_getwidth" formatted="false">%m.view 获取宽度</string>
+    <string name="builtin_block_removeview" formatted="false">%m.view 移除子视图 %m.view</string>
+    <string name="builtin_block_removeviews" formatted="false">%m.view 移除全部子视图</string>
+    <string name="builtin_block_addview" formatted="false">%m.view 添加子视图 %m.view</string>
+    <string name="builtin_block_addviews" formatted="false">%m.view 添加子视图 %m.view 位置 %d</string>
+    <string name="builtin_block_setgravity" formatted="false">%m.view 设置对齐方式 %m.gravity_v %m.gravity_h</string>
+    <string name="builtin_block_setimageidentifier" formatted="false">%m.imageview 按名称设置图片 %s</string>
+    <string name="builtin_block_setimagecustomres" formatted="false">%m.imageview 设置图片 %m.image</string>
+    <string name="builtin_block_getrating" formatted="false">%m.ratingbar 获取评分</string>
+    <string name="builtin_block_setrating" formatted="false">%m.ratingbar 设置评分 %d</string>
+    <string name="builtin_block_setnumstars" formatted="false">%m.ratingbar 设置星星数量 %d</string>
+    <string name="builtin_block_setstepsize" formatted="false">%m.ratingbar 设置评分步长 %d</string>
+    <string name="builtin_block_timepickersetis24hour" formatted="false">%m.timepicker 设置 24 小时制 %b</string>
+    <string name="builtin_block_timepickersetcurrenthour" formatted="false">%m.timepicker 设置当前小时 %d</string>
+    <string name="builtin_block_timepickersetcurrentminute" formatted="false">%m.timepicker 设置当前分钟 %d</string>
+    <string name="builtin_block_timepickersethour" formatted="false">%m.timepicker 设置小时 %d</string>
+    <string name="builtin_block_timepickersetminute" formatted="false">%m.timepicker 设置分钟 %d</string>
+    <string name="builtin_block_autocomsetdata" formatted="false">%m.actv 设置列表数据 %m.listStr</string>
+    <string name="builtin_block_setthreshold" formatted="false">%m.mactv 设置自动补全阈值 %d</string>
+    <string name="builtin_block_settokenizer" formatted="false">%m.mactv 设置逗号分隔器</string>
+    <string name="builtin_block_multiautocomsetdata" formatted="false">%m.mactv 设置列表数据 %m.listStr</string>
+    <string name="builtin_block_listsetselector" formatted="false">%m.listview 设置选择器颜色 %m.color</string>
+    <string name="builtin_block_gridsetcustomviewdata" formatted="false">%m.gridview 设置网格自定义视图数据 %m.listMap</string>
+    <string name="builtin_block_gridsetnumcolumns" formatted="false">%m.gridview 设置列数 %d</string>
+    <string name="builtin_block_gridsetcolumnwidth" formatted="false">%m.gridview 设置列宽 %d</string>
+    <string name="builtin_block_gridsetverticalspacing" formatted="false">%m.gridview 设置垂直间距 %d</string>
+    <string name="builtin_block_gridsethorizontalspacing" formatted="false">%m.gridview 设置水平间距 %d</string>
+    <string name="builtin_block_gridsetstretchmode" formatted="false">%m.gridview 设置拉伸模式 %m.gridstretchmode</string>
+    <string name="builtin_block_videoviewsetvideouri" formatted="false">%m.videoview 设置视频 URI %s</string>
+    <string name="builtin_block_videoviewstart" formatted="false">%m.videoview 开始播放</string>
+    <string name="builtin_block_videoviewpause" formatted="false">%m.videoview 暂停</string>
+    <string name="builtin_block_videoviewstop" formatted="false">%m.videoview 停止播放</string>
+    <string name="builtin_block_videoviewisplaying" formatted="false">%m.videoview 是否正在播放</string>
+    <string name="builtin_block_videoviewcanpause" formatted="false">%m.videoview 能否暂停</string>
+    <string name="builtin_block_videoviewcanseekforward" formatted="false">%m.videoview 能否快进</string>
+    <string name="builtin_block_videoviewcanseekbackward" formatted="false">%m.videoview 能否快退</string>
+    <string name="builtin_block_videoviewgetduration" formatted="false">%m.videoview 获取总时长</string>
+    <string name="builtin_block_videoviewgetcurrentposition" formatted="false">%m.videoview 获取当前播放位置</string>
+    <string name="builtin_block_listsettranscriptmode" formatted="false">%m.listview 设置自动滚动模式 %m.transcriptmode</string>
+    <string name="builtin_block_listsetstackfrombottom" formatted="false">%m.listview 设置从底部排列 %b</string>
+    <string name="builtin_block_setelevation" formatted="false">%m.view 设置阴影高度 %d</string>
+    <string name="builtin_block_settextsize" formatted="false">%m.textview 设置字号 %d</string>
+    <string name="builtin_block_setcolorfilterview" formatted="false">%m.view 设置颜色滤镜 %m.color 混合模式 %m.porterduff</string>
+    <string name="builtin_block_setcornerradiusview" formatted="false">%m.view 设置圆角半径 %d 颜色 %m.color</string>
+    <string name="builtin_block_setgradientbackground" formatted="false">%m.view 设置渐变背景 %m.color 和 %m.color</string>
+    <string name="builtin_block_setstrokeview" formatted="false">%m.view 设置描边宽度 %d 描边颜色 %m.color 背景颜色 %m.color</string>
+    <string name="builtin_block_setradiusandstrokeview" formatted="false">%m.view 设置圆角半径 %d 描边宽度 %d 描边颜色 %m.color 背景颜色 %m.color</string>
+    <string name="builtin_block_showsnackbar" formatted="false">%m.view 显示提示条，文本 %s 操作文本 %s 被点击时</string>
+    <string name="builtin_block_addtab" formatted="false">%m.tablayout 添加标签，标题 %s</string>
+    <string name="builtin_block_setupwithviewpager" formatted="false">%m.tablayout 关联分页视图 %m.viewpager</string>
+    <string name="builtin_block_setinlinelabel" formatted="false">%m.tablayout 设置图标与文本同行 %b</string>
+    <string name="builtin_block_settabtextcolors" formatted="false">%m.tablayout 设置标签文本颜色，默认 %m.color 选中 %m.color</string>
+    <string name="builtin_block_settabripplecolor" formatted="false">%m.tablayout 设置标签波纹颜色 %m.color</string>
+    <string name="builtin_block_setselectedtabindicatorcolor" formatted="false">%m.tablayout 设置选中标签指示器颜色 %m.color</string>
+    <string name="builtin_block_setselectedtabindicatorheight" formatted="false">%m.tablayout 设置选中标签指示器高度 %d</string>
+    <string name="builtin_block_returntitle" formatted="false">返回标题 %s</string>
+    <string name="builtin_block_returnfragment" formatted="false">返回 Fragment %m.activity</string>
+    <string name="builtin_block_bottommenuadditem" formatted="false">%m.bottomnavigation 添加项目，ID %d 标题 %s 图标 %m.resource</string>
+    <string name="builtin_block_codeviewsetcode" formatted="false">%m.codeview 设置代码 %s</string>
+    <string name="builtin_block_codeviewsettheme" formatted="false">%m.codeview 设置主题 %m.cv_theme</string>
+    <string name="builtin_block_codeviewsetlanguage" formatted="false">%m.codeview 设置语言 %m.cv_language</string>
+    <string name="builtin_block_codeviewapply" formatted="false">%m.codeview 应用</string>
+    <string name="builtin_block_fabicon" formatted="false">悬浮按钮：设置图标 %m.resource</string>
+    <string name="builtin_block_fabsize" formatted="false">悬浮按钮：设置尺寸 %m.fabsize</string>
+    <string name="builtin_block_fabvisibility" formatted="false">悬浮按钮：设置可见性 %m.fabvisible</string>
+    <string name="builtin_block_setbgdrawable" formatted="false">%m.view 设置背景图形 %m.drawable</string>
+    <string name="builtin_block_setcardbackgroundcolor" formatted="false">%m.cardview 设置卡片背景颜色 %m.color</string>
+    <string name="builtin_block_setcardradius" formatted="false">%m.cardview 设置圆角半径 %d</string>
+    <string name="builtin_block_setcardelevation" formatted="false">%m.cardview 设置卡片阴影高度 %d</string>
+    <string name="builtin_block_setpreventcorneroverlap" formatted="false">%m.cardview 设置防止圆角重叠 %b</string>
+    <string name="builtin_block_setusecompatpadding" formatted="false">%m.cardview 设置使用兼容内边距 %b</string>
+    <string name="builtin_block_spnsetcustomviewdata" formatted="false">%m.spinner 设置下拉列表自定义视图数据 %m.listMap</string>
+    <string name="builtin_block_lottiesetanimationfromasset" formatted="false">%m.lottie 从 assets 设置动画 %s</string>
+    <string name="builtin_block_lottiesetanimationfromjson" formatted="false">%m.lottie 从 JSON 设置动画 %s</string>
+    <string name="builtin_block_lottiesetanimationfromurl" formatted="false">%m.lottie 从 URL 设置动画 %s</string>
+    <string name="builtin_block_lottiesetrepeatcount" formatted="false">%m.lottie 设置重复次数 %d</string>
+    <string name="builtin_block_lottiesetspeed" formatted="false">%m.lottie 设置播放速度 %d</string>
+    <string name="builtin_block_recyclersetcustomviewdata" formatted="false">%m.recyclerview 设置自定义视图数据 %m.listMap</string>
+    <string name="builtin_block_recyclersetlayoutmanager" formatted="false">%m.recyclerview 设置布局管理器</string>
+    <string name="builtin_block_recyclersetlayoutmanagerhorizontal" formatted="false">%m.recyclerview 设置水平布局管理器</string>
+    <string name="builtin_block_recyclersethasfixedsize" formatted="false">%m.recyclerview 设置固定尺寸 %b</string>
+    <string name="builtin_block_recyclersmoothscrolltoposition" formatted="false">%m.recyclerview 平滑滚动到位置 %d</string>
+    <string name="builtin_block_recyclerscrolltopositionwithoffset" formatted="false">%m.recyclerview 滚动到位置 %d 偏移 %d</string>
+    <string name="builtin_block_recyclerscrollparam" formatted="false">%m.recyclerscrollparam</string>
+    <string name="builtin_block_pagerscrollparam" formatted="false">%m.pagerscrollparam</string>
+    <string name="builtin_block_pagersetcustomviewdata" formatted="false">%m.viewpager 设置分页自定义视图数据 %m.listMap</string>
+    <string name="builtin_block_pagersetfragmentadapter" formatted="false">%m.viewpager 设置 Fragment 适配器 %m.fragmentAdapter 标签数量 %d</string>
+    <string name="builtin_block_pagergetoffscreenpagelimit" formatted="false">%m.viewpager 获取屏幕外页面缓存数量</string>
+    <string name="builtin_block_pagersetoffscreenpagelimit" formatted="false">%m.viewpager 设置屏幕外页面缓存数量 %d</string>
+    <string name="builtin_block_pagergetcurrentitem" formatted="false">%m.viewpager 获取当前页面</string>
+    <string name="builtin_block_pagersetcurrentitem" formatted="false">%m.viewpager 设置当前页面 %d</string>
+    <string name="builtin_block_onswiperefreshlayout" formatted="false">当 %m.swiperefreshlayout 刷新时</string>
+    <string name="builtin_block_setrefreshing" formatted="false">%m.swiperefreshlayout 设置刷新状态 %b</string>
+    <string name="builtin_block_viewonlongclick" formatted="false">当 %m.view 被长按时</string>
+    <string name="builtin_block_viewontouch" formatted="false">当 %m.view 被触摸时</string>
+    <string name="builtin_block_checkboxonchecked" formatted="false">当 %m.checkbox 被选中时</string>
+    <string name="builtin_block_checkboxischecked" formatted="false">是否已选中</string>
+    <string name="builtin_block_getbadgecount" formatted="false">%m.badgeview 获取徽标数量</string>
+    <string name="builtin_block_setbadgenumber" formatted="false">%m.badgeview 设置徽标数值 %d</string>
+    <string name="builtin_block_setbadgestring" formatted="false">%m.badgeview 设置徽标文本 %s</string>
+    <string name="builtin_block_setbadgebackground" formatted="false">%m.badgeview 设置徽标背景颜色 %m.color</string>
+    <string name="builtin_block_setbadgetextcolor" formatted="false">%m.badgeview 设置徽标文本颜色 %m.color</string>
+    <string name="builtin_block_setbadgetextsize" formatted="false">%m.badgeview 设置徽标字号 %d</string>
+    <string name="builtin_block_setcustomletter" formatted="false">%m.sidebar 设置自定义字母，String[] %s.inputOnly</string>
+    <string name="builtin_block_setbubblecolor" formatted="false">气泡布局 %m.view 设置气泡颜色 %m.color</string>
+    <string name="builtin_block_setbubblestrokecolor" formatted="false">气泡布局 %m.view 设置描边颜色 %m.color</string>
+    <string name="builtin_block_setbubblestrokewidth" formatted="false">气泡布局 %m.view 设置描边宽度 %d</string>
+    <string name="builtin_block_setbubblecornerradius" formatted="false">气泡布局 %m.view 设置圆角半径 %d</string>
+    <string name="builtin_block_setbubblearrowheight" formatted="false">气泡布局 %m.view 设置箭头高度 %d</string>
+    <string name="builtin_block_setbubblearrowwidth" formatted="false">气泡布局 %m.view 设置箭头宽度 %d</string>
+    <string name="builtin_block_setbubblearrowposition" formatted="false">气泡布局 %m.view 设置箭头位置 %d</string>
+    <string name="builtin_block_patterntostring" formatted="false">%m.patternview 获取图案，从 %m.listStr 转为字符串</string>
+    <string name="builtin_block_patterntomd5" formatted="false">%m.patternview 获取图案，从 %m.listStr 转为 MD5</string>
+    <string name="builtin_block_patterntosha1" formatted="false">%m.patternview 获取图案，从 %m.listStr 转为 SHA1</string>
+    <string name="builtin_block_patternsetdotcount" formatted="false">%m.patternview 设置圆点数量 %d</string>
+    <string name="builtin_block_patternsetnormalstatecolor" formatted="false">%m.patternview 设置默认状态颜色 %m.color</string>
+    <string name="builtin_block_patternsetcorrectstatecolor" formatted="false">%m.patternview 设置正确状态颜色 %m.color</string>
+    <string name="builtin_block_patternsetwrongstatecolor" formatted="false">%m.patternview 设置错误状态颜色 %m.color</string>
+    <string name="builtin_block_patternsetviewmode" formatted="false">%m.patternview 设置显示模式 %m.patternviewmode</string>
+    <string name="builtin_block_patternlockclear" formatted="false">%m.patternview 清除图案</string>
+    <string name="builtin_block_tilsetboxbgcolor" formatted="false">%m.textinputlayout 设置输入框背景颜色 %m.color</string>
+    <string name="builtin_block_tilsetboxstrokecolor" formatted="false">%m.textinputlayout 设置输入框描边颜色 %m.color</string>
+    <string name="builtin_block_tilsetboxbgmode" formatted="false">%m.textinputlayout 设置输入框背景模式 %m.til_box_mode</string>
+    <string name="builtin_block_tilsetboxcornerradii" formatted="false">%m.textinputlayout 设置输入框圆角半径，左上 %d 右上 %d 左下 %d 右下 %d</string>
+    <string name="builtin_block_tilseterror" formatted="false">%m.textinputlayout 设置错误提示 %s</string>
+    <string name="builtin_block_tilseterrorenabled" formatted="false">%m.textinputlayout 设置启用错误提示 %b</string>
+    <string name="builtin_block_tilsetcounterenabled" formatted="false">%m.textinputlayout 设置启用字符计数 %b</string>
+    <string name="builtin_block_tilsetcountermaxlength" formatted="false">%m.textinputlayout 设置字符计数最大长度 %d</string>
+    <string name="builtin_block_tilgetcountermaxlength" formatted="false">%m.textinputlayout 获取字符计数最大长度</string>
+    <string name="builtin_block_ytpvlifecycle" formatted="false">%m.youtubeview 获取生命周期</string>
+    <string name="builtin_block_ytpvsetlistener" formatted="false">%m.youtubeview 添加 YouTube 播放监听器，视频 ID %s</string>
+    <string name="builtin_block_launchapp" formatted="false">%m.intent 设置应用包名 %s</string>
+    <string name="builtin_block_changestatebarcolour" formatted="false">%m.activity 设置状态栏颜色 %m.color</string>
+    <string name="builtin_block_dialog_seticon" formatted="false">%m.dialog 设置图标 %m.resource_bg</string>
+    <string name="builtin_block_viewpagernotifyondtatchange" formatted="false">%m.viewpager 通知数据已改变</string>
+    <string name="builtin_block_returnmap" formatted="false">返回 %m.varMap</string>
+    <string name="builtin_block_returnliststr" formatted="false">返回 %m.listStr</string>
+    <string name="builtin_block_returnlistmap" formatted="false">返回 %m.listMap</string>
+    <string name="builtin_block_returnview" formatted="false">返回 %m.view</string>
+    <string name="builtin_block_repeatknownnum" formatted="false">重复 %d: %s.inputOnly ++</string>
+    <string name="builtin_block_whileloop" formatted="false">当 %b 时循环</string>
+    <string name="builtin_block_trycatch" formatted="false">尝试</string>
+    <string name="builtin_block_trycatch_secondary" formatted="false">捕获异常 / 最终执行</string>
+    <string name="builtin_block_catchblock" formatted="false">捕获异常 %s.inputOnly</string>
+    <string name="builtin_block_finallyblock" formatted="false">最终执行</string>
+    <string name="builtin_block_getexceptionmessage" formatted="false">获取异常消息</string>
+    <string name="builtin_block_switchstr" formatted="false">匹配 %s</string>
+    <string name="builtin_block_switchnum" formatted="false">匹配 %d</string>
+    <string name="builtin_block_casestr" formatted="false">分支 %s</string>
+    <string name="builtin_block_casenum" formatted="false">分支 %d</string>
+    <string name="builtin_block_defaultswitch" formatted="false">默认分支</string>
+    <string name="builtin_block_returnstring" formatted="false">返回 %s</string>
+    <string name="builtin_block_returnnumber" formatted="false">返回 %d</string>
+    <string name="builtin_block_returnboolean" formatted="false">返回 %b</string>
+    <string name="builtin_block_reverselist" formatted="false">反转列表 %m.list</string>
+    <string name="builtin_block_shufflelist" formatted="false">随机打乱列表 %m.list</string>
+    <string name="builtin_block_sortlist" formatted="false">排序列表 %m.listStr</string>
+    <string name="builtin_block_sortlistnum" formatted="false">排序列表 %m.listInt</string>
+    <string name="builtin_block_swapinlist" formatted="false">交换列表 %m.list 位置 %d 和 %d</string>
+    <string name="builtin_block_getmapatposlistmap" formatted="false">获取映射，位置 %d 所属列表 %m.listMap</string>
+    <string name="builtin_block_setmapatposlistmap" formatted="false">设置映射 %m.varMap 位置 %d 所属列表 %m.listMap</string>
+    <string name="builtin_block_setatposliststr" formatted="false">设置字符串 %s 位置 %d 所属列表 %m.listStr</string>
+    <string name="builtin_block_setatposlistnum" formatted="false">设置数值 %d 位置 %d 所属列表 %m.listInt</string>
+    <string name="builtin_block_gsonlisttojsonstring" formatted="false">%m.list 转为 JSON 字符串</string>
+    <string name="builtin_block_gsonstringtoliststring" formatted="false">JSON %s 转为 %m.listStr</string>
+    <string name="builtin_block_gsonstringtolistnumber" formatted="false">JSON %s 转为 %m.listInt</string>
+    <string name="builtin_block_hashmapgetnumber" formatted="false">%m.varMap 获取数值，键 %s</string>
+    <string name="builtin_block_hashmapputnumber" formatted="false">%m.varMap 写入键 %s 整数值 %d</string>
+    <string name="builtin_block_hashmapputnumber2" formatted="false">%m.varMap 写入键 %s 浮点数值 %d</string>
+    <string name="builtin_block_hashmapgetboolean" formatted="false">%m.varMap 获取布尔值，键 %s</string>
+    <string name="builtin_block_hashmapputboolean" formatted="false">%m.varMap 写入键 %s 值 %b</string>
+    <string name="builtin_block_hashmapgetmap" formatted="false">%m.varMap 获取映射，键 %s</string>
+    <string name="builtin_block_hashmapputmap" formatted="false">%m.varMap 写入键 %s 值 %m.varMap</string>
+    <string name="builtin_block_hashmapliststr" formatted="false">%m.varMap 获取字符串列表，键 %s</string>
+    <string name="builtin_block_hashmapputliststr" formatted="false">%m.varMap 写入键 %s 值 %m.listStr</string>
+    <string name="builtin_block_hashmapgetlistmap" formatted="false">%m.varMap 获取映射列表，键 %s</string>
+    <string name="builtin_block_hashmapputlistmap" formatted="false">%m.varMap 写入键 %s 值 %m.listMap</string>
+    <string name="builtin_block_addsourcedirectly" formatted="false">直接添加源码 %s.inputOnly</string>
+    <string name="builtin_block_asdboolean" formatted="false">布尔值 %s.inputOnly</string>
+    <string name="builtin_block_asdnumber" formatted="false">数值 %s.inputOnly</string>
+    <string name="builtin_block_asdstring" formatted="false">字符串 %s.inputOnly</string>
+    <string name="builtin_block_repeatknownnumdescending" formatted="false">重复 %d: %s.inputOnly --</string>
+    <string name="builtin_block_foreachstr" formatted="false">遍历每一项 %s.inputOnly 所属列表 %m.listStr</string>
+    <string name="builtin_block_foreachnum" formatted="false">遍历每一项 %s.inputOnly 所属列表 %m.listInt</string>
+    <string name="builtin_block_foreachmap" formatted="false">遍历每一项 %s.inputOnly 所属列表 %m.listMap</string>
+    <string name="builtin_block_ifelsechain" formatted="false">如果 %b</string>
+    <string name="builtin_block_ifelsechain_secondary" formatted="false">否则如果 / 否则</string>
+    <string name="builtin_block_elseif" formatted="false">否则如果 %b</string>
+    <string name="builtin_block_elseblock" formatted="false">否则</string>
+    <string name="builtin_block_interstitialadload" formatted="false">%m.interstitialad 加载于 %m.activity</string>
+    <string name="builtin_block_interstitialadshow" formatted="false">%m.interstitialad 显示广告于 %m.activity</string>
+    <string name="builtin_block_interstitialadisloaded" formatted="false">%m.interstitialad 是否已加载</string>
+    <string name="builtin_block_interstitialadregisterfullscreencontentcallback" formatted="false">%m.interstitialad 注册全屏内容回调（此积木已不再需要，请移除）</string>
+    <string name="builtin_block_rewardedadregisterfullscreencontentcallback" formatted="false">%m.videoad 注册全屏内容回调（此积木已不再需要，请移除）</string>
+    <string name="builtin_block_getresstring" formatted="false">从资源获取字符串 %m.ResString</string>
+    <string name="builtin_block_casestrand" formatted="false">分支 %s 且</string>
+    <string name="builtin_block_casenumand" formatted="false">分支 %d 且</string>
+    <string name="builtin_block_continue" formatted="false">跳过本次循环</string>
+    <string name="builtin_block_isempty" formatted="false">%s 是否为空</string>
+    <string name="builtin_block_fileutilcopydir" formatted="false">复制目录，路径 %s 到路径 %s</string>
+    <string name="builtin_block_instanceofoperator" formatted="false">%s 是否为类型 %s 的实例</string>
+    <string name="builtin_block_checkviewvisibility" formatted="false">视图可见性 %m.view 等于 %m.visible</string>
+    <string name="builtin_block_intenthasextra" formatted="false">Activity 是否包含附加数据，键 %s</string>
+    <string name="builtin_block_intentsettype" formatted="false">%m.intent 设置类型 %s</string>
+    <string name="builtin_block_intentremoveextra" formatted="false">%m.intent 移除附加数据，键 %s</string>
+    <string name="builtin_block_filecontainsdata" formatted="false">%m.file 是否包含数据 %s</string>
+    <string name="builtin_block_viewgetchildat" formatted="false">%m.view 获取子视图，位置 %d</string>
+    <string name="builtin_block_strparseinteger" formatted="false">解析整数 %s</string>
+    <string name="builtin_block_stringsubsingle" formatted="false">%s 截取字符串，起点 %d</string>
+    <string name="builtin_block_webviewgetprogress" formatted="false">%m.webview 获取进度</string>
+    <string name="builtin_block_menuitemsetvisible" formatted="false">%m.MenuItem 设置可见性 %b</string>
+    <string name="builtin_block_menuitemsetenabled" formatted="false">%m.MenuItem 设置启用状态 %b</string>
+    <string name="builtin_block_menufinditem" formatted="false">菜单查找项目 %s.inputOnly</string>
+    <string name="builtin_block_listaddall" formatted="false">%m.listStr 添加全部项，来源 %m.list</string>
+    <string name="builtin_block_filecanexecute" formatted="false">%m.File 是否可执行</string>
+    <string name="builtin_block_filecanread" formatted="false">%m.File 是否可读</string>
+    <string name="builtin_block_filecanwrite" formatted="false">%m.File 是否可写</string>
+    <string name="builtin_block_filegetname" formatted="false">%m.File 获取名称</string>
+    <string name="builtin_block_filegetparent" formatted="false">%m.File 获取父路径</string>
+    <string name="builtin_block_filegetpath" formatted="false">%m.File 获取路径</string>
+    <string name="builtin_block_fileishidden" formatted="false">%m.File 是否为隐藏文件</string>
+    <string name="builtin_block_addpermission" formatted="false">权限命令积木：添加 %m.Permission</string>
+    <string name="builtin_block_removepermission" formatted="false">权限命令积木：移除 %m.Permission</string>
+    <string name="builtin_block_addcustomvariable" formatted="false">自定义变量积木：添加变量 %s</string>
+    <string name="builtin_block_addinitializer" formatted="false">初始化积木：添加初始化代码 %s</string>
+    <string name="builtin_block_otpviewsetfieldcount" formatted="false">%m.otpview 设置输入位数 %d</string>
+    <string name="builtin_block_otpviewsetotptext" formatted="false">%m.otpview 设置验证码文本 %s</string>
+    <string name="builtin_block_otpviewgetotptext" formatted="false">%m.otpview 获取验证码文本</string>
+    <string name="builtin_block_otpviewsetotplistener" formatted="false">%m.otpview 验证码输入完成时 -&gt; _otp</string>
+    <string name="builtin_block_signinbuttonsetcolorscheme" formatted="false">%m.signinbutton 设置配色方案 %m.SignButtonColor</string>
+    <string name="builtin_block_signinbuttonsetsize" formatted="false">%m.signinbutton 设置尺寸 %m.SignButtonSize</string>
+    <string name="builtin_block_banneradviewloadad" formatted="false">%m.adview 加载</string>
+    <string name="builtin_block_rewardedvideoadload" formatted="false">%m.videoad 加载于 %m.activity</string>
+    <string name="builtin_block_rewardedvideoadshow" formatted="false">%m.videoad 显示于 %m.activity</string>
+    <string name="update_view_changes">查看更新内容</string>
+    <string name="compile_log_monospaced_font">等宽字体</string>
+    <string name="property_range_zero">数值必须介于 0 和 %.0f 之间</string>
+    <string name="property_range_decimal">数值必须介于 %1$.1f 和 %2$.1f 之间</string>
+    <string name="property_widget_id">控件 ID</string>
+    <string name="property_string_not_found">在 strings.xml 中未找到</string>
+    <string name="widget_field_title">控件标题</string>
+    <string name="widget_field_class_name">控件类名</string>
+    <string name="widget_field_type">控件类型</string>
+    <string name="widget_field_category">分类</string>
+    <string name="block_invalid_data">（积木数据无效）</string>
+    <string name="notification_select_importance">选择重要程度</string>
+    <string name="notification_select_priority">选择优先级</string>
+    <string name="block_category_menu_item">菜单项</string>
+    <string name="layout_xml_label">布局 XML</string>
+    <string name="view_code_appcompat_note">使用 AppCompat 管理器修改 CoordinatorLayout、Toolbar 和其他 AppCompat 布局或控件的属性。</string>
+    <string name="library_broken_configuration">（库配置损坏）</string>
+    <string name="backup_unzip_failed">无法解压备份</string>
+    <string name="backup_read_project_failed">无法读取项目文件</string>
+    <string name="backup_write_project_failed">无法写入项目文件</string>
+    <string name="sound_unknown_filename">未知文件名</string>
+    <string name="library_built_in">内置</string>
+    <string name="firebase_config_missing">所选 google-services.json 文件缺少以下配置：\n</string>
+    <string name="signing_mode_own_key_store">使用密钥库签名</string>
+    <string name="signing_mode_testkey">使用测试密钥签名</string>
+    <string name="signing_mode_dont_sign">不签名</string>
+    <string name="property_select_string_resource">请选择字符串资源\n或移除“%1$s”后直接输入数值</string>
+    <string name="logic_group_boolean">布尔值（%d）</string>
+    <string name="logic_group_number">数值（%d）</string>
+    <string name="logic_group_string">字符串（%d）</string>
+    <string name="logic_group_map">映射（%d）</string>
+    <string name="logic_group_custom">自定义变量（%d）</string>
+    <string name="logic_group_list_integer">整数列表（%d）</string>
+    <string name="logic_group_list_string">字符串列表（%d）</string>
+    <string name="logic_group_list_map">映射列表（%d）</string>
+    <string name="logic_group_list_custom">自定义类型列表（%d）</string>
+    <string name="block_parameter_inputonly">仅输入</string>
+    <string name="block_parameter_string">字符串</string>
+    <string name="block_parameter_boolean">布尔值</string>
+    <string name="block_parameter_number">数值</string>
+    <string name="block_parameter_map">映射</string>
+    <string name="block_parameter_view">视图</string>
+    <string name="block_parameter_textview">文本控件</string>
+    <string name="block_parameter_edittext">输入框</string>
+    <string name="block_parameter_imageview">图片控件</string>
+    <string name="block_parameter_listview">列表视图</string>
+    <string name="block_parameter_list">列表</string>
+    <string name="block_parameter_listmap">映射列表</string>
+    <string name="block_parameter_liststring">字符串列表</string>
+    <string name="block_parameter_listnumber">数值列表</string>
+    <string name="block_parameter_intent">Intent</string>
+    <string name="block_parameter_color">颜色</string>
+    <string name="block_parameter_activity">Activity</string>
+    <string name="block_parameter_resource">资源</string>
+    <string name="block_parameter_custom_views">自定义视图</string>
+    <string name="block_parameter_layout">布局</string>
+    <string name="block_parameter_anim">动画</string>
+    <string name="block_parameter_drawable">可绘制资源</string>
+    <string name="block_parameter_resstrings">字符串资源</string>
+    <string name="block_parameter_syntax_error">错误：位置 %1$d 的“%%m”后必须紧接“.param”</string>
+    <string name="block_select_variable">选择 %1$s 变量</string>
+    <string name="library_status_on">启用</string>
+    <string name="library_status_off">停用</string>
+    <string name="library_download_pending">等待中…</string>
+    <string name="library_download_resolving">正在解析依赖…</string>
+    <string name="library_download_downloading">正在下载…</string>
+    <string name="library_download_unzipping">正在解压…</string>
+    <string name="library_download_dexing">正在处理 DEX…</string>
+    <string name="library_download_completed">已完成</string>
+    <string name="library_download_unknown_error">未知错误</string>
+    <string name="library_download_error_prefix">错误：</string>
+    <string name="library_confirm_download_dependencies">下载 %1$s 及其子依赖？</string>
+    <string name="library_confirm_download">下载 %1$s？</string>
+    <string name="library_dependency_not_found">未找到依赖“%1$s”</string>
+    <string name="library_resolution_timeout">解析 %1$s 的依赖树超时，仅下载了主库。</string>
+    <string name="library_resolution_failed">解析依赖“%1$s”失败：%2$s</string>
+    <string name="library_finalize_failed">完成已下载库“%1$s”的处理失败：%2$s</string>
+    <string name="library_storage_path">\n\n路径：%1$s</string>
+    <string name="library_dependency_counts">已下载 %1$d 个，内置 %2$d 个</string>
+    <string name="library_shared_dependencies_retained">以下 %1$d 个共享依赖仍被其他库使用，已保留：\n\n%2$s</string>
+    <string name="library_dependency_badge">" · 依赖：%1$d"</string>
+    <string name="library_version_conflict_badge">" · ⚠ 版本冲突"</string>
+    <string name="library_save_configuration_failed">无法保存配置：%1$s</string>
+    <string name="firebase_missing_storage_bucket">存储桶、</string>
+    <string name="firebase_missing_app_id">应用 ID、</string>
+    <string name="firebase_missing_api_key">API 密钥、</string>
+    <string name="firebase_missing_database">实时数据库、</string>
+    <string name="build_progress_deleting_temporary_files">删除临时文件…</string>
+    <string name="build_progress_generating_source_code">生成源代码…</string>
+    <string name="build_progress_extracting_built_in_libraries">提取内置库…</string>
+    <string name="build_progress_aapt2_is_running">正在运行 AAPT2…</string>
+    <string name="build_progress_generating_view_binding">生成视图绑定…</string>
+    <string name="build_progress_java_is_compiling">正在编译 Java…</string>
+    <string name="build_progress_merging_dex_files">合并 DEX 文件…</string>
+    <string name="build_progress_canceling_build">正在取消构建…</string>
+    <string name="build_progress_dex_is_up_to_date__no_changes">DEX 已是最新（无变更）</string>
+    <string name="build_progress_java_is_up_to_date__incremental_build__no_changes">Java 已是最新（增量构建，无变更）</string>
+    <string name="build_progress_dex_merge_is_up_to_date__cached">DEX 合并结果已是最新（使用缓存）</string>
+    <string name="build_progress_extracting_built_in_libraries__dex_files">提取内置库的 DEX 文件…</string>
+    <string name="build_progress_extracting_built_in_libraries__resources">提取内置库资源…</string>
+    <string name="build_progress_extracting_built_in_signing_keys">提取内置签名密钥…</string>
+    <string name="build_progress_extracting_built_in_android_jar">提取内置 android.jar…</string>
+    <string name="build_progress_running_r8_on_classes">正在使用 R8 处理类…</string>
+    <string name="build_progress_proguarding_classes">正在使用 ProGuard 混淆类…</string>
+    <string name="build_progress_running_stringfog">正在运行 StringFog…</string>
+    <string name="build_progress_kotlin_is_compiling">正在编译 Kotlin…</string>
+    <string name="build_progress_compiling_resources_with_aapt2">正在使用 AAPT2 编译资源…</string>
+    <string name="build_progress_linking_resources_with_aapt2">正在使用 AAPT2 链接资源…</string>
+    <string name="build_progress_java_incremental">正在编译 Java…（增量构建：%2$d 个文件中有 %1$d 个发生变更）</string>
+    <string name="display_name_number">数值</string>
+    <string name="display_name_string">字符串</string>
+    <string name="display_name_boolean">布尔值</string>
+    <string name="display_name_map">映射</string>
+    <string name="display_name_list">列表</string>
+    <string name="display_name_view">视图</string>
+    <string name="display_name_list_number">数值列表</string>
+    <string name="display_name_list_string">字符串列表</string>
+    <string name="display_name_list_map">映射列表</string>
+    <string name="display_name_list_boolean">布尔值列表</string>
+    <string name="display_name_color">颜色</string>
+    <string name="display_name_image">图片</string>
+    <string name="display_name_customview">自定义视图</string>
+    <string name="display_name_basic_activity">基础 Activity</string>
+    <string name="display_name_basic_list_item">基础列表项</string>
+    <string name="display_name_basic_drawer">基础抽屉</string>
+    <string name="display_name_empty_activity">空 Activity</string>
+    <string name="display_name_material_purple">Material 紫色</string>
+    <string name="display_name_material_blue">Material 蓝色</string>
+    <string name="display_name_material_green">Material 绿色</string>
+    <string name="display_name_material_red">Material 红色</string>
+    <string name="display_name_material_orange">Material 橙色</string>
+    <string name="display_name_material_teal">Material 蓝绿色</string>
+    <string name="display_name_material_indigo">Material 靛蓝色</string>
+    <string name="display_name_material_pink">Material 粉色</string>
+    <string name="display_name_dark_purple">深紫色</string>
+    <string name="display_name_dark_blue">深蓝色</string>
+    <string name="display_name_light_purple">浅紫色</string>
+    <string name="display_name_light_blue">浅蓝色</string>
+    <string name="display_name_random_theme">随机主题</string>
+    <string name="display_name_default">默认</string>
+    <string name="display_name_select_typeview">选择视图类型：</string>
+    <string name="event_display_onupdateprofilecomplete" formatted="false">用户资料更新完成</string>
+    <string name="event_display_onemailverificationsent" formatted="false">验证邮件已发送</string>
+    <string name="event_display_ondeleteusercomplete" formatted="false">用户删除完成</string>
+    <string name="event_display_onupdateemailcomplete" formatted="false">邮箱更新完成</string>
+    <string name="event_display_ongooglesignin" formatted="false">Google 登录完成</string>
+    <string name="event_display_onupdatepasswordcomplete" formatted="false">密码更新完成</string>
+    <string name="event_display_signinwithphoneauthcomplete" formatted="false">手机号码认证完成</string>
+    <string name="event_display_onscrolled" formatted="false">滚动</string>
+    <string name="event_display_ondatechanged" formatted="false">日期改变</string>
+    <string name="event_display_ondateset" formatted="false">日期设置完成</string>
+    <string name="event_display_onfailurelink" formatted="false">链接获取失败</string>
+    <string name="event_display_onnavigationitemselected" formatted="false">导航项选中</string>
+    <string name="event_display_onprepared" formatted="false">准备完成</string>
+    <string name="event_display_oncompletion" formatted="false">播放完成</string>
+    <string name="event_display_onpatternlockcleared" formatted="false">图案锁已清除</string>
+    <string name="event_display_onaccountpickercancelled" formatted="false">账号选择取消</string>
+    <string name="event_display_onpatternlockstarted" formatted="false">开始绘制图案锁</string>
+    <string name="event_display_onsaveinstancestate" formatted="false">保存实例状态</string>
+    <string name="event_display_oncreateoptionsmenu" formatted="false">创建选项菜单</string>
+    <string name="event_display_oncreatecontextmenu" formatted="false">创建上下文菜单</string>
+    <string name="event_display_onrestoreinstancestate" formatted="false">恢复实例状态</string>
+    <string name="event_display_oncontextitemselected" formatted="false">上下文菜单项选中</string>
+    <string name="event_display_onquerytextchanged" formatted="false">搜索文本改变</string>
+    <string name="event_display_onquerytextsubmit" formatted="false">提交搜索文本</string>
+    <string name="event_display_onerror" formatted="false">发生错误</string>
+    <string name="event_display_onverificationcompleted" formatted="false">验证完成</string>
+    <string name="event_display_onrecyclerscrollchanged" formatted="false">列表滚动状态改变</string>
+    <string name="event_display_onrecyclerscrolled" formatted="false">列表滚动</string>
+    <string name="event_display_onsuccesslink" formatted="false">链接获取成功</string>
+    <string name="event_display_onpagescrolled" formatted="false">页面滚动</string>
+    <string name="event_display_onverificationfailed" formatted="false">验证失败</string>
+    <string name="event_display_onaccountpicker" formatted="false">选择账号</string>
+    <string name="event_display_ontimeset" formatted="false">时间设置完成</string>
+    <string name="event_display_onpagescrollstatechanged" formatted="false">页面滚动状态改变</string>
+    <string name="event_display_onratingchanged" formatted="false">评分改变</string>
+    <string name="event_display_onpatternlockprogress" formatted="false">图案锁绘制中</string>
+    <string name="event_display_onpatternlockcomplete" formatted="false">图案锁绘制完成</string>
+    <string name="event_display_ontabselected" formatted="false">标签选中</string>
+    <string name="event_display_ontabunselected" formatted="false">标签取消选中</string>
+    <string name="event_display_ontabreselected" formatted="false">标签再次选中</string>
+    <string name="event_display_onpageselected" formatted="false">页面选中</string>
+    <string name="event_display_onletterselected" formatted="false">字母选中</string>
+    <string name="event_display_oncompleteregister" formatted="false">云消息注册完成</string>
+    <string name="event_display_oncodesent" formatted="false">验证码已发送</string>
+    <string name="event_display_ontimechanged" formatted="false">时间改变</string>
+    <string name="event_display_onscrollchanged" formatted="false">滚动状态改变</string>
+    <string name="event_display_onbanneradfailedtoload" formatted="false">横幅广告加载失败</string>
+    <string name="event_display_oninterstitialadfailedtoload" formatted="false">插页广告加载失败</string>
+    <string name="event_display_onrewardadfailedtoload" formatted="false">激励广告加载失败</string>
+    <string name="event_display_onadfailedtoshowfullscreencontent" formatted="false">全屏广告显示失败</string>
+    <string name="event_display_onuserearnedreward" formatted="false">用户获得奖励</string>
+    <string name="event_display_onadloaded" formatted="false">广告加载完成</string>
+    <string name="event_display_onaddismissedfullscreencontent" formatted="false">全屏广告关闭</string>
+    <string name="event_display_onadshowedfullscreencontent" formatted="false">全屏广告显示</string>
+    <string name="event_display_onrewardadloaded" formatted="false">激励广告加载完成</string>
+    <string name="event_display_onadopened" formatted="false">广告打开</string>
+    <string name="event_display_onadclicked" formatted="false">广告点击</string>
+    <string name="event_display_onadclosed" formatted="false">广告关闭</string>
+    <string name="event_display_onsqliteerror" formatted="false">SQLite 发生错误</string>
+    <string name="event_fragment_get_item" formatted="false">获取位置 %d.position 的 Fragment</string>
+    <string name="event_get_page_title" formatted="false">获取位置 %d.position 的页面标题</string>
+    <string name="event_create_import" formatted="false">创建导入</string>
+    <string name="event_activity_result" formatted="false">Activity 返回结果 %d.requestCode %d.resultCode %m.intent.data</string>
+    <string name="event_when_prefix" formatted="false">"当 "</string>
+    <string name="event_refresh_suffix" formatted="false">" 刷新"</string>
+    <string name="event_long_click_suffix" formatted="false">" 长按"</string>
+    <string name="event_tab_title_suffix" formatted="false">" 返回标签标题 %d.position"</string>
+    <string name="event_pre_execute_suffix" formatted="false">" 开始执行前 "</string>
+    <string name="event_background_suffix" formatted="false">" 在后台执行 %s.param"</string>
+    <string name="event_progress_suffix" formatted="false">" 更新进度 %d.value"</string>
+    <string name="event_post_execute_suffix" formatted="false">" 执行完成，结果 %s.result"</string>
+    <string name="event_no_spec" formatted="false">无说明</string>
+    <string name="crash_no_data" formatted="false">（没有可用的崩溃数据）</string>
+    <string name="crash_clipboard_truncated">\n\n[崩溃报告复制到剪贴板时已截断，原始长度：%1$d 个字符]\n\n</string>
+    <string name="display_name_text_activity">文本 Activity</string>
+    <string name="manifest_source_generation_failed">生成源代码失败。</string>
+    <string name="build_invalid_min_sdk">项目设置中的 minSdkVersion 无效：</string>
+    <string name="build_bundle_failed_prefix">构建应用包失败：</string>
+    <string name="copy_empty_file">文件为空（大小为 0）</string>
+    <string name="copy_open_stream_failed">无法打开输入流</string>
+    <string name="copy_unknown_error">未知错误</string>
+    <string name="property_option_match_parent">填满父容器</string>
+    <string name="property_option_wrap_content">包裹内容</string>
+    <string name="property_option_none">无</string>
+    <string name="property_option_horizontal">水平</string>
+    <string name="property_option_vertical">垂直</string>
+    <string name="property_option_normal">常规</string>
+    <string name="property_option_bold">粗体</string>
+    <string name="property_option_italic">斜体</string>
+    <string name="property_option_bold_italic">粗斜体</string>
+    <string name="property_option_default">默认</string>
+    <string name="property_option_go">前往</string>
+    <string name="property_option_search">搜索</string>
+    <string name="property_option_send">发送</string>
+    <string name="property_option_next">下一项</string>
+    <string name="property_option_done">完成</string>
+    <string name="property_option_dialog">对话框</string>
+    <string name="property_option_dropdown">下拉菜单</string>
+    <string name="property_option_single">单选</string>
+    <string name="property_option_multi">多选</string>
+    <string name="property_option_sunday">星期日</string>
+    <string name="property_option_monday">星期一</string>
+    <string name="property_option_tuesday">星期二</string>
+    <string name="property_option_wednesday">星期三</string>
+    <string name="property_option_thursday">星期四</string>
+    <string name="property_option_friday">星期五</string>
+    <string name="property_option_saturday">星期六</string>
+    <string name="property_option_text">文本</string>
+    <string name="property_option_number_signed">有符号整数</string>
+    <string name="property_option_number_decimal">小数</string>
+    <string name="property_option_number_signed_decimal">有符号小数</string>
+    <string name="property_option_phone">电话号码</string>
+    <string name="property_option_password">文本密码</string>
+    <string name="property_option_circle">圆形</string>
+    <string name="property_option_horizontal_progress">水平</string>
+    <string name="property_option_fit_xy">拉伸填满</string>
+    <string name="property_option_fit_start">等比缩放并对齐起始边</string>
+    <string name="property_option_fit_center">等比缩放并居中</string>
+    <string name="property_option_fit_end">等比缩放并对齐末尾边</string>
+    <string name="property_option_center">原始尺寸居中</string>
+    <string name="property_option_center_crop">居中裁剪</string>
+    <string name="property_option_center_inside">居中完整显示</string>
+    <string name="property_option_ad_banner">横幅广告</string>
+    <string name="property_option_ad_medium_rectangle">中等矩形广告</string>
+    <string name="property_option_ad_large_banner">大型横幅广告</string>
+    <string name="property_option_ad_smart_banner">智能横幅广告</string>
+    <string name="property_option_true">是</string>
+    <string name="property_option_false">否</string>
+    <string name="picker_color_group_custom">自定义</string>
+    <string name="picker_color_group_material3">Material 3 颜色</string>
+    <string name="picker_color_group_red">红色</string>
+    <string name="picker_color_group_pink">粉红色</string>
+    <string name="picker_color_group_purple">紫色</string>
+    <string name="picker_color_group_deep_purple">深紫色</string>
+    <string name="picker_color_group_indigo">靛蓝色</string>
+    <string name="picker_color_group_blue">蓝色</string>
+    <string name="picker_color_group_light_blue">浅蓝色</string>
+    <string name="picker_color_group_cyan">青色</string>
+    <string name="picker_color_group_teal">蓝绿色</string>
+    <string name="picker_color_group_green">绿色</string>
+    <string name="picker_color_group_light_green">浅绿色</string>
+    <string name="picker_color_group_lime">青柠色</string>
+    <string name="picker_color_group_yellow">黄色</string>
+    <string name="picker_color_group_amber">琥珀色</string>
+    <string name="picker_color_group_orange">橙色</string>
+    <string name="picker_color_group_deep_orange">深橙色</string>
+    <string name="picker_color_group_brown">棕色</string>
+    <string name="picker_color_group_grey">灰色</string>
+    <string name="picker_color_group_blue_grey">蓝灰色</string>
+    <string name="picker_color_group_black">黑色</string>
+    <string name="picker_color_group_white">白色</string>
+    <string name="picker_color_attrs_surface">表面颜色：</string>
+    <string name="picker_color_attrs_primary">主色：</string>
+    <string name="picker_color_attrs_secondary">次要颜色：</string>
+    <string name="picker_color_attrs_tertiary">第三颜色：</string>
+    <string name="picker_color_attrs_error">错误颜色：</string>
+    <string name="picker_color_attrs_custom">自定义颜色：</string>
+    <string name="images_additional_count">+ %1$d 张</string>
+    <string name="apk_signatures_error">获取摘要失败：%1$s</string>
+    <string name="apk_signatures_missing_sha1">未找到 SHA-1 摘要。</string>
+    <string name="apk_signatures_missing_sha256">未找到 SHA-256 摘要。</string>
+    <string name="apk_signatures_missing_path">计算摘要前需要指定 APK 路径。</string>
+    <string name="export_keystore_invalid">密码输入错误，或密钥库已损坏。</string>
+    <string name="code_editor_theme_default">默认</string>
+    <string name="font_default_label">默认字体</string>
+    <string name="array_type_string">字符串</string>
+    <string name="array_type_integer">整数</string>
+    <string name="array_type_object">通用数组</string>
+</resources>

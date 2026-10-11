@@ -176,9 +176,9 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
 
         String message;
         if (skipSubdependencies) {
-            message = "Are you sure you want to download " + dependencyName;
+            message = Helper.getResString(R.string.library_confirm_download, dependencyName);
         } else {
-            message = "Are you sure you want to download " + dependencyName + " and its sub-dependencies?";
+            message = Helper.getResString(R.string.library_confirm_download_dependencies, dependencyName);
         }
 
         new MaterialAlertDialogBuilder(requireContext())
@@ -232,7 +232,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                         handler.post(() -> {
                             setDownloadState(false);
                             var activity = getActivity();
-                            if (activity != null && !activity.isFinishing() && !activity.isDestroyed()) SketchwareUtil.showAnErrorOccurredDialog(activity, "Dependency '" + dep + "' not found");
+                            if (activity != null && !activity.isFinishing() && !activity.isDestroyed()) SketchwareUtil.showAnErrorOccurredDialog(activity, Helper.getResString(R.string.library_dependency_not_found, dep));
                         });
                     }
 
@@ -330,8 +330,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                     @Override
                     public void onResolutionTimeout(@NonNull Artifact dep) {
                         handler.post(() -> SketchwareUtil.toast(
-                                "Dependency tree resolution timed out for " + dep.getArtifactId()
-                                        + ". Only the main library was downloaded."));
+                                Helper.getResString(R.string.library_resolution_timeout, dep.getArtifactId())));
                     }
 
                     @Override
@@ -366,7 +365,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
                     setDownloadState(false);
                     var activity = getActivity();
                     if (activity != null && !activity.isFinishing() && !activity.isDestroyed()) SketchwareUtil.showAnErrorOccurredDialog(activity,
-                            "Failed to resolve dependency '" + dependencyName + "': " + e.getMessage());
+                            Helper.getResString(R.string.library_resolution_failed, dependencyName, e.getMessage()));
                 });
             }
         });
@@ -472,8 +471,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
         } catch (Throwable e) {
             handler.post(() -> {
                 setDownloadState(false);
-                String errorMessage = "Failed to finalize downloaded library '" + dependencyName
-                        + "': " + e.getMessage();
+                String errorMessage = Helper.getResString(R.string.library_finalize_failed, dependencyName, e.getMessage());
                 var activity = getActivity();
                 if (activity != null && !activity.isFinishing() && !activity.isDestroyed()) {
                     SketchwareUtil.showAnErrorOccurredDialog(activity, errorMessage);
@@ -549,7 +547,7 @@ public class LibraryDownloaderDialogFragment extends BottomSheetDialogFragment {
         new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.common_message_permission_title_storage)
                 .setMessage(Helper.getResString(R.string.common_message_permission_storage)
-                        + "\n\nPath: " + SketchwarePaths.getLocalLibsDir().getAbsolutePath())
+                        + Helper.getResString(R.string.library_storage_path, SketchwarePaths.getLocalLibsDir().getAbsolutePath()))
                 .setPositiveButton(R.string.common_word_settings, (dialog, which) -> {
                     try {
                         Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,

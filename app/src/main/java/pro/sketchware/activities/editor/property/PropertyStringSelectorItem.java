@@ -17,6 +17,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import pro.sketchware.core.callback.PropertyChangedCallback;
 import pro.sketchware.util.UIHelper;
 import pro.sketchware.core.project.SketchwareConstants;
+import pro.sketchware.util.locale.PropertyDisplayNames;
 import pro.sketchware.util.ViewUtil;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
@@ -77,7 +78,7 @@ public class PropertyStringSelectorItem extends RelativeLayout implements View.O
 
     public void setValue(String value) {
         this.value = value;
-        tvValue.setText(value);
+        tvValue.setText(PropertyDisplayNames.get(getContext(), key, value));
     }
 
     @Override
@@ -166,7 +167,7 @@ public class PropertyStringSelectorItem extends RelativeLayout implements View.O
     private RadioButton getOption(String optionText) {
         RadioButton radioButton = new RadioButton(getContext());
         radioButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12.0f);
-        radioButton.setText(optionText);
+        radioButton.setText(PropertyDisplayNames.get(getContext(), key, optionText));
         radioButton.setTag(optionText);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,

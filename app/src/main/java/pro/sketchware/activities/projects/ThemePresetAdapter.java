@@ -1,5 +1,6 @@
 package pro.sketchware.activities.projects;
 
+import pro.sketchware.util.locale.LocalizedDisplayNames;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -39,7 +40,7 @@ public class ThemePresetAdapter extends RecyclerView.Adapter<ThemePresetAdapter.
     public void onBindViewHolder(@NonNull ThemePresetViewHolder holder, int position) {
         ThemeManager.ThemePreset theme = themePresets.get(position);
 
-        holder.binding.themeName.setText(theme.name);
+        holder.binding.themeName.setText(LocalizedDisplayNames.get(theme.name));
 
         holder.binding.colorPrimary.setBackgroundColor(theme.colorPrimary);
         holder.binding.colorPrimaryDark.setBackgroundColor(theme.colorPrimaryDark);

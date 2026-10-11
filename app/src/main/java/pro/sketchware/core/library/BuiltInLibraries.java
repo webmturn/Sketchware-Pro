@@ -1,5 +1,7 @@
 package pro.sketchware.core.library;
 
+import pro.sketchware.R;
+import pro.sketchware.util.Helper;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -648,7 +650,7 @@ public class BuiltInLibraries {
 
         if (ProjectBuilder.hasFileChanged(baseAssetsPath + dexsArchiveName, dexsArchivePath)) {
             for (BuildProgressReceiver receiver : progressReceivers) {
-                receiver.onProgress("Extracting built-in libraries' DEX files...", BuildStage.EXTRACT_LIBRARY_DEX);
+                receiver.onProgress(Helper.getResString(R.string.build_progress_extracting_built_in_libraries__dex_files), BuildStage.EXTRACT_LIBRARY_DEX);
             }
             /* Delete the directory */
             fileUtil.deleteDirectoryByPath(dexsDirectoryPath);
@@ -659,7 +661,7 @@ public class BuiltInLibraries {
         }
         if (ProjectBuilder.hasFileChanged(baseAssetsPath + libsArchiveName, libsArchivePath)) {
             for (BuildProgressReceiver receiver : progressReceivers) {
-                receiver.onProgress("Extracting built-in libraries' resources...", BuildStage.EXTRACT_LIBRARY_RESOURCES);
+                receiver.onProgress(Helper.getResString(R.string.build_progress_extracting_built_in_libraries__resources), BuildStage.EXTRACT_LIBRARY_RESOURCES);
             }
             /* Delete the directory */
             fileUtil.deleteDirectoryByPath(libsDirectoryPath);
@@ -671,7 +673,7 @@ public class BuiltInLibraries {
         maybeExtractCoreLambdaStubsJar();
         if (ProjectBuilder.hasFileChanged(baseAssetsPath + testkeyArchiveName, testkeyArchivePath)) {
             for (BuildProgressReceiver receiver : progressReceivers) {
-                receiver.onProgress("Extracting built-in signing keys...", BuildStage.EXTRACT_SIGNING_KEYS);
+                receiver.onProgress(Helper.getResString(R.string.build_progress_extracting_built_in_signing_keys), BuildStage.EXTRACT_SIGNING_KEYS);
             }
             /* Delete the directory */
             fileUtil.deleteDirectoryByPath(testkeyDirectoryPath);
@@ -687,7 +689,7 @@ public class BuiltInLibraries {
         String androidJarPath = new File(EXTRACTED_COMPILE_ASSETS_PATH, androidJarArchiveName).getAbsolutePath();
         if (ProjectBuilder.hasFileChanged("libs" + File.separator + androidJarArchiveName, androidJarPath)) {
             for (BuildProgressReceiver receiver : receivers) {
-                receiver.onProgress("Extracting built-in android.jar...", BuildStage.EXTRACT_ANDROID_JAR);
+                receiver.onProgress(Helper.getResString(R.string.build_progress_extracting_built_in_android_jar), BuildStage.EXTRACT_ANDROID_JAR);
             }
             /* Delete android.jar */
             new EncryptedFileUtil().deleteFileByPath(EXTRACTED_COMPILE_ASSETS_PATH.getAbsolutePath() + File.separator + "android.jar");

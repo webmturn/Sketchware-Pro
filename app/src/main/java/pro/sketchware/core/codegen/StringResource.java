@@ -23,6 +23,8 @@ public class StringResource {
   private final String translationDir = SketchwarePaths.getLocalizationStringsPath();
   
   private boolean isLoaded;
+  private String translationLocales = "";
+  private long overrideRevision = -1;
   
   public StringResource() {
     blockTranslations = new HashMap<>();
@@ -55,6 +57,11 @@ public class StringResource {
   }
   
   private void ensureTranslationsLoaded(Context context) {
+    String locales = context.getResources().getConfiguration().getLocales().toLanguageTags();
+    long revision = pro.sketchware.util.locale.LanguageOverrideManager.getInstance().getRevision();
+    if (!locales.equals(translationLocales) || revision != overrideRevision) {
+      eventTranslations = new HashMap<>();
+    }
     if (blockTranslations == null)
       blockTranslations = new HashMap<>();
     if (blockTranslations.isEmpty()) {
@@ -280,6 +287,8 @@ public class StringResource {
   }
   
   public void loadEventTranslations(Context context) {
+    translationLocales = context.getResources().getConfiguration().getLocales().toLanguageTags();
+    overrideRevision = pro.sketchware.util.locale.LanguageOverrideManager.getInstance().getRevision();
     eventTranslations = new HashMap<>();
     loadEventSpecTranslation(context, "initializeLogic");
     loadEventSpecTranslation(context, "onBackPressed");

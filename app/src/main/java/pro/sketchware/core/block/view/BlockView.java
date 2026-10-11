@@ -1,5 +1,7 @@
 package pro.sketchware.core.block.view;
 
+import pro.sketchware.core.codegen.BuiltinBlockLocalization;
+import pro.sketchware.util.locale.LocalizedDisplayNames;
 import pro.sketchware.util.format.FormatUtil;
 import pro.sketchware.core.codegen.StringResource;
 
@@ -11,6 +13,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import pro.sketchware.R;
 import pro.sketchware.beans.BlockBean;
 import com.google.gson.Gson;
 import java.util.ArrayList;
@@ -107,7 +110,7 @@ public class BlockView extends BaseBlockView {
     if (opCode.equals("getVar") || opCode.equals("getArg")) {
       String prefix = componentType;
       if (prefix != null && prefix.length() > 0) {
-        text = componentType + " : " + label;
+        text = getComponentTypeDisplayName() + " : " + label;
       }
     }
     textView.setText(text);
@@ -120,6 +123,18 @@ public class BlockView extends BaseBlockView {
     lp.setMargins(0, 0, 0, 0);
     textView.setLayoutParams(lp);
     return textView;
+  }
+
+  protected final String getComponentTypeDisplayName() {
+    // Java class names can collide with labels such as Image, Color, or Default.
+    // Only variable/argument blocks with canonical Map/List metadata use translated prefixes.
+    boolean isBuiltinVariable = "getVar".equals(opCode) || "getArg".equals(opCode);
+    boolean isBuiltinType = "a".equals(blockType) && "Map".equals(componentType)
+        || "l".equals(blockType) && ("List".equals(componentType)
+        || "List Number".equals(componentType) || "List String".equals(componentType)
+        || "List Map".equals(componentType) || "List Boolean".equals(componentType));
+    return isBuiltinVariable && isBuiltinType
+        ? LocalizedDisplayNames.get(getContext(), componentType) : componentType;
   }
   
   public final void appendToChain(BlockView blockView) {
@@ -773,7 +788,7 @@ public class BlockView extends BaseBlockView {
   private TextView updateSingleLabel(TextView label, boolean isCollapsed, int stackTag) {
     if (isCollapsed) {
       int count = (stackTag > -1) ? countBlocksInChain(stackTag) : 0;
-      String text = "... (" + count + (count == 1 ? " block)" : " blocks)");
+      String text = context.getResources().getQuantityString(R.plurals.block_collapsed_count, count, count);
       if (label == null) {
         label = createCollapsedLabel();
         addView(label);
@@ -842,7 +857,7 @@ public class BlockView extends BaseBlockView {
     this.spec = spec;
     invalidateSearchCaches();
     removeAllViews();
-    parseSpec(this.spec, blockColor);
+    parseSpec(BuiltinBlockLocalization.getSpec(getContext(), opCode, this.spec, false), blockColor);
     for (View view : specViews)
       addView(view);
     rebuildChildViews();
@@ -851,7 +866,7 @@ public class BlockView extends BaseBlockView {
       addView(elseLabel);
     } 
     if (blockType.equals("e") && !spec2.equals("")) {
-      elseLabel = createLabel(spec2);
+      elseLabel = createLabel(BuiltinBlockLocalization.getSpec(getContext(), opCode, spec2, true));
       addView(elseLabel);
     } 
     layoutChain();
@@ -861,6 +876,7 @@ public class BlockView extends BaseBlockView {
     if (paletteSearchTextCache == null) {
       StringBuilder searchText = new StringBuilder();
       appendSearchValue(searchText, spec);
+      appendSearchValue(searchText, BuiltinBlockLocalization.getSpec(getContext(), opCode, spec, false));
       paletteSearchTextCache = searchText.toString().toLowerCase(java.util.Locale.ROOT);
     }
     return paletteSearchTextCache;

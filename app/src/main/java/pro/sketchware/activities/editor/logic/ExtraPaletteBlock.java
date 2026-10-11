@@ -1,5 +1,6 @@
 package pro.sketchware.activities.editor.logic;
 
+import pro.sketchware.core.codegen.BuiltinBlockLocalization;
 import pro.sketchware.core.settings.ApplicationSettings;
 
 import static pro.sketchware.util.ThemeUtils.getColor;
@@ -931,6 +932,7 @@ public class ExtraPaletteBlock {
 
         StringBuilder searchText = new StringBuilder();
         appendSearchText(searchText, resolvePaletteDisplaySpec(spec, blockType, opCode));
+        appendSearchText(searchText, spec);
         String resolvedSearchText = searchText.toString().toLowerCase(Locale.ROOT);
         cachedPaletteSearchTexts.put(cacheKey, resolvedSearchText);
         return resolvedSearchText;
@@ -968,12 +970,12 @@ public class ExtraPaletteBlock {
 
         if (color == BlockColorMapper.CUSTOM_BLOCK_FALLBACK_COLOR) {
             if (spec != null && !spec.isEmpty()) {
-                return spec;
+                return BuiltinBlockLocalization.getSpec(logicEditor, opCode, spec, false);
             }
 
             String cachedSpec = cachedResolvedSpecs.get(opCode);
             if (cachedSpec != null) {
-                return cachedSpec;
+                return BuiltinBlockLocalization.getSpec(logicEditor, opCode, cachedSpec, false);
             }
 
             ExtraBlockInfo blockInfo = BlockLoader.getBlockInfo(opCode);
@@ -984,7 +986,7 @@ public class ExtraPaletteBlock {
             String extraSpec = blockInfo != null ? blockInfo.getSpec() : "";
             if (extraSpec != null && !extraSpec.isEmpty()) {
                 cachedResolvedSpecs.put(opCode, extraSpec);
-                return extraSpec;
+                return BuiltinBlockLocalization.getSpec(logicEditor, opCode, extraSpec, false);
             }
             cachedResolvedSpecs.put(opCode, opCode);
             return opCode;
