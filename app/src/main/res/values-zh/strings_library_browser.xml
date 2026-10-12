@@ -1,0 +1,42 @@
+<resources>
+    <string name="dependency_browser_title">依赖关系</string>
+    <string name="dependency_browser_tree">树状展示</string>
+    <string name="dependency_browser_levels">分层展示</string>
+    <string name="dependency_browser_switch_tree">切换为树状展示</string>
+    <string name="dependency_browser_switch_levels">切换为分层展示</string>
+    <string name="dependency_browser_expand_all">展开全部</string>
+    <string name="dependency_browser_collapse_all">收起全部</string>
+    <string name="dependency_browser_loading">正在读取依赖…</string>
+    <string name="dependency_browser_summary">本地 %1$d · 内置 %2$d · 缺失 %3$d</string>
+    <string name="dependency_browser_direct_count">直接 %1$d · 共 %2$d</string>
+    <string name="dependency_browser_direct_section">%1$s · 直接 %2$d 项</string>
+    <plurals name="dependency_browser_section">
+        <item quantity="other">%1$s · %2$d 个依赖</item>
+    </plurals>
+    <string name="dependency_browser_flat_note">此缓存未保存父子关系，当前展示依赖列表。</string>
+    <string name="dependency_browser_incomplete_note">部分关系缺失，未关联的依赖仍保留显示。</string>
+    <string name="dependency_browser_builtin_group">内置依赖 · %1$d</string>
+    <string name="dependency_browser_builtin_provided">由应用内置库提供</string>
+    <string name="dependency_browser_local">本地</string>
+    <string name="dependency_browser_missing">文件缺失</string>
+    <string name="dependency_browser_shared">共享引用</string>
+    <string name="dependency_browser_unattached">关系未保存</string>
+    <plurals name="dependency_browser_children">
+        <item quantity="other">%1$d 项依赖</item>
+    </plurals>
+    <string name="dependency_browser_expand_node">展开 %1$s</string>
+    <string name="dependency_browser_collapse_node">收起 %1$s</string>
+    <string name="dependency_browser_enter_node">查看 %1$s 的下级依赖</string>
+    <string name="dependency_browser_details">%1$s 的详情</string>
+    <string name="dependency_browser_up">返回上一级</string>
+    <string name="dependency_browser_path_title">引入路径</string>
+    <string name="dependency_browser_choose_path">返回指定层级</string>
+    <string name="dependency_browser_unknown_path">缓存中未保存引入路径。</string>
+    <string name="dependency_browser_parents">被以下库引用：\n%1$s</string>
+    <string name="dependency_browser_copy_coordinate">复制坐标</string>
+    <string name="dependency_browser_copied">坐标已复制</string>
+    <string name="dependency_browser_project_enabled">在项目中启用</string>
+    <string name="dependency_browser_required">以下已启用的库需要此依赖：\n%1$s</string>
+    <string name="dependency_browser_missing_reason">请先下载此依赖，再启用。</string>
+    <string name="dependency_browser_checking">正在检查项目依赖…</string>
+</resources>

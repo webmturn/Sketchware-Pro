@@ -435,6 +435,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
     private void showSubDependencies(LocalLibrary library) {
         Intent intent = new Intent(this, SubDependenciesActivity.class);
         intent.putExtra(SubDependenciesActivity.EXTRA_ROOT_LIB_NAME, library.getName());
+        intent.putExtra(SubDependenciesActivity.EXTRA_ROOT_COORDINATE, library.getCoordinate());
         intent.putExtra(SubDependenciesActivity.EXTRA_SC_ID, scId);
 
         List<LocalLibrary.DepInfo> allDeps = library.getAllDependencies();
@@ -443,6 +444,8 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
         boolean[] builtIn = new boolean[allDeps.size()];
         int[] depths = new int[allDeps.size()];
         ArrayList<String> parents = new ArrayList<>(allDeps.size());
+        Bundle parentLists = new Bundle();
+        boolean[] hierarchyKnown = new boolean[allDeps.size()];
         for (int i = 0; i < allDeps.size(); i++) {
             LocalLibrary.DepInfo dep = allDeps.get(i);
             folders.add(dep.folderName);
@@ -450,12 +453,16 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
             builtIn[i] = dep.builtIn;
             depths[i] = dep.depth;
             parents.add(dep.parentCoord);
+            parentLists.putStringArrayList(coords.get(i), new ArrayList<>(dep.parentCoords));
+            hierarchyKnown[i] = dep.hierarchyKnown;
         }
         intent.putStringArrayListExtra(SubDependenciesActivity.EXTRA_DEP_FOLDERS, folders);
         intent.putStringArrayListExtra(SubDependenciesActivity.EXTRA_DEP_COORDS, coords);
         intent.putExtra(SubDependenciesActivity.EXTRA_DEP_BUILTIN, builtIn);
         intent.putExtra(SubDependenciesActivity.EXTRA_DEP_DEPTHS, depths);
         intent.putStringArrayListExtra(SubDependenciesActivity.EXTRA_DEP_PARENTS, parents);
+        intent.putExtra(SubDependenciesActivity.EXTRA_DEP_PARENT_LISTS, parentLists);
+        intent.putExtra(SubDependenciesActivity.EXTRA_DEP_HIERARCHY_KNOWN, hierarchyKnown);
         startActivity(intent);
     }
 

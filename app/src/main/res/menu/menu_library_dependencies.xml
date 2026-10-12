@@ -1,0 +1,6 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/dependency_switch_view" android:title="@string/dependency_browser_switch_levels"
+        android:icon="@drawable/ic_dependency_levels" app:showAsAction="always" />
+    <item android:id="@+id/dependency_expand_all" android:title="@string/dependency_browser_expand_all"
+        app:showAsAction="never" />
+</menu>

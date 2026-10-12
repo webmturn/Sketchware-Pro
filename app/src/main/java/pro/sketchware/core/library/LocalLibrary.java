@@ -25,6 +25,7 @@ public class LocalLibrary {
     private final List<String> subDependencyNames;
     /** All transitive dep descriptions (including built-in), for UI display. */
     private final List<DepInfo> allDependencies;
+    private final String coordinate;
 
     /** Lightweight descriptor for a transitive dependency entry. */
     public static class DepInfo {
@@ -35,26 +36,31 @@ public class LocalLibrary {
         public final boolean builtIn;
         public final int depth;           // tree depth (1 = direct dep of root)
         public final String parentCoord;  // Maven coordinate of parent, e.g. "com.squareup.okhttp3:okhttp:5.1.0"
+        public final List<String> parentCoords;
+        public final boolean hierarchyKnown;
 
         DepInfo(String folderName, String groupId, String artifactId, String version,
-                boolean builtIn, int depth, String parentCoord) {
+                boolean builtIn, int depth, List<String> parentCoords, boolean hierarchyKnown) {
             this.folderName = folderName;
             this.groupId = groupId;
             this.artifactId = artifactId;
             this.version = version;
             this.builtIn = builtIn;
             this.depth = depth;
-            this.parentCoord = parentCoord;
+            this.parentCoords = List.copyOf(parentCoords);
+            this.parentCoord = parentCoords.isEmpty() ? null : parentCoords.get(0);
+            this.hierarchyKnown = hierarchyKnown;
         }
     }
 
     private LocalLibrary(String name, String size, boolean isRootLibrary,
-                         List<String> subDependencyNames, List<DepInfo> allDependencies) {
+                         List<String> subDependencyNames, List<DepInfo> allDependencies, String coordinate) {
         this.name = name;
         this.size = size;
         this.isRootLibrary = isRootLibrary;
         this.subDependencyNames = subDependencyNames;
         this.allDependencies = allDependencies;
+        this.coordinate = coordinate;
     }
 
     public static LocalLibrary fromFile(File file) {
@@ -81,10 +87,20 @@ public class LocalLibrary {
                             int depth = 1;
                             Object depthObj = entry.get("depth");
                             if (depthObj instanceof Number) depth = ((Number) depthObj).intValue();
-                            Object parentValue = entry.get("parent");
-                            String parentCoord = parentValue != null ? parentValue.toString() : null;
+                            List<String> parents = new ArrayList<>();
+                            if (entry.get("parents") instanceof List<?> parentValues) {
+                                for (Object value : parentValues) {
+                                    if (value instanceof String parent && !parent.isEmpty() && !parents.contains(parent)) {
+                                        parents.add(parent);
+                                    }
+                                }
+                            }
+                            if (parents.isEmpty() && entry.get("parent") instanceof String parent && !parent.isEmpty()) {
+                                parents.add(parent);
+                            }
                             allDeps.add(new DepInfo(folderName, groupId != null ? groupId : "",
-                                    artifactId, version, builtIn, depth, parentCoord));
+                                    artifactId, version, builtIn, depth, parents,
+                                    !parents.isEmpty() && !Boolean.FALSE.equals(entry.get("hierarchyKnown"))));
                             if (!builtIn) {
                                 subDeps.add(folderName);
                             }
@@ -95,12 +111,32 @@ public class LocalLibrary {
                 LogUtil.w("LocalLibrary", "Failed to parse dependency tree for " + file.getName() + ": " + e.getMessage());
             }
         }
-        return new LocalLibrary(file.getName(), formatFileSize(getFileSize(file)), isRoot, subDeps, allDeps);
+        String coordinate = "";
+        File coordinateFile = new File(file, "maven-coordinate");
+        if (coordinateFile.isFile()) {
+            String stored = readFile(coordinateFile.getAbsolutePath()).trim();
+            if (stored.split(":", -1).length == 3) coordinate = stored;
+        }
+        if (coordinate.isEmpty()) {
+            for (DepInfo dep : allDeps) {
+                for (String parent : dep.parentCoords) {
+                    String[] parts = parent.split(":", -1);
+                    if (parts.length == 3 && file.getName().equals(parts[1] + "-v" + parts[2])) {
+                        coordinate = parent;
+                        break;
+                    }
+                }
+                if (!coordinate.isEmpty()) break;
+            }
+        }
+        return new LocalLibrary(file.getName(), formatFileSize(getFileSize(file)), isRoot, subDeps, allDeps, coordinate);
     }
 
     public String getName() {
         return name;
     }
+
+    public String getCoordinate() { return coordinate; }
 
     public String getSize() {
         return size;

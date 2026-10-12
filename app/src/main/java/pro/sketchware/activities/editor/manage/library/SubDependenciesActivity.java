@@ -1,227 +1,468 @@
 package pro.sketchware.activities.editor.manage.library;
 
-import pro.sketchware.util.Helper;
-import pro.sketchware.core.project.SketchwarePaths;
-
 import static pro.sketchware.core.library.LocalLibrariesUtil.buildEnabledRootDependencyState;
 import static pro.sketchware.core.library.LocalLibrariesUtil.createLibraryMap;
 import static pro.sketchware.core.library.LocalLibrariesUtil.getLocalLibraries;
 import static pro.sketchware.core.library.LocalLibrariesUtil.rewriteLocalLibFile;
+import static pro.sketchware.util.FileUtil.formatFileSize;
+import static pro.sketchware.util.FileUtil.getFileSize;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.TypefaceSpan;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import pro.sketchware.activities.base.BaseAppCompatActivity;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.gson.Gson;
 
+import com.google.gson.Gson;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import pro.sketchware.R;
-import pro.sketchware.databinding.ActivitySubDependenciesBinding;
-import pro.sketchware.databinding.ViewItemLocalLibBinding;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
+import pro.sketchware.core.library.DependencyTreeModel;
+import pro.sketchware.core.library.DependencyTreeModel.Node;
+import pro.sketchware.core.library.DependencyTreeModel.Row;
 import pro.sketchware.core.library.LocalLibrariesUtil;
 import pro.sketchware.core.library.LocalLibrary;
+import pro.sketchware.core.project.SketchwarePaths;
+import pro.sketchware.databinding.ActivitySubDependenciesBinding;
+import pro.sketchware.databinding.DialogDependencyDetailsBinding;
+import pro.sketchware.databinding.ItemLibraryDependencyBinding;
+import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.UI;
 
-import static pro.sketchware.util.FileUtil.formatFileSize;
-import static pro.sketchware.util.FileUtil.getFileSize;
-
 public class SubDependenciesActivity extends BaseAppCompatActivity {
-
     public static final String EXTRA_ROOT_LIB_NAME = "root_lib_name";
+    public static final String EXTRA_ROOT_COORDINATE = "root_coordinate";
     public static final String EXTRA_SC_ID = "sc_id";
     public static final String EXTRA_DEP_FOLDERS = "dep_folders";
     public static final String EXTRA_DEP_COORDS = "dep_coords";
     public static final String EXTRA_DEP_BUILTIN = "dep_builtin";
     public static final String EXTRA_DEP_DEPTHS = "dep_depths";
     public static final String EXTRA_DEP_PARENTS = "dep_parents";
+    public static final String EXTRA_DEP_PARENT_LISTS = "dep_parent_lists";
+    public static final String EXTRA_DEP_HIERARCHY_KNOWN = "dep_hierarchy_known";
+    public static final String VIEW_PREFERENCES = "local_library_browser";
+    public static final String LEVEL_VIEW_PREFERENCE = "level_view";
 
     private ActivitySubDependenciesBinding binding;
-    private String scId;
+    private DialogDependencyDetailsBinding detailBinding;
+    private BottomSheetDialog detailsDialog;
+    private Row detailRow;
+    private String scId, rootName, rootCoordinate;
     private ArrayList<HashMap<String, Object>> projectUsedLibs;
-    private boolean notAssociatedWithProject;
+    private boolean notAssociatedWithProject, levelView, loaded;
     private final SubDepAdapter adapter = new SubDepAdapter();
     private final ExecutorService dependencyStateExecutor = Executors.newSingleThreadExecutor();
     private Map<String, List<String>> enabledRootLibrariesBySubDependency = Collections.emptyMap();
     private Map<String, List<String>> subDependenciesByEnabledRootLibrary = Collections.emptyMap();
     private boolean dependencyGuardReady = true;
+    private DependencyTreeModel model;
+    private final Set<String> expanded = new HashSet<>(), expandedGroups = new HashSet<>();
+    private final ArrayList<String> browsePath = new ArrayList<>();
+    private final ArrayList<String> focusedPath = new ArrayList<>();
+    private String focusedCoordinate = "";
+    private Parcelable restoredScroll;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    @Override public void onCreate(Bundle savedInstanceState) {
         enableEdgeToEdgeNoContrast();
         super.onCreate(savedInstanceState);
         binding = ActivitySubDependenciesBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        UI.addSystemWindowInsetToPadding(binding.toolbar, true, true, true, false);
-        UI.addSystemWindowInsetToPadding(binding.dependenciesList, true, false, true, true);
+        UI.addSystemWindowInsetToPadding(binding.getRoot(), true, false, true, false);
+        UI.addSystemWindowInsetToPadding(binding.toolbar, false, true, false, false);
+        UI.addSystemWindowInsetToPadding(binding.dependenciesList, false, false, false, true);
 
         Intent intent = getIntent();
-        String rootLibName = intent.getStringExtra(EXTRA_ROOT_LIB_NAME);
-        ArrayList<String> depFolders = intent.getStringArrayListExtra(EXTRA_DEP_FOLDERS);
-        ArrayList<String> depCoords = intent.getStringArrayListExtra(EXTRA_DEP_COORDS);
-        boolean[] depBuiltIn = intent.getBooleanArrayExtra(EXTRA_DEP_BUILTIN);
-        int[] depDepths = intent.getIntArrayExtra(EXTRA_DEP_DEPTHS);
-        ArrayList<String> depParents = intent.getStringArrayListExtra(EXTRA_DEP_PARENTS);
+        rootName = intent.getStringExtra(EXTRA_ROOT_LIB_NAME);
+        if (rootName == null) rootName = "";
+        rootCoordinate = intent.getStringExtra(EXTRA_ROOT_COORDINATE);
+        if (rootCoordinate == null) rootCoordinate = "";
         scId = intent.getStringExtra(EXTRA_SC_ID);
-
         notAssociatedWithProject = scId == null || scId.equals("system");
         dependencyGuardReady = notAssociatedWithProject;
-
+        levelView = getSharedPreferences(VIEW_PREFERENCES, MODE_PRIVATE)
+                .getBoolean(LEVEL_VIEW_PREFERENCE, false);
+        if (savedInstanceState != null) {
+            levelView = savedInstanceState.getBoolean("level_view", levelView);
+            restoreList(savedInstanceState, "expanded", expanded);
+            restoreList(savedInstanceState, "groups", expandedGroups);
+            ArrayList<String> path = savedInstanceState.getStringArrayList("path");
+            if (path != null) browsePath.addAll(path);
+            focusedCoordinate = savedInstanceState.getString("focus", "");
+            ArrayList<String> focusPath = savedInstanceState.getStringArrayList("focus_path");
+            if (focusPath != null) focusedPath.addAll(focusPath);
+            restoredScroll = savedInstanceState.getParcelable("scroll");
+        }
+        updateRootHeader();
+        binding.toolbar.setNavigationOnClickListener(v -> goUpOrFinish());
+        binding.toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.dependency_switch_view) {
+                switchDisplayMode();
+                return true;
+            }
+            if (item.getItemId() == R.id.dependency_expand_all && loaded) {
+                boolean collapse = allExpanded();
+                expanded.clear();
+                expandedGroups.clear();
+                if (!collapse) {
+                    expandedGroups.add(DependencyTreeModel.ROOT);
+                    for (Node node : model.allNodes()) {
+                        if (!model.children(node.coordinate).isEmpty()) {
+                            expanded.add(node.coordinate);
+                            expandedGroups.add(node.coordinate);
+                        }
+                    }
+                }
+                refreshRows();
+                return true;
+            }
+            return false;
+        });
+        binding.dependencyUp.setOnClickListener(v -> goUpOrFinish());
+        binding.dependencyPath.setOnClickListener(v -> choosePath());
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override public void handleOnBackPressed() { goUpOrFinish(); }
+        });
+        binding.dependenciesList.setAdapter(adapter);
+        binding.dependenciesList.addItemDecoration(new BranchDecoration());
+        updateToolbar();
         if (!notAssociatedWithProject) {
             projectUsedLibs = getLocalLibraries(scId);
             preloadDependencyState();
         }
-
-        binding.toolbar.setTitle(rootLibName);
-        binding.toolbar.setNavigationOnClickListener(v -> finish());
-
-        binding.dependenciesList.setAdapter(adapter);
-
-        if (depFolders == null || depFolders.isEmpty()) {
-            binding.noContentLayout.setVisibility(View.VISIBLE);
-            binding.dependenciesList.setVisibility(View.GONE);
-        } else {
-            loadDependencies(rootLibName, depFolders, depCoords, depBuiltIn, depDepths, depParents);
-        }
+        loadDependencies(intent);
     }
 
-    @Override
-    public void onDestroy() {
+    private static void restoreList(Bundle state, String key, Set<String> target) {
+        ArrayList<String> values = state.getStringArrayList(key);
+        if (values != null) target.addAll(values);
+    }
+
+    @Override protected void onSaveInstanceState(@NonNull Bundle state) {
+        state.putBoolean("level_view", levelView);
+        state.putStringArrayList("expanded", new ArrayList<>(expanded));
+        state.putStringArrayList("groups", new ArrayList<>(expandedGroups));
+        state.putStringArrayList("path", new ArrayList<>(browsePath));
+        state.putString("focus", focusedCoordinate);
+        state.putStringArrayList("focus_path", new ArrayList<>(focusedPath));
+        state.putParcelable("scroll", binding.dependenciesList.getLayoutManager().onSaveInstanceState());
+        super.onSaveInstanceState(state);
+    }
+
+    @Override public void onDestroy() {
+        if (detailsDialog != null) detailsDialog.dismiss();
         dependencyStateExecutor.shutdownNow();
         super.onDestroy();
     }
 
-    private void loadDependencies(String rootLibName, List<String> folders, List<String> coords,
-                                  boolean[] builtIn, int[] depths, List<String> parents) {
-        // Build raw items from intent data
-        List<SubDepItem> rawItems = new ArrayList<>();
-        boolean hasTreeData = (depths != null && parents != null && depths.length == folders.size());
-
-        int builtInCount = 0;
-        int downloadedCount = 0;
-
-        for (int i = 0; i < folders.size(); i++) {
-            String folder = folders.get(i);
-            String coord = (coords != null && i < coords.size()) ? coords.get(i) : folder;
-            boolean isBuiltIn = (builtIn != null && i < builtIn.length) && builtIn[i];
-            int depth = hasTreeData ? depths[i] : 1;
-            String parent = hasTreeData && i < parents.size() ? parents.get(i) : null;
-            File dir = resolveLibDir(folder);
-            String size = isBuiltIn ? Helper.getResString(R.string.library_built_in) : (dir != null ? formatFileSize(getFileSize(dir)) : "\u2014");
-
-            rawItems.add(new SubDepItem(folder, coord, size, isBuiltIn, depth, parent));
-
-            if (isBuiltIn) builtInCount++;
-            else downloadedCount++;
+    private void loadDependencies(Intent intent) {
+        ArrayList<String> folders = intent.getStringArrayListExtra(EXTRA_DEP_FOLDERS);
+        ArrayList<String> coords = intent.getStringArrayListExtra(EXTRA_DEP_COORDS);
+        ArrayList<String> parents = intent.getStringArrayListExtra(EXTRA_DEP_PARENTS);
+        Bundle parentLists = intent.getBundleExtra(EXTRA_DEP_PARENT_LISTS);
+        boolean[] builtIn = intent.getBooleanArrayExtra(EXTRA_DEP_BUILTIN);
+        boolean[] known = intent.getBooleanArrayExtra(EXTRA_DEP_HIERARCHY_KNOWN);
+        int[] depths = intent.getIntArrayExtra(EXTRA_DEP_DEPTHS);
+        // Older callers identify the root through the direct dependencies' parent.
+        if (rootCoordinate.isEmpty() && parents != null && depths != null) {
+            for (int i = 0; i < Math.min(parents.size(), depths.length); i++) {
+                if (depths[i] == 1 && parents.get(i) != null) {
+                    rootCoordinate = parents.get(i);
+                    break;
+                }
+            }
         }
+        final String root = rootCoordinate;
+        dependencyStateExecutor.execute(() -> {
+            List<Node> entries = new ArrayList<>();
+            if (folders != null) {
+                for (int i = 0; i < folders.size(); i++) {
+                    if (Thread.currentThread().isInterrupted()) return;
+                    String folder = folders.get(i);
+                    if (folder == null || folder.isEmpty()) continue;
+                    String coord = coords != null && i < coords.size() && coords.get(i) != null ? coords.get(i) : folder;
+                    boolean internal = builtIn != null && i < builtIn.length && builtIn[i];
+                    List<String> incoming = parentLists != null ? parentLists.getStringArrayList(coord) : null;
+                    if (incoming == null) incoming = new ArrayList<>();
+                    else incoming = new ArrayList<>(incoming);
+                    if (incoming.isEmpty() && parents != null && i < parents.size() && parents.get(i) != null) {
+                        incoming.add(parents.get(i));
+                    }
+                    incoming.removeIf(value -> value == null || value.isEmpty());
+                    boolean relationKnown = known != null && i < known.length ? known[i] : !incoming.isEmpty();
+                    File dir = internal ? null : resolveLibDir(folder);
+                    entries.add(new Node(coord, folder, internal, dir != null,
+                            dir == null ? "" : formatFileSize(getFileSize(dir)), incoming, relationKnown));
+                }
+            }
+            DependencyTreeModel result = new DependencyTreeModel(root, entries);
+            runOnUiThread(() -> {
+                if (isFinishing() || isDestroyed()) return;
+                model = result;
+                loaded = true;
+                updateRootHeader();
+                browsePath.removeIf(id -> model.node(id) == null);
+                focusedPath.removeIf(id -> model.node(id) == null);
+                int internal = 0, local = 0, missing = 0;
+                for (Node node : model.allNodes()) {
+                    if (node.builtIn) internal++;
+                    else if (node.available) local++;
+                    else missing++;
+                }
+                String stats = getString(R.string.dependency_browser_summary, local, internal, missing);
+                if (model.hasHierarchy()) {
+                    stats = getString(R.string.dependency_browser_direct_count,
+                            model.directCount(), model.allNodes().size()) + "\n" + stats;
+                }
+                binding.dependencySummary.setText(stats);
+                binding.dependencyRelationshipNote.setVisibility(!entries.isEmpty()
+                        && (!model.hasHierarchy() || model.isIncomplete()) ? View.VISIBLE : View.GONE);
+                binding.dependencyRelationshipNote.setText(!model.hasHierarchy()
+                        ? R.string.dependency_browser_flat_note : R.string.dependency_browser_incomplete_note);
+                refreshRows();
+                if (restoredScroll != null) {
+                    binding.dependenciesList.getLayoutManager().onRestoreInstanceState(restoredScroll);
+                    restoredScroll = null;
+                }
+            });
+        });
+    }
 
-        // Set subtitle with summary stats
-        binding.toolbar.setSubtitle(Helper.getResString(R.string.library_dependency_counts, downloadedCount, builtInCount));
+    private String currentParent() {
+        return browsePath.isEmpty() ? "" : browsePath.get(browsePath.size() - 1);
+    }
 
-        // If tree data is available, sort into DFS order for proper tree display
-        List<SubDepItem> orderedItems;
-        if (hasTreeData) {
-            orderedItems = sortDfs(rawItems);
+    private void switchDisplayMode() {
+        levelView = !levelView;
+        getSharedPreferences(VIEW_PREFERENCES, MODE_PRIVATE).edit()
+                .putBoolean(LEVEL_VIEW_PREFERENCE, levelView).apply();
+        if (loaded) {
+            if (levelView && !focusedCoordinate.isEmpty()) {
+                List<String> path = new ArrayList<>(focusedPath.isEmpty()
+                        ? model.pathTo(focusedCoordinate) : focusedPath);
+                if (model.children(focusedCoordinate).isEmpty() && !path.isEmpty()) path.remove(path.size() - 1);
+                browsePath.clear();
+                browsePath.addAll(path);
+            }
+            refreshRows();
+            binding.dependenciesList.scrollToPosition(0);
+        } else updateToolbar();
+        SketchwareUtil.toast(getString(levelView ? R.string.dependency_browser_levels : R.string.dependency_browser_tree));
+    }
+
+    private void updateToolbar() {
+        MenuItem toggle = binding.toolbar.getMenu().findItem(R.id.dependency_switch_view);
+        int label = levelView ? R.string.dependency_browser_switch_tree : R.string.dependency_browser_switch_levels;
+        toggle.setIcon(levelView ? R.drawable.ic_dependency_tree : R.drawable.ic_dependency_levels);
+        toggle.setTitle(label);
+        toggle.setContentDescription(getString(label));
+        toggle.setTooltipText(getString(label));
+        MenuItem expand = binding.toolbar.getMenu().findItem(R.id.dependency_expand_all);
+        expand.setVisible(loaded && !levelView && model.allNodes().stream()
+                .anyMatch(node -> node.builtIn || !model.children(node.coordinate).isEmpty()));
+        expand.setTitle(loaded && allExpanded() ? R.string.dependency_browser_collapse_all : R.string.dependency_browser_expand_all);
+    }
+
+    private boolean allExpanded() {
+        if (!loaded || !expandedGroups.contains("")) return false;
+        for (Node node : model.allNodes()) {
+            if (!model.children(node.coordinate).isEmpty()
+                    && (!expanded.contains(node.coordinate) || !expandedGroups.contains(node.coordinate))) return false;
+        }
+        return true;
+    }
+
+    private void refreshRows() {
+        if (!loaded) return;
+        adapter.setItems(model.rows(browsePath, !levelView, expanded, expandedGroups));
+        binding.noContentLayout.setVisibility(adapter.items.isEmpty() ? View.VISIBLE : View.GONE);
+        String mode = getString(levelView ? R.string.dependency_browser_levels : R.string.dependency_browser_tree);
+        int count = model.children(currentParent()).size();
+        binding.dependencySectionTitle.setText(model.hasHierarchy() && !(browsePath.isEmpty() && model.isIncomplete())
+                ? getString(R.string.dependency_browser_direct_section, mode, count)
+                : getResources().getQuantityString(R.plurals.dependency_browser_section, count, mode, count));
+        binding.dependencyPathBar.setVisibility(browsePath.isEmpty() ? View.GONE : View.VISIBLE);
+        String path = readablePath(browsePath);
+        binding.dependencyPath.setText(path);
+        binding.dependencyPath.setContentDescription(getString(R.string.dependency_browser_choose_path) + ": " + path);
+        updateToolbar();
+        binding.dependenciesList.invalidateItemDecorations();
+    }
+
+    private String rootDisplayName() {
+        String[] parts = rootCoordinate.split(":", -1);
+        int marker = rootName.lastIndexOf("-v");
+        return parts.length == 3 ? parts[1] : marker > 0 ? rootName.substring(0, marker) : rootName;
+    }
+
+    private void updateRootHeader() {
+        String[] parts = rootCoordinate.split(":", -1);
+        int marker = rootName.lastIndexOf("-v");
+        String version = parts.length == 3 ? parts[2] : marker > 0 ? rootName.substring(marker + 2) : "";
+        binding.rootLibraryName.setText(rootDisplayName() + (version.isEmpty() ? "" : "  " + version));
+        binding.rootLibraryCoordinate.setText(parts.length == 3 ? parts[0] : rootCoordinate);
+        binding.rootLibraryCoordinate.setVisibility(rootCoordinate.isEmpty() ? View.GONE : View.VISIBLE);
+    }
+
+    private String readablePath(List<String> path) {
+        List<String> labels = new ArrayList<>();
+        labels.add(rootDisplayName());
+        for (String id : path) {
+            Node node = model.node(id);
+            if (node != null) labels.add(node.name);
+        }
+        return String.join(" → ", labels);
+    }
+
+    private void goUpOrFinish() {
+        if (browsePath.isEmpty()) { finish(); return; }
+        browsePath.remove(browsePath.size() - 1);
+        focusedCoordinate = currentParent();
+        focusedPath.clear();
+        focusedPath.addAll(browsePath);
+        refreshRows();
+        binding.dependenciesList.scrollToPosition(0);
+    }
+
+    private void choosePath() {
+        if (!loaded || browsePath.isEmpty()) return;
+        List<String> labels = new ArrayList<>();
+        labels.add(rootDisplayName());
+        for (String id : browsePath) labels.add(model.node(id).name);
+        new MaterialAlertDialogBuilder(this).setTitle(R.string.dependency_browser_choose_path)
+                .setItems(labels.toArray(new String[0]), (dialog, index) -> {
+                    while (browsePath.size() > index) browsePath.remove(browsePath.size() - 1);
+                    focusedCoordinate = currentParent();
+                    focusedPath.clear();
+                    focusedPath.addAll(browsePath);
+                    refreshRows();
+                    binding.dependenciesList.scrollToPosition(0);
+                }).show();
+    }
+
+    private void clickRow(Row row) {
+        if (row.isGroup()) {
+            if (!expandedGroups.add(row.parent)) expandedGroups.remove(row.parent);
         } else {
-            orderedItems = rawItems;
-        }
-
-        // Compute isLastChild for tree connectors
-        computeLastChildFlags(orderedItems);
-
-        adapter.setItems(orderedItems);
-        binding.noContentLayout.setVisibility(orderedItems.isEmpty() ? View.VISIBLE : View.GONE);
-    }
-
-    /**
-     * Sorts items into DFS order using the parent→children relationship.
-     * Items without tree data or orphaned items are appended at the end.
-     */
-    private List<SubDepItem> sortDfs(List<SubDepItem> items) {
-        // Build parent → children map (preserving insertion order)
-        Map<String, List<SubDepItem>> childrenMap = new LinkedHashMap<>();
-        for (SubDepItem item : items) {
-            if (item.parentCoord != null) {
-                childrenMap.computeIfAbsent(item.parentCoord, k -> new ArrayList<>()).add(item);
+            focusedCoordinate = row.node.coordinate;
+            focusedPath.clear();
+            focusedPath.addAll(row.path);
+            if (row.reference || model.children(row.node.coordinate).isEmpty()) {
+                showDetails(row);
+                return;
             }
+            if (levelView || row.depth >= 3) {
+                browsePath.clear();
+                browsePath.addAll(row.path);
+                binding.dependenciesList.scrollToPosition(0);
+            } else if (!expanded.add(row.node.coordinate)) expanded.remove(row.node.coordinate);
         }
-
-        List<SubDepItem> result = new ArrayList<>();
-        java.util.Set<String> visited = new java.util.HashSet<>();
-
-        // DFS from depth-1 items (direct children of root)
-        for (SubDepItem item : items) {
-            if (item.depth == 1) {
-                dfsVisit(item, childrenMap, visited, result);
-            }
-        }
-
-        // Append any orphaned items not reached by DFS
-        for (SubDepItem item : items) {
-            if (!visited.contains(item.coordinate)) {
-                result.add(item);
-            }
-        }
-
-        return result;
-    }
-
-    private void dfsVisit(SubDepItem item, Map<String, List<SubDepItem>> childrenMap,
-                          java.util.Set<String> visited, List<SubDepItem> result) {
-        if (!visited.add(item.coordinate)) return;
-        result.add(item);
-        List<SubDepItem> children = childrenMap.get(item.coordinate);
-        if (children != null) {
-            for (SubDepItem child : children) {
-                dfsVisit(child, childrenMap, visited, result);
-            }
-        }
-    }
-
-    /**
-     * Computes whether each item is the last child of its parent,
-     * used for drawing └── vs ├── tree connectors.
-     */
-    private void computeLastChildFlags(List<SubDepItem> items) {
-        // For each parent, find the index of its last child
-        Map<String, Integer> lastChildIndex = new HashMap<>();
-        for (int i = 0; i < items.size(); i++) {
-            SubDepItem item = items.get(i);
-            if (item.parentCoord != null) {
-                lastChildIndex.put(item.parentCoord, i);
-            }
-        }
-        for (int i = 0; i < items.size(); i++) {
-            SubDepItem item = items.get(i);
-            if (item.parentCoord != null) {
-                Integer lastIdx = lastChildIndex.get(item.parentCoord);
-                item.isLastChild = (lastIdx != null && lastIdx == i);
-            }
-        }
+        refreshRows();
     }
 
     private File resolveLibDir(String name) {
         File primary = new File(SketchwarePaths.getLocalLibsDir(), name);
-        if (primary.exists()) return primary;
+        if (primary.isDirectory()) return primary;
         File fallback = new File(SketchwarePaths.getLocalLibsFallbackDir(), name);
-        if (fallback.exists()) return fallback;
-        return null;
+        return fallback.isDirectory() ? fallback : null;
+    }
+
+    private String nodeState(Node node) {
+        if (node.builtIn) return getString(R.string.library_built_in);
+        if (!node.available) return getString(R.string.dependency_browser_missing);
+        return getString(R.string.dependency_browser_local) + " · " + node.size;
+    }
+
+    private void showDetails(Row row) {
+        if (row.isGroup()) return;
+        focusedCoordinate = row.node.coordinate;
+        focusedPath.clear();
+        focusedPath.addAll(row.path);
+        if (detailsDialog != null) detailsDialog.dismiss();
+        detailRow = row;
+        detailBinding = DialogDependencyDetailsBinding.inflate(getLayoutInflater());
+        detailsDialog = new BottomSheetDialog(this);
+        detailsDialog.setContentView(detailBinding.getRoot());
+        detailBinding.dependencyDetailName.setText(row.node.name);
+        detailBinding.dependencyDetailCoordinate.setText(row.node.coordinate);
+        detailBinding.dependencyDetailState.setText(nodeState(row.node));
+        detailBinding.dependencyDetailState.setTextColor(MaterialColors.getColor(detailBinding.getRoot(),
+                !row.node.available && !row.node.builtIn ? androidx.appcompat.R.attr.colorError
+                        : com.google.android.material.R.attr.colorOnSurfaceVariant));
+        boolean knownPath = model.hasKnownPath(row.path);
+        detailBinding.dependencyDetailPath.setText(knownPath ? readablePath(row.path)
+                : getString(R.string.dependency_browser_unknown_path));
+        detailBinding.dependencyDetailParents.setVisibility(row.node.parents.size() > 1 ? View.VISIBLE : View.GONE);
+        detailBinding.dependencyDetailParents.setText(getString(R.string.dependency_browser_parents,
+                String.join("\n", row.node.parents)));
+        detailBinding.dependencyCopyCoordinate.setOnClickListener(v -> {
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+            clipboard.setPrimaryClip(ClipData.newPlainText(getString(R.string.dependency_browser_copy_coordinate),
+                    row.node.coordinate));
+            SketchwareUtil.toast(getString(R.string.dependency_browser_copied));
+        });
+        configureProjectControl(row.node);
+        UI.addSystemWindowInsetToPadding(detailBinding.getRoot(), false, false, false, true);
+        detailsDialog.setOnDismissListener(dialog -> {
+            detailBinding = null;
+            detailRow = null;
+            detailsDialog = null;
+        });
+        detailsDialog.show();
+    }
+
+    private void configureProjectControl(Node node) {
+        if (detailBinding == null) return;
+        boolean visible = !notAssociatedWithProject && !node.builtIn;
+        detailBinding.dependencyProjectEnabled.setVisibility(visible ? View.VISIBLE : View.GONE);
+        detailBinding.dependencyProjectReason.setVisibility(visible ? View.VISIBLE : View.GONE);
+        if (!visible) return;
+        List<String> requiredBy = getEnabledRootLibrariesDependingOn(node.folderName);
+        boolean used = isUsedLibrary(node.folderName);
+        detailBinding.dependencyProjectEnabled.setChecked(used);
+        detailBinding.dependencyProjectEnabled.setEnabled(dependencyGuardReady && (used || node.available)
+                && (!used || requiredBy.isEmpty()));
+        String reason = !dependencyGuardReady ? getString(R.string.dependency_browser_checking)
+                : !node.available && !used ? getString(R.string.dependency_browser_missing_reason)
+                : !requiredBy.isEmpty() ? getString(R.string.dependency_browser_required, String.join("\n", requiredBy)) : "";
+        detailBinding.dependencyProjectReason.setText(reason);
+        detailBinding.dependencyProjectReason.setVisibility(reason.isEmpty() ? View.GONE : View.VISIBLE);
+        detailBinding.dependencyProjectEnabled.setOnClickListener(v -> {
+            boolean checked = detailBinding.dependencyProjectEnabled.isChecked();
+            if (!toggleLibrary(checked, node.folderName)) detailBinding.dependencyProjectEnabled.setChecked(!checked);
+            configureProjectControl(node);
+        });
     }
 
     private boolean isUsedLibrary(String libraryName) {
@@ -273,114 +514,124 @@ public class SubDependenciesActivity extends BaseAppCompatActivity {
                 .show();
     }
 
-    private static class SubDepItem {
-        final String folderName;
-        final String coordinate;
-        final String size;
-        final boolean builtIn;
-        final int depth;
-        final String parentCoord;
-        boolean isLastChild;
 
-        SubDepItem(String folderName, String coordinate, String size, boolean builtIn,
-                   int depth, String parentCoord) {
-            this.folderName = folderName;
-            this.coordinate = coordinate;
-            this.size = size;
-            this.builtIn = builtIn;
-            this.depth = depth;
-            this.parentCoord = parentCoord;
+    private class SubDepAdapter extends RecyclerView.Adapter<SubDepAdapter.ViewHolder> {
+        private final List<Row> items = new ArrayList<>();
+        @NonNull @Override public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return new ViewHolder(ItemLibraryDependencyBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+        }
+        @Override public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            Row row = items.get(position);
+            ItemLibraryDependencyBinding item = holder.binding;
+            ViewGroup.LayoutParams indent = item.dependencyIndent.getLayoutParams();
+            indent.width = dp(row.depth * 16);
+            item.dependencyIndent.setLayoutParams(indent);
+            boolean expandable = row.isGroup() || !row.reference && !model.children(row.node.coordinate).isEmpty();
+            boolean open = row.isGroup() ? expandedGroups.contains(row.parent) : expanded.contains(row.node.coordinate) && !levelView && row.depth < 3;
+            item.dependencyExpandIcon.setVisibility(expandable ? View.VISIBLE : View.INVISIBLE);
+            item.dependencyExpandIcon.setRotation(open ? 90 : 0);
+            if (row.isGroup()) {
+                item.dependencyName.setText(getString(R.string.dependency_browser_builtin_group, row.builtInCount));
+                item.dependencyMetadata.setText(R.string.dependency_browser_builtin_provided);
+                item.getRoot().setContentDescription(item.dependencyName.getText() + ", " +
+                        getString(open ? R.string.dependency_browser_collapse_node : R.string.dependency_browser_expand_node,
+                                getString(R.string.library_built_in)));
+            } else {
+                Node node = row.node;
+                SpannableStringBuilder title = new SpannableStringBuilder(node.name);
+                if (!node.version.isEmpty()) {
+                    int start = title.length();
+                    title.append("  ").append(node.version);
+                    title.setSpan(new RelativeSizeSpan(0.75f), start, title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    title.setSpan(new TypefaceSpan("sans-serif"), start, title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    title.setSpan(new ForegroundColorSpan(MaterialColors.getColor(item.getRoot(),
+                            com.google.android.material.R.attr.colorOnSurfaceVariant)), start, title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                item.dependencyName.setText(title);
+                List<String> metadata = new ArrayList<>();
+                if (!node.group.isEmpty()) metadata.add(node.group);
+                metadata.add(nodeState(node));
+                if (row.reference) metadata.add(getString(R.string.dependency_browser_shared));
+                if (model.hasHierarchy() && !model.hasKnownPath(row.path)) {
+                    metadata.add(getString(R.string.dependency_browser_unattached));
+                }
+                if (!row.reference && expandable) {
+                    int count = model.children(node.coordinate).size();
+                    metadata.add(getResources().getQuantityString(R.plurals.dependency_browser_children, count, count));
+                }
+                SpannableStringBuilder description = new SpannableStringBuilder(String.join(" · ", metadata));
+                if (!node.available && !node.builtIn) {
+                    String missing = getString(R.string.dependency_browser_missing);
+                    int start = description.toString().indexOf(missing);
+                    if (start >= 0) description.setSpan(new ForegroundColorSpan(MaterialColors.getColor(item.getRoot(),
+                            androidx.appcompat.R.attr.colorError)), start, start + missing.length(),
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                item.dependencyMetadata.setText(description);
+                String action = expandable ? getString(levelView || row.depth >= 3 ? R.string.dependency_browser_enter_node
+                        : open ? R.string.dependency_browser_collapse_node : R.string.dependency_browser_expand_node, node.name)
+                        : getString(R.string.dependency_browser_details, node.name);
+                item.getRoot().setContentDescription(node.coordinate + ", " + item.dependencyMetadata.getText() + ", " + action);
+            }
+            item.getRoot().setOnClickListener(v -> clickRow(row));
+            item.getRoot().setOnLongClickListener(row.isGroup() ? null : v -> {
+                showDetails(row);
+                return true;
+            });
+            item.getRoot().setLongClickable(!row.isGroup());
+            if (row.isGroup()) {
+                ViewCompat.removeAccessibilityAction(item.getRoot(),
+                        AccessibilityNodeInfoCompat.ACTION_LONG_CLICK);
+            } else {
+                ViewCompat.replaceAccessibilityAction(item.getRoot(),
+                        AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_LONG_CLICK,
+                        getString(R.string.dependency_browser_details, row.node.name),
+                        (view, arguments) -> view.performLongClick());
+            }
+        }
+        @Override public int getItemCount() { return items.size(); }
+        void setItems(List<Row> rows) { items.clear(); items.addAll(rows); notifyDataSetChanged(); }
+        class ViewHolder extends RecyclerView.ViewHolder {
+            final ItemLibraryDependencyBinding binding;
+            ViewHolder(ItemLibraryDependencyBinding binding) { super(binding.getRoot()); this.binding = binding; }
         }
     }
 
-    private class SubDepAdapter extends RecyclerView.Adapter<SubDepAdapter.ViewHolder> {
-        private final List<SubDepItem> items = new ArrayList<>();
-        private float dpUnit;
+    private int dp(float value) { return Math.round(value * getResources().getDisplayMetrics().density); }
 
-        @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new ViewHolder(ViewItemLocalLibBinding.inflate(
-                    LayoutInflater.from(parent.getContext()), parent, false));
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            var binding = holder.binding;
-            var item = items.get(position);
-
-            // Tree indentation: 20dp per depth level (depth 1 = no indent, depth 2 = 20dp, etc.)
-            if (dpUnit == 0) dpUnit = holder.itemView.getResources().getDisplayMetrics().density;
-            int indentPx = (int) ((item.depth - 1) * 20 * dpUnit);
-            binding.card.setPadding(indentPx, 0, 0, 0);
-
-            // Tree connector prefix
-            String treePrefix = "";
-            if (item.depth > 1) {
-                treePrefix = item.isLastChild ? "\u2514\u2500 " : "\u251C\u2500 ";
-            }
-
-            // Line 1: [tree prefix] artifactId.  Line 2: groupId:version · size/Built-in
-            String coord = item.coordinate;
-            String[] parts = coord.split(":");
-            if (parts.length == 3) {
-                binding.libraryName.setText(treePrefix + parts[1]);
-                binding.librarySize.setText(parts[0] + ":" + parts[2] + " \u00b7 " + item.size);
-            } else {
-                binding.libraryName.setText(treePrefix + coord);
-                binding.librarySize.setText(item.size);
-            }
-            binding.libraryName.setSingleLine(true);
-            binding.libraryName.setSelected(true);
-
-            binding.card.setChecked(false);
-            binding.card.setCheckable(false);
-            binding.card.setOnClickListener(null);
-
-            if (item.builtIn) {
-                binding.card.setAlpha(0.6f);
-                binding.materialSwitch.setVisibility(View.GONE);
-                binding.materialSwitch.setOnClickListener(null);
-            } else {
-                binding.card.setAlpha(1.0f);
-                binding.materialSwitch.setVisibility(View.VISIBLE);
-                binding.materialSwitch.setChecked(false);
-                if (!notAssociatedWithProject) {
-                    binding.materialSwitch.setChecked(isUsedLibrary(item.folderName));
-                    binding.materialSwitch.setEnabled(dependencyGuardReady);
-                    if (dependencyGuardReady) {
-                        binding.materialSwitch.setOnClickListener(v -> {
-                            boolean isChecked = binding.materialSwitch.isChecked();
-                            if (!toggleLibrary(isChecked, item.folderName)) {
-                                binding.materialSwitch.setChecked(!isChecked);
-                            }
-                        });
-                    } else {
-                        binding.materialSwitch.setOnClickListener(null);
+    private class BranchDecoration extends RecyclerView.ItemDecoration {
+        private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        @Override public void onDraw(@NonNull Canvas canvas, @NonNull RecyclerView list, @NonNull RecyclerView.State state) {
+            paint.setColor(MaterialColors.getColor(list, com.google.android.material.R.attr.colorOutlineVariant));
+            paint.setStrokeWidth(dp(1));
+            boolean rtl = list.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
+            for (int i = 0; i < list.getChildCount(); i++) {
+                View view = list.getChildAt(i);
+                int position = list.getChildAdapterPosition(view);
+                if (position < 0 || position >= adapter.items.size()) continue;
+                Row row = adapter.items.get(position);
+                float middle = (view.getTop() + view.getBottom()) / 2f;
+                float start = rtl ? view.getRight() - view.getPaddingStart() - dp(16)
+                        : view.getLeft() + view.getPaddingStart() + dp(16);
+                float direction = rtl ? -1 : 1;
+                for (int j = 0; j < row.depth - 1; j++) {
+                    if (j + 1 < row.ancestorLines.size() && row.ancestorLines.get(j + 1)) {
+                        float x = start + direction * dp(j * 16);
+                        canvas.drawLine(x, view.getTop(), x, view.getBottom(), paint);
                     }
-                } else {
-                    binding.materialSwitch.setEnabled(false);
-                    binding.materialSwitch.setOnClickListener(null);
                 }
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return items.size();
-        }
-
-        public void setItems(List<SubDepItem> newItems) {
-            items.clear();
-            items.addAll(newItems);
-            notifyDataSetChanged();
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder {
-            final ViewItemLocalLibBinding binding;
-
-            ViewHolder(@NonNull ViewItemLocalLibBinding binding) {
-                super(binding.getRoot());
-                this.binding = binding;
+                if (row.depth > 0) {
+                    float x = start + direction * dp((row.depth - 1) * 16);
+                    canvas.drawLine(x, view.getTop(), x, row.last ? middle : view.getBottom(), paint);
+                    canvas.drawLine(x, middle, x + direction * dp(9), middle, paint);
+                }
+                boolean open = row.isGroup() ? expandedGroups.contains(row.parent) :
+                        !levelView && !row.reference && row.depth < 3 && expanded.contains(row.node.coordinate)
+                                && !model.children(row.node.coordinate).isEmpty();
+                if (open) {
+                    float x = start + direction * dp(row.depth * 16);
+                    canvas.drawLine(x, middle + dp(12), x, view.getBottom(), paint);
+                }
             }
         }
     }
@@ -399,6 +650,7 @@ public class SubDependenciesActivity extends BaseAppCompatActivity {
                         copyDependencyMap(dependencyState.getSubDependenciesByRootLibrary());
                 dependencyGuardReady = true;
                 adapter.notifyDataSetChanged();
+                if (detailsDialog != null && detailRow != null) configureProjectControl(detailRow.node);
             });
         });
     }

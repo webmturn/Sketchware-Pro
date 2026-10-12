@@ -1,0 +1,44 @@
+<resources>
+    <string name="dependency_browser_title">Dependencies</string>
+    <string name="dependency_browser_tree">Tree view</string>
+    <string name="dependency_browser_levels">Level view</string>
+    <string name="dependency_browser_switch_tree">Switch to tree view</string>
+    <string name="dependency_browser_switch_levels">Switch to level view</string>
+    <string name="dependency_browser_expand_all">Expand all</string>
+    <string name="dependency_browser_collapse_all">Collapse all</string>
+    <string name="dependency_browser_loading">Loading dependencies…</string>
+    <string name="dependency_browser_summary">%1$d local · %2$d built-in · %3$d missing</string>
+    <string name="dependency_browser_direct_count">%1$d direct · %2$d total</string>
+    <string name="dependency_browser_direct_section">%1$s · %2$d direct</string>
+    <plurals name="dependency_browser_section">
+        <item quantity="one">%1$s · %2$d dependency</item>
+        <item quantity="other">%1$s · %2$d dependencies</item>
+    </plurals>
+    <string name="dependency_browser_flat_note">This cache has no relationship data. Dependencies are shown as a list.</string>
+    <string name="dependency_browser_incomplete_note">Some relationships are missing. Unattached dependencies remain visible.</string>
+    <string name="dependency_browser_builtin_group">Built-in · %1$d</string>
+    <string name="dependency_browser_builtin_provided">Provided by the app</string>
+    <string name="dependency_browser_local">Local</string>
+    <string name="dependency_browser_missing">File missing</string>
+    <string name="dependency_browser_shared">Shared reference</string>
+    <string name="dependency_browser_unattached">Relationship unknown</string>
+    <plurals name="dependency_browser_children">
+        <item quantity="one">%1$d dependency</item>
+        <item quantity="other">%1$d dependencies</item>
+    </plurals>
+    <string name="dependency_browser_expand_node">Expand %1$s</string>
+    <string name="dependency_browser_collapse_node">Collapse %1$s</string>
+    <string name="dependency_browser_enter_node">Browse dependencies of %1$s</string>
+    <string name="dependency_browser_details">Details for %1$s</string>
+    <string name="dependency_browser_up">Go up one level</string>
+    <string name="dependency_browser_path_title">Introduction path</string>
+    <string name="dependency_browser_choose_path">Go to a level</string>
+    <string name="dependency_browser_unknown_path">The cache does not contain an introduction path.</string>
+    <string name="dependency_browser_parents">Referenced by:\n%1$s</string>
+    <string name="dependency_browser_copy_coordinate">Copy coordinate</string>
+    <string name="dependency_browser_copied">Coordinate copied</string>
+    <string name="dependency_browser_project_enabled">Use in project</string>
+    <string name="dependency_browser_required">Required by these enabled libraries:\n%1$s</string>
+    <string name="dependency_browser_missing_reason">Download this dependency before enabling it.</string>
+    <string name="dependency_browser_checking">Checking project dependencies…</string>
+</resources>

@@ -1,0 +1,40 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:fillViewport="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="24dp">
+        <TextView android:id="@+id/dependency_detail_name"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceTitleLarge" android:textColor="?attr/colorOnSurface" />
+        <TextView android:id="@+id/dependency_detail_coordinate"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" android:textIsSelectable="true"
+            android:textAppearance="?attr/textAppearanceBodyMedium" android:textColor="?attr/colorOnSurface" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/dependency_copy_coordinate"
+            style="?attr/borderlessButtonStyle"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/dependency_browser_copy_coordinate" app:icon="@drawable/ic_mtrl_copy" />
+        <TextView android:id="@+id/dependency_detail_state"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" android:textColor="?attr/colorOnSurfaceVariant"
+            android:textAppearance="?attr/textAppearanceBodyMedium" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="20dp" android:text="@string/dependency_browser_path_title"
+            android:textColor="?attr/colorOnSurfaceVariant" android:textSize="12sp" />
+        <TextView android:id="@+id/dependency_detail_path"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="6dp" android:textIsSelectable="true"
+            android:textColor="?attr/colorOnSurface" android:textAppearance="?attr/textAppearanceBodyMedium" />
+        <TextView android:id="@+id/dependency_detail_parents"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" android:textColor="?attr/colorOnSurfaceVariant"
+            android:textAppearance="?attr/textAppearanceBodySmall" android:visibility="gone" />
+        <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/dependency_project_enabled"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="20dp" android:text="@string/dependency_browser_project_enabled" />
+        <TextView android:id="@+id/dependency_project_reason"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="6dp" android:textColor="?attr/colorOnSurfaceVariant"
+            android:textAppearance="?attr/textAppearanceBodySmall" />
+    </LinearLayout>
+</ScrollView>
