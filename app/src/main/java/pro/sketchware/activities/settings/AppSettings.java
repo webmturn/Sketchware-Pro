@@ -196,7 +196,12 @@ public class AppSettings extends BaseAppCompatActivity {
             dialog.show(getSupportFragmentManager(), "file_picker");
         });
 
-        apkPathDialog.setPositiveButton(R.string.common_word_continue, (v, which) -> {
+        apkPathDialog.setPositiveButton(R.string.common_word_continue, null);
+        apkPathDialog.setNegativeButton(R.string.common_word_cancel, null);
+        apkPathDialog.setView(testkey_root);
+        apkPathDialog.setCancelable(false);
+        AlertDialog shown = apkPathDialog.show();
+        shown.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
             if (!isAPKSelected[0]) {
                 SketchwareUtil.toast(Helper.getResString(R.string.apk_sign_select_file), Toast.LENGTH_SHORT);
                 shakeView(binding.selectFile);
@@ -214,22 +219,18 @@ public class AppSettings extends BaseAppCompatActivity {
 
                 confirmOverwrite.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
                 confirmOverwrite.setPositiveButton(R.string.common_word_overwrite, (view, which1) -> {
-                    v.dismiss();
+                    shown.dismiss();
                     signApkFileWithDialog(input_apk_path, output_apk_path, true,
                             null, null, null, null);
                 });
                 confirmOverwrite.show();
             } else {
+                shown.dismiss();
                 signApkFileWithDialog(input_apk_path, output_apk_path, true,
                         null, null, null, null);
             }
         });
 
-        apkPathDialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
-
-        apkPathDialog.setView(testkey_root);
-        apkPathDialog.setCancelable(false);
-        apkPathDialog.show();
     }
 
     private void signApkFileWithDialog(String inputApkPath, String outputApkPath, boolean useTestkey, String keyStorePath, String keyStorePassword, String keyStoreKeyAlias, String keyPassword) {

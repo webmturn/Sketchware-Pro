@@ -41,7 +41,7 @@ public class SettingsActivity extends BaseAppCompatActivity {
             default -> throw new IllegalArgumentException("Unknown fragment tag: " + fragmentTag);
         };
 
-        openFragment(fragment);
+        if (savedInstanceState == null) openFragment(fragment);
     }
 
     private void openFragment(Fragment fragment) {

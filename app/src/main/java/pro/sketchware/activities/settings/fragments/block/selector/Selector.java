@@ -39,9 +39,9 @@ public class Selector implements Parcelable {
     };
 
     protected Selector(Parcel in) {
-        data = in.createStringArrayList();
-        name = in.readString();
         title = in.readString();
+        name = in.readString();
+        data = in.createStringArrayList();
     }
 
     public List<String> getData() {

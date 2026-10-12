@@ -81,7 +81,6 @@ public class BlocksManager extends BaseAppCompatActivity {
     private String currentQuery = "";
     private ItemTouchHelper itemTouchHelper;
     private ActivityBlocksManagerBinding binding;
-    private DialogPaletteBinding dialogBinding;
     private Vibrator vibrator;
 
     @Override
@@ -576,19 +575,19 @@ public class BlocksManager extends BaseAppCompatActivity {
         dialog.setIcon(R.drawable.icon_style_white_96);
         dialog.setTitle(!isEditing ? R.string.blocks_title_create_palette : R.string.blocks_title_edit_palette);
 
-        dialogBinding = DialogPaletteBinding.inflate(getLayoutInflater());
+        var paletteBinding = DialogPaletteBinding.inflate(getLayoutInflater());
 
         if (isEditing) {
-            dialogBinding.nameEditText.setText(oldName);
-            dialogBinding.colorEditText.setText(oldColor.replace("#", ""));
+            paletteBinding.nameEditText.setText(oldName);
+            paletteBinding.colorEditText.setText(oldColor.replace("#", ""));
         }
 
-        dialogBinding.openColorPalette.setOnClickListener(v1 -> {
+        paletteBinding.openColorPalette.setOnClickListener(v1 -> {
             ColorPickerDialog colorPickerDialog = new ColorPickerDialog(this, 0xFFFFFFFF, false, false);
             colorPickerDialog.setColorPickerCallback(new ColorPickerDialog.OnColorPickedListener() {
                 @Override
                 public void onColorPicked(int colorInt) {
-                    dialogBinding.colorEditText.setText(String.format("%06X", colorInt & 0x00FFFFFF));
+                    paletteBinding.colorEditText.setText(String.format("%06X", colorInt & 0x00FFFFFF));
                 }
 
                 @Override
@@ -596,24 +595,29 @@ public class BlocksManager extends BaseAppCompatActivity {
 
                 }
             });
-            colorPickerDialog.showAtLocation(dialogBinding.openColorPalette, Gravity.CENTER, 0, 0);
+            colorPickerDialog.showAtLocation(paletteBinding.openColorPalette, Gravity.CENTER, 0, 0);
         });
 
-        dialog.setView(dialogBinding.getRoot());
+        dialog.setView(paletteBinding.getRoot());
 
-        dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {
-            String nameInput = Objects.requireNonNull(dialogBinding.nameEditText.getText()).toString();
-            String colorInput = Objects.requireNonNull(dialogBinding.colorEditText.getText()).toString();
+        Helper.addClearErrorOnTextChangeTextWatcher(paletteBinding.name);
+        Helper.addClearErrorOnTextChangeTextWatcher(paletteBinding.color);
+        dialog.setPositiveButton(R.string.common_word_save, null);
+        dialog.setNegativeButton(R.string.cancel, null);
+        var shown = dialog.show();
+        shown.getButton(android.content.DialogInterface.BUTTON_POSITIVE).setOnClickListener(v -> {
+            String nameInput = Objects.requireNonNull(paletteBinding.nameEditText.getText()).toString();
+            String colorInput = Objects.requireNonNull(paletteBinding.colorEditText.getText()).toString();
 
             if (nameInput.isEmpty()) {
-                SketchwareUtil.toast(Helper.getResString(R.string.error_name_empty), Toast.LENGTH_SHORT);
+                paletteBinding.name.setError(Helper.getResString(R.string.error_name_empty));
                 return;
             }
             // add hash for the color 
             colorInput = "#" + colorInput;
 
             if (!PropertiesUtil.isHexColor(colorInput)) {
-                SketchwareUtil.toast(Helper.getResString(R.string.blocks_error_valid_hex), Toast.LENGTH_SHORT);
+                paletteBinding.color.setError(Helper.getResString(R.string.blocks_error_valid_hex));
                 return;
             }
 
@@ -646,12 +650,10 @@ public class BlocksManager extends BaseAppCompatActivity {
                     readSettings();
                     refreshList();
                 }
-                v.dismiss();
+                shown.dismiss();
             }
         });
 
-        dialog.setNegativeButton(Helper.getResString(R.string.cancel), null);
-        dialog.show();
     }
 
 
