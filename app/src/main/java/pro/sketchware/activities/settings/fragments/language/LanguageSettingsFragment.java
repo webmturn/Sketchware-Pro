@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.os.LocaleListCompat;
 
@@ -24,6 +25,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.StringReader;
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
@@ -40,12 +42,14 @@ import pro.sketchware.databinding.FragmentSettingsLanguageBinding;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.UI;
+import pro.sketchware.util.locale.AppLanguages;
 
 public class LanguageSettingsFragment extends BaseFragment {
 
     private static final String EXPORT_DIR = SketchwarePaths.getSystemI18nPath();
 
     private FragmentSettingsLanguageBinding binding;
+    private AlertDialog languagePickerDialog;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,111 +64,80 @@ public class LanguageSettingsFragment extends BaseFragment {
 
         setupInsets();
         setupLanguagePicker();
-        setupCurrentLanguage();
+        binding.btnImportStrings.setOnClickListener(v -> showImportDialog());
+        binding.btnExportStrings.setOnClickListener(v -> exportStrings());
+        binding.btnClearOverride.setOnClickListener(v -> clearOverride());
         setupOverrideStatus();
     }
 
     private void setupInsets() {
-        UI.addSystemWindowInsetToPadding(binding.appBarLayout, true, true, true, true);
+        UI.addSystemWindowInsetToPadding(binding.appBarLayout, true, true, true, false);
         UI.addSystemWindowInsetToPadding(binding.content, true, false, true, true);
     }
 
-    private static final String[] LOCALE_TAGS = {"", "en", "zh"};
-    private static final String[] DISPLAY_NAMES = {"", "English", "中文"};
-
-    private int getCurrentLocaleIndex() {
-        LocaleListCompat currentLocales = AppCompatDelegate.getApplicationLocales();
-        if (currentLocales.isEmpty()) return 0;
-        String currentTag = currentLocales.get(0).getLanguage();
-        for (int i = 1; i < LOCALE_TAGS.length; i++) {
-            if (LOCALE_TAGS[i].equals(currentTag)) return i;
-        }
-        return 0;
-    }
-
-    private String getLocaleDisplayName(int index) {
-        if (index == 0) {
-            Locale systemLocale = Resources.getSystem().getConfiguration().getLocales().get(0);
-            return Helper.getResString(R.string.language_settings_follow_system)
-                    + " (" + systemLocale.getDisplayLanguage(systemLocale) + ")";
-        }
-        return DISPLAY_NAMES[index];
-    }
-
     private void setupLanguagePicker() {
-        int selectedIndex = getCurrentLocaleIndex();
-        binding.currentLocaleDisplay.setText(getLocaleDisplayName(selectedIndex));
+        List<Locale> supported = AppLanguages.read(requireContext());
+        LocaleListCompat currentLocales = AppCompatDelegate.getApplicationLocales();
+        String display;
+        if (currentLocales.isEmpty()) {
+            display = Helper.getResString(R.string.language_settings_follow_system);
+        } else {
+            Locale current = currentLocales.get(0);
+            int index = AppLanguages.findSelection(supported, current);
+            Locale displayed = index < 0 ? current : supported.get(index);
+            display = displayed.getDisplayName(displayed);
+        }
+        binding.currentLocaleDisplay.setText(display);
 
-        binding.cardLanguagePicker.setOnClickListener(v -> {
-            int currentIndex = getCurrentLocaleIndex();
-            String[] items = new String[LOCALE_TAGS.length];
-            for (int i = 0; i < items.length; i++) {
-                items[i] = getLocaleDisplayName(i);
-            }
+        Locale systemLocale = Resources.getSystem().getConfiguration().getLocales().get(0);
+        binding.systemLocaleDisplay.setText(String.format(
+                Helper.getResString(R.string.language_settings_system_locale),
+                systemLocale.getDisplayLanguage(systemLocale)));
 
-            final int[] pendingChoice = {currentIndex};
-            new MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(R.string.language_settings_select_language)
-                    .setSingleChoiceItems(items, currentIndex, (dialog, which) -> {
-                        pendingChoice[0] = which;
-                    })
-                    .setPositiveButton(R.string.common_word_ok, (dialog, which) -> {
-                        if (pendingChoice[0] == currentIndex) return;
-                        applyLocaleAndRestart(LOCALE_TAGS[pendingChoice[0]]);
-                    })
-                    .setNegativeButton(R.string.common_word_cancel, null)
-                    .show();
-        });
+        binding.cardLanguagePicker.setOnClickListener(v -> showLanguagePicker(supported));
     }
 
-    private void applyLocaleAndRestart(String tag) {
-        LocaleListCompat locales = tag.isEmpty()
-                ? LocaleListCompat.getEmptyLocaleList()
-                : LocaleListCompat.forLanguageTags(tag);
-
-        new MaterialAlertDialogBuilder(requireContext())
+    private void showLanguagePicker(List<Locale> supported) {
+        if (languagePickerDialog != null && languagePickerDialog.isShowing()) return;
+        String[] names = new String[supported.size() + 1];
+        names[0] = Helper.getResString(R.string.language_settings_follow_system);
+        for (int i = 0; i < supported.size(); i++) {
+            Locale locale = supported.get(i);
+            names[i + 1] = locale.getDisplayName(locale);
+        }
+        LocaleListCompat currentLocales = AppCompatDelegate.getApplicationLocales();
+        int selected = 0;
+        if (!currentLocales.isEmpty()) {
+            int index = AppLanguages.findSelection(supported, currentLocales.get(0));
+            selected = index < 0 ? -1 : index + 1;
+        }
+        final int currentIndex = selected;
+        languagePickerDialog = new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.language_settings_select_language)
-                .setMessage(R.string.language_settings_restart_hint)
-                .setPositiveButton(R.string.common_word_ok, (dialog, which) -> {
+                .setSingleChoiceItems(names, selected, (dialog, which) -> {
+                    dialog.dismiss();
+                    if (which == currentIndex) return;
+                    LocaleListCompat locales = which == 0
+                            ? LocaleListCompat.getEmptyLocaleList()
+                            : LocaleListCompat.forLanguageTags(supported.get(which - 1).toLanguageTag());
                     AppCompatDelegate.setApplicationLocales(locales);
                 })
                 .setNegativeButton(R.string.common_word_cancel, null)
-                .setCancelable(false)
                 .show();
-    }
-
-    private void setupCurrentLanguage() {
-        Locale systemLocale = Resources.getSystem().getConfiguration().getLocales().get(0);
-        Locale appLocale = requireContext().getResources().getConfiguration().getLocales().get(0);
-        LanguageOverrideManager mgr = LanguageOverrideManager.getInstance();
-
-        StringBuilder display = new StringBuilder();
-        display.append(appLocale.getDisplayLanguage(appLocale));
-        display.append(" (").append(appLocale.getLanguage()).append(")");
-
-        if (mgr.isActive()) {
-            display.append("\n").append(String.format(
-                    Helper.getResString(R.string.language_settings_custom_override),
-                    mgr.getOverrideCount()));
-        }
-
-        display.append("\n").append(String.format(
-                Helper.getResString(R.string.language_settings_system_locale),
-                systemLocale.getDisplayLanguage(systemLocale) + " (" + systemLocale.getLanguage() + ")"));
-        binding.currentLanguageValue.setText(display.toString());
+        languagePickerDialog.setOnDismissListener(dialog -> languagePickerDialog = null);
     }
 
     private void setupOverrideStatus() {
         LanguageOverrideManager mgr = LanguageOverrideManager.getInstance();
 
         if (mgr.isActive()) {
-            binding.overrideCard.setVisibility(View.VISIBLE);
             binding.overrideInfo.setText(
                     String.format(Helper.getResString(R.string.language_settings_override_info),
                             mgr.getOverrideCount()));
-            binding.btnClearOverride.setOnClickListener(v -> clearOverride());
+            binding.btnClearOverride.setVisibility(View.VISIBLE);
         } else {
-            binding.overrideCard.setVisibility(View.GONE);
+            binding.overrideInfo.setText(Helper.getResString(R.string.language_settings_no_override));
+            binding.btnClearOverride.setVisibility(View.GONE);
         }
     }
 
@@ -182,7 +155,6 @@ public class LanguageSettingsFragment extends BaseFragment {
     }
 
     private void refreshUI() {
-        setupCurrentLanguage();
         setupOverrideStatus();
     }
 
@@ -277,23 +249,6 @@ public class LanguageSettingsFragment extends BaseFragment {
                 .replace("'", "\\'")
                 .replace("\"", "&quot;")
                 .replace("\n", "\\n");
-    }
-
-    @Override
-    public void configureToolbar(@NonNull com.google.android.material.appbar.MaterialToolbar toolbar) {
-        super.configureToolbar(toolbar);
-        toolbar.inflateMenu(R.menu.language_settings_menu);
-        toolbar.setOnMenuItemClickListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.import_language_strings) {
-                showImportDialog();
-                return true;
-            } else if (id == R.id.export_language_strings) {
-                exportStrings();
-                return true;
-            }
-            return false;
-        });
     }
 
     private void showImportDialog() {
@@ -396,6 +351,7 @@ public class LanguageSettingsFragment extends BaseFragment {
 
     @Override
     public void onDestroyView() {
+        if (languagePickerDialog != null) languagePickerDialog.dismiss();
         super.onDestroyView();
         binding = null;
     }

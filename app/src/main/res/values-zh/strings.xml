@@ -328,9 +328,9 @@
     <string name="resource_type_strings">字符串</string>
 
     <!-- ========== 语言设置 (Language Settings) ========== -->
-    <string name="language_settings_system_locale">系统语言: %s</string>
-    <string name="language_settings_override_info">已覆盖 %d 个字符串</string>
-    <string name="language_settings_cleared">语言覆盖已清除</string>
+    <string name="language_settings_system_locale">系统语言：%s</string>
+    <string name="language_settings_override_info">已启用 · %d 条译文</string>
+    <string name="language_settings_cleared">自定义翻译已移除</string>
     <string name="language_settings_select_xml">选择 XML 文件</string>
     <string name="language_settings_import_empty">导入的文件不包含任何字符串</string>
     <string name="language_settings_import_confirm_title">确认导入</string>
@@ -341,8 +341,8 @@
 总字符串数：%1$d
 匹配成功：%2$d
 匹配失败：%3$d</string>
-    <string name="language_settings_clear_confirm_title">清除覆盖</string>
-    <string name="language_settings_clear_confirm_msg">确定要清除所有语言覆盖并恢复为英文吗？</string>
+    <string name="language_settings_clear_confirm_title">移除自定义翻译</string>
+    <string name="language_settings_clear_confirm_msg">移除所有导入的译文？界面将恢复为你选择的应用语言。</string>
 
     <!-- ========== 错误消息 (Error Messages) ========== -->
     <string name="error_file_empty">文件为空</string>
@@ -1732,7 +1732,13 @@
 
     <!-- ========== 语言设置 - 完整 ========== -->
     <string name="language_settings_title">语言设置</string>
-    <string name="language_settings_desc">导出和导入翻译文件</string>
+    <string name="language_settings_desc">选择应用语言，管理自定义翻译</string>
+    <string name="language_settings_app_language">应用语言</string>
+    <string name="language_settings_apply_hint">选择后，界面会自动刷新。</string>
+    <string name="language_settings_custom_translations">自定义翻译</string>
+    <string name="language_settings_no_override">未导入翻译文件</string>
+    <string name="language_settings_import_file">导入 XML</string>
+    <string name="language_settings_export_file">导出 XML</string>
     <string name="language_settings_current_language">当前语言</string>
     <string name="language_settings_default_language">英语（默认）</string>
     <string name="language_settings_select_language">选择语言</string>
@@ -1740,7 +1746,7 @@
     <string name="language_settings_restart_hint">语言已更改。立即重启应用以将新语言应用到所有界面？</string>
     <string name="language_settings_custom_override">自定义 (%d 个字符串已覆盖)</string>
     <string name="language_settings_override_active">语言覆盖已激活</string>
-    <string name="language_settings_clear">清除</string>
+    <string name="language_settings_clear">移除自定义翻译</string>
     <string name="language_settings_section_export">导出</string>
     <string name="language_settings_export_strings">导出字符串</string>
     <string name="language_settings_export_desc">将所有应用字符串导出为 XML 文件以供翻译</string>
@@ -1751,7 +1757,7 @@
     <string name="language_settings_import_desc">导入已翻译的字符串 XML 文件以覆盖当前语言</string>
     <string name="language_settings_imported">成功导入 %d 个字符串</string>
     <string name="language_settings_import_error">导入失败: %s</string>
-    <string name="language_settings_help">使用方法:\n\n1. 点击\"导出字符串\"生成包含所有应用字符串的 XML 文件。\n2. 翻译导出文件中的字符串。\n3. 点击\"导入字符串\"加载你的翻译文件。\n\n导入的字符串将覆盖默认显示语言。你可以随时清除覆盖以恢复默认设置。</string>
+    <string name="language_settings_help">导出 XML 文件、编辑译文后，再从这里导入。自定义翻译优先于所选应用语言。</string>
 
     <!-- ========== 事件 - 补充 ========== -->
     <string name="event_on_connected">连接时</string>
