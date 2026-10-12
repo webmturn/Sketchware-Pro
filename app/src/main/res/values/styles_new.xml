@@ -150,4 +150,13 @@
         <item name="android:windowSoftInputMode">stateVisible|adjustResize</item>
         <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
     </style>
+    <style name="TextAppearance.SketchwarePro.SettingsTitle" parent="TextAppearance.SketchwarePro.BodyLargeEmphasized">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="TextAppearance.SketchwarePro.SettingsSummary" parent="TextAppearance.SketchwarePro.BodyMedium">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+    </style>
 </resources>

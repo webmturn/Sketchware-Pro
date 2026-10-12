@@ -1,60 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
     <SwitchPreferenceCompat
+        app:layout="@layout/settings_preference_item"
+        app:singleLineTitle="false"
         app:iconSpaceReserved="false"
         app:key="built-in-blocks"
         app:summary="@string/pref_built_in_blocks_summary"
         app:title="@string/pref_built_in_blocks_title" />
 
     <SwitchPreferenceCompat
+        app:layout="@layout/settings_preference_item"
+        app:singleLineTitle="false"
         app:iconSpaceReserved="false"
         app:key="always-show-blocks"
         app:summary="@string/pref_show_all_var_blocks_summary"
         app:title="@string/pref_show_all_var_blocks_title" />
 
     <SwitchPreferenceCompat
+        app:layout="@layout/settings_preference_item"
+        app:singleLineTitle="false"
         app:iconSpaceReserved="false"
         app:key="show-every-single-block"
         app:summary="@string/pref_show_all_palette_blocks_summary"
         app:title="@string/pref_show_all_palette_blocks_title" />
 
     <Preference
+        app:layout="@layout/settings_preference_item"
+        app:singleLineTitle="false"
         app:iconSpaceReserved="false"
         app:key="backup-dir"
         app:summary="@string/pref_backup_dir_summary"
         app:title="@string/pref_backup_dir_title" />
 
     <SwitchPreferenceCompat
+        app:layout="@layout/settings_preference_item"
+        app:singleLineTitle="false"
         app:iconSpaceReserved="false"
         app:key="root-auto-install-projects"
         app:summary="@string/pref_root_install_summary"
         app:title="@string/pref_root_install_title" />
 
     <SwitchPreferenceCompat
+        app:layout="@layout/settings_preference_item"
+        app:singleLineTitle="false"
         app:iconSpaceReserved="false"
         app:key="root-auto-open-after-installing"
         app:summary="@string/pref_root_launch_summary"
         app:title="@string/pref_root_launch_title" />
 
     <SwitchPreferenceCompat
+        app:layout="@layout/settings_preference_item"
+        app:singleLineTitle="false"
         app:iconSpaceReserved="false"
         app:key="use-new-version-control"
         app:summary="@string/pref_new_version_control_summary"
         app:title="@string/pref_new_version_control_title" />
 
     <SwitchPreferenceCompat
+        app:layout="@layout/settings_preference_item"
+        app:singleLineTitle="false"
         app:iconSpaceReserved="false"
         app:key="use-asd-highlighter"
         app:summary="@string/pref_block_highlighting_summary"
         app:title="@string/pref_block_highlighting_title" />
 
     <Preference
+        app:layout="@layout/settings_preference_item"
+        app:singleLineTitle="false"
         app:iconSpaceReserved="false"
         app:key="backup-filename"
-        app:summary="@string/pref_backup_filename_summary"
         app:title="@string/pref_backup_filename_title" />
 
     <SwitchPreferenceCompat
+        app:layout="@layout/settings_preference_item"
+        app:singleLineTitle="false"
         app:iconSpaceReserved="false"
         app:key="project-data-encryption"
         app:summary="@string/pref_project_encryption_summary"

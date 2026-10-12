@@ -100,7 +100,7 @@ public class BlockSelectorDetailsFragment extends BaseFragment {
             return;
         }
         DialogAddCustomActivityBinding dialogBinding = DialogAddCustomActivityBinding.inflate(LayoutInflater.from(requireContext()));
-        dialogBinding.activityNameInputLayout.setHint(Helper.getResString(R.string.selector_hint_name));
+        dialogBinding.activityNameInputLayout.setHint(Helper.getResString(R.string.selector_hint_item));
         if (isEdit) {
             if (indexA < 0 || indexA >= selectors.get(index).getData().size()) {
                 SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
@@ -119,7 +119,7 @@ public class BlockSelectorDetailsFragment extends BaseFragment {
         shown.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
             String newItem = Helper.getText(dialogBinding.activityNameInput);
             if (newItem.isEmpty()) {
-                dialogBinding.activityNameInputLayout.setError(Helper.getResString(R.string.error_selector_name_required));
+                dialogBinding.activityNameInputLayout.setError(Helper.getResString(R.string.error_selector_item_required));
                 return;
             }
             List<String> data = selectors.get(index).getData();

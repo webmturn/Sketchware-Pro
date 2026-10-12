@@ -54,4 +54,8 @@
     <dimen name="recycler_view_item_spacing">6dp</dimen>
     
     <dimen name="dialog_action_size">100dp</dimen>
+    <dimen name="settings_row_min_height">72dp</dimen>
+    <dimen name="settings_row_padding_vertical">12dp</dimen>
+    <dimen name="settings_summary_gap">4dp</dimen>
+    <dimen name="settings_text_line_spacing">2dp</dimen>
 </resources>

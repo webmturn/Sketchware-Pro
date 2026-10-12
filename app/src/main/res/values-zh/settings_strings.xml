@@ -1,0 +1,10 @@
+<resources>
+    <string name="settings_backup_filename_example">示例：%s</string>
+    <string name="settings_backup_filename_sample_project">示例项目</string>
+    <string name="settings_backup_filename_template">命名模板</string>
+    <string name="settings_backup_filename_preview">文件名示例</string>
+    <string name="settings_backup_filename_invalid_summary">命名格式无效，点击编辑</string>
+    <string name="settings_backup_filename_invalid_preview">无法生成文件名示例</string>
+    <string name="settings_backup_filename_date_error">请检查 $time(…) 中的日期格式</string>
+    <string name="settings_backup_filename_required">请输入命名模板</string>
+</resources>

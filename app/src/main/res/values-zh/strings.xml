@@ -379,7 +379,7 @@
     <string name="error_api_key_empty">API 密钥不能为空！</string>
     <string name="error_array_name_empty">数组名称输入为空</string>
     <string name="error_array_type_not_selected">未选择数组类型</string>
-    <string name="error_cannot_change_selector_name">无法更改此选择器的名称</string>
+    <string name="error_cannot_change_selector_name">无法更改此菜单的名称</string>
     <string name="error_circular_dependency">在 \"%s\" 中发现循环依赖\n请在保存前解决此问题</string>
     <string name="error_circular_rel_layout">IllegalStateException: RelativeLayout 中不能存在循环依赖</string>
     <string name="error_color_cannot_be_empty">颜色不能为空</string>
@@ -452,8 +452,9 @@
     <string name="error_required_fields_empty">部分必填字段为空！</string>
     <string name="error_save_image_failed">无法保存图片</string>
     <string name="error_select_more_block">请选择一个 MoreBlock</string>
-    <string name="error_selector_name_required">请输入选择器名称</string>
-    <string name="error_selector_title_required">请输入选择器标题</string>
+    <string name="error_selector_name_required">请输入菜单名称</string>
+    <string name="error_selector_title_required">请输入菜单标题</string>
+    <string name="error_selector_item_required">请输入选项内容</string>
     <string name="error_something_went_wrong">出了点问题！</string>
     <string name="error_style_name_empty">样式名称输入为空</string>
     <string name="error_theme_name_empty">主题名称输入为空</string>
@@ -603,18 +604,19 @@
     <string name="share_block_select_required_sounds_step_name">选择音效</string>
 
     <!-- ========== 选择器 (Selector) ========== -->
-    <string name="selector_confirm_delete">确定要删除此选择器吗？</string>
+    <string name="selector_confirm_delete">确定要删除此选择器菜单吗？</string>
     <string name="selector_dialog_button_create">创建</string>
-    <string name="selector_dialog_title_edit">编辑选择器</string>
-    <string name="selector_dialog_title_new">新建选择器</string>
+    <string name="selector_dialog_title_edit">编辑选择器菜单</string>
+    <string name="selector_dialog_title_new">新建选择器菜单</string>
     <string name="selector_exported_format">已导出到 %s</string>
-    <string name="selector_hint_name">选择器名称</string>
-    <string name="selector_hint_title">选择器标题 (例: 选择视图:)</string>
-    <string name="selector_message_delete_item">确定要删除此项吗？</string>
-    <string name="selector_select_json">选择 .json 选择器文件</string>
+    <string name="selector_hint_name">菜单名称</string>
+    <string name="selector_hint_title">菜单标题（例如：选择视图）</string>
+    <string name="selector_hint_item">选项内容</string>
+    <string name="selector_message_delete_item">确定要删除此选项吗？</string>
+    <string name="selector_select_json">选择 .json 选择器菜单文件</string>
     <string name="selector_title_actions">操作</string>
     <string name="selector_title_attention">注意</string>
-    <string name="selector_title_new_item">新选择器项</string>
+    <string name="selector_title_new_item">新建选项</string>
 
     <!-- ========== 操作/对话框 ========== -->
     <string name="action_delete">删除</string>
@@ -680,13 +682,13 @@
     <string name="menu_edit_appcompat">编辑 AppCompat</string>
     <string name="menu_edit_lowercase">编辑</string>
     <string name="menu_edit_with">编辑方式…</string>
-    <string name="menu_export_all_block_selector">导出所有积木块选择器菜单</string>
+    <string name="menu_export_all_block_selector">导出全部选择器菜单</string>
     <string name="menu_export_events">导出事件</string>
     <string name="menu_export_logcat">导出日志</string>
     <string name="menu_filter_by_package">按包名筛选</string>
     <string name="menu_find_replace">查找和替换</string>
     <string name="menu_firebase_settings">设置</string>
-    <string name="menu_import_block_selector">导入积木块选择器菜单</string>
+    <string name="menu_import_block_selector">导入选择器菜单</string>
     <string name="menu_import_events">导入事件</string>
     <string name="menu_layout_preview">布局预览</string>
     <string name="menu_open_in_editor">在编辑器中打开</string>
@@ -730,8 +732,8 @@
     <string name="app_settings_app_settings_desc">更改常规应用设置</string>
     <string name="app_settings_block_manager">积木块管理器</string>
     <string name="app_settings_block_manager_desc">管理你自己的积木块，用于逻辑编辑器</string>
-    <string name="app_settings_block_selector_manager">积木块选择器菜单管理器</string>
-    <string name="app_settings_block_selector_manager_desc">管理你自己的积木块选择器菜单</string>
+    <string name="app_settings_block_selector_manager">选择器菜单</string>
+    <string name="app_settings_block_selector_manager_desc">配置自定义积木的下拉选项</string>
     <string name="app_settings_category_general">常规</string>
     <string name="app_settings_category_managers">管理器</string>
     <string name="app_settings_component_manager">组件管理器</string>
@@ -780,7 +782,7 @@
     <string name="pref_project_encryption_title">加密项目数据</string>
     <string name="pref_project_encryption_summary">关闭后，项目数据文件（视图、逻辑、库配置）以明文存储，方便调试。读取时自动兼容两种格式。</string>
     <string name="pref_built_in_blocks_title">内置积木块</string>
-    <string name="pref_built_in_blocks_summary">可能会减慢逻辑编辑器中积木块的加载速度</string>
+    <string name="pref_built_in_blocks_summary">可能增加积木块的加载时间</string>
     <string name="pref_new_version_control_title">使用新版本控制</string>
     <string name="pref_new_version_control_summary">为项目启用自定义版本号和版本名</string>
     <string name="pref_root_install_title">使用 root 权限安装项目</string>
@@ -788,9 +790,9 @@
     <string name="pref_root_launch_title">安装后启动项目</string>
     <string name="pref_root_launch_summary">使用 root 自动安装后自动打开项目</string>
     <string name="pref_show_all_palette_blocks_title">显示调色板的所有积木块</string>
-    <string name="pref_show_all_palette_blocks_summary">将显示每个可用的积木块。会减慢打开调色板的速度！</string>
+    <string name="pref_show_all_palette_blocks_summary">显示全部可用积木块，打开时可能较慢</string>
     <string name="pref_show_all_var_blocks_title">显示所有变量积木块</string>
-    <string name="pref_show_all_var_blocks_summary">即使没有相应的变量，所有变量积木块也会显示</string>
+    <string name="pref_show_all_var_blocks_summary">没有对应变量时也显示积木块</string>
 
     <!-- ========== 代码缩减 (Code Shrinker) ========== -->
     <string name="code_shrinker_rules">代码缩减规则</string>
@@ -1412,7 +1414,7 @@
     <string name="settings_backup_directory_title">备份目录</string>
     <string name="settings_backup_filename_msg">定义 SWB 备份文件的命名方式。\n可用变量:\n - $projectName - 项目名称\n - $versionCode - 应用版本号\n - $versionName - 应用版本名\n - $pkgName - 包名</string>
     <string name="settings_backup_filename_title">备份文件名格式</string>
-    <string name="settings_block_selector">积木块选择器管理器</string>
+    <string name="settings_block_selector">选择器菜单</string>
     <string name="settings_events_manager">事件管理器</string>
     <string name="settings_events_manager_activity_events">Activity 事件</string>
     <string name="settings_events_manager_details">事件管理器详情</string>
@@ -2451,7 +2453,7 @@
 
     <!-- ========== 代码缩减 ========== -->
     <string name="code_shrinker_configure_shrinker">通过编辑规则文件配置 R8/ProGuard。此步骤是必要的，因为没有正确的配置，ProGuard 可能会破坏你的项目。</string>
-    <string name="config_backup_filename_msg">这定义了 SWB 备份文件的命名方式。\n可用变量:\n - $projectName - 项目名称\n - $versionCode - 应用版本号\n - $versionName - 应用版本名\n - $pkgName - 应用包名\n - $timeInMs - 备份时间（毫秒）\n\n你也可以使用 Java 的日期格式语法自定义时间格式:\n$time(yyyy-MM-dd\'T\'HHmmss)\n</string>
+    <string name="config_backup_filename_msg">以下变量会在备份时替换：\n\n$projectName — 项目名称\n$versionName — 应用版本名\n$versionCode — 应用版本号\n$pkgName — 应用包名\n$timeInMs — 备份时间（毫秒）\n$time(yyyy-MM-dd\'T\'HHmmss)\n按括号中的格式生成日期和时间\n\n.swb 扩展名会自动添加。</string>
 
     <!-- ========== 通用 ========== -->
     <string name="title_besome_blog">Medium</string>
@@ -2868,9 +2870,9 @@
     <string name="events_new_title">新建事件</string>
 
     <!-- ========== 块选择器 ========== -->
-    <string name="selector_new_title">新建选择器</string>
-    <string name="selector_edit_title">编辑选择器</string>
-    <string name="selector_new_item_title">新建选择器项</string>
+    <string name="selector_new_title">新建选择器菜单</string>
+    <string name="selector_edit_title">编辑选择器菜单</string>
+    <string name="selector_new_item_title">新建选项</string>
 
     <!-- ========== 文件选择器 ========== -->
     <string name="file_picker_select_json_selector">选择 .json 选择器文件</string>

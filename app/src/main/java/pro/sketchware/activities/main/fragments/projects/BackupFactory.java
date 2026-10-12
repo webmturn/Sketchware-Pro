@@ -1,6 +1,7 @@
 package pro.sketchware.activities.main.fragments.projects;
 
 import pro.sketchware.core.settings.ApplicationSettings;
+import pro.sketchware.util.BackupFilenameFormatter;
 
 import android.content.Context;
 
@@ -31,8 +32,6 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -304,19 +303,8 @@ public class BackupFactory {
         String finalFileName;
 
         try {
-            finalFileName = customFileName
-                    .replace("$projectName", projectNameOnly)
-                    .replace("$versionCode", versionCode)
-                    .replace("$versionName", versionName)
-                    .replace("$pkgName", pkgName)
-                    .replace("$versionCode", versionCode)
-                    .replace("$timeInMs", String.valueOf(Calendar.getInstance(Locale.ENGLISH).getTimeInMillis()));
-            Matcher matcher = Pattern.compile("\\$time\\((.*?)\\)").matcher(customFileName);
-            while (matcher.find()) {
-                finalFileName = finalFileName.replaceFirst(
-                        Pattern.quote(Objects.requireNonNull(matcher.group(0))),
-                        Matcher.quoteReplacement(getFormattedDateFrom(matcher.group(1))));
-            }
+            finalFileName = BackupFilenameFormatter.format(customFileName, projectNameOnly,
+                    versionName, versionCode, pkgName, System.currentTimeMillis());
         } catch (Exception ignored) {
             SketchwareUtil.toastError(Helper.getResString(R.string.error_parse_backup_filename));
             // Example name: InternalDemo v1.0 (com.jbk.internal.demo, 1) 2021-12-31T125827

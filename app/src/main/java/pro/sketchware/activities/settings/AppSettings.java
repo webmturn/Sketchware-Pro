@@ -7,6 +7,7 @@ import static pro.sketchware.activities.editor.view.ViewEditor.shakeView;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,6 +108,21 @@ public class AppSettings extends BaseAppCompatActivity {
     private LibraryItemView createPreference(int icon, String title, String desc, View.OnClickListener listener) {
         LibraryItemView preference = new LibraryItemView(this);
         preference.enabled.setVisibility(View.GONE);
+        preference.container.setMinimumHeight(getResources().getDimensionPixelSize(R.dimen.settings_row_min_height));
+        ViewGroup.MarginLayoutParams titleMargins = (ViewGroup.MarginLayoutParams) preference.title.getLayoutParams();
+        titleMargins.topMargin = getResources().getDimensionPixelSize(R.dimen.settings_row_padding_vertical);
+        preference.title.setLayoutParams(titleMargins);
+        ViewGroup.MarginLayoutParams summaryMargins = (ViewGroup.MarginLayoutParams) preference.description.getLayoutParams();
+        summaryMargins.topMargin = getResources().getDimensionPixelSize(R.dimen.settings_summary_gap);
+        summaryMargins.bottomMargin = titleMargins.topMargin;
+        preference.description.setLayoutParams(summaryMargins);
+        preference.title.setTextAppearance(R.style.TextAppearance_SketchwarePro_SettingsTitle);
+        preference.description.setTextAppearance(R.style.TextAppearance_SketchwarePro_SettingsSummary);
+        for (TextView text : new TextView[]{preference.title, preference.description}) {
+            text.setIncludeFontPadding(false);
+            text.setBreakStrategy(Layout.BREAK_STRATEGY_BALANCED);
+            text.setLineSpacing(getResources().getDimension(R.dimen.settings_text_line_spacing), 1f);
+        }
         preference.icon.setImageResource(icon);
         preference.title.setText(title);
         preference.description.setText(desc);

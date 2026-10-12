@@ -1,0 +1,10 @@
+<resources>
+    <string name="settings_backup_filename_example">Example: %s</string>
+    <string name="settings_backup_filename_sample_project">Sample Project</string>
+    <string name="settings_backup_filename_template">Filename template</string>
+    <string name="settings_backup_filename_preview">Example filename</string>
+    <string name="settings_backup_filename_invalid_summary">Invalid filename format. Tap to edit.</string>
+    <string name="settings_backup_filename_invalid_preview">Unable to generate an example</string>
+    <string name="settings_backup_filename_date_error">Check the date format inside $time(…).</string>
+    <string name="settings_backup_filename_required">Enter a filename template.</string>
+</resources>
