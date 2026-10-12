@@ -1,13 +1,13 @@
 package pro.sketchware.core.codegen;
 
-import org.json.JSONArray;
+import java.io.IOException;
+import pro.sketchware.beans.CustomListener;
+import pro.sketchware.util.CustomEventsStore;
+import pro.sketchware.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import pro.sketchware.core.codegen.EventsHandler;
-import pro.sketchware.core.codegen.EventCodeGenerator;
-import pro.sketchware.util.FileUtil;
 
 public class ComponentExtraCode {
 
@@ -54,38 +54,20 @@ public class ComponentExtraCode {
         }
 
         // Hilal's components
-        String path = EventsHandler.CUSTOM_LISTENER_FILE_PATH;
         try {
-            if (FileUtil.isExistFile(path) && !FileUtil.readFile(path).isEmpty() && !FileUtil.readFile(path).equals("[]")) {
-                JSONArray arr = new JSONArray(FileUtil.readFile(path));
-                if (arr.length() > 0) {
-                    for (int i = 0; i < arr.length(); i++) {
-                        String c = arr.getJSONObject(i).getString("code");
-                        String f = getFirstLine(c);
-                        if (!arr.getJSONObject(i).isNull("s") && listenerCode.contains(f)) {
-                            String q = arr.getJSONObject(i).getString("s");
-                            if (q.equals("true")) {
-                                String temp = eventCodeGenerator.eventLogic;
-                                if (temp.isEmpty()) {
-                                    eventCodeGenerator.eventLogic = listenerCode.replace(f, "");
-                                    return;
-                                } else {
-                                    eventCodeGenerator.eventLogic = temp.concat("\r\n\r\n").concat(listenerCode.replace(f, ""));
-                                    return;
-                                }
-                            }
-                        }
-                    }
+            for (CustomListener listener : CustomEventsStore.INSTANCE.readListeners()) {
+                String firstLine = getFirstLine(listener.getCode());
+                if (listener.isIndependent() && listenerCode.contains(firstLine)) {
+                    String extraCode = listenerCode.replace(firstLine, "");
+                    String existingCode = eventCodeGenerator.eventLogic;
+                    eventCodeGenerator.eventLogic = existingCode.isEmpty()
+                            ? extraCode : existingCode.concat("\r\n\r\n").concat(extraCode);
+                    return;
                 }
             }
-        } catch (Exception e) {
-            if (listenerCodeBuilder.length() > 0 && !listenerCode.isEmpty()) {
-                listenerCodeBuilder.append("\r\n");
-                listenerCodeBuilder.append("\r\n");
-                listenerCodeBuilder.append(listenerCode);
-            }
+        } catch (IOException e) {
+            LogUtil.w("ComponentExtraCode", "Could not read custom listeners", e);
         }
-
 
         ///others
         if (listenerCodeBuilder.length() > 0 && !listenerCode.isEmpty()) {

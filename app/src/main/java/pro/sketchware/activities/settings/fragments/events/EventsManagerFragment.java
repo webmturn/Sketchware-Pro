@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -19,6 +20,10 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -26,6 +31,8 @@ import pro.sketchware.activities.base.BaseFragment;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
+import pro.sketchware.util.CustomEventsStore;
+import pro.sketchware.core.codegen.EventsHandler;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.beans.CustomEvent;
@@ -46,21 +53,12 @@ public class EventsManagerFragment extends BaseFragment {
 
     public static String getNumOfEvents(String name) {
         int eventAmount = 0;
-        if (FileUtil.isExistFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath())) {
-            ArrayList<CustomEvent> events;
-            try {
-                events = new Gson()
-                        .fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()),
-                                new TypeToken<ArrayList<CustomEvent>>(){}.getType());
-            } catch (JsonSyntaxException e) {
-                events = new ArrayList<>();
+        try {
+            for (CustomEvent event : CustomEventsStore.INSTANCE.readEvents()) {
+                if (name.equals(event.getListener())) eventAmount++;
             }
-            if (events == null) events = new ArrayList<>();
-            for (CustomEvent event : events) {
-                if (name.equals(event.getListener())) {
-                    eventAmount++;
-                }
-            }
+        } catch (IOException e) {
+            LogUtil.w("EventsManagerFragment", "Could not count events", e);
         }
         return String.format(Helper.getResString(R.string.app_settings_events_count), eventAmount);
     }
@@ -123,54 +121,93 @@ public class EventsManagerFragment extends BaseFragment {
             }
         }
 
+        String original = existingListener == null ? null : new Gson().toJson(existingListener);
         var dialog = new MaterialAlertDialogBuilder(requireContext())
-                .setTitle(existingListener == null ? Helper.getResString(R.string.events_new_listener) : Helper.getResString(R.string.events_edit_listener))
+                .setTitle(existingListener == null ? R.string.events_new_listener : R.string.events_edit_listener)
                 .setView(listenerBinding.getRoot())
-                .setPositiveButton(R.string.common_word_save, (di, i) -> {
-                    String listenerName = Helper.getText(listenerBinding.listenerName);
-                    if (!listenerName.isEmpty()) {
-                        CustomListener listenerData = existingListener != null ? existingListener : new CustomListener();
-                        listenerData.setName(listenerName);
-                        listenerData.setCode(listenerBinding.listenerIsIndependentClassOrMethod.isChecked()
-                                ? "//" + listenerName + "\n" + Helper.getText(listenerBinding.listenerCode)
-                                : Helper.getText(listenerBinding.listenerCode));
-                        listenerData.setIndependentFlag(listenerBinding.listenerIsIndependentClassOrMethod.isChecked() ? "true" : "false");
-                        listenerData.setImports(Helper.getText(listenerBinding.listenerCustomImport));
-                        if (position >= 0) {
-                            if (position >= listMap.size()) {
-                                SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                .setPositiveButton(R.string.common_word_save, null)
+                .setNegativeButton(R.string.common_word_cancel, null).create();
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            String listenerName = Helper.getText(listenerBinding.listenerName);
+            if (listenerName.isEmpty()) {
+                listenerBinding.listenerName.setError(Helper.getResString(R.string.error_invalid_name));
+                return;
+            }
+            try {
+                ArrayList<CustomListener> listeners = CustomEventsStore.INSTANCE.readListeners();
+                ArrayList<CustomEvent> events = CustomEventsStore.INSTANCE.readEvents();
+                int selected = original == null ? -1 : findListener(listeners, original);
+                if (original != null && selected < 0) {
+                    SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                    return;
+                }
+                for (int i = 0; i < listeners.size(); i++) {
+                    if (i != selected && listenerName.equals(listeners.get(i).getName())) {
+                        listenerBinding.listenerName.setError(Helper.getResString(R.string.error_item_already_exists));
+                        return;
+                    }
+                }
+                CustomListener listenerData = new CustomListener();
+                listenerData.setName(listenerName);
+                listenerData.setCode(listenerBinding.listenerIsIndependentClassOrMethod.isChecked()
+                        ? "//" + listenerName + "\n" + Helper.getText(listenerBinding.listenerCode)
+                        : Helper.getText(listenerBinding.listenerCode));
+                listenerData.setIndependentFlag(listenerBinding.listenerIsIndependentClassOrMethod.isChecked() ? "true" : "false");
+                listenerData.setImports(Helper.getText(listenerBinding.listenerCustomImport));
+                if (selected >= 0) {
+                    String oldName = listeners.get(selected).getName();
+                    if (!oldName.equals(listenerName)) {
+                        // Existing duplicate listener names cannot be split without knowing which events belong to each.
+                        for (int i = 0; i < listeners.size(); i++) {
+                            if (i != selected && oldName.equals(listeners.get(i).getName())) {
+                                listenerBinding.listenerName.setError(Helper.getResString(R.string.error_item_already_exists));
                                 return;
                             }
-                            listMap.set(position, listenerData);
-                        } else {
-                            listMap.add(listenerData);
                         }
-                        addListenerItem();
-                        di.dismiss();
-                    } else {
-                        SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_name));
+                        for (CustomEvent event : events) {
+                            if (oldName.equals(event.getListener())) event.setListener(listenerName);
+                        }
                     }
-                })
-                .setNegativeButton(R.string.common_word_cancel, (di, i) -> di.dismiss()).create();
-        dialog.show();
+                    listeners.set(selected, listenerData);
+                } else listeners.add(listenerData);
+                CustomEventsStore.INSTANCE.saveBoth(events, listeners);
+                refreshCodegen();
+                refreshList();
+                dialog.dismiss();
+            } catch (IOException e) {
+                LogUtil.w("EventsManagerFragment", "Could not save listener", e);
+                SketchwareUtil.toastError(Helper.getResString(R.string.common_error_failed_to_save));
+            }
+        });
+    }
+
+    private int findListener(ArrayList<CustomListener> listeners, String original) {
+        int found = -1;
+        for (int i = 0; i < listeners.size(); i++) {
+            if (original.equals(new Gson().toJson(listeners.get(i)))) {
+                if (found >= 0) return -1;
+                found = i;
+            }
+        }
+        return found;
+    }
+
+    private static void refreshCodegen() {
+        EventsHandler.refreshCachedCustomEvents();
+        EventsHandler.refreshCachedCustomListeners();
     }
 
     public void refreshList() {
-        listMap.clear();
-        if (FileUtil.isExistFile(EventsManagerConstants.LISTENERS_FILE.getAbsolutePath())) {
-            try {
-                listMap = new Gson().fromJson(FileUtil.readFile(EventsManagerConstants.LISTENERS_FILE.getAbsolutePath()),
-                        new TypeToken<ArrayList<CustomListener>>(){}.getType());
-                if (listMap == null) {
-                    listMap = new ArrayList<>();
-                }
-            } catch (JsonSyntaxException e) {
-                listMap = new ArrayList<>();
-            }
-            Collections.reverse(listMap);
-            binding.listenersRecyclerView.setAdapter(new ListenersAdapter(listMap, requireContext()));
-            binding.listenersRecyclerView.getAdapter().notifyDataSetChanged();
+        try {
+            listMap = CustomEventsStore.INSTANCE.readListeners();
+        } catch (IOException e) {
+            listMap = new ArrayList<>();
+            SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_file));
         }
+        Collections.reverse(listMap);
+        binding.listenersRecyclerView.setAdapter(new ListenersAdapter(listMap, requireContext()));
+        binding.activityEventsDescription.setText(getNumOfEvents(""));
     }
 
     private void showImportEventsDialog() {
@@ -210,28 +247,47 @@ public class EventsManagerFragment extends BaseFragment {
     }
 
     private void importEvents(ArrayList<CustomListener> data, ArrayList<CustomEvent> data2) {
-        if (data == null || data2 == null) {
+        if (data == null || data2 == null || data.contains(null) || data2.contains(null)) {
             SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_file));
             return;
         }
-        ArrayList<CustomEvent> events = new ArrayList<>();
-        if (FileUtil.isExistFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath())) {
-            try {
-                events = new Gson().fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()),
-                        new TypeToken<ArrayList<CustomEvent>>(){}.getType());
-                if (events == null) {
-                    events = new ArrayList<>();
+        try {
+            ArrayList<CustomListener> listeners = CustomEventsStore.INSTANCE.readListeners();
+            ArrayList<CustomEvent> events = CustomEventsStore.INSTANCE.readEvents();
+            Set<String> listenerNames = new HashSet<>();
+            Set<String> eventNames = new HashSet<>();
+            for (CustomListener listener : listeners) listenerNames.add(listener.getName());
+            for (CustomEvent event : events) eventNames.add(event.getName());
+            for (CustomListener listener : data) {
+                if (listener.getName().isEmpty()) {
+                    SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_file));
+                    return;
                 }
-            } catch (JsonSyntaxException e) {
-                LogUtil.w("EventsManagerFragment", "Failed to parse events JSON", e);
+                if (!listenerNames.add(listener.getName())) {
+                    SketchwareUtil.toastError(Helper.getResString(R.string.error_item_already_exists));
+                    return;
+                }
             }
+            for (CustomEvent event : data2) {
+                if (event.getName().isEmpty() || (!event.getListener().isEmpty() && !listenerNames.contains(event.getListener()))) {
+                    SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_file));
+                    return;
+                }
+                if (!eventNames.add(event.getName())) {
+                    SketchwareUtil.toastError(Helper.getResString(R.string.error_item_already_exists));
+                    return;
+                }
+            }
+            events.addAll(data2);
+            listeners.addAll(data);
+            CustomEventsStore.INSTANCE.saveBoth(events, listeners);
+            refreshCodegen();
+            refreshList();
+            SketchwareUtil.toast(Helper.getResString(R.string.toast_events_imported));
+        } catch (IOException e) {
+            LogUtil.w("EventsManagerFragment", "Could not import definitions", e);
+            SketchwareUtil.toastError(Helper.getResString(R.string.common_error_failed_to_save));
         }
-        events.addAll(data2);
-        FileUtil.writeFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath(), new Gson().toJson(events));
-        listMap.addAll(data);
-        FileUtil.writeFile(EventsManagerConstants.LISTENERS_FILE.getAbsolutePath(), new Gson().toJson(listMap));
-        refreshList();
-        SketchwareUtil.toast(Helper.getResString(R.string.toast_events_imported));
     }
 
     private void exportListener(int p) {
@@ -283,39 +339,33 @@ public class EventsManagerFragment extends BaseFragment {
         SketchwareUtil.toast(Helper.getResString(R.string.toast_events_exported), Toast.LENGTH_LONG);
     }
 
-    private void addListenerItem() {
-        FileUtil.writeFile(EventsManagerConstants.LISTENERS_FILE.getAbsolutePath(), new Gson().toJson(listMap));
-        refreshList();
-    }
-
     private void deleteItem(int position) {
-        if (position < 0 || position >= listMap.size()) {
-            SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
-            return;
+        if (position < 0 || position >= listMap.size()) return;
+        String original = new Gson().toJson(listMap.get(position));
+        try {
+            ArrayList<CustomListener> listeners = CustomEventsStore.INSTANCE.readListeners();
+            ArrayList<CustomEvent> events = CustomEventsStore.INSTANCE.readEvents();
+            int selected = findListener(listeners, original);
+            if (selected < 0) {
+                SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                return;
+            }
+            String name = listeners.remove(selected).getName();
+            boolean stillUsed = false;
+            for (CustomListener listener : listeners) if (name.equals(listener.getName())) stillUsed = true;
+            if (!stillUsed) events.removeIf(event -> name.equals(event.getListener()));
+            CustomEventsStore.INSTANCE.saveBoth(events, listeners);
+            refreshCodegen();
+            refreshList();
+        } catch (IOException e) {
+            SketchwareUtil.toastError(Helper.getResString(R.string.common_error_failed_to_save));
         }
-        listMap.remove(position);
-        FileUtil.writeFile(EventsManagerConstants.LISTENERS_FILE.getAbsolutePath(), new Gson().toJson(listMap));
-        refreshList();
     }
 
-    private void deleteRelatedEvents(String name) {
-        ArrayList<CustomEvent> events = new ArrayList<>();
-        if (FileUtil.isExistFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath())) {
-            try {
-                events = new Gson()
-                        .fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()),
-                                new TypeToken<ArrayList<CustomEvent>>(){}.getType());
-            } catch (JsonSyntaxException e) {
-                events = new ArrayList<>();
-            }
-            if (events == null) events = new ArrayList<>();
-            for (int i = events.size() - 1; i > -1; i--) {
-                if (name.equals(events.get(i).getListener())) {
-                    events.remove(i);
-                }
-            }
-        }
-        FileUtil.writeFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath(), new Gson().toJson(events));
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
     private class ListenersAdapter extends RecyclerView.Adapter<ListenersAdapter.ViewHolder> {
@@ -365,7 +415,6 @@ public class EventsManagerFragment extends BaseFragment {
                                             .setTitle(R.string.events_delete_listener_title)
                                             .setMessage(R.string.events_delete_confirm_msg)
                                             .setPositiveButton(R.string.common_word_yes, (di, i) -> {
-                                                deleteRelatedEvents(name);
                                                 deleteItem(position);
                                                 di.dismiss();
                                             })

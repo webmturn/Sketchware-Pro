@@ -21,7 +21,9 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
-import java.lang.reflect.Type;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Locale;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -30,6 +32,7 @@ import pro.sketchware.activities.base.BaseFragment;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
+import pro.sketchware.util.DefinitionFiles;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.DialogBlockConfigurationBinding;
@@ -58,11 +61,15 @@ public class BlockSelectorManagerFragment extends BaseFragment {
 
         adapter = new BlockSelectorAdapter((selector, index) -> openFragment(R.id.settings_fragment_container, BlockSelectorDetailsFragment.newInstance(index, selectors)), (selector, index) -> showActionsDialog(index));
 
-        if (FileUtil.isExistFile(BlockSelectorConsts.BLOCK_SELECTORS_FILE.getAbsolutePath())) {
-            selectors = parseJson(FileUtil.readFile(BlockSelectorConsts.BLOCK_SELECTORS_FILE.getAbsolutePath()));
-        } else {
-            selectors.add(new Selector("Select typeview:", "typeview", getTypeViewList()));
-            saveAllSelectors();
+        try {
+            selectors = readSelectors();
+            if (!BlockSelectorConsts.BLOCK_SELECTORS_FILE.exists()) {
+                selectors.add(new Selector("Select typeview:", "typeview", getTypeViewList()));
+                saveAllSelectors();
+            }
+        } catch (IOException e) {
+            selectors = new ArrayList<>();
+            SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_selector_file));
         }
 
         binding.list.setAdapter(adapter);
@@ -74,16 +81,19 @@ public class BlockSelectorManagerFragment extends BaseFragment {
         UI.addSystemWindowInsetToMargin(binding.createNew, false, false, true, true);
     }
 
-    private ArrayList<Selector> parseJson(String jsonString) {
-        Type listType = new TypeToken<ArrayList<Selector>>() {
-        }.getType();
-        return getGson().fromJson(jsonString, listType);
+    private ArrayList<Selector> readSelectors() throws IOException {
+        ArrayList<Selector> items = DefinitionFiles.readList(BlockSelectorConsts.BLOCK_SELECTORS_FILE, Selector.class);
+        for (Selector selector : items) {
+            if (!selector.isValid()) throw new IOException("Invalid selector definition");
+        }
+        return items;
     }
 
     private void showCreateEditDialog(int index, boolean isEdit) {
         DialogBlockConfigurationBinding dialogBinding = DialogBlockConfigurationBinding.inflate(LayoutInflater.from(requireContext()));
         dialogBinding.tilPalettesPath.setHint(Helper.getResString(R.string.selector_hint_name));
         dialogBinding.tilBlocksPath.setHint(Helper.getResString(R.string.selector_hint_title));
+        Helper.addClearErrorOnTextChangeTextWatcher(dialogBinding.tilBlocksPath);
 
         if (isEdit) {
             if (index < 0 || index >= selectors.size()) {
@@ -95,7 +105,7 @@ public class BlockSelectorManagerFragment extends BaseFragment {
         }
 
         addBasicTextChangedListener(dialogBinding.palettesPath, str -> {
-            if (itemAlreadyExists(str)) {
+            if (itemAlreadyExists(str, isEdit ? index : -1)) {
                 dialogBinding.tilPalettesPath.setError(Helper.getResString(R.string.error_item_already_exists));
             } else {
                 dialogBinding.tilPalettesPath.setError(null);
@@ -110,33 +120,29 @@ public class BlockSelectorManagerFragment extends BaseFragment {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(requireActivity());
         dialog.setTitle(!isEdit ? R.string.selector_dialog_title_new : R.string.selector_dialog_title_edit);
         dialog.setView(dialogBinding.getRoot());
-        dialog.setPositiveButton(!isEdit ? R.string.selector_dialog_button_create : R.string.common_word_save, (v, which) -> {
+        dialog.setPositiveButton(!isEdit ? R.string.selector_dialog_button_create : R.string.common_word_save, null);
+        dialog.setNegativeButton(R.string.common_word_cancel, null);
+        AlertDialog shown = dialog.show();
+        shown.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
             String selectorName = Helper.getText(dialogBinding.palettesPath);
-            String selectorTitle = Objects.requireNonNull(dialogBinding.blocksPath.getText()).toString();
-
+            String selectorTitle = Helper.getText(dialogBinding.blocksPath);
             if (selectorName.isEmpty()) {
-                SketchwareUtil.toast(Helper.getResString(R.string.error_selector_name_required));
+                dialogBinding.tilPalettesPath.setError(Helper.getResString(R.string.error_selector_name_required));
                 return;
             }
             if (selectorTitle.isEmpty()) {
-                SketchwareUtil.toast(Helper.getResString(R.string.error_selector_title_required));
+                dialogBinding.tilBlocksPath.setError(Helper.getResString(R.string.error_selector_title_required));
                 return;
             }
-            if (!isEdit) {
-                if (!itemAlreadyExists(selectorName)) {
-                    selectors.add(new Selector(selectorTitle, selectorName, new ArrayList<>()));
-                } else {
-                    SketchwareUtil.toast(Helper.getResString(R.string.error_item_already_exists));
-                }
-            } else {
-                selectors.set(index, new Selector(selectorTitle, selectorName, selectors.get(index).getData()));
+            if (itemAlreadyExists(selectorName, isEdit ? index : -1)) {
+                dialogBinding.tilPalettesPath.setError(Helper.getResString(R.string.error_item_already_exists));
+                return;
             }
-            saveAllSelectors();
-            adapter.notifyDataSetChanged();
-            v.dismiss();
+            ArrayList<Selector> updated = new ArrayList<>(selectors);
+            if (isEdit) updated.set(index, new Selector(selectorTitle, selectorName, selectors.get(index).getData()));
+            else updated.add(new Selector(selectorTitle, selectorName, new ArrayList<>()));
+            if (commitSelectors(updated)) shown.dismiss();
         });
-        dialog.setNegativeButton(R.string.common_word_cancel, (v, which) -> v.dismiss());
-        dialog.show();
     }
 
     private void showActionsDialog(int index) {
@@ -176,9 +182,9 @@ public class BlockSelectorManagerFragment extends BaseFragment {
                     confirmDialog.dismiss();
                     return;
                 }
-                selectors.remove(index);
-                saveAllSelectors();
-                adapter.notifyDataSetChanged();
+                ArrayList<Selector> updated = new ArrayList<>(selectors);
+                updated.remove(index);
+                commitSelectors(updated);
                 confirmDialog.dismiss();
             }, DialogInterface::dismiss);
         });
@@ -229,7 +235,21 @@ public class BlockSelectorManagerFragment extends BaseFragment {
     }
 
     private void saveAllSelectors() {
-        saveAllSelectors(BlockSelectorConsts.BLOCK_SELECTORS_FILE.getAbsolutePath(), Helper.getResString(R.string.common_word_saved));
+        commitSelectors(new ArrayList<>(selectors));
+    }
+
+    private boolean commitSelectors(ArrayList<Selector> updated) {
+        try {
+            readSelectors();
+            DefinitionFiles.write(BlockSelectorConsts.BLOCK_SELECTORS_FILE, updated);
+            selectors = updated;
+            adapter.submitList(new ArrayList<>(selectors));
+            SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
+            return true;
+        } catch (IOException e) {
+            SketchwareUtil.toastError(Helper.getResString(R.string.common_error_failed_to_save));
+            return false;
+        }
     }
 
     private void saveAllSelectors(String path, String message) {
@@ -245,68 +265,44 @@ public class BlockSelectorManagerFragment extends BaseFragment {
 
     private void handleToImportFile(File file) {
         try {
-            String json = FileUtil.readFile(file.getAbsolutePath());
-            if (isObject(json)) {
-                Selector selector = getSelectorFromFile(file);
-                if (selector != null) {
-                    selectors.add(selector);
-                    saveAllSelectors();
-                    adapter.notifyDataSetChanged();
-                } else {
+            JsonElement json = JsonParser.parseString(FileUtil.readFile(file.getAbsolutePath()));
+            ArrayList<Selector> incoming = new ArrayList<>();
+            if (json.isJsonObject()) incoming.add(getGson().fromJson(json, Selector.class));
+            else if (json.isJsonArray()) incoming = getGson().fromJson(json,
+                    new TypeToken<ArrayList<Selector>>(){}.getType());
+            else throw new JsonSyntaxException("Expected selector or selector list");
+            ArrayList<Selector> updated = readSelectors();
+            HashSet<String> names = new HashSet<>();
+            for (Selector selector : updated) names.add(selector.getName().toLowerCase(Locale.ROOT));
+            for (Selector selector : incoming) {
+                if (selector == null || !selector.isValid()) {
                     SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_selector_file));
+                    return;
                 }
-            } else {
-                List<Selector> selectorsN = getSelectorsFromFile(file);
-                if (selectorsN != null) {
-                    selectors.addAll(selectorsN);
-                    saveAllSelectors();
-                    adapter.notifyDataSetChanged();
-                } else {
-                    SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_selector_file));
+                if (!names.add(selector.getName().toLowerCase(Locale.ROOT))) {
+                    SketchwareUtil.toastError(Helper.getResString(R.string.error_item_already_exists));
+                    return;
                 }
             }
-        } catch (JsonSyntaxException e) {
-            Log.e(BlockSelectorConsts.TAG, e.toString());
+            updated.addAll(incoming);
+            commitSelectors(updated);
+        } catch (JsonSyntaxException | IOException e) {
+            Log.e(BlockSelectorConsts.TAG, "Could not import selectors", e);
             SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_selector_file));
         }
     }
 
-    private Selector getSelectorFromFile(File file) {
-        String json = FileUtil.readFile(file.getAbsolutePath());
-        try {
-            return getGson().fromJson(json, Selector.class);
-        } catch (JsonSyntaxException e) {
-            Log.e(BlockSelectorConsts.TAG, e.toString());
-            SketchwareUtil.toastError(Helper.getResString(R.string.error_get_selector_failed));
-            return null;
-        }
-    }
-
-    private List<Selector> getSelectorsFromFile(File file) {
-        String json = FileUtil.readFile(file.getAbsolutePath());
-        Type itemListType = new TypeToken<List<Selector>>() {
-        }.getType();
-        try {
-            return getGson().fromJson(json, itemListType);
-        } catch (JsonSyntaxException e) {
-            Log.e(BlockSelectorConsts.TAG, e.toString());
-            SketchwareUtil.toastError(Helper.getResString(R.string.error_get_selector_failed));
-            return null;
-        }
-    }
-
-    private boolean isObject(String jsonString) {
-        JsonElement jsonElement = JsonParser.parseString(jsonString);
-        return jsonElement.isJsonObject();
-    }
-
-    private boolean itemAlreadyExists(String toCompare) {
-        for (Selector selector : selectors) {
-            if (selector.getName().equalsIgnoreCase(toCompare)) {
-                return true;
-            }
+    private boolean itemAlreadyExists(String toCompare, int excludedIndex) {
+        for (int i = 0; i < selectors.size(); i++) {
+            if (i != excludedIndex && toCompare.equalsIgnoreCase(selectors.get(i).getName())) return true;
         }
         return false;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
     private List<String> getTypeViewList() {

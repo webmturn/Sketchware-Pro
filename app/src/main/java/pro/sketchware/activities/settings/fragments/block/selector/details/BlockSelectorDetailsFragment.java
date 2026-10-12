@@ -15,10 +15,12 @@ import androidx.appcompat.app.AlertDialog;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import pro.sketchware.activities.base.BaseFragment;
+import pro.sketchware.util.DefinitionFiles;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.DialogAddCustomActivityBinding;
@@ -27,7 +29,6 @@ import pro.sketchware.databinding.FragmentBlockSelectorManagerBinding;
 import pro.sketchware.activities.settings.fragments.block.selector.BlockSelectorConsts;
 import pro.sketchware.util.UI;
 import pro.sketchware.activities.settings.fragments.block.selector.Selector;
-import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 
 public class BlockSelectorDetailsFragment extends BaseFragment {
@@ -72,7 +73,7 @@ public class BlockSelectorDetailsFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (index < 0 || index >= selectors.size()) {
+        if (index < 0 || index >= selectors.size() || selectors.get(index) == null || !selectors.get(index).isValid()) {
             getParentFragmentManager().popBackStack();
             return;
         }
@@ -94,7 +95,7 @@ public class BlockSelectorDetailsFragment extends BaseFragment {
     }
 
     private void showCreateEditDialog(boolean isEdit, int indexA) {
-        if (index < 0 || index >= selectors.size()) {
+        if (index < 0 || index >= selectors.size() || selectors.get(index) == null || !selectors.get(index).isValid()) {
             getParentFragmentManager().popBackStack();
             return;
         }
@@ -109,28 +110,30 @@ public class BlockSelectorDetailsFragment extends BaseFragment {
         }
 
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(requireActivity());
-        dialog.setTitle(R.string.selector_title_new_item);
-        dialog.setPositiveButton(R.string.common_word_create, (v, which) -> {
-            String newItem = Helper.getText(dialogBinding.activityNameInput);
-            if (newItem != null && !newItem.isEmpty()) {
-                if (!isEdit) {
-                    selectors.get(index).getData().add(newItem);
-                } else {
-                    if (indexA < 0 || indexA >= selectors.get(index).getData().size()) {
-                        SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
-                        v.dismiss();
-                        return;
-                    }
-                    selectors.get(index).getData().set(indexA, newItem);
-                }
-                saveAll();
-                adapter.notifyDataSetChanged();
-            }
-            v.dismiss();
-        });
+        dialog.setTitle(isEdit ? R.string.common_word_edit : R.string.selector_title_new_item);
+        dialog.setPositiveButton(isEdit ? R.string.common_word_save : R.string.common_word_create, null);
         dialog.setNegativeButton(R.string.common_word_cancel, null);
         dialog.setView(dialogBinding.getRoot());
-        dialog.show();
+        Helper.addClearErrorOnTextChangeTextWatcher(dialogBinding.activityNameInputLayout);
+        AlertDialog shown = dialog.show();
+        shown.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            String newItem = Helper.getText(dialogBinding.activityNameInput);
+            if (newItem.isEmpty()) {
+                dialogBinding.activityNameInputLayout.setError(Helper.getResString(R.string.error_selector_name_required));
+                return;
+            }
+            List<String> data = selectors.get(index).getData();
+            List<String> original = new ArrayList<>(data);
+            if (isEdit) data.set(indexA, newItem);
+            else data.add(newItem);
+            if (saveAll()) {
+                adapter.notifyDataSetChanged();
+                shown.dismiss();
+            } else {
+                data.clear();
+                data.addAll(original);
+            }
+        });
     }
 
     private void showActionsDialog(int indexA) {
@@ -165,9 +168,9 @@ public class BlockSelectorDetailsFragment extends BaseFragment {
                             confirmDialog.dismiss();
                             return;
                         }
-                        selectors.get(index).getData().remove(indexA);
-                        saveAll();
-                        adapter.notifyDataSetChanged();
+                        String removed = selectors.get(index).getData().remove(indexA);
+                        if (saveAll()) adapter.notifyDataSetChanged();
+                        else selectors.get(index).getData().add(indexA, removed);
                         confirmDialog.dismiss();
                     },
                     DialogInterface::dismiss
@@ -187,9 +190,18 @@ public class BlockSelectorDetailsFragment extends BaseFragment {
         dialog.show();
     }
 
-    private void saveAll() {
-        FileUtil.writeFile(BlockSelectorConsts.BLOCK_SELECTORS_FILE.getAbsolutePath(), getGson().toJson(selectors));
-        SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
+    private boolean saveAll() {
+        try {
+            for (Selector selector : DefinitionFiles.readList(BlockSelectorConsts.BLOCK_SELECTORS_FILE, Selector.class)) {
+                if (!selector.isValid()) throw new IOException("Invalid selector definition");
+            }
+            DefinitionFiles.write(BlockSelectorConsts.BLOCK_SELECTORS_FILE, selectors);
+            SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
+            return true;
+        } catch (IOException e) {
+            SketchwareUtil.toastError(Helper.getResString(R.string.common_error_failed_to_save));
+            return false;
+        }
     }
 
     @Override

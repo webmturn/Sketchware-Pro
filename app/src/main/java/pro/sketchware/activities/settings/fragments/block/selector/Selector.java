@@ -68,6 +68,11 @@ public class Selector implements Parcelable {
         this.title = title;
     }
 
+    public boolean isValid() {
+        return name != null && !name.isEmpty() && title != null && !title.isEmpty()
+                && data != null && !data.contains(null);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

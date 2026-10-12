@@ -2,8 +2,6 @@ package pro.sketchware.activities.settings.fragments.events.creator;
 
 import static pro.sketchware.util.GsonUtils.getGson;
 
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,17 +11,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import pro.sketchware.util.CustomEventsStore;
+import pro.sketchware.core.codegen.EventsHandler;
 import pro.sketchware.activities.base.BaseFragment;
-import pro.sketchware.activities.settings.fragments.events.EventsManagerConstants;
 import pro.sketchware.util.Helper;
 import pro.sketchware.beans.CustomEvent;
 import pro.sketchware.dialogs.IconSelectorDialog;
 import pro.sketchware.core.project.OldResourceIdMapper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FragmentEventsManagerCreatorBinding;
-import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.UI;
 
@@ -39,7 +38,8 @@ public class EventsManagerCreatorFragment extends BaseFragment {
     private String event_name = "";
     private boolean isActivityEvent;
     private boolean isEdit;
-    private String lisName;
+    private String lisName = "";
+    private CustomEvent originalEvent;
 
     private FragmentEventsManagerCreatorBinding binding;
 
@@ -49,8 +49,8 @@ public class EventsManagerCreatorFragment extends BaseFragment {
         Bundle args = getArguments();
         if (args != null && args.containsKey("lis_name")) {
             lisName = args.getString("lis_name", "");
-            isActivityEvent = lisName.isEmpty();
         }
+        isActivityEvent = lisName.isEmpty();
         if (args != null && args.containsKey("event")) {
             event_name = args.getString("event", "");
             isEdit = true;
@@ -61,6 +61,15 @@ public class EventsManagerCreatorFragment extends BaseFragment {
             _par = args.getString("_par");
             _spec = args.getString("_spec");
             _code = args.getString("_code");
+            originalEvent = new CustomEvent();
+            originalEvent.setName(_name);
+            originalEvent.setVar(_var);
+            originalEvent.setListener(lisName);
+            originalEvent.setIcon(_icon);
+            originalEvent.setDescription(_desc);
+            originalEvent.setParameters(_par);
+            originalEvent.setHeaderSpec(_spec);
+            originalEvent.setCode(_code);
         }
     }
 
@@ -117,6 +126,7 @@ public class EventsManagerCreatorFragment extends BaseFragment {
             ((View) binding.eventsCreatorIcon.getParent().getParent().getParent()).setVisibility(View.GONE);
         }
         Helper.addClearErrorOnTextChangeTextWatcher(binding.eventsCreatorIconTil);
+        Helper.addClearErrorOnTextChangeTextWatcher(binding.eventsCreatorNameTil);
     }
 
     private void setupViews() {
@@ -140,27 +150,26 @@ public class EventsManagerCreatorFragment extends BaseFragment {
             return;
         }
         ArrayList<CustomEvent> eventsList;
-        String concat = EventsManagerConstants.EVENTS_FILE.getAbsolutePath();
-        if (FileUtil.isExistFile(concat)) {
-            try {
-                eventsList = getGson().fromJson(FileUtil.readFile(concat),
-                        new TypeToken<ArrayList<CustomEvent>>(){}.getType());
-                if (eventsList == null) eventsList = new ArrayList<>();
-            } catch (JsonSyntaxException e) {
-                eventsList = new ArrayList<>();
-            }
-        } else {
-            eventsList = new ArrayList<>();
+        try {
+            eventsList = CustomEventsStore.INSTANCE.readEvents();
+        } catch (IOException e) {
+            SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_file));
+            return;
         }
-        CustomEvent eventData = new CustomEvent();
-        if (isEdit) {
-            int index = figureP(eventsList, _name);
-            if (index < 0) {
-                SketchwareUtil.toast(Helper.getResString(R.string.common_error_an_error_occurred));
+        int index = isEdit ? findOriginalEvent(eventsList) : -1;
+        if (isEdit && index < 0) {
+            SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+            return;
+        }
+        String name = Helper.getText(binding.eventsCreatorEventname);
+        for (int i = 0; i < eventsList.size(); i++) {
+            if (i != index && name.equals(eventsList.get(i).getName())) {
+                binding.eventsCreatorNameTil.setError(Helper.getResString(R.string.error_item_already_exists));
+                binding.eventsCreatorEventname.requestFocus();
                 return;
             }
-            eventData = eventsList.get(index);
         }
+        CustomEvent eventData = new CustomEvent();
         eventData.setName(Helper.getText(binding.eventsCreatorEventname));
         eventData.setVar(Helper.getText(binding.eventsCreatorVarname));
         if (isActivityEvent) {
@@ -173,21 +182,35 @@ public class EventsManagerCreatorFragment extends BaseFragment {
         eventData.setParameters(Helper.getText(binding.eventsCreatorParams));
         eventData.setCode(Helper.getText(binding.eventsCreatorCode));
         eventData.setHeaderSpec(Helper.getText(binding.eventsCreatorSpec));
-        if (!isEdit) {
-            eventsList.add(eventData);
+        if (isEdit) eventsList.set(index, eventData);
+        else eventsList.add(eventData);
+        try {
+            CustomEventsStore.INSTANCE.saveEvents(eventsList);
+        } catch (IOException e) {
+            SketchwareUtil.toastError(Helper.getResString(R.string.common_error_failed_to_save));
+            return;
         }
-        FileUtil.writeFile(concat, getGson().toJson(eventsList));
+        EventsHandler.refreshCachedCustomEvents();
         SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
         getParentFragmentManager().popBackStack();
     }
 
-    private int figureP(ArrayList<CustomEvent> eventsList, String eventName) {
+    private int findOriginalEvent(ArrayList<CustomEvent> eventsList) {
+        int found = -1;
+        String original = getGson().toJson(originalEvent);
         for (int i = 0; i < eventsList.size(); i++) {
-            if (eventName.equals(eventsList.get(i).getName())) {
-                return i;
+            if (original.equals(getGson().toJson(eventsList.get(i)))) {
+                if (found >= 0) return -1; // An ambiguous or changed selection must not overwrite another event.
+                found = i;
             }
         }
-        return -1;
+        return found;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
     private void setToolbar() {

@@ -1,10 +1,6 @@
 package pro.sketchware.core.codegen;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -17,13 +13,12 @@ import pro.sketchware.R;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.beans.CustomEvent;
 import pro.sketchware.beans.CustomListener;
-import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.CustomEventsStore;
 import pro.sketchware.util.SketchwareUtil;
 
 public class EventsHandler {
 
     private static final String TAG = "EventsHandler";
-    private static final Gson GSON = new Gson();
 
     public static final String CUSTOM_EVENTS_FILE_PATH = SketchwarePaths.getAbsolutePathOf(SketchwarePaths.CUSTOM_EVENTS_FILE);
     public static final String CUSTOM_LISTENER_FILE_PATH = SketchwarePaths.getAbsolutePathOf(SketchwarePaths.CUSTOM_LISTENERS_FILE);
@@ -140,29 +135,6 @@ public class EventsHandler {
     private static void addImports(ArrayList<String> list, String imports) {
         if (!imports.isEmpty()) {
             list.addAll(new ArrayList<>(Arrays.asList(imports.split("\n"))));
-        }
-    }
-
-    private static <T> ArrayList<T> readCustomConfig(String filePath, Type listType, String configLabel) {
-        if (!FileUtil.isExistFile(filePath)) {
-            return new ArrayList<>();
-        }
-
-        String content = FileUtil.readFile(filePath);
-        if (content.isEmpty() || content.equals("[]")) {
-            return new ArrayList<>();
-        }
-
-        try {
-            ArrayList<T> data = GSON.fromJson(content, listType);
-            if (data == null) {
-                LogUtil.e(TAG, "Failed to parse " + configLabel + " file! Now using none");
-                return new ArrayList<>();
-            }
-            return data;
-        } catch (JsonParseException e) {
-            LogUtil.e(TAG, "Failed to parse " + configLabel + " file! Now using none", e);
-            return new ArrayList<>();
         }
     }
 
@@ -448,18 +420,20 @@ public class EventsHandler {
     }
 
     private static ArrayList<CustomEvent> readCustomEvents() {
-        return readCustomConfig(
-                CUSTOM_EVENTS_FILE_PATH,
-                new TypeToken<ArrayList<CustomEvent>>(){}.getType(),
-                "Custom Events"
-        );
+        try {
+            return CustomEventsStore.INSTANCE.readEvents();
+        } catch (java.io.IOException e) {
+            LogUtil.e(TAG, "Failed to read custom events", e);
+            return new ArrayList<>();
+        }
     }
 
     private static ArrayList<CustomListener> readCustomListeners() {
-        return readCustomConfig(
-                CUSTOM_LISTENER_FILE_PATH,
-                new TypeToken<ArrayList<CustomListener>>(){}.getType(),
-                "Custom Listeners"
-        );
+        try {
+            return CustomEventsStore.INSTANCE.readListeners();
+        } catch (java.io.IOException e) {
+            LogUtil.e(TAG, "Failed to read custom listeners", e);
+            return new ArrayList<>();
+        }
     }
 }

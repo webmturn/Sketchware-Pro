@@ -2,7 +2,6 @@ package pro.sketchware.activities.settings.fragments.events.details;
 
 import static pro.sketchware.util.GsonUtils.getGson;
 
-import com.google.gson.JsonSyntaxException;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +12,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import com.google.gson.reflect.TypeToken;
-
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import pro.sketchware.util.CustomEventsStore;
+import pro.sketchware.core.codegen.EventsHandler;
 import pro.sketchware.activities.base.BaseFragment;
 import pro.sketchware.util.Helper;
 import pro.sketchware.core.project.OldResourceIdMapper;
@@ -25,9 +25,7 @@ import pro.sketchware.beans.CustomEvent;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FragmentEventsManagerDetailsBinding;
 import pro.sketchware.databinding.LayoutEventItemBinding;
-import pro.sketchware.activities.settings.fragments.events.EventsManagerConstants;
 import pro.sketchware.activities.settings.fragments.events.creator.EventsManagerCreatorFragment;
-import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.UI;
 
@@ -51,7 +49,7 @@ public class EventsManagerDetailsFragment extends BaseFragment {
 
         Bundle args = getArguments();
         if (args != null) {
-            listName = args.getString("listName");
+            listName = args.getString("listName", "");
         }
     }
 
@@ -82,60 +80,50 @@ public class EventsManagerDetailsFragment extends BaseFragment {
 
     private void refreshList() {
         listMap.clear();
-        if (FileUtil.isExistFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath())) {
-            ArrayList<CustomEvent> events;
-            try {
-                events = getGson()
-                        .fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()),
-                                new TypeToken<ArrayList<CustomEvent>>(){}.getType());
-                if (events == null) {
-                    events = new ArrayList<>();
-                }
-            } catch (JsonSyntaxException e) {
-                events = new ArrayList<>();
+        try {
+            for (CustomEvent event : CustomEventsStore.INSTANCE.readEvents()) {
+                if (listName.equals(event.getListener())) listMap.add(event);
             }
-            for (int i = 0; i < events.size(); i++) {
-                if (listName.equals(events.get(i).getListener())) {
-                    listMap.add(events.get(i));
-                }
-            }
-            Collections.reverse(listMap);
-            binding.eventsRecyclerView.setAdapter(new EventsAdapter(listMap));
-            binding.eventsRecyclerView.getAdapter().notifyDataSetChanged();
+        } catch (IOException e) {
+            SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_file));
         }
+        Collections.reverse(listMap);
+        binding.eventsRecyclerView.setAdapter(new EventsAdapter(listMap));
         binding.noEventsLayout.setVisibility(listMap.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
     private void deleteItem(int position) {
-        if (position < 0 || position >= listMap.size()) {
-            SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
-            return;
-        }
-        if (FileUtil.isExistFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath())) {
-            ArrayList<CustomEvent> events;
-            try {
-                events = getGson()
-                        .fromJson(FileUtil.readFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath()),
-                                new TypeToken<ArrayList<CustomEvent>>(){}.getType());
-                if (events == null) {
-                    events = new ArrayList<>();
+        if (position < 0 || position >= listMap.size()) return;
+        String original = getGson().toJson(listMap.get(position));
+        try {
+            ArrayList<CustomEvent> events = CustomEventsStore.INSTANCE.readEvents();
+            int selected = -1;
+            for (int i = 0; i < events.size(); i++) {
+                if (original.equals(getGson().toJson(events.get(i)))) {
+                    if (selected >= 0) {
+                        SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                        return;
+                    }
+                    selected = i;
                 }
-            } catch (JsonSyntaxException e) {
+            }
+            if (selected < 0) {
+                SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
                 return;
             }
-            listMap.remove(position);
-            for (int i = events.size() - 1; i > -1; i--) {
-                if (listName.equals(events.get(i).getListener())) {
-                    events.remove(i);
-                }
-            }
-            events.addAll(listMap);
-            FileUtil.writeFile(EventsManagerConstants.EVENTS_FILE.getAbsolutePath(), getGson().toJson(events));
+            events.remove(selected);
+            CustomEventsStore.INSTANCE.saveEvents(events);
+            EventsHandler.refreshCachedCustomEvents();
             refreshList();
-        } else {
-            listMap.remove(position);
-            refreshList();
+        } catch (IOException e) {
+            SketchwareUtil.toastError(Helper.getResString(R.string.common_error_failed_to_save));
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
     private class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
