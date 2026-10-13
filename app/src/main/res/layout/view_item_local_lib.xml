@@ -18,50 +18,83 @@
         app:cardCornerRadius="24dp"
         app:checkedIcon="@null">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingEnd="16dp"
-            android:paddingStart="20dp"
-            android:paddingVertical="8dp">
+            android:minHeight="64dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="10dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
             <TextView
                 android:id="@+id/library_name"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:singleLine="true"
-                android:textAppearance="?attr/textAppearanceBodyLarge"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:includeFontPadding="false"
+                android:breakStrategy="balanced"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="16sp"
                 android:textColor="?attr/colorOnSurface"
-                app:layout_constraintVertical_chainStyle="packed"
-                app:layout_constraintEnd_toStartOf="@id/material_switch"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/library_size"
-                app:layout_constraintTop_toTopOf="@id/material_switch"
+                android:importantForAccessibility="no"
                 tools:text="appcompat-v1.7.0" />
 
             <TextView
                 android:id="@+id/library_size"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:layout_marginTop="4dp"
+                android:includeFontPadding="false"
+                android:breakStrategy="balanced"
+                android:textSize="13sp"
                 android:textColor="?attr/colorOnSurfaceVariant"
-                app:layout_constraintBottom_toBottomOf="@id/material_switch"
-                app:layout_constraintEnd_toStartOf="@id/material_switch"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/library_name"
+                android:importantForAccessibility="no"
                 tools:text="3.4 KB" />
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/library_controls"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/library_chevron"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:importantForAccessibility="no"
+                    app:srcCompat="@drawable/ic_mtrl_chevron_right_24"
+                    app:tint="?attr/colorOnSurfaceVariant" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/library_selected"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:importantForAccessibility="no"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_mtrl_check"
+                    app:tint="?attr/colorOnSecondaryContainer" />
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/material_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:visibility="gone" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            </FrameLayout>
+
+        </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
 </FrameLayout>

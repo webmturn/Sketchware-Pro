@@ -1,0 +1,18 @@
+<resources>
+    <string name="local_library_manager_title">本地库</string>
+    <string name="local_library_manager_search">搜索本地库</string>
+    <string name="local_library_manager_scope_global">全局管理</string>
+    <string name="local_library_manager_scope_project">项目引用</string>
+    <plurals name="local_library_manager_count">
+        <item quantity="other">%1$s · %2$d 个库</item>
+    </plurals>
+    <string name="local_library_manager_search_count">找到 %1$d 个，共 %2$d 个库</string>
+    <plurals name="local_library_manager_dependencies">
+        <item quantity="other">%1$d 个依赖</item>
+    </plurals>
+    <string name="local_library_manager_conflict">版本冲突</string>
+    <string name="local_library_manager_use_in_project">在当前项目中启用 %1$s</string>
+    <string name="local_library_manager_select">选择 %1$s</string>
+    <string name="local_library_manager_no_matches">未找到匹配的库</string>
+    <string name="local_library_manager_no_matches_body">试试其他库名或版本。</string>
+</resources>

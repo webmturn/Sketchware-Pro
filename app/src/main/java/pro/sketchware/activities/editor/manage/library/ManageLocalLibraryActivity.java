@@ -9,8 +9,12 @@ import static pro.sketchware.core.library.LocalLibrariesUtil.rewriteLocalLibFile
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.graphics.Color;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -24,11 +28,15 @@ import android.widget.TextView;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -40,8 +48,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -57,7 +65,6 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageLocallibrariesBinding;
 import pro.sketchware.databinding.ViewItemLocalLibBinding;
-import pro.sketchware.databinding.ViewItemLocalLibSearchBinding;
 import pro.sketchware.core.library.LocalLibrariesUtil;
 import pro.sketchware.core.library.LocalLibrary;
 import pro.sketchware.core.library.LocalLibraryImportPackageIndex;
@@ -66,10 +73,12 @@ import pro.sketchware.util.UI;
 
 public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
     private final LibraryAdapter adapter = new LibraryAdapter();
-    private final SearchAdapter searchAdapter = new SearchAdapter();
     private ArrayList<HashMap<String, Object>> projectUsedLibs;
     private boolean notAssociatedWithProject;
-    private boolean searchBarExpanded;
+    private boolean contextualToolbarExpanded;
+    private MenuItem searchMenuItem;
+    private SearchView librarySearchView;
+    private String librarySearchQuery = "";
     private BuildSettings buildSettings;
     private ManageLocallibrariesBinding binding;
     private ProjectSettings projectSettings;
@@ -83,19 +92,17 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
         binding = ManageLocallibrariesBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        UI.addWindowInsetToMargin(binding.searchBar, WindowInsetsCompat.Type.displayCutout(), true, false, true, false);
+        UI.addWindowInsetToMargin(binding.libraryToolbar, WindowInsetsCompat.Type.displayCutout(), true, false, true, false);
         UI.addSystemWindowInsetToPadding(binding.contextualToolbarContainer, true, true, true, false);
         UI.addSystemWindowInsetToPadding(binding.librariesList, true, false, true, true);
-        UI.addSystemWindowInsetToPadding(binding.searchList, true, false, true, true);
         UI.addWindowInsetToMargin(binding.downloadLibraryButton, WindowInsetsCompat.Type.systemBars(), false, false, false, true);
 
-        if (getIntent().hasExtra("sc_id")) {
-            scId = Objects.requireNonNull(getIntent().getStringExtra("sc_id"));
-            buildSettings = new BuildSettings(scId);
-            notAssociatedWithProject = scId.equals("system");
-            if (!notAssociatedWithProject) {
-                projectSettings = new ProjectSettings(scId);
-            }
+        scId = getIntent().getStringExtra("sc_id");
+        if (scId == null) scId = "system";
+        buildSettings = new BuildSettings(scId);
+        notAssociatedWithProject = scId.equals("system");
+        if (!notAssociatedWithProject) {
+            projectSettings = new ProjectSettings(scId);
         }
 
         adapter.setOnLocalLibrarySelectedStateChangedListener(item -> {
@@ -110,22 +117,36 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
         });
 
         binding.librariesList.setAdapter(adapter);
-        binding.searchList.setAdapter(searchAdapter);
 
-        binding.searchBar.setNavigationOnClickListener(v -> {
+        binding.libraryToolbar.setNavigationOnClickListener(v -> {
             if (!UIHelper.isClickThrottled()) {
                 getOnBackPressedDispatcher().onBackPressed();
             }
         });
 
-        // Step 2: orphan cleanup menu on SearchBar (available in both project and global view)
-        binding.searchBar.inflateMenu(R.menu.menu_search_bar_local_libraries);
-        MenuItem manifestMergeMenuItem = binding.searchBar.getMenu().findItem(R.id.action_toggle_local_library_manifest_merge);
+        binding.libraryToolbar.inflateMenu(R.menu.menu_search_bar_local_libraries);
+        searchMenuItem = binding.libraryToolbar.getMenu().findItem(R.id.action_search_local_libraries);
+        librarySearchView = (SearchView) searchMenuItem.getActionView();
+        librarySearchView.setMaxWidth(Integer.MAX_VALUE);
+        librarySearchView.setQueryHint(getString(R.string.local_library_manager_search));
+        librarySearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override public boolean onQueryTextSubmit(String query) { return true; }
+            @Override public boolean onQueryTextChange(String query) {
+                librarySearchQuery = query.trim();
+                adapter.filter(librarySearchQuery);
+                return true;
+            }
+        });
+        if (savedInstanceState != null && savedInstanceState.getBoolean("library_search_expanded")) {
+            searchMenuItem.expandActionView();
+            librarySearchView.setQuery(savedInstanceState.getString("library_search_query", ""), false);
+        }
+        MenuItem manifestMergeMenuItem = binding.libraryToolbar.getMenu().findItem(R.id.action_toggle_local_library_manifest_merge);
         if (manifestMergeMenuItem != null) {
             manifestMergeMenuItem.setVisible(!notAssociatedWithProject);
             manifestMergeMenuItem.setChecked(isLocalLibraryManifestMergeEnabled());
         }
-        binding.searchBar.setOnMenuItemClickListener(item -> {
+        binding.libraryToolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.action_manage_repositories) {
                 showManageRepositoriesDialog();
                 return true;
@@ -194,36 +215,27 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
             fragment.show(getSupportFragmentManager(), "library_downloader_dialog");
         });
 
-        binding.searchView.getEditText().addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String value = s.toString().trim();
-                searchAdapter.filter(getAdapterLocalLibraries(), value);
-            }
-
-            @Override
-            public void onTextChanged(CharSequence newText, int start, int before, int count) {
-            }
-        });
-
         runLoadLocalLibrariesTask();
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if (searchBarExpanded) {
+                if (contextualToolbarExpanded) {
                     hideContextualToolbarAndClearSelection();
-                } else if (binding.searchView.isShowing()) {
-                    binding.searchView.hide();
+                } else if (searchMenuItem.isActionViewExpanded()) {
+                    searchMenuItem.collapseActionView();
                 } else {
                     finish();
                 }
             }
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("library_search_expanded", searchMenuItem.isActionViewExpanded());
+        outState.putString("library_search_query", librarySearchQuery);
     }
 
     @Override
@@ -247,26 +259,33 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
 
     private void hideContextualToolbarAndClearSelection() {
         adapter.isSelectionModeEnabled = false;
-        if (collapseContextualToolbar()) {
-            setLocalLibrariesSelected(false);
-        }
+        collapseContextualToolbar();
+        setLocalLibrariesSelected(false);
     }
 
     public void setLocalLibrariesSelected(boolean selected) {
-        for (LocalLibrary library : getAdapterLocalLibraries()) {
+        for (LocalLibrary library : selected ? adapter.getVisibleLibraries() : getAdapterLocalLibraries()) {
             library.setSelected(selected);
         }
         adapter.notifyDataSetChanged();
     }
 
     private void expandContextualToolbar() {
-        searchBarExpanded = true;
-        binding.searchBar.expand(binding.contextualToolbarContainer, binding.appBarLayout);
+        contextualToolbarExpanded = true;
+        binding.contextualToolbarContainer.setVisibility(View.VISIBLE);
+        binding.libraryToolbar.setVisibility(View.INVISIBLE);
+        binding.librarySummary.setVisibility(View.INVISIBLE);
+        librarySearchView.clearFocus();
+        android.view.inputmethod.InputMethodManager keyboard =
+                (android.view.inputmethod.InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        keyboard.hideSoftInputFromWindow(binding.getRoot().getWindowToken(), 0);
     }
 
-    private boolean collapseContextualToolbar() {
-        searchBarExpanded = false;
-        return binding.searchBar.collapse(binding.contextualToolbarContainer, binding.appBarLayout);
+    private void collapseContextualToolbar() {
+        contextualToolbarExpanded = false;
+        binding.contextualToolbarContainer.setVisibility(View.GONE);
+        binding.libraryToolbar.setVisibility(View.VISIBLE);
+        binding.librarySummary.setVisibility(View.VISIBLE);
     }
 
     private long getSelectedLocalLibrariesCount() {
@@ -319,7 +338,6 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
         runOnUiThread(() -> {
             if (isFinishing() || isDestroyed()) return;
             adapter.setLocalLibraries(localLibraries);
-            binding.noContentLayout.setVisibility(localLibraries.isEmpty() ? View.VISIBLE : View.GONE);
         });
     }
 
@@ -532,6 +550,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
     }
 
     public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHolder> {
+        private final List<LocalLibrary> allLocalLibraries = new ArrayList<>();
         private final List<LocalLibrary> localLibraries = new ArrayList<>();
         /** Step 6: names of libraries that have version conflicts (multiple versions of same artifact). */
         private final Set<String> conflictingLibNames = new HashSet<>();
@@ -549,32 +568,39 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
             var binding = holder.binding;
             var library = localLibraries.get(position);
 
-            binding.libraryName.setText(library.getName());
-            // Step 3: show dep count badge for root libraries (all deps including built-in)
-            String sizeText = library.getSize();
-            if (library.isRootLibrary() && !library.getAllDependencies().isEmpty()) {
-                int depCount = library.getAllDependencies().size();
-                sizeText += Helper.getResString(R.string.library_dependency_badge, depCount);
+            SpannableStringBuilder title = new SpannableStringBuilder(library.getName());
+            String[] coordinate = library.getCoordinate().split(":", -1);
+            if (coordinate.length == 3 && !coordinate[0].isEmpty() && !coordinate[1].isEmpty()
+                    && !coordinate[2].isEmpty()
+                    && library.getName().equals(coordinate[1] + "-v" + coordinate[2])) {
+                title.clear();
+                title.append(coordinate[1]);
+                int start = title.length();
+                title.append("  ").append(coordinate[2]);
+                title.setSpan(new RelativeSizeSpan(13f / 16), start, title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                title.setSpan(new TypefaceSpan("sans-serif"), start, title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                title.setSpan(new ForegroundColorSpan(MaterialColors.getColor(binding.card,
+                        com.google.android.material.R.attr.colorOnSurfaceVariant)), start, title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
-            // Step 6: show version conflict indicator
-            if (conflictingLibNames.contains(library.getName())) {
-                sizeText += Helper.getResString(R.string.library_version_conflict_badge);
-            }
-            binding.librarySize.setText(sizeText);
-            binding.libraryName.setSelected(true);
+            binding.libraryName.setText(title);
+            List<String> metadata = new ArrayList<>();
+            metadata.add(library.getSize());
+            int depCount = library.getAllDependencies().size();
+            if (depCount > 0) metadata.add(getResources().getQuantityString(
+                    R.plurals.local_library_manager_dependencies, depCount, depCount));
+            if (conflictingLibNames.contains(library.getName())) metadata.add(getString(R.string.local_library_manager_conflict));
+            List<String> displayMetadata = new ArrayList<>();
+            for (String part : metadata) displayMetadata.add(unbrokenMetadata(part));
+            binding.librarySize.setText(String.join(" ·\u00a0", displayMetadata));
+            binding.card.setContentDescription(library.getName() + ", " + String.join(", ", metadata));
             bindSelectedState(binding.card, library);
 
-            // Long press → enter multi-select mode
             View.OnLongClickListener enterSelectionMode = v -> {
-                if (isSelectionModeEnabled) {
-                    return false;
-                }
                 isSelectionModeEnabled = true;
                 toggleLocalLibrary(binding.card, library, onLocalLibrarySelectedStateChangedListener);
                 return true;
             };
 
-            // Click on name/size area → open sub-dependencies screen (or toggle selection)
             View.OnClickListener openSubDeps = v -> {
                 if (isSelectionModeEnabled) {
                     toggleLocalLibrary(binding.card, library, onLocalLibrarySelectedStateChangedListener);
@@ -582,33 +608,25 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
                     showSubDependencies(library);
                 }
             };
-            binding.libraryName.setOnClickListener(openSubDeps);
-            binding.librarySize.setOnClickListener(openSubDeps);
-            binding.libraryName.setOnLongClickListener(enterSelectionMode);
-            binding.librarySize.setOnLongClickListener(enterSelectionMode);
-
-            // Card click/long-press for areas not covered by name/size/switch
-            binding.card.setOnClickListener(v -> {
-                if (isSelectionModeEnabled) {
-                    toggleLocalLibrary(binding.card, library, onLocalLibrarySelectedStateChangedListener);
-                } else {
-                    showSubDependencies(library);
-                }
-            });
+            binding.card.setOnClickListener(openSubDeps);
             binding.card.setOnLongClickListener(enterSelectionMode);
+            ViewCompat.replaceAccessibilityAction(binding.card,
+                    AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_LONG_CLICK,
+                    getString(R.string.local_library_manager_select, library.getName()),
+                    (view, arguments) -> view.performLongClick());
 
-            binding.materialSwitch.setChecked(false);
-            if (!notAssociatedWithProject) {
-
+            boolean projectControl = !notAssociatedWithProject && !isSelectionModeEnabled;
+            binding.libraryControls.setVisibility(isSelectionModeEnabled || projectControl || depCount > 0 ? View.VISIBLE : View.GONE);
+            binding.libraryChevron.setVisibility(!isSelectionModeEnabled && !projectControl && depCount > 0 ? View.VISIBLE : View.GONE);
+            binding.librarySelected.setVisibility(isSelectionModeEnabled
+                    ? library.isSelected() ? View.VISIBLE : View.INVISIBLE : View.GONE);
+            binding.materialSwitch.setVisibility(projectControl ? View.VISIBLE : View.GONE);
+            binding.materialSwitch.setEnabled(projectControl);
+            binding.materialSwitch.setChecked(isUsedLibrary(library.getName()));
+            binding.materialSwitch.setContentDescription(getString(R.string.local_library_manager_use_in_project, library.getName()));
+            binding.materialSwitch.setOnClickListener(null);
+            if (projectControl) {
                 binding.materialSwitch.setOnClickListener(v -> onItemClicked(binding, library.getName()));
-
-                for (Map<String, Object> libraryMap : projectUsedLibs) {
-                    if (library.getName().equals(String.valueOf(libraryMap.get("name")))) {
-                        binding.materialSwitch.setChecked(true);
-                    }
-                }
-            } else {
-                binding.materialSwitch.setEnabled(false);
             }
         }
 
@@ -629,6 +647,7 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
             if (onLocalLibrarySelectedStateChangedListener != null) {
                 onLocalLibrarySelectedStateChangedListener.invoke(library);
             }
+            notifyDataSetChanged();
             if (library.isSelected() && isUsedLibrary(library.getName())) {
                 new MaterialAlertDialogBuilder(ManageLocalLibraryActivity.this)
                         .setTitle(R.string.common_word_warning)
@@ -643,7 +662,12 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
         }
 
         private void bindSelectedState(MaterialCardView card, LocalLibrary library) {
-            card.setChecked(library.isSelected());
+            card.setCheckable(true);
+            card.setChecked(isSelectionModeEnabled && library.isSelected());
+            card.setCheckable(isSelectionModeEnabled);
+            card.setCardBackgroundColor(isSelectionModeEnabled && library.isSelected()
+                    ? MaterialColors.getColor(card, com.google.android.material.R.attr.colorSecondaryContainer)
+                    : Color.TRANSPARENT);
         }
 
         private void onItemClicked(ViewItemLocalLibBinding binding, String name) {
@@ -651,12 +675,16 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
         }
 
         public List<LocalLibrary> getLocalLibraries() {
+            return allLocalLibraries;
+        }
+
+        public List<LocalLibrary> getVisibleLibraries() {
             return localLibraries;
         }
 
         public void setLocalLibraries(List<LocalLibrary> localLibraries) {
-            this.localLibraries.clear();
-            this.localLibraries.addAll(localLibraries);
+            allLocalLibraries.clear();
+            allLocalLibraries.addAll(localLibraries);
             // Step 6: detect version conflicts (multiple libs with same artifact ID)
             conflictingLibNames.clear();
             Map<String, List<String>> artifactToLibs = new HashMap<>();
@@ -667,7 +695,31 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
             for (List<String> versions : artifactToLibs.values()) {
                 if (versions.size() > 1) conflictingLibNames.addAll(versions);
             }
+            filter(librarySearchQuery);
+        }
+
+        public void filter(String query) {
+            String search = query.toLowerCase(Locale.ROOT);
+            localLibraries.clear();
+            for (LocalLibrary library : allLocalLibraries) {
+                if (library.getName().toLowerCase(Locale.ROOT).contains(search)
+                        || library.getCoordinate().toLowerCase(Locale.ROOT).contains(search)) {
+                    localLibraries.add(library);
+                }
+            }
             notifyDataSetChanged();
+            int count = allLocalLibraries.size();
+            binding.librarySummary.setText(query.isEmpty() ? getResources().getQuantityString(
+                    R.plurals.local_library_manager_count, count,
+                    getString(notAssociatedWithProject ? R.string.local_library_manager_scope_global
+                            : R.string.local_library_manager_scope_project), count)
+                    : getString(R.string.local_library_manager_search_count, localLibraries.size(), count));
+            boolean noMatches = !query.isEmpty() && count > 0;
+            binding.libraryEmptyTitle.setText(noMatches ? R.string.local_library_manager_no_matches
+                    : R.string.local_library_manager_no_libraries_title);
+            binding.libraryEmptyBody.setText(noMatches ? R.string.local_library_manager_no_matches_body
+                    : R.string.local_library_manager_no_libraries_body);
+            binding.noContentLayout.setVisibility(localLibraries.isEmpty() ? View.VISIBLE : View.GONE);
         }
 
         /**
@@ -693,83 +745,14 @@ public class ManageLocalLibraryActivity extends BaseAppCompatActivity {
         }
     }
 
-    public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
-        private final List<LocalLibrary> filteredLocalLibraries = new ArrayList<>();
-
-        @NonNull
-        @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            var binding = ViewItemLocalLibSearchBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-            return new ViewHolder(binding);
+    /** Keep each short metadata value together when a row wraps on narrow screens. */
+    private static String unbrokenMetadata(String text) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < text.length(); i++) {
+            if (i > 0) result.append('\u2060');
+            result.append(text.charAt(i));
         }
-
-        @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            var binding = holder.binding;
-            var library = filteredLocalLibraries.get(position);
-
-            binding.libraryName.setText(library.getName());
-            binding.librarySize.setText(library.getSize());
-            binding.libraryName.setSelected(true);
-
-            binding.materialSwitch.setChecked(false);
-            if (!notAssociatedWithProject) {
-
-                binding.getRoot().setOnClickListener(v -> binding.materialSwitch.performClick());
-
-                binding.materialSwitch.setOnClickListener(v -> {
-                    onItemClicked(binding, library.getName());
-                    adapter.notifyItemChanged(position);
-                });
-
-                for (Map<String, Object> libraryMap : projectUsedLibs) {
-                    if (library.getName().equals(String.valueOf(libraryMap.get("name")))) {
-                        binding.materialSwitch.setChecked(true);
-                    }
-                }
-            } else {
-                binding.materialSwitch.setEnabled(false);
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return filteredLocalLibraries.isEmpty() ? 0 : filteredLocalLibraries.size();
-        }
-
-        private void onItemClicked(ViewItemLocalLibSearchBinding binding, String name) {
-            toggleLibrary(binding.materialSwitch.isChecked(), name);
-        }
-
-        public void filter(List<LocalLibrary> localLibraries, String query) {
-            filteredLocalLibraries.clear();
-            if (query.isEmpty()) {
-                filteredLocalLibraries.addAll(localLibraries);
-            } else {
-                for (LocalLibrary library : localLibraries) {
-                    if (library.getName().toLowerCase().contains(query.toLowerCase())) {
-                        filteredLocalLibraries.add(library);
-                    }
-                }
-            }
-            // Sorts the filtered search results to ensure enabled libraries still appear at the top.
-            filteredLocalLibraries.sort((lib1, lib2) -> {
-                boolean isEnabled1 = isUsedLibrary(lib1.getName());
-                boolean isEnabled2 = isUsedLibrary(lib2.getName());
-                return Boolean.compare(isEnabled2, isEnabled1);
-            });
-
-            notifyDataSetChanged();
-        }
-
-        public static class ViewHolder extends RecyclerView.ViewHolder {
-            private final ViewItemLocalLibSearchBinding binding;
-
-            public ViewHolder(@NonNull ViewItemLocalLibSearchBinding binding) {
-                super(binding.getRoot());
-                this.binding = binding;
-            }
-        }
+        return result.toString();
     }
 
     // ==================== Repository Management ====================

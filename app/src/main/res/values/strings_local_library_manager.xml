@@ -1,0 +1,20 @@
+<resources>
+    <string name="local_library_manager_title">Local libraries</string>
+    <string name="local_library_manager_search">Search local libraries</string>
+    <string name="local_library_manager_scope_global">Global library management</string>
+    <string name="local_library_manager_scope_project">Project libraries</string>
+    <plurals name="local_library_manager_count">
+        <item quantity="one">%1$s · %2$d library</item>
+        <item quantity="other">%1$s · %2$d libraries</item>
+    </plurals>
+    <string name="local_library_manager_search_count">%1$d of %2$d libraries</string>
+    <plurals name="local_library_manager_dependencies">
+        <item quantity="one">%1$d dependency</item>
+        <item quantity="other">%1$d dependencies</item>
+    </plurals>
+    <string name="local_library_manager_conflict">Version conflict</string>
+    <string name="local_library_manager_use_in_project">Use %1$s in this project</string>
+    <string name="local_library_manager_select">Select %1$s</string>
+    <string name="local_library_manager_no_matches">No matching libraries</string>
+    <string name="local_library_manager_no_matches_body">Try another library name or version.</string>
+</resources>

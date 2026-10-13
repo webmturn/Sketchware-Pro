@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_search_local_libraries"
+        android:icon="@drawable/ic_mtrl_search"
+        android:title="@string/local_library_manager_search"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="always|collapseActionView" />
+
+    <item
         android:id="@+id/action_manage_repositories"
         android:title="@string/menu_manage_repositories"
         app:showAsAction="never" />

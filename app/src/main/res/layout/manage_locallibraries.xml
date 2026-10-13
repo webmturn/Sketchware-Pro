@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:paddingBottom="120dp"
+        android:paddingBottom="96dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/view_item_local_lib" />
@@ -24,17 +24,22 @@
         app:liftOnScrollColor="@android:color/transparent"
         app:statusBarForeground="?attr/colorSurface">
 
-        <com.google.android.material.search.SearchBar
-            android:id="@+id/search_bar"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/library_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="@string/local_library_manager_title"
+            app:navigationIcon="?attr/homeAsUpIndicator" />
+
+        <TextView
+            android:id="@+id/library_summary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp"
-            android:hint="@string/local_lib_hint_search"
-            app:defaultMarginsEnabled="false"
-            app:navigationIcon="?attr/homeAsUpIndicator" />
+            android:paddingHorizontal="20dp"
+            android:paddingBottom="8dp"
+            android:includeFontPadding="false"
+            android:textSize="12sp"
+            android:textColor="?attr/colorOnSurfaceVariant" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -55,25 +60,6 @@
 
     </FrameLayout>
 
-    <com.google.android.material.search.SearchView
-        android:id="@+id/search_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:hint="@string/local_lib_hint_search"
-        app:layout_anchor="@id/search_bar">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/search_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingBottom="120dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:listitem="@layout/view_item_local_lib_search" />
-
-    </com.google.android.material.search.SearchView>
-
     <LinearLayout
         android:id="@+id/no_content_layout"
         android:layout_width="match_parent"
@@ -87,6 +73,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <TextView
+            android:id="@+id/library_empty_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -95,6 +82,7 @@
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/library_empty_body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
