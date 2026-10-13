@@ -2,6 +2,8 @@ package pro.sketchware.activities.editor;
 
 import pro.sketchware.core.project.SketchwarePaths;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -1644,32 +1646,34 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         } else {
             objectAnimator = paletteHideAnimator;
         }
+        // Keep the canvas behind the moving palette; reserve its space only once it is open.
+        // On close (or a reversed animation), restore the canvas before exposing it.
+        layoutEditorForOrientation(getResources().getConfiguration().orientation, false);
+        boolean landscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        float currentPosition = landscape ? paletteLayout.getTranslationX() : paletteLayout.getTranslationY();
+        float targetPosition = visible ? 0.0f : ViewUtil.dpToPx(this, landscape ? 320.0f : 240.0f);
+        // A reused ObjectAnimator otherwise retains the starting value of its first run.
+        objectAnimator.setFloatValues(currentPosition, targetPosition);
         objectAnimator.start();
-        layoutEditorForOrientation(getResources().getConfiguration().orientation);
     }
 
     public void layoutEditorForOrientation(int i) {
-        LinearLayout.LayoutParams layoutParams;
-        int editorHeight;
-        int editorWidth = ViewGroup.LayoutParams.MATCH_PARENT;
-        if (isPaletteVisible) {
-            int width = getResources().getDisplayMetrics().widthPixels;
-            int height = getResources().getDisplayMetrics().heightPixels;
-            if (width <= height) {
-                width = height;
-            }
-            if (2 == i) {
-                editorWidth = width - ((int) ViewUtil.dpToPx(this, 320.0f));
-                editorHeight = ViewGroup.LayoutParams.MATCH_PARENT;
+        layoutEditorForOrientation(i, isPaletteVisible);
+    }
+
+    private void layoutEditorForOrientation(int orientation, boolean reservePaletteSpace) {
+        // Weight uses the parent's available size, including toolbar/search changes and insets.
+        // Subtracting from the current editor height repeatedly could shrink the canvas again.
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, 0, 1.0f);
+        if (reservePaletteSpace) {
+            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                layoutParams.rightMargin = paletteArea.getWidth();
             } else {
-                editorHeight = viewLogicEditor.getHeight() - paletteArea.getHeight();
+                layoutParams.bottomMargin = paletteArea.getHeight();
             }
-            layoutParams = new LinearLayout.LayoutParams(editorWidth, editorHeight);
-        } else {
-            layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         }
         viewLogicEditor.setLayoutParams(layoutParams);
-        viewLogicEditor.requestLayout();
     }
 
     public void showViewSelector(FieldBlockView fieldBlock) {
@@ -1797,6 +1801,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void setupPaletteAnimators(int i) {
+        if (paletteAnimatorsInitialized) {
+            cancelPaletteAnimations();
+        }
         boolean wasPaletteVisible = isPaletteVisible;
         if (i == 2) {
             if (!wasPaletteVisible) {
@@ -1825,6 +1832,26 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
 
         paletteShowAnimator.setDuration(500L);
         paletteShowAnimator.setInterpolator(new DecelerateInterpolator());
+        paletteShowAnimator.addListener(new AnimatorListenerAdapter() {
+            private boolean cancelled;
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                cancelled = false;
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                cancelled = true;
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (!cancelled && isPaletteVisible) {
+                    layoutEditorForOrientation(getResources().getConfiguration().orientation);
+                }
+            }
+        });
         paletteHideAnimator.setDuration(300L);
         paletteHideAnimator.setInterpolator(new DecelerateInterpolator());
         paletteAnimatorsInitialized = true;
@@ -2118,6 +2145,13 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         blockPane = viewLogicEditor.getBlockPane();
         paletteLayout = findViewById(R.id.layout_palette);
         paletteArea = findViewById(R.id.area_palette);
+        paletteArea.addOnLayoutChangeListener((v, left, top, right, bottom,
+                                              oldLeft, oldTop, oldRight, oldBottom) -> {
+            if (right - left != oldRight - oldLeft || bottom - top != oldBottom - oldTop) {
+                layoutEditorForOrientation(getResources().getConfiguration().orientation,
+                        isPaletteVisible && !paletteShowAnimator.isRunning());
+            }
+        });
         openBlocksMenuButton = findViewById(R.id.fab_toggle_palette);
         openBlocksMenuButton.setOnClickListener(v -> togglePaletteVisibility(!isPaletteVisible));
         logicTopMenu = findViewById(R.id.top_menu);
