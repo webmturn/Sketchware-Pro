@@ -1,6 +1,8 @@
 package pro.sketchware.util.locale;
 
 import android.content.res.Resources;
+import android.content.res.Configuration;
+import android.util.DisplayMetrics;
 
 import androidx.annotation.NonNull;
 import androidx.core.os.ConfigurationCompat;
@@ -14,6 +16,20 @@ public final class LanguageOverrideResources extends Resources {
     public LanguageOverrideResources(@NonNull Resources baseResources) {
         super(baseResources.getAssets(), baseResources.getDisplayMetrics(), baseResources.getConfiguration());
         this.baseResources = baseResources;
+    }
+
+    // This Resources instance is not registered with Android's configuration updates.
+    // Keep orientation, density and font scale tied to the live base resources.
+    @NonNull
+    @Override
+    public Configuration getConfiguration() {
+        return baseResources.getConfiguration();
+    }
+
+    @NonNull
+    @Override
+    public DisplayMetrics getDisplayMetrics() {
+        return baseResources.getDisplayMetrics();
     }
 
     @NonNull

@@ -200,7 +200,15 @@ public class LogicPaletteAnimationTest {
             if (ready[0]) return;
             SystemClock.sleep(30);
         }
-        fail("Orientation did not settle");
+        scenario.onActivity(a -> {
+            View editor = a.findViewById(R.id.editor);
+            View decor = a.getWindow().getDecorView();
+            fail("Orientation did not settle: expected=" + expected
+                    + ", actual=" + a.getResources().getConfiguration().orientation
+                    + ", requested=" + a.getRequestedOrientation()
+                    + ", editor=" + editor.getWidth() + "x" + editor.getHeight()
+                    + ", window=" + decor.getWidth() + "x" + decor.getHeight());
+        });
     }
 
     private static void withEditor(Check check) throws Exception {
