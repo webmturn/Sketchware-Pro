@@ -1,7 +1,5 @@
 package pro.sketchware.activities.resourceseditor.components.fragments;
 
-import static pro.sketchware.util.UI.animateLayoutChanges;
-
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import pro.sketchware.widgets.ColorPickerDialog;
@@ -189,11 +188,6 @@ public class ColorsEditor extends Fragment implements ResourceEditorDraftState.O
             dialogBinding.colorPreview.setBackgroundColor(0xFFFFFF);
         }
 
-        dialogBinding.importantNote.setOnClickListener(view -> {
-            animateLayoutChanges(dialogBinding.getRoot());
-            dialogBinding.imgColorGuide.setVisibility(dialogBinding.imgColorGuide.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
-        });
-
         dialogBinding.colorValueInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -226,8 +220,9 @@ public class ColorsEditor extends Fragment implements ResourceEditorDraftState.O
 
             @Override
             public void afterTextChanged(Editable s) {
-                animateLayoutChanges(dialogBinding.getRoot());
-                dialogBinding.importantNote.setVisibility(defaultColors.containsKey(s.toString()) ? View.VISIBLE : View.GONE);
+                boolean showNote = defaultColors.containsKey(s.toString());
+                if (!showNote) dialogBinding.colorGuide.collapseImmediately();
+                dialogBinding.importantNote.setVisibility(showNote ? View.VISIBLE : View.GONE);
             }
         });
 
@@ -317,7 +312,9 @@ public class ColorsEditor extends Fragment implements ResourceEditorDraftState.O
 
         dialog.setNegativeButton(Helper.getResString(R.string.cancel), null);
         dialog.setView(dialogBinding.getRoot());
-        dialog.show();
+        AlertDialog colorDialog = dialog.show();
+        dialogBinding.colorGuide.setDialog(colorDialog);
+        dialogBinding.importantNote.setOnClickListener(view -> dialogBinding.colorGuide.toggle());
     }
 
     private void addColor(String name, String value, String note) {
