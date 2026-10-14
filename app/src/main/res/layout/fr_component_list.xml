@@ -3,37 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/component_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:clipToPadding="false"
+        android:paddingTop="8dp"
+        android:paddingBottom="64dp"
+        android:scrollbars="vertical"
+        android:splitMotionEvents="false"
+        tools:listitem="@layout/fr_logic_list_item_component" />
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/empty_message"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:textAppearance="?attr/textAppearanceBodySmall" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/component_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:paddingTop="8dp"
-                android:paddingBottom="64dp"
-                android:scrollbars="vertical"
-                android:splitMotionEvents="false"
-                tools:listitem="@layout/fr_logic_list_item_component" />
-
-        </LinearLayout>
-    </LinearLayout>
+    <TextView
+        android:id="@+id/empty_message"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textAppearance="?attr/textAppearanceBodySmall" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

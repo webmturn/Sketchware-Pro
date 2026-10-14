@@ -71,7 +71,7 @@
                 android:src="@drawable/ic_arrow_drop_down_24px" />
         </RelativeLayout>
 
-        <LinearLayout
+        <pro.sketchware.widgets.ClippedLinearLayout
             android:id="@+id/component_option_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -103,6 +103,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:tint="?colorOnError"/>
-        </LinearLayout>
+        </pro.sketchware.widgets.ClippedLinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -24,10 +24,79 @@ import pro.sketchware.R;
 import pro.sketchware.beans.ComponentBean;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.core.project.ProjectDataManager;
+import pro.sketchware.activities.editor.component.CollapsibleComponentLayout;
 
 /** Checks the camera event buttons during transitions, not only after animations finish. */
 @RunWith(AndroidJUnit4.class)
 public class ComponentAnimationTest {
+    @Test public void cameraActionButtonsKeepTheirSizeDuringRevealAndCollapse() throws Exception {
+        withCamera((fixture, scenario) -> {
+            scenario.onActivity(a -> row(a).performClick());
+            SystemClock.sleep(350);
+            int[] partialFrames = {0};
+            ArrayList<String> compressedFrames = new ArrayList<>();
+            View[] root = {null};
+            ViewTreeObserver.OnPreDrawListener[] observer = {null};
+            scenario.onActivity(a -> {
+                root[0] = row(a);
+                View options = root[0].findViewById(R.id.component_option_layout);
+                View events = root[0].findViewById(R.id.component_events);
+                CollapsibleComponentLayout actions = root[0].findViewById(R.id.component_option);
+                int fullHeight = options.getHeight();
+                int buttonHeight = actions.getDeleteButton().getHeight();
+                int actionHeight = actions.getHeight(), eventHeight = events.getHeight();
+                assertTrue(buttonHeight > 0);
+                observer[0] = () -> {
+                    if (options.getVisibility() == View.VISIBLE && options.getHeight() > 0
+                            && options.getHeight() < fullHeight) {
+                        partialFrames[0]++;
+                        if (actions.getDeleteButton().getHeight() != buttonHeight
+                                || actions.getHeight() != actionHeight || events.getHeight() != eventHeight) {
+                            compressedFrames.add("options=" + options.getHeight() + ", actions="
+                                    + actions.getHeight() + ", button=" + actions.getDeleteButton().getHeight());
+                        }
+                    }
+                    return true;
+                };
+                root[0].getViewTreeObserver().addOnPreDrawListener(observer[0]);
+                root[0].performClick();
+            });
+            SystemClock.sleep(350);
+            scenario.onActivity(a -> row(a).performClick());
+            SystemClock.sleep(350);
+            scenario.onActivity(a -> {
+                root[0].getViewTreeObserver().removeOnPreDrawListener(observer[0]);
+                assertTrue("Must sample partially revealed frames", partialFrames[0] > 0);
+                assertTrue("Clipping must not shrink action buttons: " + compressedFrames, compressedFrames.isEmpty());
+                assertExpanded(a);
+            });
+        });
+    }
+
+    @Test public void emptyComponentsKeepMessageAndAddButtonVisible() throws Exception {
+        try (ProjectEditorPersistenceTest.Fixture fixture = new ProjectEditorPersistenceTest.Fixture()) {
+            fixture.seed(false, false);
+            try (ActivityScenario<DesignActivity> scenario = fixture.launch()) {
+                ProjectEditorPersistenceTest.waitForEditor(scenario);
+                scenario.onActivity(a -> ((ViewPager) a.findViewById(R.id.viewpager)).setCurrentItem(2, false));
+                SystemClock.sleep(300);
+                scenario.onActivity(a -> {
+                    View componentPage = (View) list(a).getParent();
+                    View message = componentPage.findViewById(R.id.empty_message);
+                    View add = componentPage.findViewById(R.id.fab);
+                    assertEquals(0, list(a).getAdapter().getItemCount());
+                    assertTrue("Empty message must remain visible", message.isShown());
+                    assertTrue("Add button must remain visible", add.isShown());
+                    Rect visible = new Rect();
+                    assertTrue(add.getGlobalVisibleRect(visible));
+                    assertEquals(add.getWidth(), visible.width());
+                    assertEquals(add.getHeight(), visible.height());
+                    assertEquals(list(a).getHeight(), message.getHeight());
+                });
+            }
+        }
+    }
+
     @Test public void cameraEventsAreVisibleAsTheirAreaExpands() throws Exception {
         withCamera((fixture, scenario) -> {
             int[] exposedFrames = {0};
