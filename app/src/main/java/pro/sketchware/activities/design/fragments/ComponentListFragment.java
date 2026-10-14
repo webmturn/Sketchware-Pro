@@ -160,15 +160,23 @@ public class ComponentListFragment extends DesignProjectFragment implements View
         }
 
         private class ViewHolder extends CollapsibleViewHolder {
+            private static final int COLLAPSE_DURATION_MS = 200;
 
             public final FrLogicListItemComponentBinding binding;
 
             public ViewHolder(FrLogicListItemComponentBinding itemBinding) {
-                super(itemBinding.getRoot(), 200);
+                super(itemBinding.getRoot(), COLLAPSE_DURATION_MS);
                 binding = itemBinding;
             }
 
             void bind(ComponentBean componentBean) {
+                binding.eventsPreview.animate().cancel();
+                binding.componentEvents.animate().cancel();
+                binding.imgMenu.animate().cancel();
+                binding.imgMenu.animate().setStartDelay(0).setDuration(COLLAPSE_DURATION_MS);
+                // The card's height reveals its contents; keep event buttons in their final position.
+                binding.componentEvents.setTranslationX(0.0f);
+                binding.componentEvents.setAlpha(1.0f);
                 binding.componentOption
                         .getDeleteButton()
                         .getLabel()
@@ -311,8 +319,6 @@ public class ComponentListFragment extends DesignProjectFragment implements View
 
                     binding.componentEvents.setVisibility(View.VISIBLE);
                     if (!componentBean.isCollapsed) {
-                        binding.eventsPreview.setTranslationX(
-                                binding.eventsPreview.getWidth());
                         binding.eventsPreview.setAlpha(0);
                     }
                     addedEventsAdapter.submitList(addedEvents);
@@ -353,18 +359,22 @@ public class ComponentListFragment extends DesignProjectFragment implements View
 
             @Override
             public void collapse() {
+                if (getLayoutPosition() == RecyclerView.NO_POSITION) return;
                 super.collapse();
-                binding.eventsPreview.animate().translationX(0.0f).alpha(1.0f).setStartDelay(120L).setDuration(150L).start();
-                binding.componentEvents.animate().translationX(-binding.componentEvents.getWidth()).setDuration(150L).alpha(0.0f).start();
+                animateEventPreview(1.0f);
             }
 
             @Override
             public void expand() {
+                if (getLayoutPosition() == RecyclerView.NO_POSITION) return;
                 super.expand();
-                binding.eventsPreview.animate().translationX(binding.eventsPreview.getWidth()).alpha(0.0f).setDuration(150L).start();
-                binding.componentEvents.setTranslationX(-binding.componentEvents.getWidth());
-                binding.componentEvents.setAlpha(0.0f);
-                binding.componentEvents.animate().translationX(0.0f).setStartDelay(200L).setDuration(120L).alpha(1.0f).start();
+                animateEventPreview(0.0f);
+            }
+
+            private void animateEventPreview(float targetAlpha) {
+                binding.eventsPreview.animate().cancel();
+                binding.eventsPreview.animate().alpha(targetAlpha).setStartDelay(0)
+                        .setDuration(COLLAPSE_DURATION_MS).start();
             }
 
             private interface EventClickListener {
