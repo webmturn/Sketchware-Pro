@@ -212,16 +212,12 @@ public class ViewEditorFragment extends DesignProjectFragment implements MenuPro
 
     public void togglePropertyView(boolean showProperty) {
         startAnimation();
-        if (!isPropertyViewVisible || !showProperty) {
-            cancelAnimations();
-            if (showProperty) {
-                showPropertyViewAnimator.start();
-            } else if (isPropertyViewVisible) {
-                hidePropertyViewAnimator.start();
-            }
-
-            isPropertyViewVisible = showProperty;
-        }
+        if (isPropertyViewVisible == showProperty) return;
+        cancelAnimations();
+        isPropertyViewVisible = showProperty;
+        ObjectAnimator animator = showProperty ? showPropertyViewAnimator : hidePropertyViewAnimator;
+        animator.setFloatValues(viewProperty.getTranslationY(), showProperty ? 0.0f : getPropertyPanelHiddenTranslationY());
+        animator.start();
     }
 
     public void openPropertyActivity(ViewBean viewBean) {
@@ -677,6 +673,8 @@ public class ViewEditorFragment extends DesignProjectFragment implements MenuPro
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfiguration) {
         super.onConfigurationChanged(newConfiguration);
+        cancelAnimations();
+        viewProperty.setTranslationY(isPropertyViewVisible ? 0.0f : getPropertyPanelHiddenTranslationY());
         viewEditor.setScreenType(newConfiguration.orientation);
         viewEditor.isLayoutChanged = true;
     }

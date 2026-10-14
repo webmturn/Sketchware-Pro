@@ -105,6 +105,8 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
     private int displayWidth;
     private int displayHeight;
     private PaletteFavorite paletteFavorite;
+    private boolean favoritePaletteRequested;
+    private int paletteSwitchGeneration;
     private LinearLayout bgStatus;
     private TextView fileName;
     private ImageView imgPhoneTopBg;
@@ -226,35 +228,39 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
     }
 
     private void showPaletteFavorite() {
-        paletteWidget.animate()
-                .alpha(0f)
-                .setDuration(100)
-                .withEndAction(() -> {
-                    paletteWidget.setVisibility(View.GONE);
-                    paletteFavorite.setAlpha(0f);
-                    paletteFavorite.setVisibility(View.VISIBLE);
-                    paletteFavorite.animate()
-                            .alpha(1f)
-                            .setDuration(100)
-                            .start();
-                })
-                .start();
+        switchPalette(true);
     }
 
     private void showPaletteWidget() {
-        paletteFavorite.animate()
+        switchPalette(false);
+    }
+
+    private void switchPalette(boolean favorite) {
+        if (favoritePaletteRequested == favorite) return;
+        favoritePaletteRequested = favorite;
+        int generation = ++paletteSwitchGeneration;
+        paletteWidget.animate().cancel();
+        paletteFavorite.animate().cancel();
+        View outgoing = favorite ? paletteWidget : paletteFavorite;
+        View incoming = favorite ? paletteFavorite : paletteWidget;
+        if (outgoing.getVisibility() != View.VISIBLE) {
+            finishPaletteSwitch(incoming, outgoing, generation);
+            return;
+        }
+        outgoing.animate()
                 .alpha(0f)
                 .setDuration(100)
-                .withEndAction(() -> {
-                    paletteFavorite.setVisibility(View.GONE);
-                    paletteWidget.setAlpha(0f);
-                    paletteWidget.setVisibility(View.VISIBLE);
-                    paletteWidget.animate()
-                            .alpha(1f)
-                            .setDuration(100)
-                            .start();
-                })
+                .withEndAction(() -> finishPaletteSwitch(incoming, outgoing, generation))
                 .start();
+    }
+
+    private void finishPaletteSwitch(View incoming, View outgoing, int generation) {
+        if (generation != paletteSwitchGeneration) return;
+        outgoing.setVisibility(View.GONE);
+        // A reversal may bring back the still-visible outgoing panel. Keep its current alpha.
+        if (incoming.getVisibility() != View.VISIBLE) incoming.setAlpha(0f);
+        incoming.setVisibility(View.VISIBLE);
+        incoming.animate().alpha(1f).setDuration(100).start();
     }
 
 
@@ -816,11 +822,9 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
         if (isPaletteVisible == show) return;
         isPaletteVisible = show;
         cancelAnimation();
-        if (show) {
-            deleteViewShowAnimator.start();
-        } else {
-            deleteViewHideAnimator.start();
-        }
+        ObjectAnimator animator = show ? deleteViewShowAnimator : deleteViewHideAnimator;
+        animator.setFloatValues(deleteView.getTranslationY(), show ? 0.0f : deleteView.getHeight() * 2.0f);
+        animator.start();
     }
 
     public void initialize(String projectId, ProjectFileBean projectFileBean) {

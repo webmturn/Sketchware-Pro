@@ -137,6 +137,16 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
         }
     }
 
+    private void setSeeAllVisible(boolean visible) {
+        if (showAllVisible == visible) return;
+        showAllVisible = visible;
+        cancelSeeAllAnimations();
+        ObjectAnimator animator = visible ? showAllShower : showAllHider;
+        animator.setFloatValues(layoutPropertySeeAll.getTranslationY(),
+                visible ? 0.0f : ViewUtil.dpToPx(getContext(), 100.0f));
+        animator.start();
+    }
+
     public void saveProperties() {
         if (viewPropertyItems != null) {
             viewPropertyItems.save();
@@ -300,36 +310,20 @@ public class ViewProperty extends LinearLayout implements PropertyChangedCallbac
         viewEvent = findViewById(R.id.view_event);
         hcvProperty.setHorizontalScrollBarEnabled(false);
         hcvProperty.setOnScrollChangedListener((scrollX, scrollY, oldScrollX, oldScrollY) -> {
-            if (Math.abs(scrollX - oldScrollY) <= 5) {
+            if (scrollX == oldScrollX) {
                 return;
             }
             int maxScrollX = hcvProperty.getChildAt(0).getWidth() - hcvProperty.getWidth();
             if (scrollX > 100 && scrollX < maxScrollX) {
                 if (scrollX > oldScrollX) {
-                    if (showAllVisible) {
-                        showAllVisible = false;
-                        cancelSeeAllAnimations();
-                        showAllHider.start();
-                    }
+                    setSeeAllVisible(false);
                 } else {
-                    if (!showAllVisible) {
-                        showAllVisible = true;
-                        cancelSeeAllAnimations();
-                        showAllShower.start();
-                    }
+                    setSeeAllVisible(true);
                 }
             } else if (scrollX >= maxScrollX) {
-                if (showAllVisible) {
-                    showAllVisible = false;
-                    cancelSeeAllAnimations();
-                    showAllHider.start();
-                }
+                setSeeAllVisible(false);
             } else {
-                if (!showAllVisible) {
-                    showAllVisible = true;
-                    cancelSeeAllAnimations();
-                    showAllShower.start();
-                }
+                setSeeAllVisible(true);
             }
         });
         imgSave = findViewById(R.id.img_save);

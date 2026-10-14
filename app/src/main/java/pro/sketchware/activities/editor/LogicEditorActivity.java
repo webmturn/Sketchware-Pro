@@ -1796,7 +1796,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         if (isDrawerVisible != visible) {
             isDrawerVisible = visible;
             cancelDrawerAnimations();
-            (visible ? drawerShowAnimator : drawerHideAnimator).start();
+            ObjectAnimator animator = visible ? drawerShowAnimator : drawerHideAnimator;
+            animator.setFloatValues(editorDrawer.getTranslationX(), visible ? 0.0f : editorDrawer.getWidth());
+            animator.start();
         }
     }
 
@@ -1907,7 +1909,9 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         }
         isTopMenuVisible = visible;
         cancelTopMenuAnimations();
-        (visible ? topMenuShowAnimator : topMenuHideAnimator).start();
+        ObjectAnimator animator = visible ? topMenuShowAnimator : topMenuHideAnimator;
+        animator.setFloatValues(logicTopMenu.getTranslationY(), visible ? 0.0f : -logicTopMenu.getHeight());
+        animator.start();
     }
 
     public void showTypefaceSelector(FieldBlockView fieldBlock) {
@@ -2753,7 +2757,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         drawerShowAnimator = ObjectAnimator.ofFloat(editorDrawer, View.TRANSLATION_X, 0.0f);
         drawerShowAnimator.setDuration(500L);
         drawerShowAnimator.setInterpolator(new DecelerateInterpolator());
-        drawerHideAnimator = ObjectAnimator.ofFloat(editorDrawer, View.TRANSLATION_X, editorDrawer.getHeight());
+        drawerHideAnimator = ObjectAnimator.ofFloat(editorDrawer, View.TRANSLATION_X, editorDrawer.getWidth());
         drawerHideAnimator.setDuration(300L);
         drawerHideAnimator.setInterpolator(new DecelerateInterpolator());
         drawerAnimatorsInitialized = true;

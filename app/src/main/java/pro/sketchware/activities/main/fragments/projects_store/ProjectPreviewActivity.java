@@ -105,6 +105,7 @@ public class ProjectPreviewActivity extends BaseAppCompatActivity {
         UI.addSystemWindowInsetToPadding(binding.topScrim, false, true, false, false);
         UI.addSystemWindowInsetToPadding(binding.toolbar, true, true, true, false);
 
+        binding.toolbarTitleContainer.setTranslationY(24f);
         binding.scrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, v1, v2, v3, v4) -> {
             int[] location = new int[2];
             binding.author.getLocationOnScreen(location);
@@ -114,7 +115,6 @@ public class ProjectPreviewActivity extends BaseAppCompatActivity {
                 isTitleContainerShown = true;
 
                 binding.toolbarTitleContainer.setVisibility(View.VISIBLE);
-                binding.toolbarTitleContainer.setTranslationY(24f);
 
                 binding.topScrim.animate().alpha(1f).setDuration(TITLE_CONTAINER_FADE_DURATION).start();
                 binding.toolbarTitleContainer.animate()

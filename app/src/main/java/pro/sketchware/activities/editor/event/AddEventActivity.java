@@ -81,12 +81,11 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
             AnimationUtil.collapseView(binding.eventsPreview, 300, new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    binding.eventsPreview.setVisibility(View.GONE);
+                    if (isPreviewCollapsed) binding.eventsPreview.setVisibility(View.GONE);
                 }
             });
         } else if (!eventsToAdd.isEmpty() && isPreviewCollapsed) {
             isPreviewCollapsed = false;
-            binding.eventsPreview.setVisibility(View.VISIBLE);
             AnimationUtil.expandView(binding.eventsPreview, 300, null);
         }
     }

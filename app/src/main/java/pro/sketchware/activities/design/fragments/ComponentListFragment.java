@@ -137,6 +137,7 @@ public class ComponentListFragment extends DesignProjectFragment implements View
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            holder.cancelCollapseAnimation();
             ComponentBean componentBean = components.get(position);
             holder.bind(componentBean);
         }

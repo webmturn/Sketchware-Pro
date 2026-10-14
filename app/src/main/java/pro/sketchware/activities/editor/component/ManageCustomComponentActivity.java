@@ -272,6 +272,7 @@ public class ManageCustomComponentActivity extends BaseAppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            holder.cancelCollapseAnimation();
             int backgroundResource;
             if (components.size() == 1) {
                 backgroundResource = R.drawable.shape_alone;

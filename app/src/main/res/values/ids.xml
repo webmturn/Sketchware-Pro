@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="img_back" type="id" />
+    <item name="layout_height_animator" type="id" />
 
     <!-- Ids for design right drawer -->
     <item name="item_library_manager" type="id" />

@@ -1,5 +1,7 @@
 package pro.sketchware.activities.editor.property;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -31,6 +33,7 @@ import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ViewBean;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.slider.Slider;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -252,6 +255,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
         PropertyPopupHybridBinding binding = PropertyPopupHybridBinding.inflate(LayoutInflater.from(getContext()));
 
         float validCurrentValue = Math.max(minValue, Math.min(maxValue, currentValue));
+        SliderAnimation valueAnimation = new SliderAnimation();
 
         binding.slider.setValueFrom(minValue);
         binding.slider.setValueTo(maxValue);
@@ -273,12 +277,22 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
         updateValueDisplay(binding.tvCurrentValue, validCurrentValue, isInteger);
 
         binding.slider.addOnChangeListener((s, value, fromUser) -> {
+            float roundedSliderValue = Math.round(value * 10.0f) / 10.0f;
+            updateValueDisplay(binding.tvCurrentValue, roundedSliderValue, isInteger);
             if (fromUser) {
-                float roundedSliderValue = Math.round(value * 10.0f) / 10.0f;
-                updateValueDisplay(binding.tvCurrentValue, roundedSliderValue, isInteger);
+                valueAnimation.cancel();
                 binding.edInput.setText(isInteger ? String.valueOf((int) roundedSliderValue) :
                         String.format(Locale.US, "%.1f", roundedSliderValue));
             }
+        });
+        binding.slider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
+            @Override public void onStartTrackingTouch(@NonNull Slider slider) {
+                valueAnimation.cancel();
+                float selectedValue = slider.getValue();
+                binding.edInput.setText(isInteger ? String.valueOf((int) selectedValue) :
+                        String.format(Locale.US, "%.1f", selectedValue));
+            }
+            @Override public void onStopTrackingTouch(@NonNull Slider slider) { }
         });
 
         binding.edInput.addTextChangedListener(new TextWatcher() {
@@ -292,6 +306,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
 
             @Override
             public void afterTextChanged(Editable s) {
+                if (!valueAnimation.applyingValue) valueAnimation.cancel();
                 try {
                     float inputValue = Float.parseFloat(s.toString());
                     boolean isUnlimited = key.equals("property_translation_x") || key.equals("property_translation_y") ||
@@ -368,6 +383,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
         dialog.setNeutralButton(R.string.common_word_custom, null);
 
         AlertDialog alertDialog = dialog.create();
+        alertDialog.setOnDismissListener(d -> valueAnimation.cancel());
 
         alertDialog.setOnShowListener(dialogInterface -> {
             float animationStartValue;
@@ -385,11 +401,14 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
                 float animatedValue = (float) animation.getAnimatedValue();
                 float validAnimatedValue = Math.round(animatedValue / stepSize) * stepSize;
                 validAnimatedValue = Math.max(minValue, Math.min(maxValue, validAnimatedValue));
-                binding.slider.setValue(validAnimatedValue);
-                updateValueDisplay(binding.tvCurrentValue, validAnimatedValue, isInteger);
+                final float displayedValue = validAnimatedValue;
+                valueAnimation.apply(() -> {
+                    binding.slider.setValue(displayedValue);
+                    updateValueDisplay(binding.tvCurrentValue, displayedValue, isInteger);
+                });
             });
 
-            sliderAnimator.start();
+            valueAnimation.start(sliderAnimator);
 
             Button customButton = alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL);
             Button resetButton = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
@@ -408,6 +427,7 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
             });
 
             resetButton.setOnClickListener(v -> {
+                valueAnimation.cancel();
                 float defaultValue = getDefaultValue(key);
 
                 ValueAnimator resetAnimator = ValueAnimator.ofFloat(binding.slider.getValue(), defaultValue);
@@ -418,18 +438,53 @@ public class PropertyInputItem extends RelativeLayout implements View.OnClickLis
                     float animatedValue = (float) animation.getAnimatedValue();
                     float validAnimatedValue = Math.round(animatedValue / stepSize) * stepSize;
                     validAnimatedValue = Math.max(minValue, Math.min(maxValue, validAnimatedValue));
-                    binding.slider.setValue(validAnimatedValue);
-                    updateValueDisplay(binding.tvCurrentValue, validAnimatedValue, isInteger);
-                    binding.edInput.setText(isInteger ? String.valueOf((int) validAnimatedValue) :
-                            String.format(Locale.US, "%.1f", validAnimatedValue));
+                    final float displayedValue = validAnimatedValue;
+                    valueAnimation.apply(() -> {
+                        binding.slider.setValue(displayedValue);
+                        updateValueDisplay(binding.tvCurrentValue, displayedValue, isInteger);
+                        binding.edInput.setText(isInteger ? String.valueOf((int) displayedValue) :
+                                String.format(Locale.US, "%.1f", displayedValue));
+                    });
                 });
 
-                resetAnimator.start();
+                valueAnimation.start(resetAnimator);
                 binding.tiInput.setError(null);
             });
         });
 
         alertDialog.show();
+    }
+
+    /** One owner for this dialog's value animation; user input always takes precedence. */
+    private static final class SliderAnimation {
+        private ValueAnimator current;
+        private boolean applyingValue;
+
+        private void cancel() {
+            ValueAnimator previous = current;
+            current = null;
+            if (previous != null) previous.cancel();
+        }
+
+        private void start(ValueAnimator animator) {
+            cancel();
+            current = animator;
+            animator.addListener(new AnimatorListenerAdapter() {
+                @Override public void onAnimationEnd(Animator animation) {
+                    if (current == animation) current = null;
+                }
+            });
+            animator.start();
+        }
+
+        private void apply(Runnable update) {
+            applyingValue = true;
+            try {
+                update.run();
+            } finally {
+                applyingValue = false;
+            }
+        }
     }
 
     private void updateValueDisplay(TextView textView, float value, boolean isInteger) {

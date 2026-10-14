@@ -513,6 +513,7 @@ public class EventListFragment extends DesignProjectFragment implements View.OnC
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            holder.cancelCollapseAnimation();
             EventBean eventBean = getActiveList().get(position);
             holder.targetType.setVisibility(View.VISIBLE);
             holder.previewContainer.setVisibility(View.VISIBLE);

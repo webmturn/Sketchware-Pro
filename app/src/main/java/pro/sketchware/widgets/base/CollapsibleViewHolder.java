@@ -61,6 +61,10 @@ public abstract class CollapsibleViewHolder extends RecyclerView.ViewHolder {
     @NonNull
     protected abstract ViewGroup getOptionsLayout();
 
+    public final void cancelCollapseAnimation() {
+        AnimationUtil.cancelHeightAnimation(getOptionsLayout());
+    }
+
     /**
      * @return Views that act like an arrow icon and collapse/expand the RecyclerView item on click.
      */
@@ -89,7 +93,7 @@ public abstract class CollapsibleViewHolder extends RecyclerView.ViewHolder {
         AnimationUtil.collapseView(getOptionsLayout(), animationDurationInMs, new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                getOptionsLayout().setVisibility(View.GONE);
+                if (isCollapsed()) getOptionsLayout().setVisibility(View.GONE);
             }
         });
     }
@@ -97,7 +101,6 @@ public abstract class CollapsibleViewHolder extends RecyclerView.ViewHolder {
     public void expand() {
         if (getLayoutPosition() == RecyclerView.NO_POSITION) return;
         setIsCollapsed(false);
-        getOptionsLayout().setVisibility(View.VISIBLE);
         for (var v : getOnClickCollapseTriggerViews()) {
             if (config == null || config.shouldRotateView(v)) {
                 AnimationUtil.rotate(v, -180, null);
