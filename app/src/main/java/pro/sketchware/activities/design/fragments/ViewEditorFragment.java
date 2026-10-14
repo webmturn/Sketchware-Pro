@@ -73,6 +73,7 @@ public class ViewEditorFragment extends DesignProjectFragment implements MenuPro
     private boolean isDragging = false;
     private String sc_id;
     private Runnable propertyPanelWarmUpRunnable;
+    private boolean propertyContentPrepared;
     private boolean propertyViewsDirty = true;
 
     private WidgetsCreatorManager widgetsCreatorManager;
@@ -172,6 +173,7 @@ public class ViewEditorFragment extends DesignProjectFragment implements MenuPro
         viewEditor.initialize(sc_id, projectFileBean);
         viewEditor.refreshResourceManager();
         viewProperty.initialize(sc_id, this.projectFileBean);
+        propertyContentPrepared = false;
         setupPalette();
         refreshAllViews();
         schedulePropertyPanelWarmUp();
@@ -240,22 +242,26 @@ public class ViewEditorFragment extends DesignProjectFragment implements MenuPro
     }
 
     private void selectPropertyWidget(String viewId) {
+        cancelPropertyPanelWarmUp();
         if (propertyViewsDirty) {
             updatePropertyViews();
         }
-        if (!viewProperty.selectWidgetById(viewId)) {
+        boolean selected = viewProperty.selectWidgetById(viewId);
+        if (!selected) {
             updatePropertyViews();
-            viewProperty.selectWidgetById(viewId);
+            selected = viewProperty.selectWidgetById(viewId);
         }
+        propertyContentPrepared = selected;
     }
 
     private void schedulePropertyPanelWarmUp() {
-        if (propertyPanelWarmUpRunnable != null) {
-            viewProperty.removeCallbacks(propertyPanelWarmUpRunnable);
-        }
+        cancelPropertyPanelWarmUp();
+        if (!isAdded() || !isResumed() || !getUserVisibleHint() || viewProperty == null
+                || projectFileBean == null || propertyContentPrepared || isPropertyViewVisible) return;
         propertyPanelWarmUpRunnable = () -> {
             propertyPanelWarmUpRunnable = null;
-            if (!isAdded() || projectFileBean == null || isPropertyViewVisible) {
+            if (!isAdded() || !isResumed() || !getUserVisibleHint() || getView() == null
+                    || projectFileBean == null || propertyContentPrepared || isPropertyViewVisible) {
                 return;
             }
             if (propertyViewsDirty) {
@@ -263,8 +269,34 @@ public class ViewEditorFragment extends DesignProjectFragment implements MenuPro
             }
             startAnimation();
             viewProperty.warmUpPropertyContent();
+            propertyContentPrepared = true;
         };
         viewProperty.postDelayed(propertyPanelWarmUpRunnable, 250L);
+    }
+
+    private void cancelPropertyPanelWarmUp() {
+        if (propertyPanelWarmUpRunnable != null && viewProperty != null) {
+            viewProperty.removeCallbacks(propertyPanelWarmUpRunnable);
+            propertyPanelWarmUpRunnable = null;
+        }
+    }
+
+    @Override public void setUserVisibleHint(boolean visible) {
+        super.setUserVisibleHint(visible);
+        // This editor's pager uses visible hints for its retained tabs.
+        if (visible) schedulePropertyPanelWarmUp();
+        else cancelPropertyPanelWarmUp();
+    }
+
+    @Override public void onResume() {
+        super.onResume();
+        schedulePropertyPanelWarmUp();
+    }
+
+    @Override public void onDestroyView() {
+        cancelPropertyPanelWarmUp();
+        cancelAnimations();
+        super.onDestroyView();
     }
 
     private void onViewHistoryChanged() {
@@ -711,10 +743,7 @@ public class ViewEditorFragment extends DesignProjectFragment implements MenuPro
     @Override
     public void onStop() {
         super.onStop();
-        if (propertyPanelWarmUpRunnable != null && viewProperty != null) {
-            viewProperty.removeCallbacks(propertyPanelWarmUpRunnable);
-            propertyPanelWarmUpRunnable = null;
-        }
+        cancelPropertyPanelWarmUp();
         if (viewProperty != null) {
             viewProperty.saveProperties();
         }

@@ -32,6 +32,8 @@ import pro.sketchware.activities.design.fragments.ViewEditorFragment;
 import pro.sketchware.activities.editor.LogicEditorActivity;
 import pro.sketchware.activities.editor.event.AddEventActivity;
 import pro.sketchware.activities.editor.property.PropertyInputItem;
+import pro.sketchware.activities.editor.view.ViewProperty;
+import androidx.viewpager.widget.ViewPager;
 import pro.sketchware.activities.editor.view.ViewEditor;
 import pro.sketchware.activities.main.fragments.projects_store.ProjectPreviewActivity;
 import pro.sketchware.beans.ComponentBean;
@@ -47,6 +49,33 @@ import com.google.android.material.slider.Slider;
 /** Exercises real editor controls using disposable projects; no user project is modified. */
 @RunWith(AndroidJUnit4.class)
 public class EditorAnimationRegressionTest {
+    @Test public void propertiesRemainUsableAfterReturningFromComponents() throws Exception {
+        try (ProjectEditorPersistenceTest.Fixture f = new ProjectEditorPersistenceTest.Fixture()) {
+            f.seed(false, false);
+            try (ActivityScenario<DesignActivity> scenario = f.launch()) {
+                ProjectEditorPersistenceTest.waitForEditor(scenario);
+                scenario.onActivity(a -> ((ViewPager) a.findViewById(R.id.viewpager)).setCurrentItem(2, false));
+                pause(400);
+                scenario.onActivity(a -> ((ViewPager) a.findViewById(R.id.viewpager)).setCurrentItem(0, false));
+                pause(400);
+                scenario.onActivity(a -> {
+                    ViewProperty property = a.findViewById(R.id.view_property);
+                    assertTrue(property.selectWidgetById("status"));
+                    fragment(a).togglePropertyView(true);
+                });
+                pause(800);
+                scenario.onActivity(a -> {
+                    ViewProperty property = a.findViewById(R.id.view_property);
+                    PropertyInputItem id = property.findViewWithTag("property_id");
+                    assertNotNull("Returning to the view tab must populate properties", id);
+                    assertEquals("status", id.getValue());
+                    assertTrue(property.isShown());
+                    assertEquals(0f, property.getTranslationY(), 1f);
+                });
+            }
+        }
+    }
+
     @Test public void logicSideDrawerAndDragToolbar() throws Exception {
         try(ProjectEditorPersistenceTest.Fixture f = new ProjectEditorPersistenceTest.Fixture()) {
             f.seed(false,false);
