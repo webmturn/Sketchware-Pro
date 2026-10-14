@@ -24,6 +24,7 @@ import java.util.Objects;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
+import pro.sketchware.activities.resourceseditor.ResourceEditorDraftState;
 import pro.sketchware.activities.resourceseditor.components.adapters.StringsAdapter;
 import pro.sketchware.activities.resourceseditor.components.utils.StringsEditorManager;
 import pro.sketchware.databinding.ResourcesEditorFragmentBinding;
@@ -32,7 +33,7 @@ import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.XmlUtil;
 
-public class StringsEditor extends Fragment {
+public class StringsEditor extends Fragment implements ResourceEditorDraftState.Owner {
     private ResourcesEditorFragmentBinding binding;
 
     private ResourcesEditorActivity activity;
@@ -59,6 +60,23 @@ public class StringsEditor extends Fragment {
         binding = ResourcesEditorFragmentBinding.inflate(inflater, container, false);
         stringsEditorManager.sc_id = activity.sc_id;
         return binding.getRoot();
+    }
+
+    @Nullable
+    @Override
+    public Bundle saveDraftState() {
+        return hasUnsavedChanges ? ResourceEditorDraftState.capture(listmap, notesMap) : null;
+    }
+
+    @Override
+    public void restoreDraftState(@NonNull Bundle state, String filePath) {
+        ResourceEditorDraftState.restore(state, listmap, notesMap, HashMap.class);
+        this.filePath = filePath;
+        hasUnsavedChanges = true;
+        stringsEditorManager.isDefaultVariant = activity.variant.isEmpty();
+        adapter = new StringsAdapter(activity, listmap, notesMap);
+        binding.recyclerView.setAdapter(adapter);
+        updateNoContentLayout();
     }
 
     public void updateStringsList(String filePath, int updateMode, boolean hasUnsavedChangesStatus) {

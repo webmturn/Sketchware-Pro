@@ -26,6 +26,7 @@ import java.util.Objects;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
+import pro.sketchware.activities.resourceseditor.ResourceEditorDraftState;
 import pro.sketchware.activities.resourceseditor.components.adapters.StylesAdapter;
 import pro.sketchware.activities.resourceseditor.components.models.StyleModel;
 import pro.sketchware.activities.resourceseditor.components.utils.StylesEditorManager;
@@ -36,7 +37,7 @@ import pro.sketchware.databinding.StyleEditorAddBinding;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 
-public class ThemesEditor extends Fragment {
+public class ThemesEditor extends Fragment implements ResourceEditorDraftState.Owner {
 
     private ResourcesEditorFragmentBinding binding;
     private ResourcesEditorActivity activity;
@@ -63,6 +64,22 @@ public class ThemesEditor extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ResourcesEditorFragmentBinding.inflate(inflater, container, false);
         return binding.getRoot();
+    }
+
+    @Nullable
+    @Override
+    public Bundle saveDraftState() {
+        return hasUnsavedChanges ? ResourceEditorDraftState.capture(themesList, notesMap) : null;
+    }
+
+    @Override
+    public void restoreDraftState(@NonNull Bundle state, String filePath) {
+        ResourceEditorDraftState.restore(state, themesList, notesMap, StyleModel.class);
+        this.filePath = filePath;
+        hasUnsavedChanges = true;
+        adapter = new StylesAdapter(themesList, this, notesMap);
+        binding.recyclerView.setAdapter(adapter);
+        updateNoContentLayout();
     }
 
     public void updateThemesList(String filePath, int updateMode, boolean hasUnsavedChangesStatus) {

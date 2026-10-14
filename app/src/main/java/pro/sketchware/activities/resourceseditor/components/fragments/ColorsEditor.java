@@ -28,6 +28,7 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.core.project.ProjectThemeColors;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
+import pro.sketchware.activities.resourceseditor.ResourceEditorDraftState;
 import pro.sketchware.activities.resourceseditor.components.adapters.ColorsAdapter;
 import pro.sketchware.activities.resourceseditor.components.utils.ColorsEditorManager;
 import pro.sketchware.core.resources.ColorModel;
@@ -38,7 +39,7 @@ import pro.sketchware.util.PropertiesUtil;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.XmlUtil;
 
-public class ColorsEditor extends Fragment {
+public class ColorsEditor extends Fragment implements ResourceEditorDraftState.Owner {
 
     public static String contentPath;
     public final ArrayList<ColorModel> colorList = new ArrayList<>();
@@ -63,6 +64,25 @@ public class ColorsEditor extends Fragment {
         binding = ResourcesEditorFragmentBinding.inflate(inflater, container, false);
         initialize();
         return binding.getRoot();
+    }
+
+    @Nullable
+    @Override
+    public Bundle saveDraftState() {
+        return hasUnsavedChanges ? ResourceEditorDraftState.capture(colorList, notesMap) : null;
+    }
+
+    @Override
+    public void restoreDraftState(@NonNull Bundle state, String filePath) {
+        ResourceEditorDraftState.restore(state, colorList, notesMap, ColorModel.class);
+        contentPath = filePath;
+        colorsEditorManager.contentPath = filePath;
+        colorsEditorManager.isDefaultVariant = activity.variant.isEmpty();
+        isNightVariant = activity.variant.contains("night");
+        hasUnsavedChanges = true;
+        adapter = new ColorsAdapter(colorsEditorManager, colorList, activity, notesMap);
+        binding.recyclerView.setAdapter(adapter);
+        updateNoContentLayout();
     }
 
     public void updateColorsList(String filePath, int updateMode, boolean hasUnsavedChangesStatus) {

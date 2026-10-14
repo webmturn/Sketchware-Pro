@@ -8,12 +8,17 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.SparseBooleanArray;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
 
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -24,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -73,6 +79,22 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
     private ResourcesEditorsActivityBinding binding;
     private MaterialAlertDialogBuilder builder;
     private int currentTabPosition = ResourceEditorTabs.STRINGS;
+    private TabLayoutMediator tabMediator;
+    private boolean editorsLoaded;
+    private String resourceSearchQuery = "";
+    private boolean initialLoadPending;
+    private boolean sourceReloadPending;
+    private Bundle pendingDrafts;
+    private final Handler resourceHandler = new Handler(Looper.getMainLooper());
+    private final Runnable loadEditorsTask = this::loadPendingEditors;
+    private final FragmentManager.FragmentLifecycleCallbacks editorLifecycleCallbacks =
+            new FragmentManager.FragmentLifecycleCallbacks() {
+                @Override
+                public void onFragmentViewCreated(@NonNull FragmentManager manager, @NonNull Fragment fragment,
+                                                  @NonNull View view, @Nullable Bundle savedInstanceState) {
+                    schedulePendingLoad();
+                }
+            };
 
     public static String escapeXml(String text) {
         return XmlUtil.escapeXml(text);
@@ -84,14 +106,18 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
 
         if (savedInstanceState != null) {
             currentTabPosition = savedInstanceState.getInt("current_tab_position", ResourceEditorTabs.STRINGS);
+            resourceSearchQuery = savedInstanceState.getString("resource_search_query", "");
+            pendingDrafts = savedInstanceState.getBundle("resource_editor_drafts");
+            sourceReloadPending = savedInstanceState.getBoolean("resource_source_reload", false);
         }
 
         setupUI();
         initializeManagers();
-        initializeEditors();
+        initializeEditors(savedInstanceState);
+        getSupportFragmentManager().registerFragmentLifecycleCallbacks(editorLifecycleCallbacks, false);
         setupListeners();
         setupBackPressedHandler();
-        initializeBackgroundTask("");
+        initializeBackgroundTask(savedInstanceState == null ? "" : savedInstanceState.getString("resource_variant", ""));
     }
 
     private void setupUI() {
@@ -108,16 +134,44 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         projectFilePaths.initializeMetadata(ProjectDataManager.getLibraryManager(sc_id), ProjectDataManager.getFileManager(sc_id), ProjectDataManager.getProjectDataManager(sc_id));
     }
 
-    private void initializeEditors() {
-        stringsEditor = new StringsEditor();
-        colorsEditor = new ColorsEditor();
-        stylesEditor = new StylesEditor();
-        themesEditor = new ThemesEditor();
-        arraysEditor = new ArraysEditor();
-        dimensEditor = new DimensEditor();
+    private void initializeEditors(Bundle savedInstanceState) {
+        stringsEditor = restoreEditor(savedInstanceState, ResourceEditorTabs.STRINGS, StringsEditor.class, StringsEditor::new);
+        colorsEditor = restoreEditor(savedInstanceState, ResourceEditorTabs.COLORS, ColorsEditor.class, ColorsEditor::new);
+        stylesEditor = restoreEditor(savedInstanceState, ResourceEditorTabs.STYLES, StylesEditor.class, StylesEditor::new);
+        themesEditor = restoreEditor(savedInstanceState, ResourceEditorTabs.THEMES, ThemesEditor.class, ThemesEditor::new);
+        arraysEditor = restoreEditor(savedInstanceState, ResourceEditorTabs.ARRAYS, ArraysEditor.class, ArraysEditor::new);
+        dimensEditor = restoreEditor(savedInstanceState, ResourceEditorTabs.DIMENS, DimensEditor.class, DimensEditor::new);
+    }
+
+    private <T extends Fragment> T restoreEditor(Bundle savedState, int position, Class<T> type, Supplier<T> create) {
+        String key = "resource_editor_" + position;
+        Fragment restored = savedState != null && savedState.containsKey(key)
+                ? getSupportFragmentManager().getFragment(savedState, key) : null;
+        // Older saved states only contain the pager's fragment state, without our explicit references.
+        if (restored == null) {
+            for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                if (type.isInstance(fragment)) {
+                    restored = fragment;
+                    break;
+                }
+            }
+        }
+        return restored == null ? create.get() : type.cast(restored);
+    }
+
+    private Fragment[] editors() {
+        return new Fragment[]{stringsEditor, colorsEditor, stylesEditor, themesEditor, arraysEditor, dimensEditor};
+    }
+
+    private boolean areEditorsReady() {
+        for (Fragment editor : editors()) {
+            if (editor == null || !editor.isAdded() || editor.getActivity() != this || editor.getView() == null) return false;
+        }
+        return true;
     }
 
     private void initializeBackgroundTask(String variant) {
+        if (this.variant != null && !this.variant.equals(variant)) pendingDrafts = null;
         this.variant = variant;
         stringsFilePath = SketchwarePaths.getProjectResourceValuesFilePath(sc_id, variant, "strings.xml");
         colorsFilePath = SketchwarePaths.getProjectResourceValuesFilePath(sc_id, variant, "colors.xml");
@@ -126,7 +180,8 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         arrayFilePath = SketchwarePaths.getProjectResourceValuesFilePath(sc_id, variant, "arrays.xml");
         dimensFilePath = SketchwarePaths.getProjectResourceValuesFilePath(sc_id, variant, "dimens.xml");
 
-        setupViewPager();
+        if (binding.viewPager.getAdapter() == null) setupViewPager();
+        else updateTabTitles();
         startBackgroundTask();
     }
 
@@ -134,6 +189,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         binding.topAppBar.setNavigationOnClickListener(Helper.getBackPressedClickListener(this));
 
         binding.fab.setOnClickListener(view -> {
+            if (!editorsLoaded) return;
             int currentItem = binding.viewPager.getCurrentItem();
             switch (currentItem) {
                 case ResourceEditorTabs.STRINGS -> stringsEditor.showAddStringDialog();
@@ -147,24 +203,57 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
     }
 
     private void startBackgroundTask() {
+        initialLoadPending = true;
+        editorsLoaded = false;
         showLoadingDialog();
+        schedulePendingLoad();
+    }
 
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            loadDataInBackground();
-            dismissLoadingDialog();
-        }, 1000);
+    private void schedulePendingLoad() {
+        resourceHandler.removeCallbacks(loadEditorsTask);
+        if ((!initialLoadPending && !sourceReloadPending) || isFinishing() || isDestroyed()
+                || !getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED) || !areEditorsReady()) return;
+        resourceHandler.post(loadEditorsTask);
+    }
+
+    private void loadPendingEditors() {
+        if (isFinishing() || isDestroyed() || !getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)
+                || !areEditorsReady()) return;
+        if (initialLoadPending) loadDataInBackground();
+        if (sourceReloadPending) reloadFromCodeEditor();
+        initialLoadPending = false;
+        sourceReloadPending = false;
+        editorsLoaded = true;
+        applyResourceSearch();
+        dismissLoadingDialog();
     }
 
     private void loadDataInBackground() {
-        stringsEditor.updateStringsList(stringsFilePath, 0, false);
-        colorsEditor.updateColorsList(colorsFilePath, 0, false);
-        stylesEditor.updateStylesList(stylesFilePath, 0, false);
-        themesEditor.updateThemesList(themesFilePath, 0, false);
-        arraysEditor.updateArraysList(arrayFilePath, 0, false);
-        dimensEditor.updateDimensList(dimensFilePath, 0, false);
+        if (!restoreDraft(stringsEditor, ResourceEditorTabs.STRINGS, stringsFilePath))
+            stringsEditor.updateStringsList(stringsFilePath, 0, false);
+        if (!restoreDraft(colorsEditor, ResourceEditorTabs.COLORS, colorsFilePath))
+            colorsEditor.updateColorsList(colorsFilePath, 0, false);
+        if (!restoreDraft(stylesEditor, ResourceEditorTabs.STYLES, stylesFilePath))
+            stylesEditor.updateStylesList(stylesFilePath, 0, false);
+        if (!restoreDraft(themesEditor, ResourceEditorTabs.THEMES, themesFilePath))
+            themesEditor.updateThemesList(themesFilePath, 0, false);
+        if (!restoreDraft(arraysEditor, ResourceEditorTabs.ARRAYS, arrayFilePath))
+            arraysEditor.updateArraysList(arrayFilePath, 0, false);
+        if (!restoreDraft(dimensEditor, ResourceEditorTabs.DIMENS, dimensFilePath))
+            dimensEditor.updateDimensList(dimensFilePath, 0, false);
+        pendingDrafts = null;
+        checkForInvalidResources();
+    }
+
+    private boolean restoreDraft(ResourceEditorDraftState.Owner editor, int position, String filePath) {
+        Bundle draft = pendingDrafts == null ? null : pendingDrafts.getBundle(Integer.toString(position));
+        if (draft == null) return false;
+        editor.restoreDraftState(draft, filePath);
+        return true;
     }
 
     public void checkForInvalidResources() {
+        if (!areEditorsReady() || isFinishing() || isDestroyed()) return;
         if (stringsEditor.stringsEditorManager.isDataLoadingFailed) {
             showLoadFailedDialog("strings.xml", stringsFilePath);
             return;
@@ -281,36 +370,74 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
 
     @Override
     public void onResume() {
-        if (isComingFromSrcCodeEditor) {
-            int currentItem = binding.viewPager.getCurrentItem();
-
-            if (currentItem == ResourceEditorTabs.STRINGS || stringsEditor.stringsEditorManager.isDataLoadingFailed) {
-                stringsEditor.updateStringsList(stringsFilePath, 0, false);
-            }
-
-            if (currentItem == ResourceEditorTabs.COLORS || colorsEditor.colorsEditorManager.isDataLoadingFailed) {
-                colorsEditor.updateColorsList(colorsFilePath, 0, false);
-            }
-
-            if (currentItem == ResourceEditorTabs.STYLES || stylesEditor.stylesEditorManager.isDataLoadingFailed) {
-                stylesEditor.updateStylesList(stylesFilePath, 0, false);
-            }
-
-            if (currentItem == ResourceEditorTabs.THEMES || themesEditor.themesEditorManager.isDataLoadingFailed) {
-                themesEditor.updateThemesList(themesFilePath, 0, false);
-            }
-
-            if (currentItem == ResourceEditorTabs.ARRAYS || arraysEditor.arraysEditorManager.isDataLoadingFailed) {
-                arraysEditor.updateArraysList(arrayFilePath, 0, false);
-            }
-
-            if (currentItem == ResourceEditorTabs.DIMENS || (dimensEditor.dimensEditorManager != null && dimensEditor.dimensEditorManager.isDataLoadingFailed)) {
-                dimensEditor.updateDimensList(dimensFilePath, 0, false);
-            }
-            checkForInvalidResources();
-        }
-        isComingFromSrcCodeEditor = false;
         super.onResume();
+        if (isComingFromSrcCodeEditor) {
+            sourceReloadPending = true;
+            isComingFromSrcCodeEditor = false;
+        }
+        schedulePendingLoad();
+    }
+
+    private void applyResourceSearch() {
+        if (!editorsLoaded) return;
+        int currentItem = binding.viewPager.getCurrentItem();
+        if (currentItem == ResourceEditorTabs.STRINGS) {
+            stringsEditor.adapter.filter(resourceSearchQuery);
+        } else if (currentItem == ResourceEditorTabs.COLORS) {
+            colorsEditor.adapter.filter(resourceSearchQuery);
+        } else if (currentItem == ResourceEditorTabs.STYLES) {
+            stylesEditor.adapter.filter(resourceSearchQuery);
+        } else if (currentItem == ResourceEditorTabs.THEMES) {
+            themesEditor.adapter.filter(resourceSearchQuery);
+        } else if (currentItem == ResourceEditorTabs.ARRAYS) {
+            arraysEditor.adapter.filter(resourceSearchQuery);
+        } else if (currentItem == ResourceEditorTabs.DIMENS) {
+            if (dimensEditor.adapter != null) dimensEditor.adapter.filter(resourceSearchQuery);
+        }
+    }
+
+    private void reloadFromCodeEditor() {
+        int currentItem = binding.viewPager.getCurrentItem();
+
+        if (currentItem == ResourceEditorTabs.STRINGS || stringsEditor.stringsEditorManager.isDataLoadingFailed) {
+            stringsEditor.updateStringsList(stringsFilePath, 0, false);
+        }
+
+        if (currentItem == ResourceEditorTabs.COLORS || colorsEditor.colorsEditorManager.isDataLoadingFailed) {
+            colorsEditor.updateColorsList(colorsFilePath, 0, false);
+        }
+
+        if (currentItem == ResourceEditorTabs.STYLES || stylesEditor.stylesEditorManager.isDataLoadingFailed) {
+            stylesEditor.updateStylesList(stylesFilePath, 0, false);
+        }
+
+        if (currentItem == ResourceEditorTabs.THEMES || themesEditor.themesEditorManager.isDataLoadingFailed) {
+            themesEditor.updateThemesList(themesFilePath, 0, false);
+        }
+
+        if (currentItem == ResourceEditorTabs.ARRAYS || arraysEditor.arraysEditorManager.isDataLoadingFailed) {
+            arraysEditor.updateArraysList(arrayFilePath, 0, false);
+        }
+
+        if (currentItem == ResourceEditorTabs.DIMENS || (dimensEditor.dimensEditorManager != null && dimensEditor.dimensEditorManager.isDataLoadingFailed)) {
+            dimensEditor.updateDimensList(dimensFilePath, 0, false);
+        }
+        checkForInvalidResources();
+    }
+
+    @Override
+    protected void onStop() {
+        resourceHandler.removeCallbacks(loadEditorsTask);
+        dismissLoadingDialog();
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        resourceHandler.removeCallbacks(loadEditorsTask);
+        getSupportFragmentManager().unregisterFragmentLifecycleCallbacks(editorLifecycleCallbacks);
+        if (tabMediator != null) tabMediator.detach();
+        super.onDestroy();
     }
 
     @Override
@@ -324,21 +451,8 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextChange(String newText) {
-                    newText = newText.toLowerCase().trim();
-                    int currentItem = binding.viewPager.getCurrentItem();
-                    if (currentItem == ResourceEditorTabs.STRINGS) {
-                        stringsEditor.adapter.filter(newText);
-                    } else if (currentItem == ResourceEditorTabs.COLORS) {
-                        colorsEditor.adapter.filter(newText);
-                    } else if (currentItem == ResourceEditorTabs.STYLES) {
-                        stylesEditor.adapter.filter(newText);
-                    } else if (currentItem == ResourceEditorTabs.THEMES) {
-                        themesEditor.adapter.filter(newText);
-                    } else if (currentItem == ResourceEditorTabs.ARRAYS) {
-                        arraysEditor.adapter.filter(newText);
-                    } else if (currentItem == ResourceEditorTabs.DIMENS) {
-                        if (dimensEditor.adapter != null) dimensEditor.adapter.filter(newText);
-                    }
+                    resourceSearchQuery = newText.toLowerCase().trim();
+                    applyResourceSearch();
                     return false;
                 }
 
@@ -347,6 +461,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
                     return false;
                 }
             });
+            searchView.setQuery(resourceSearchQuery, false);
         }
         MenuItem getFromVariantItem = menu.findItem(R.id.action_get_from_variant);
         if (getFromVariantItem != null) {
@@ -358,6 +473,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull android.view.MenuItem item) {
+        if (!editorsLoaded) return super.onOptionsItemSelected(item);
         int id = item.getItemId();
         if (id == R.id.action_save) {
             saveEditorsChanges();
@@ -407,6 +523,19 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("current_tab_position", binding.viewPager.getCurrentItem());
+        outState.putString("resource_variant", variant);
+        outState.putString("resource_search_query", resourceSearchQuery);
+        outState.putBoolean("resource_source_reload", isComingFromSrcCodeEditor || sourceReloadPending);
+        Bundle drafts = pendingDrafts == null ? new Bundle() : new Bundle(pendingDrafts);
+        Fragment[] editors = editors();
+        for (int i = 0; i < editors.length; i++) {
+            if (editors[i].isAdded()) getSupportFragmentManager().putFragment(outState, "resource_editor_" + i, editors[i]);
+            if (editorsLoaded) {
+                Bundle draft = ((ResourceEditorDraftState.Owner) editors[i]).saveDraftState();
+                if (draft != null) drafts.putBundle(Integer.toString(i), draft);
+            }
+        }
+        outState.putBundle("resource_editor_drafts", drafts);
     }
 
     private void saveEditorsChanges() {
@@ -447,28 +576,29 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         binding.viewPager.setAdapter(adapter);
         binding.viewPager.setCurrentItem(currentTabPosition, false);
 
-        new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position) -> {
-            switch (position) {
-                case ResourceEditorTabs.STRINGS:
-                    tab.setText("strings" + variant + ".xml");
-                    break;
-                case ResourceEditorTabs.COLORS:
-                    tab.setText("colors" + variant + ".xml");
-                    break;
-                case ResourceEditorTabs.STYLES:
-                    tab.setText("styles" + variant + ".xml");
-                    break;
-                case ResourceEditorTabs.THEMES:
-                    tab.setText("themes" + variant + ".xml");
-                    break;
-                case ResourceEditorTabs.ARRAYS:
-                    tab.setText("arrays" + variant + ".xml");
-                    break;
-                case ResourceEditorTabs.DIMENS:
-                    tab.setText("dimens" + variant + ".xml");
-            }
-        }).attach();
+        tabMediator = new TabLayoutMediator(binding.tabLayout, binding.viewPager,
+                (tab, position) -> tab.setText(resourceTabTitle(position)));
+        tabMediator.attach();
         UI.animateLayoutChanges(binding.viewPager);
+    }
+
+    private String resourceTabTitle(int position) {
+        return switch (position) {
+            case ResourceEditorTabs.STRINGS -> "strings";
+            case ResourceEditorTabs.COLORS -> "colors";
+            case ResourceEditorTabs.STYLES -> "styles";
+            case ResourceEditorTabs.THEMES -> "themes";
+            case ResourceEditorTabs.ARRAYS -> "arrays";
+            case ResourceEditorTabs.DIMENS -> "dimens";
+            default -> throw new IllegalArgumentException("Invalid resource tab: " + position);
+        } + variant + ".xml";
+    }
+
+    private void updateTabTitles() {
+        for (int i = 0; i < ResourceEditorTabs.COUNT; i++) {
+            Objects.requireNonNull(binding.tabLayout.getTabAt(i)).setText(resourceTabTitle(i));
+        }
+        invalidateOptionsMenu();
     }
 
     private void changeTheVariantDialog() {

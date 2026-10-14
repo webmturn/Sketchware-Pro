@@ -20,6 +20,7 @@ import java.util.Objects;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
+import pro.sketchware.activities.resourceseditor.ResourceEditorDraftState;
 import pro.sketchware.activities.resourceseditor.components.adapters.DimensAdapter;
 import pro.sketchware.activities.resourceseditor.components.models.DimenModel;
 import pro.sketchware.activities.resourceseditor.components.utils.DimensEditorManager;
@@ -29,7 +30,7 @@ import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.XmlUtil;
 
-public class DimensEditor extends Fragment {
+public class DimensEditor extends Fragment implements ResourceEditorDraftState.Owner {
 
     public String contentPath;
     public final ArrayList<DimenModel> dimenList = new ArrayList<>();
@@ -52,6 +53,23 @@ public class DimensEditor extends Fragment {
         binding = ResourcesEditorFragmentBinding.inflate(inflater, container, false);
         dimensEditorManager = new DimensEditorManager();
         return binding.getRoot();
+    }
+
+    @Nullable
+    @Override
+    public Bundle saveDraftState() {
+        return hasUnsavedChanges ? ResourceEditorDraftState.capture(dimenList, notesMap) : null;
+    }
+
+    @Override
+    public void restoreDraftState(@NonNull Bundle state, String filePath) {
+        ResourceEditorDraftState.restore(state, dimenList, notesMap, DimenModel.class);
+        contentPath = filePath;
+        dimensEditorManager.contentPath = filePath;
+        hasUnsavedChanges = true;
+        adapter = new DimensAdapter(dimenList, activity, notesMap);
+        binding.recyclerView.setAdapter(adapter);
+        updateNoContentLayout();
     }
 
     public void updateDimensList(String filePath, int updateMode, boolean hasUnsavedChangesStatus) {

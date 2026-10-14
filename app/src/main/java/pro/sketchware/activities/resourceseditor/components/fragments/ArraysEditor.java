@@ -28,6 +28,7 @@ import java.util.Objects;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
+import pro.sketchware.activities.resourceseditor.ResourceEditorDraftState;
 import pro.sketchware.activities.resourceseditor.components.adapters.ArraysAdapter;
 import pro.sketchware.activities.resourceseditor.components.models.ArrayModel;
 import pro.sketchware.activities.resourceseditor.components.utils.ArraysEditorManager;
@@ -38,7 +39,7 @@ import pro.sketchware.databinding.ResourcesEditorFragmentBinding;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 
-public class ArraysEditor extends Fragment {
+public class ArraysEditor extends Fragment implements ResourceEditorDraftState.Owner {
 
     private ResourcesEditorFragmentBinding binding;
 
@@ -99,6 +100,22 @@ public class ArraysEditor extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ResourcesEditorFragmentBinding.inflate(inflater, container, false);
         return binding.getRoot();
+    }
+
+    @Nullable
+    @Override
+    public Bundle saveDraftState() {
+        return hasUnsavedChanges ? ResourceEditorDraftState.capture(arraysList, notesMap) : null;
+    }
+
+    @Override
+    public void restoreDraftState(@NonNull Bundle state, String filePath) {
+        ResourceEditorDraftState.restore(state, arraysList, notesMap, ArrayModel.class);
+        this.filePath = filePath;
+        hasUnsavedChanges = true;
+        adapter = new ArraysAdapter(arraysList, this, notesMap);
+        binding.recyclerView.setAdapter(adapter);
+        updateNoContentLayout();
     }
 
     public void updateArraysList(String filePath, int updateMode, boolean hasUnsavedChangesStatus) {
