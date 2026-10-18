@@ -133,6 +133,9 @@ public final class ResourceEditorDraftState {
         if (entries == null || notes == null || notes.containsKey(null) || notes.containsValue(null)) {
             throw new IllegalArgumentException("Incomplete legacy draft");
         }
+        for (Integer index : notes.keySet()) {
+            if (index < 0 || index > entries.size()) throw new IllegalArgumentException("Invalid legacy note position");
+        }
         for (Object entry : entries) {
             if (entry == null || !entryClass.isInstance(entry)) {
                 throw new IllegalArgumentException("Invalid legacy resource model");

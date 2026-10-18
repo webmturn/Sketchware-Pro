@@ -197,6 +197,38 @@ public class ResourceEditorDraftStoreTest {
         assertFalse(store.directory.exists());
     }
 
+    @Test public void ageCleanupRetriesModelSegmentsLeftAfterCloseCleanupFailure() throws Exception {
+        store.commit(new long[]{1,0,1,0,0,0}, new boolean[]{true,false,true,false,false,false},
+                Map.of(0, strings("protected string"), 2, ResourceEditorDraftState.snapshot(
+                        List.of(new StyleModel("Style", "Parent", new LinkedHashMap<>(Map.of("attr", "protected model")))), Map.of())));
+        File manifest = new File(store.directory, "manifest.json");
+        File pages = new File(store.directory, "pages");
+        assertEquals(2, pages.list().length);
+        assertTrue(List.of(pages.list()).stream().anyMatch(name -> name.endsWith(".seg")));
+
+        // Age alone must never remove an open, recoverable model draft.
+        assertTrue(manifest.setLastModified(1));
+        ResourceEditorDraftStore.pruneClosedSessions(root);
+        assertEquals("protected model", ((StyleModel) restore()[2].entries.get(0)).getAttribute("attr"));
+        assertEquals(2, pages.list().length);
+
+        // Simulate closing successfully while the immediate payload cleanup cannot run.
+        failingPoint = "before_cleanup";
+        store.close();
+        assertEquals(2, pages.list().length);
+        JsonObject closed = JsonParser.parseString(new String(Files.readAllBytes(manifest.toPath()),
+                StandardCharsets.UTF_8)).getAsJsonObject();
+        assertTrue(closed.get("closed").getAsBoolean());
+        ResourceEditorDraftStore.pruneClosedSessions(root);
+        assertTrue(manifest.exists()); // A recently closed session is still retained.
+        assertEquals(2, pages.list().length);
+
+        assertTrue(manifest.setLastModified(1));
+        ResourceEditorDraftStore.pruneClosedSessions(root);
+        assertFalse("Expired CLOSED session must collect both .bin and .seg leftovers", store.directory.exists());
+        ResourceEditorDraftStore.pruneClosedSessions(root); // Safe to retry after collection.
+    }
+
     @Test public void differentSessionsAreIsolatedAndGroupFailureKeepsBothOldPages() throws Exception {
         long[] revisions = {1,1,0,0,0,0};
         boolean[] dirty = {true,true,false,false,false,false};

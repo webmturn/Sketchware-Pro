@@ -9,6 +9,11 @@ import com.google.gson.reflect.TypeToken;
 import java.io.File;
 import java.io.IOException;
 import java.io.InterruptedIOException;
+import java.io.ByteArrayOutputStream;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.io.RandomAccessFile;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.security.MessageDigest;
@@ -57,6 +62,9 @@ final class ResourceEditorDraftStore {
     private final boolean[] xmlCommittedPages = new boolean[ResourceEditorTabs.COUNT];
     private volatile Manifest manifest;
     private volatile boolean durable;
+    // Only successful captures, never models handed to the UI by open(). Accessed on IO.
+    private final ResourceEditorDraftState.Snapshot[] protectedModels = new ResourceEditorDraftState.Snapshot[ResourceEditorTabs.COUNT];
+    private final long[] protectedModelRevisions = new long[ResourceEditorTabs.COUNT];
 
     interface Faults { void at(String point) throws IOException; }
 
@@ -85,6 +93,7 @@ final class ResourceEditorDraftStore {
     }
 
     ResourceEditorDraftState.Snapshot[] open(boolean restoring) throws IOException {
+        java.util.Arrays.fill(protectedModels, null);
         ResourceEditorDraftState.Snapshot[] pages = new ResourceEditorDraftState.Snapshot[ResourceEditorTabs.COUNT];
         File file = new File(directory, "manifest.json");
         if (!file.exists() && !restoring) {
@@ -115,7 +124,11 @@ final class ResourceEditorDraftStore {
                 PageRef ref = restored.pages[i];
                 if (ref == null || ref.revision < 0) throw new IOException("Invalid draft page descriptor");
                 if (!ref.dirty) {
-                    if (ref.object != null) throw new IOException("Clean page has a draft payload");
+                    if (ref.object != null || ref.blocks != null) throw new IOException("Clean page has a draft payload");
+                    continue;
+                }
+                if (i != ResourceEditorTabs.STRINGS && ResourceEditorModelBlocks.FORMAT.equals(ref.format)) {
+                    pages[i] = readModelBlocks(i, ref);
                     continue;
                 }
                 if (i == ResourceEditorTabs.STRINGS && ResourceEditorStringsSnapshot.CHUNKS_FORMAT.equals(ref.format)) {
@@ -276,6 +289,8 @@ final class ResourceEditorDraftStore {
                 LogUtil.e("ResourceDrafts", "Unable to migrate legacy draft", failure);
                 return legacyResult(LEGACY_FAILED, null, corrupt);
             }
+            // These migration snapshots are about to become editable UI models.
+            for (Integer page : migrated.keySet()) protectedModels[page] = null;
             return legacyResult(corrupt.isEmpty() ? LEGACY_MIGRATED : LEGACY_PARTIAL, migrated, corrupt);
         } catch (IOException failure) {
             // Owner was replaced or the commit could not be attempted at all.
@@ -447,6 +462,11 @@ final class ResourceEditorDraftStore {
                 } else {
                     ResourceEditorDraftState.Snapshot snapshot = snapshots.get(i);
                     if (snapshot == null) throw new IOException("Missing changed draft page");
+                    if (i != ResourceEditorTabs.STRINGS) {
+                        if (snapshot.chunks != null) throw new IOException("Unexpected string chunks");
+                        next.pages[i] = writeModelBlocks(i, revisions[i], snapshot);
+                        continue;
+                    }
                     if (snapshot.chunks != null) {
                         if (i != ResourceEditorTabs.STRINGS) throw new IOException("Unexpected incremental page");
                         next.pages[i] = writeChunks(revisions[i], snapshot.chunks);
@@ -490,6 +510,13 @@ final class ResourceEditorDraftStore {
             ResourceXmlWriter.write(new File(directory, "manifest.json"), writer -> GSON.toJson(next, writer));
             manifest = next;
             durable = true;
+            for (int i = 1; i < next.pages.length; i++) {
+                if (!next.pages[i].dirty) protectedModels[i] = null;
+                else if (snapshots.containsKey(i)) {
+                    protectedModels[i] = snapshots.get(i);
+                    protectedModelRevisions[i] = revisions[i];
+                }
+            }
             // Every page is represented by this manifest: the full snapshot, the reused protected
             // entry, or a clean page. Any earlier XML-triggered invalidation is now resolved.
             java.util.Arrays.fill(xmlCommittedPages, false);
@@ -497,6 +524,158 @@ final class ResourceEditorDraftStore {
         // Cleanup failure cannot invalidate an already committed checkpoint.
         try { faults.at("after_manifest"); cleanup(); }
         catch (IOException failure) { LogUtil.w("ResourceDrafts", "Draft cleanup deferred", failure); }
+    }
+
+    private PageRef writeModelBlocks(int page, long revision, ResourceEditorDraftState.Snapshot snapshot) throws IOException {
+        if (!validChunkNotes(snapshot)) throw new IOException("Invalid model page notes");
+        PageRef previous = manifest.pages[page];
+        ResourceEditorDraftState.Snapshot protectedSnapshot = protectedModels[page];
+        boolean reusable = durable && !xmlCommittedPages[page]
+                && ResourceEditorModelBlocks.FORMAT.equals(previous.format)
+                && protectedSnapshot != null && protectedModelRevisions[page] == previous.revision;
+        PageRef next = new PageRef();
+        next.format = ResourceEditorModelBlocks.FORMAT;
+        next.revision = revision;
+        next.dirty = true;
+        next.rows = snapshot.entries.size();
+        int count = ResourceEditorModelBlocks.count(next.rows);
+        next.blocks = new ArrayList<>(count);
+        List<Integer> changed = new ArrayList<>();
+        // Avoid boxing every row index when only a model attribute changed.
+        boolean identicalNotes = reusable && protectedSnapshot.notes.equals(snapshot.notes);
+        for (int block = 0; block < count; block++) {
+            if (reusable && block < previous.blocks.size()
+                    && !ResourceEditorModelBlocks.changed(protectedSnapshot, snapshot, block, identicalNotes)) {
+                next.blocks.add(previous.blocks.get(block));
+            } else {
+                next.blocks.add(null);
+                changed.add(block);
+            }
+        }
+        writeSegment(page, revision, snapshot, next, changed);
+        // A segment can contain both live and superseded blocks. Bound reachable waste,
+        // rather than periodically rewriting solely because many small segments exist.
+        if (needsModelCompaction(page, next)) {
+            faults.at("before_compaction");
+            changed.clear();
+            for (int block = 0; block < count; block++) changed.add(block);
+            writeSegment(page, revision, snapshot, next, changed);
+            faults.at("after_compaction");
+        }
+        return next;
+    }
+
+    private void writeSegment(int page, long revision, ResourceEditorDraftState.Snapshot snapshot,
+                              PageRef next, List<Integer> changed) throws IOException {
+        if (changed.isEmpty()) return;
+        String object = UUID.randomUUID().toString();
+        long[] offset = {0};
+        faults.at("before_page");
+        ResourceXmlWriter.writeBytes(segmentFile(page, object), stream -> {
+            EncodedBlock bytes = new EncodedBlock();
+            try (Writer writer = new BufferedWriter(new OutputStreamWriter(bytes, StandardCharsets.UTF_8), 65536)) {
+                for (int index : changed) {
+                    var slice = ResourceEditorModelBlocks.slice(snapshot, index);
+                    if (!validChunkNotes(slice)) throw new IOException("Invalid model block notes");
+                    PageData data = new PageData();
+                    data.session = session; data.project = project; data.variant = variant;
+                    data.page = page; data.revision = revision; data.block = index;
+                    data.entries = slice.entries; data.notes = slice.notes;
+                    bytes.reset();
+                    faults.at("before_encode");
+                    GSON.toJson(data, writer);
+                    writer.flush();
+                    faults.at("after_encode");
+                    ModelBlockRef block = new ModelBlockRef();
+                    block.object = object; block.offset = offset[0]; block.length = bytes.size();
+                    MessageDigest checksum = newDigest(); checksum.update(bytes.buffer(), 0, bytes.size());
+                    block.revision = revision; block.checksum = hex(checksum.digest());
+                    stream.write(bytes.buffer(), 0, bytes.size());
+                    offset[0] += bytes.size();
+                    next.blocks.set(index, block);
+                }
+            }
+        }, null);
+        faults.at("after_write");
+        faults.at("after_page");
+    }
+
+    private static final class EncodedBlock extends ByteArrayOutputStream {
+        EncodedBlock() { super(65536); }
+        byte[] buffer() { return buf; }
+    }
+
+    private boolean needsModelCompaction(int page, PageRef ref) throws IOException {
+        Set<String> objects = new HashSet<>();
+        long live = 0, retained = 0;
+        for (ModelBlockRef block : ref.blocks) {
+            live = Math.addExact(live, block.length);
+            if (objects.add(block.object)) {
+                File file = segmentFile(page, block.object);
+                if (!file.isFile()) throw new IOException("Missing referenced model segment");
+                retained = Math.addExact(retained, file.length());
+            }
+        }
+        return retained - live > live;
+    }
+
+    private ResourceEditorDraftState.Snapshot readModelBlocks(int page, PageRef ref) throws IOException {
+        if (ref.rows < 0 || ref.blocks == null || ref.blocks.size() != ResourceEditorModelBlocks.count(ref.rows)
+                || ref.object != null || ref.chunks != null) throw new IOException("Invalid model block descriptor");
+        List<Object> entries = new ArrayList<>(ref.rows);
+        Map<Integer, String> notes = new HashMap<>();
+        Map<String, RandomAccessFile> files = new HashMap<>();
+        java.lang.reflect.Type blockType = TypeToken.getParameterized(ModelBlockData.class, modelClass(page)).getType();
+        try {
+            for (int index = 0; index < ref.blocks.size(); index++) {
+                ModelBlockRef block = ref.blocks.get(index);
+                if (block == null || block.revision < 0 || block.revision > ref.revision)
+                    throw new IOException("Invalid model block revision");
+                checkObject(block.object);
+                RandomAccessFile file = files.get(block.object);
+                if (file == null) {
+                    file = new RandomAccessFile(segmentFile(page, block.object), "r");
+                    files.put(block.object, file);
+                }
+                if (block.offset < 0 || block.length <= 0 || block.length > Integer.MAX_VALUE
+                        || block.length > file.length() || block.offset > file.length() - block.length)
+                    throw new IOException("Invalid model segment range");
+                byte[] bytes = new byte[(int) block.length];
+                file.seek(block.offset); file.readFully(bytes);
+                if (!digest(bytes).equals(block.checksum)) throw new IOException("Model block checksum mismatch");
+                ModelBlockData<?> data = GSON.fromJson(new String(bytes, StandardCharsets.UTF_8), blockType);
+                if (data == null || data.schema == null || data.schema != SCHEMA
+                        || !session.equals(data.session) || !project.equals(data.project) || !variant.equals(data.variant)
+                        || data.page == null || data.page != page || data.revision == null || data.revision != block.revision
+                        || data.block == null || data.block != index) throw new IOException("Model block identity mismatch");
+                @SuppressWarnings("unchecked")
+                List<Object> rows = (List<Object>)(List<?>)data.entries;
+                Map<Integer, String> localNotes = data.notes;
+                int start = index * ResourceEditorModelBlocks.ROWS;
+                int expected = Math.min(ResourceEditorModelBlocks.ROWS, ref.rows - start);
+                if (rows == null || rows.size() != expected || rows.contains(null) || localNotes == null
+                        || localNotes.containsKey(null) || localNotes.containsValue(null))
+                    throw new IOException("Incomplete model block");
+                var slice = new ResourceEditorDraftState.Snapshot(rows, localNotes);
+                if (!validChunkNotes(slice)) throw new IOException("Invalid model block notes");
+                entries.addAll(rows);
+                for (Map.Entry<Integer, String> note : localNotes.entrySet()) {
+                    // Reused old trailing notes do not become row notes after an append.
+                    if (note.getKey() < expected || index == ref.blocks.size() - 1)
+                        notes.put(start + note.getKey(), note.getValue());
+                }
+            }
+        } finally {
+            for (RandomAccessFile file : files.values()) {
+                try { file.close(); }
+                catch (IOException failure) { LogUtil.w("ResourceDrafts", "Model segment close failed", failure); }
+            }
+        }
+        return new ResourceEditorDraftState.Snapshot(entries, notes);
+    }
+
+    private File segmentFile(int page, String object) {
+        return new File(new File(directory, "pages"), page + "-" + object + ".seg");
     }
 
     private PageRef writeChunks(long revision, ResourceEditorDraftState.StringChunks changes) throws IOException {
@@ -614,6 +793,7 @@ final class ResourceEditorDraftStore {
             manifest = closed;
             durable = true;
             gate.closed = true;
+            java.util.Arrays.fill(protectedModels, null);
         }
         intentFile().delete();
         try { cleanup(); }
@@ -630,6 +810,10 @@ final class ResourceEditorDraftStore {
         Set<String> referenced = new HashSet<>();
         for (int i = 0; i < manifest.pages.length; i++) {
             PageRef ref = manifest.pages[i];
+            if (ref.dirty && ResourceEditorModelBlocks.FORMAT.equals(ref.format)) {
+                for (ModelBlockRef block : ref.blocks) referenced.add(segmentFile(i, block.object).getName());
+                continue;
+            }
             if (ref.dirty) {
                 referenced.add(pageFile(i, ref).getName());
                 if (ref.chunks != null) for (ChunkRef chunk : ref.chunks.values()) referenced.add(chunkFile(chunk).getName());
@@ -638,7 +822,7 @@ final class ResourceEditorDraftStore {
         File[] files = new File(directory, "pages").listFiles();
         if (files != null) for (File file : files) {
             if (!referenced.contains(file.getName()) && file.isFile()
-                    && (file.getName().matches("[0-5]-[0-9a-f-]{36}\\.(json|bin)")
+                    && (file.getName().matches("[0-5]-[0-9a-f-]{36}\\.(json|bin|seg)")
                     || file.getName().matches("\\.resource-.*\\.tmp"))) {
                 if (!file.delete()) LogUtil.w("ResourceDrafts", "Unable to remove obsolete draft: " + file.getName());
             }
@@ -678,7 +862,7 @@ final class ResourceEditorDraftStore {
                 if (Files.isSymbolicLink(pages.toPath())) continue;
                 File[] objects = pages.listFiles();
                 if (objects != null) for (File object : objects) {
-                    if (object.isFile() && (object.getName().matches("[0-5]-[0-9a-f-]{36}\\.(json|bin)")
+                    if (object.isFile() && (object.getName().matches("[0-5]-[0-9a-f-]{36}\\.(json|bin|seg)")
                             || object.getName().matches("\\.resource-.*\\.tmp"))) object.delete();
                 }
                 if (pages.exists() && !pages.delete()) continue;
@@ -750,6 +934,19 @@ final class ResourceEditorDraftStore {
         long baseRevision;
         int rows;
         Map<Integer, ChunkRef> chunks;
+        List<ModelBlockRef> blocks;
+    }
+    /** Nullable identity fields distinguish missing JSON headers from valid zero values. */
+    private static final class ModelBlockData<T> {
+        Integer schema, page, block;
+        Long revision;
+        String session, project, variant;
+        List<T> entries;
+        Map<Integer, String> notes;
+    }
+    private static final class ModelBlockRef {
+        String object, checksum;
+        long offset, length, revision;
     }
     private static final class ChunkRef {
         long revision;
@@ -762,5 +959,6 @@ final class ResourceEditorDraftStore {
         long revision;
         List<Object> entries;
         Map<Integer, String> notes;
+        Integer block;
     }
 }

@@ -18,6 +18,10 @@ import java.security.MessageDigest;
 public final class ResourceXmlWriter {
     private ResourceXmlWriter() { }
 
+    /** Optional test observer; the normal path does not time or wrap individual writes. */
+    @androidx.annotation.VisibleForTesting
+    static volatile java.util.function.BiConsumer<String, Long> testTimings;
+
     interface Output { void write(Writer writer) throws IOException; }
     interface BytesOutput { void write(OutputStream stream) throws IOException; }
     private interface AtomicOutput { void write(FileOutputStream stream) throws IOException; }
@@ -32,23 +36,29 @@ public final class ResourceXmlWriter {
     }
 
     static void write(File target, Output output, MessageDigest checksum) throws IOException {
+        var observer = testTimings;
+        String prefix = target.getName().equals("manifest.json") ? "manifest." : "payload.";
         replace(target, stream -> {
+            OutputStream raw = observed(stream, observer, prefix);
             try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-                    checksum == null ? stream : new DigestOutputStream(stream, checksum), StandardCharsets.UTF_8), 65536)) {
+                    checksum == null ? raw : new DigestOutputStream(raw, checksum), StandardCharsets.UTF_8), 65536)) {
                 output.write(writer);
-                writer.flush();
-                stream.getFD().sync();
+                timed(writer::flush, observer, prefix + "flushNs");
+                timed(() -> stream.getFD().sync(), observer, prefix + "syncNs");
             }
         });
     }
 
     static void writeBytes(File target, BytesOutput output, MessageDigest checksum) throws IOException {
+        var observer = testTimings;
+        String prefix = target.getName().equals("manifest.json") ? "manifest." : "payload.";
         replace(target, stream -> {
+            OutputStream raw = observed(stream, observer, prefix);
             try (OutputStream buffered = new BufferedOutputStream(
-                    checksum == null ? stream : new DigestOutputStream(stream, checksum), 65536)) {
+                    checksum == null ? raw : new DigestOutputStream(raw, checksum), 65536)) {
                 output.write(buffered);
-                buffered.flush();
-                stream.getFD().sync();
+                timed(buffered::flush, observer, prefix + "flushNs");
+                timed(() -> stream.getFD().sync(), observer, prefix + "syncNs");
             }
         });
     }
@@ -63,10 +73,37 @@ public final class ResourceXmlWriter {
             try (FileOutputStream stream = new FileOutputStream(temp)) {
                 output.write(stream);
             }
-            Files.move(temp.toPath(), target.toPath(), StandardCopyOption.ATOMIC_MOVE,
-                    StandardCopyOption.REPLACE_EXISTING);
+            timed(() -> Files.move(temp.toPath(), target.toPath(), StandardCopyOption.ATOMIC_MOVE,
+                    StandardCopyOption.REPLACE_EXISTING), testTimings,
+                    target.getName().equals("manifest.json") ? "manifest.moveNs" : "payload.moveNs");
         } finally {
             if (temp.exists()) temp.delete();
         }
+    }
+
+    private interface TimedOutput { void run() throws IOException; }
+
+    private static void timed(TimedOutput output, java.util.function.BiConsumer<String, Long> observer,
+                              String phase) throws IOException {
+        if (observer == null) { output.run(); return; }
+        long start = System.nanoTime();
+        try { output.run(); }
+        finally { observer.accept(phase, System.nanoTime() - start); }
+    }
+
+    private static OutputStream observed(FileOutputStream stream,
+                                         java.util.function.BiConsumer<String, Long> observer, String prefix) {
+        if (observer == null) return stream;
+        return new OutputStream() {
+            @Override public void write(int value) throws IOException {
+                timed(() -> stream.write(value), observer, prefix + "writeNs");
+                observer.accept(prefix + "writeBytes", 1L);
+            }
+            @Override public void write(byte[] bytes, int offset, int length) throws IOException {
+                timed(() -> stream.write(bytes, offset, length), observer, prefix + "writeNs");
+                observer.accept(prefix + "writeBytes", (long) length);
+            }
+            @Override public void close() throws IOException { stream.close(); }
+        };
     }
 }
