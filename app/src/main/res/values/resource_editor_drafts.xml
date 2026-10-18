@@ -13,8 +13,12 @@
     <string name="resources_editor_xml_prepare_failed">Unable to prepare the resource XML, so no file was written. Please try again.</string>
     <string name="resources_editor_xml_intent_failed">Unable to record the XML save intent, so no resource file was written. Please try again.</string>
     <string name="resources_editor_draft_xml_conflict_loaded">A saved resource XML is newer than the old draft, so the XML was loaded for that page.</string>
+    <string name="resources_editor_legacy_migration_failed">Unable to migrate the old built-in draft. The original draft has been kept and will be retried; keep this editor open and save again.</string>
+    <string name="resources_editor_legacy_corrupt">Part of the old built-in draft is unreadable. Its raw data has been kept for diagnosis; the readable pages were migrated.</string>
     <string name="resources_editor_unsafe_navigation_title">Restore state is not safe yet</string>
     <string name="resources_editor_unsafe_navigation_message">The project XML may already be written, but the old draft restore point could not be handled safely. Retry the save, or explicitly discard and exit.</string>
     <string name="resources_editor_unsafe_retry">Retry save</string>
     <string name="resources_editor_unsafe_discard">Discard and exit</string>
+    <string name="resources_editor_legacy_state_too_large">Legacy drafts or diagnostic material exceed the safe saved-state budget and are not fully protected. Keep this editor open and retry saving; unprotected content may not survive process termination.</string>
+    <string name="resources_editor_legacy_restore_incomplete">Some legacy drafts or diagnostic material could not be protected previously. This restore may be incomplete; existing protected drafts and XML are unaffected.</string>
 </resources>

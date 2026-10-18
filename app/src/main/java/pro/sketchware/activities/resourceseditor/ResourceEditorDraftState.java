@@ -128,7 +128,45 @@ public final class ResourceEditorDraftState {
                 TypeToken.getParameterized(List.class, entryClass).getType());
         Map<Integer, String> notes = GSON.fromJson(state.getString("notes"),
                 new TypeToken<Map<Integer, String>>() { }.getType());
-        if (entries == null || notes == null) throw new IllegalArgumentException("Incomplete legacy draft");
-        return new Snapshot(entries, notes);
+        if (entries == null || notes == null || notes.containsKey(null) || notes.containsValue(null)) {
+            throw new IllegalArgumentException("Incomplete legacy draft");
+        }
+        for (Object entry : entries) {
+            if (entry == null || !entryClass.isInstance(entry)) {
+                throw new IllegalArgumentException("Invalid legacy resource model");
+            }
+            if (entry instanceof Map<?, ?> row) {
+                requireLegacyString(row.get("key"));
+                requireLegacyString(row.get("text"));
+            } else if (entry instanceof ColorModel color) {
+                requireLegacyString(color.getColorName());
+                requireLegacyString(color.getColorValue());
+            } else if (entry instanceof DimenModel dimen) {
+                requireLegacyString(dimen.getDimenName());
+                requireLegacyString(dimen.getDimenValue());
+            } else if (entry instanceof StyleModel style) {
+                requireLegacyString(style.getStyleName());
+                validateLegacyAttributes(style.getAttributes());
+            } else if (entry instanceof ArrayModel array) {
+                requireLegacyString(array.getArrayName());
+                if (array.getArrayType() == null) throw new IllegalArgumentException("Missing legacy array type");
+                validateLegacyAttributes(array.getAttributes());
+            }
+        }
+        // In particular, validate every string attribute before the per-page isolation ends;
+        // otherwise a nested JSON value fails later while encoding the entire transaction.
+        return snapshot(entries, notes);
+    }
+
+    private static void requireLegacyString(Object value) {
+        if (!(value instanceof String)) throw new IllegalArgumentException("Invalid legacy string field");
+    }
+
+    private static void validateLegacyAttributes(Map<?, ?> attributes) {
+        if (attributes == null) throw new IllegalArgumentException("Missing legacy attributes");
+        for (Map.Entry<?, ?> attribute : attributes.entrySet()) {
+            requireLegacyString(attribute.getKey());
+            requireLegacyString(attribute.getValue());
+        }
     }
 }

@@ -13,6 +13,10 @@
     <string name="resources_editor_xml_prepare_failed">无法准备资源 XML，未写入任何文件。请重试。</string>
     <string name="resources_editor_xml_intent_failed">无法记录 XML 保存意图，未写入任何资源文件。请重试。</string>
     <string name="resources_editor_draft_xml_conflict_loaded">检测到已保存的资源 XML 比旧草稿新，该页已加载 XML。</string>
+    <string name="resources_editor_legacy_migration_failed">旧版内嵌草稿迁移失败，已保留原始草稿并会在下次保存时重试。请保持编辑器打开并再次保存。</string>
+    <string name="resources_editor_legacy_corrupt">旧版内嵌草稿中有无法读取的页面，原始数据已保留用于排查；可读取的页面已完成迁移。</string>
+    <string name="resources_editor_legacy_state_too_large">旧版草稿或排查材料超过安全恢复状态大小，未能全部保护。请保持编辑器打开并重试保存；进程结束后未保护内容可能无法恢复。</string>
+    <string name="resources_editor_legacy_restore_incomplete">上次有旧版草稿或排查材料未能保护，本次恢复可能不完整。已保留的草稿和 XML 不受影响。</string>
     <string name="resources_editor_unsafe_navigation_title">恢复状态尚未安全完成</string>
     <string name="resources_editor_unsafe_navigation_message">项目 XML 可能已写入，但旧草稿恢复点未能安全处理。请重试保存，或明确放弃并退出。</string>
     <string name="resources_editor_unsafe_retry">重试保存</string>

@@ -90,7 +90,18 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
     private String resourceSearchQuery = "";
     private boolean initialLoadPending;
     private boolean sourceReloadPending;
+    /** Valid legacy pages that are not yet covered by a durable commit; the only retry source. */
     private Bundle pendingDrafts;
+    /** Raw legacy pages that could not be parsed. Kept as evidence, never migrated again. */
+    private Bundle pendingCorruptDrafts;
+    private String legacyCorruptMaterial;
+    private boolean legacyRestoreIncomplete;
+    private boolean legacyCorruptIncomplete;
+    private boolean legacyBudgetFailureShown;
+    private int legacyPagesRemaining;
+    private boolean legacyNeedsProtect;
+    private boolean legacyFailureShown;
+    private ResourceEditorDraftStore currentStore;
     private ResourceEditorDraftController draftController;
     private ResourceEditorDraftState.Snapshot[] restoredDrafts;
     private String savedDraftSession;
@@ -121,6 +132,14 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
             currentTabPosition = savedInstanceState.getInt("current_tab_position", ResourceEditorTabs.STRINGS);
             resourceSearchQuery = savedInstanceState.getString("resource_search_query", "");
             pendingDrafts = savedInstanceState.getBundle("resource_editor_drafts");
+            pendingCorruptDrafts = savedInstanceState.getBundle("resource_legacy_corrupt");
+            legacyCorruptMaterial = savedInstanceState.getString("resource_legacy_material");
+            if (legacyCorruptMaterial != null && !legacyCorruptMaterial.matches("[0-9a-f]{64}")) {
+                legacyCorruptMaterial = null;
+            }
+            legacyRestoreIncomplete = savedInstanceState.getBoolean("resource_legacy_unprotected", false);
+            legacyCorruptIncomplete = savedInstanceState.getBoolean("resource_legacy_material_unprotected", false);
+            legacyPagesRemaining = pendingDrafts == null ? 0 : pendingDrafts.size();
             savedDraftSession = savedInstanceState.getString("resource_draft_session");
             sourceEditorPage = savedInstanceState.getInt("resource_source_page", -1);
             sourceReloadPending = savedInstanceState.getBoolean("resource_source_reload", false);
@@ -133,6 +152,9 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         setupListeners();
         setupBackPressedHandler();
         initializeBackgroundTask(savedInstanceState == null ? "" : savedInstanceState.getString("resource_variant", ""));
+        if (legacyRestoreIncomplete || legacyCorruptIncomplete) {
+            SketchwareUtil.toastError(getString(R.string.resources_editor_legacy_restore_incomplete));
+        }
     }
 
     private void setupUI() {
@@ -188,6 +210,13 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
     private void initializeBackgroundTask(String variant) {
         if (this.variant != null && !this.variant.equals(variant)) {
             pendingDrafts = null;
+            pendingCorruptDrafts = null;
+            legacyCorruptMaterial = null;
+            legacyRestoreIncomplete = false;
+            legacyCorruptIncomplete = false;
+            legacyBudgetFailureShown = false;
+            legacyPagesRemaining = 0;
+            legacyNeedsProtect = false;
             savedDraftSession = null;
             restoredDrafts = null;
             restoreReferenceUnsafe = false;
@@ -264,7 +293,8 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
 
     private void openDraftSession() {
         draftController = new ResourceEditorDraftController(this, sc_id, variant, savedDraftSession,
-                new String[]{stringsFilePath, colorsFilePath, stylesFilePath, themesFilePath, arrayFilePath, dimensFilePath});
+                new String[]{stringsFilePath, colorsFilePath, stylesFilePath, themesFilePath, arrayFilePath, dimensFilePath},
+                pendingDrafts);
         ResourceEditorDraftController controller = draftController;
         WeakReference<ResourcesEditorActivity> reference = new WeakReference<>(this);
         controller.opening.whenComplete((loaded, failure) -> new Handler(Looper.getMainLooper()).post(() -> {
@@ -278,6 +308,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
                 activity.openDraftSession();
             } else {
                 activity.restoredDrafts = loaded.pages;
+                activity.applyLegacyResult(loaded.legacy);
                 activity.schedulePendingLoad();
             }
         }));
@@ -314,7 +345,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
 
     private boolean protectDrafts() {
         resourceHandler.removeCallbacks(prewriteDraftTask);
-        if (draftController.checkpoint(draftOwners())) {
+        if (checkpointDrafts()) {
             draftFailureShown = false;
             return true;
         }
@@ -322,10 +353,113 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         return false;
     }
 
+    /** A successful commit also makes every loaded legacy page durable. */
+    private boolean checkpointDrafts() {
+        if (draftController == null) return false;
+        boolean protectedNow = draftController.checkpoint(draftOwners());
+        if (protectedNow && editorsLoaded && legacyNeedsProtect) releaseLegacySource();
+        return protectedNow;
+    }
+
+    private void releaseLegacySource() {
+        if (pendingDrafts != null) {
+            legacyRestoreIncomplete = false;
+            legacyBudgetFailureShown = false;
+        }
+        pendingDrafts = null;
+        legacyPagesRemaining = 0;
+        legacyNeedsProtect = false;
+    }
+
+    private void applyLegacyResult(ResourceEditorDraftStore.LegacyImport result) {
+        if (result == null) {
+            persistCorruptMaterial();
+            return;
+        }
+        boolean hadCorrupt = !result.corrupt.isEmpty();
+        mergeCorrupt(result.corrupt);
+        stripCorruptFromPending();
+        if (persistCorruptMaterial()) result.corrupt.clear();
+        if (result.state == ResourceEditorDraftStore.LEGACY_MIGRATED
+                || result.state == ResourceEditorDraftStore.LEGACY_SUPERSEDED) {
+            releaseLegacySource();
+        } else if (result.state == ResourceEditorDraftStore.LEGACY_PARTIAL) {
+            releaseLegacySource();
+            if (hadCorrupt) {
+                SketchwareUtil.toastError(getString(R.string.resources_editor_legacy_corrupt));
+            }
+        } else if (result.state == ResourceEditorDraftStore.LEGACY_DEFERRED
+                || result.state == ResourceEditorDraftStore.LEGACY_FAILED) {
+            if (result.state == ResourceEditorDraftStore.LEGACY_FAILED) reportLegacyFailure();
+        }
+    }
+
+    private boolean persistCorruptMaterial() {
+        if (pendingCorruptDrafts == null || pendingCorruptDrafts.isEmpty()) return true;
+        if (draftController == null) return false;
+        String material = draftController.archiveLegacyCorrupt(pendingCorruptDrafts);
+        if (material == null) return false;
+        legacyCorruptMaterial = material;
+        pendingCorruptDrafts = null;
+        legacyCorruptIncomplete = false;
+        return true;
+    }
+
+    private void saveLegacyFallback(Bundle state) {
+        persistCorruptMaterial();
+        if (legacyCorruptMaterial != null) state.putString("resource_legacy_material", legacyCorruptMaterial);
+        int omitted = ResourceEditorLegacyState.writeFallback(state, pendingDrafts, pendingCorruptDrafts);
+        if (pendingDrafts != null && (omitted & ResourceEditorLegacyState.DRAFT_OMITTED) == 0) {
+            legacyRestoreIncomplete = false;
+        }
+        if (pendingCorruptDrafts != null && (omitted & ResourceEditorLegacyState.CORRUPT_OMITTED) == 0) {
+            legacyCorruptIncomplete = false;
+        }
+        if ((omitted & ResourceEditorLegacyState.DRAFT_OMITTED) != 0) legacyRestoreIncomplete = true;
+        if ((omitted & ResourceEditorLegacyState.CORRUPT_OMITTED) != 0) legacyCorruptIncomplete = true;
+        if (legacyRestoreIncomplete) state.putBoolean("resource_legacy_unprotected", true);
+        if (legacyCorruptIncomplete) state.putBoolean("resource_legacy_material_unprotected", true);
+        if (omitted != 0 && !legacyBudgetFailureShown) {
+            SketchwareUtil.toastError(getString(R.string.resources_editor_legacy_state_too_large));
+            legacyBudgetFailureShown = true;
+        }
+    }
+
+    private void mergeCorrupt(Bundle corrupt) {
+        if (corrupt == null || corrupt.isEmpty()) return;
+        if (pendingCorruptDrafts == null) pendingCorruptDrafts = new Bundle();
+        pendingCorruptDrafts.putAll(corrupt);
+    }
+
+    /** Corrupt pages are evidence only; retrying them can never succeed. */
+    private void stripCorruptFromPending() {
+        if (pendingDrafts == null || pendingCorruptDrafts == null || pendingCorruptDrafts.isEmpty()) {
+            legacyPagesRemaining = pendingDrafts == null ? 0 : pendingDrafts.size();
+            return;
+        }
+        Bundle retry = new Bundle();
+        for (String key : pendingDrafts.keySet()) {
+            if (!pendingCorruptDrafts.containsKey(key)) {
+                retry.putBundle(key, pendingDrafts.getBundle(key));
+            }
+        }
+        pendingDrafts = retry.isEmpty() ? null : retry;
+        legacyPagesRemaining = pendingDrafts == null ? 0 : pendingDrafts.size();
+    }
+
+    private void reportLegacyFailure() {
+        if (!legacyFailureShown) {
+            SketchwareUtil.toastError(getString(R.string.resources_editor_legacy_migration_failed));
+        }
+        legacyFailureShown = true;
+    }
+
     private void loadDataInBackground() {
         ResourceEditorDraftController.Loaded loaded = draftController.opening.join();
         ResourceEditorDraftStore store = loaded.store;
+        currentStore = store;
         if (restoredDrafts == null) restoredDrafts = loaded.pages;
+        legacyPagesRemaining = pendingDrafts == null ? 0 : pendingDrafts.size();
         Fragment[] fragments = editors();
         for (int i = 0; i < fragments.length; i++) {
             ((ResourceEditorFragment) fragments[i]).restoreDraftRevision(store.revision(i));
@@ -347,7 +481,9 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         for (int i = 0; i < committed.length; i++) committed[i] = store.wasXmlCommitted(i);
         for (boolean value : committed) xmlConflict |= value;
         if (xmlConflict) SketchwareUtil.toast(Helper.getResString(R.string.resources_editor_draft_xml_conflict_loaded));
-        pendingDrafts = null;
+        // Legacy is released only after a durable commit covers it, not merely because the UI
+        // finished loading it. Until then the Bundle stays the retry source.
+        if (pendingDrafts != null && legacyPagesRemaining == 0) legacyNeedsProtect = true;
         restoredDrafts = null;
         java.util.Arrays.fill(loaded.pages, null);
         checkForInvalidResources();
@@ -356,12 +492,38 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
     private boolean restoreDraft(ResourceEditorDraftState.Owner editor, int position, String filePath) {
         if (restoredDrafts != null && restoredDrafts[position] != null) {
             editor.restoreSnapshot(restoredDrafts[position], filePath);
+            settleLegacyPage(position);
             return true;
         }
-        Bundle draft = pendingDrafts == null ? null : pendingDrafts.getBundle(Integer.toString(position));
+        // A proven XML commit outranks any legacy content on the same page.
+        if (currentStore != null && currentStore.wasXmlCommitted(position)) {
+            settleLegacyPage(position);
+            return false;
+        }
+        Bundle draft = legacyDraft(position);
         if (draft == null) return false;
-        editor.restoreDraftState(draft, filePath);
+        try {
+            editor.restoreDraftState(draft, filePath);
+        } catch (RuntimeException failure) {
+            pro.sketchware.util.LogUtil.w("ResourceDrafts", "Unreadable legacy draft page " + position, failure);
+            if (pendingCorruptDrafts == null) pendingCorruptDrafts = new Bundle();
+            pendingCorruptDrafts.putBundle(Integer.toString(position), new Bundle(draft));
+            settleLegacyPage(position);
+            pendingDrafts.remove(Integer.toString(position));
+            return false;
+        }
+        settleLegacyPage(position);
         return true;
+    }
+
+    private Bundle legacyDraft(int position) {
+        return pendingDrafts == null ? null : pendingDrafts.getBundle(Integer.toString(position));
+    }
+
+    private void settleLegacyPage(int position) {
+        if (pendingDrafts != null && pendingDrafts.containsKey(Integer.toString(position))) {
+            legacyPagesRemaining = Math.max(0, legacyPagesRemaining - 1);
+        }
     }
 
     public void checkForInvalidResources() {
@@ -641,11 +803,29 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         }
         if (editorsLoaded) {
             if (protectDrafts()) restoreReferenceUnsafe = false;
-        } else if (pendingDrafts != null && !draftController.migrateLegacy(pendingDrafts)) reportDraftFailure();
-        // Keep the session UUID: the per-page XML commit intent decides which draft pages are
-        // older than an already-written XML. Dropping the UUID would lose failed pages' A.
-        if (draftController.hasCheckpoint()) outState.putString("resource_draft_session", draftController.session);
-        else if (!editorsLoaded && savedDraftSession != null) outState.putString("resource_draft_session", savedDraftSession);
+        } else if (pendingDrafts != null && !pendingDrafts.isEmpty() && draftController != null) {
+            // Retry before writing state; a successful import releases the Bundle below.
+            applyLegacyResult(draftController.retryLegacy(pendingDrafts));
+        }
+        boolean legacyPending = pendingDrafts != null && !pendingDrafts.isEmpty();
+        if (draftController == null) {
+            if (legacyPending && savedDraftSession != null) {
+                outState.putString("resource_draft_session", savedDraftSession);
+            }
+            saveLegacyFallback(outState);
+            return;
+        }
+        if (!legacyPending && draftController.hasCheckpoint()) {
+            // Only a session with a durable manifest may be referenced as the recovery point.
+            outState.putString("resource_draft_session", draftController.session);
+        } else if (legacyPending && savedDraftSession != null && draftController.hasCheckpoint()) {
+            // Dual source: keep the pre-existing session for its own pages, while the Bundle
+            // remains the source for pages the session does not cover.
+            outState.putString("resource_draft_session", savedDraftSession);
+        } else if (!editorsLoaded && savedDraftSession != null) {
+            outState.putString("resource_draft_session", savedDraftSession);
+        }
+        saveLegacyFallback(outState);
     }
 
     private ResourceEditorSaveResult.XmlWrite savePage(int page) {
@@ -667,7 +847,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
 
     private ResourceEditorSaveResult saveEditorsChanges() {
         resourceHandler.removeCallbacks(prewriteDraftTask);
-        if (!draftController.checkpoint(draftOwners())) {
+        if (!checkpointDrafts()) {
             reportDraftFailure();
             return ResourceEditorSaveResult.draftFailure();
         }
@@ -678,7 +858,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         for (ResourceEditorSaveResult.XmlWrite page : pages) allXmlSaved &= page != ResourceEditorSaveResult.XmlWrite.FAILED;
         updateProjectMetadata(pages[ResourceEditorTabs.STRINGS] != ResourceEditorSaveResult.XmlWrite.FAILED,
                 pages[ResourceEditorTabs.COLORS] != ResourceEditorSaveResult.XmlWrite.FAILED);
-        boolean cleanConfirmed = draftController.checkpoint(draftOwners());
+        boolean cleanConfirmed = checkpointDrafts();
         ResourceEditorSaveResult.DraftState draftState = cleanConfirmed && allXmlSaved
                 ? ResourceEditorSaveResult.DraftState.CLEAN_CONFIRMED
                 : ResourceEditorSaveResult.DraftState.CONTENT_PROTECTED;
@@ -790,6 +970,8 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         savedDraftSession = null;
         restoredDrafts = null;
         pendingDrafts = null;
+        legacyPagesRemaining = 0;
+        legacyNeedsProtect = false;
         restoreReferenceUnsafe = false;
         draftFailureShown = false;
         openDraftSession();

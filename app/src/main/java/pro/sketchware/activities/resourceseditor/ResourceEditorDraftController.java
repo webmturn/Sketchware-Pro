@@ -1,6 +1,7 @@
 package pro.sketchware.activities.resourceseditor;
 
 import android.content.Context;
+import android.os.Bundle;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +28,7 @@ final class ResourceEditorDraftController {
     static final class Loaded {
         final ResourceEditorDraftStore store;
         final ResourceEditorDraftState.Snapshot[] pages;
+        ResourceEditorDraftStore.LegacyImport legacy;
         Loaded(ResourceEditorDraftStore store, ResourceEditorDraftState.Snapshot[] pages) {
             this.store = store; this.pages = pages;
         }
@@ -42,11 +44,16 @@ final class ResourceEditorDraftController {
     private final long owner;
 
     ResourceEditorDraftController(Context context, String project, String variant, String savedSession) {
-        this(context, project, variant, savedSession, null);
+        this(context, project, variant, savedSession, null, null);
     }
 
     ResourceEditorDraftController(Context context, String project, String variant, String savedSession,
                                    String[] xmlPaths) {
+        this(context, project, variant, savedSession, xmlPaths, null);
+    }
+
+    ResourceEditorDraftController(Context context, String project, String variant, String savedSession,
+                                   String[] xmlPaths, Bundle legacyDrafts) {
         session = savedSession == null ? UUID.randomUUID().toString() : savedSession;
         gate = OWNERS.computeIfAbsent(session, ignored -> new Gate());
         synchronized (gate) { owner = ++gate.owner; }
@@ -56,6 +63,16 @@ final class ResourceEditorDraftController {
                 ResourceEditorDraftStore store = new ResourceEditorDraftStore(root, session, project, variant, gate, owner,
                         point -> ResourceEditorDraftStore.testFault.accept(point), xmlPaths);
                 Loaded loaded = new Loaded(store, store.open(savedSession != null));
+                // Migrate before any editor or prewrite exists, so a late legacy commit can never
+                // overwrite a newer model. Failure keeps the Bundle as the retry source.
+                if (legacyDrafts != null) {
+                    loaded.legacy = store.importLegacy(legacyDrafts);
+                    for (int i = 0; i < loaded.pages.length; i++) {
+                        if (loaded.pages[i] == null && loaded.legacy.pages.get(i) != null) {
+                            loaded.pages[i] = loaded.legacy.pages.get(i);
+                        }
+                    }
+                }
                 ResourceEditorDraftStore.pruneClosedSessions(root);
                 return loaded;
             } catch (IOException failure) { throw new java.util.concurrent.CompletionException(failure); }
@@ -102,34 +119,52 @@ final class ResourceEditorDraftController {
         return false;
     }
 
-    boolean migrateLegacy(android.os.Bundle drafts) {
+    /**
+     * Retries a failed legacy import while the editors are still loading. Runs on the serial
+     * draft queue; callers must not use it once a live model could be newer than the Bundle.
+     */
+    ResourceEditorDraftStore.LegacyImport retryLegacy(Bundle drafts) {
+        if (detached || drafts == null || drafts.isEmpty()) return null;
         try {
-            CompletableFuture.runAsync(() -> {
-                Loaded loaded = opening.join();
-                long[] revisions = new long[ResourceEditorTabs.COUNT];
-                boolean[] dirty = new boolean[ResourceEditorTabs.COUNT];
-                Map<Integer, ResourceEditorDraftState.Snapshot> pages = new HashMap<>();
-                for (int i = 0; i < revisions.length; i++) {
-                    android.os.Bundle page = drafts.getBundle(Integer.toString(i));
-                    if (page != null) {
-                        revisions[i] = 1; dirty[i] = true;
-                        pages.put(i, ResourceEditorDraftState.fromLegacy(page, ResourceEditorDraftStore.modelClass(i)));
-                    }
+            Loaded loaded = opening.join();
+            if (loaded.legacy != null && loaded.legacy.covered()) return loaded.legacy;
+            ResourceEditorDraftStore.LegacyImport retried = CompletableFuture.supplyAsync(
+                    () -> loaded.store.importLegacy(drafts), IO).get();
+            loaded.legacy = retried;
+            for (int i = 0; i < loaded.pages.length; i++) {
+                if (loaded.pages[i] == null && retried.pages.get(i) != null) {
+                    loaded.pages[i] = retried.pages.get(i);
                 }
-                try { loaded.store.commit(revisions, dirty, pages); }
-                catch (IOException failure) { throw new java.util.concurrent.CompletionException(failure); }
-            }, IO).get();
-            return true;
+            }
+            return retried;
         } catch (InterruptedException failure) {
             Thread.currentThread().interrupt();
+            LogUtil.e("ResourceDrafts", "Legacy draft retry interrupted", failure);
         } catch (ExecutionException | RuntimeException failure) {
-            LogUtil.e("ResourceDrafts", "Unable to migrate legacy draft", failure);
+            LogUtil.e("ResourceDrafts", "Unable to retry legacy draft migration", failure);
         }
-        return false;
+        return null;
     }
 
     boolean hasCheckpoint() {
         return opening.isDone() && !opening.isCompletedExceptionally() && opening.join().store.isDurable();
+    }
+
+    String archiveLegacyCorrupt(Bundle corrupt) {
+        if (detached || corrupt == null || corrupt.isEmpty()) return null;
+        try {
+            Loaded loaded = opening.join();
+            return CompletableFuture.supplyAsync(() -> {
+                try { return loaded.store.archiveLegacyCorrupt(corrupt); }
+                catch (IOException failure) { throw new java.util.concurrent.CompletionException(failure); }
+            }, IO).get();
+        } catch (InterruptedException failure) {
+            Thread.currentThread().interrupt();
+            LogUtil.e("ResourceDrafts", "Legacy material archival interrupted", failure);
+        } catch (ExecutionException | RuntimeException failure) {
+            LogUtil.e("ResourceDrafts", "Unable to archive legacy material", failure);
+        }
+        return null;
     }
 
     boolean isWriting() { return writing != null && !writing.isDone(); }

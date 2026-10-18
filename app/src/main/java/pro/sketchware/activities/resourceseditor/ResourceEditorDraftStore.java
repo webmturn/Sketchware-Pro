@@ -1,5 +1,7 @@
 package pro.sketchware.activities.resourceseditor;
 
+import android.os.Bundle;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -176,6 +178,136 @@ final class ResourceEditorDraftStore {
     boolean isDurable() { return durable; }
     long generation() { return manifest == null ? -1 : manifest.generation; }
     boolean wasXmlCommitted(int page) { return xmlCommittedPages[page]; }
+
+    static final int LEGACY_NONE = 0;
+    static final int LEGACY_MIGRATED = 1;
+    static final int LEGACY_SUPERSEDED = 2;
+    static final int LEGACY_PARTIAL = 3;
+    static final int LEGACY_FAILED = 4;
+    static final int LEGACY_DEFERRED = 5;
+
+    /** Result of folding a legacy saved-state Bundle into this session. */
+    static final class LegacyImport {
+        final int state;
+        final Map<Integer, ResourceEditorDraftState.Snapshot> pages;
+        final Bundle corrupt;
+
+        LegacyImport(int state, Map<Integer, ResourceEditorDraftState.Snapshot> pages, Bundle corrupt) {
+            this.state = state;
+            this.pages = pages;
+            this.corrupt = corrupt;
+        }
+
+        boolean covered() {
+            return state == LEGACY_MIGRATED || state == LEGACY_SUPERSEDED || state == LEGACY_PARTIAL;
+        }
+    }
+
+    private static LegacyImport legacyResult(int state,
+                                             Map<Integer, ResourceEditorDraftState.Snapshot> pages,
+                                             Bundle corrupt) {
+        return new LegacyImport(state, pages == null ? new HashMap<>() : pages, corrupt);
+    }
+
+    /**
+     * Imports the pre-session Bundle written by older versions. A newer dirty draft and a proven
+     * XML commit win per page; unreadable pages are set aside instead of failing the other pages.
+     * The commit is atomic, so a failure leaves the manifest and every legacy input untouched.
+     */
+    LegacyImport importLegacy(Bundle drafts) {
+        Bundle corrupt = new Bundle();
+        try {
+            requireOwner();
+            if (drafts == null || drafts.isEmpty()) return legacyResult(LEGACY_NONE, null, corrupt);
+            Map<Integer, ResourceEditorDraftState.Snapshot> migrated = new HashMap<>();
+            boolean anyXmlCommitted = false;
+            for (boolean committed : xmlCommittedPages) anyXmlCommitted |= committed;
+            for (int i = 0; i < ResourceEditorTabs.COUNT; i++) {
+                Bundle page;
+                try {
+                    page = drafts.getBundle(Integer.toString(i));
+                } catch (RuntimeException failure) {
+                    // The bundle itself is unreadable; keep the caller's original source intact.
+                    LogUtil.w("ResourceDrafts", "Unable to read legacy draft page " + i, failure);
+                    return legacyResult(LEGACY_FAILED, null, corrupt);
+                }
+                if (page == null) continue;
+                // Superseded input need not be parsed or retained as corrupt material.
+                if (xmlCommittedPages[i] || manifest.pages[i].dirty) continue;
+                ResourceEditorDraftState.Snapshot snapshot;
+                try {
+                    snapshot = ResourceEditorDraftState.fromLegacy(page, modelClass(i));
+                    if (snapshot == null || snapshot.entries == null || snapshot.entries.contains(null)
+                            || snapshot.notes == null || snapshot.notes.containsKey(null)
+                            || snapshot.notes.containsValue(null)) {
+                        throw new IllegalArgumentException("Incomplete legacy page");
+                    }
+                } catch (RuntimeException failure) {
+                    LogUtil.w("ResourceDrafts", "Unreadable legacy draft page " + i, failure);
+                    corrupt.putBundle(Integer.toString(i), new Bundle(page));
+                    continue;
+                }
+                // A proven XML commit is newer than any legacy content, and an already dirty
+                // manifest page is a newer draft. Neither may be replaced by the old Bundle.
+                migrated.put(i, snapshot);
+            }
+            if (anyXmlCommitted && !migrated.isEmpty()) {
+                // commit() rewrites every page, including the XML-committed one for which no
+                // complete snapshot exists here. Defer until that page is loaded and protected.
+                return legacyResult(LEGACY_DEFERRED, null, corrupt);
+            }
+            if (migrated.isEmpty()) {
+                return legacyResult(corrupt.isEmpty() ? LEGACY_SUPERSEDED : LEGACY_PARTIAL, null, corrupt);
+            }
+            long[] revisions = new long[ResourceEditorTabs.COUNT];
+            boolean[] dirty = new boolean[ResourceEditorTabs.COUNT];
+            for (int i = 0; i < ResourceEditorTabs.COUNT; i++) {
+                PageRef ref = manifest.pages[i];
+                revisions[i] = ref.revision;
+                dirty[i] = ref.dirty;
+                if (migrated.containsKey(i)) {
+                    revisions[i] = 1;
+                    dirty[i] = true;
+                }
+            }
+            try {
+                commit(revisions, dirty, migrated);
+            } catch (IOException failure) {
+                LogUtil.e("ResourceDrafts", "Unable to migrate legacy draft", failure);
+                return legacyResult(LEGACY_FAILED, null, corrupt);
+            }
+            return legacyResult(corrupt.isEmpty() ? LEGACY_MIGRATED : LEGACY_PARTIAL, migrated, corrupt);
+        } catch (IOException failure) {
+            // Owner was replaced or the commit could not be attempted at all.
+            LogUtil.e("ResourceDrafts", "Unable to migrate legacy draft", failure);
+            return legacyResult(LEGACY_FAILED, null, corrupt);
+        } catch (RuntimeException failure) {
+            LogUtil.e("ResourceDrafts", "Unable to migrate legacy draft", failure);
+            return legacyResult(LEGACY_FAILED, null, corrupt);
+        }
+    }
+
+    /** Independent diagnostic material; never used as a draft or as an incremental base. */
+    String archiveLegacyCorrupt(Bundle corrupt) throws IOException {
+        requireOwner();
+        Bundle material = new Bundle();
+        material.putInt("schema", 1);
+        material.putString("project", project);
+        material.putString("variant", variant);
+        material.putBundle("pages", corrupt);
+        byte[] bytes = ResourceEditorLegacyState.parcelBytes(material);
+        String identity = digest((project + "\u0000" + variant).getBytes(StandardCharsets.UTF_8));
+        File archive = new File(new File(new File(directory.getParentFile(), "legacy-material"), identity),
+                digest(bytes) + ".parcel");
+        faults.at("before_legacy_material");
+        synchronized (gate) {
+            requireOwner();
+            if (!archive.isFile() || !digest(Files.readAllBytes(archive.toPath())).equals(digest(bytes))) {
+                ResourceXmlWriter.writeBytes(archive, stream -> stream.write(bytes), null);
+            }
+        }
+        return identity;
+    }
 
     /** Writes the per-page XML commit intent before the XML-only save touches project files. */
     boolean writeXmlCommitIntent(Map<Integer, String> hashes) throws IOException {
