@@ -16,6 +16,19 @@ public abstract class ResourceEditorFragment extends Fragment implements Resourc
     private long revision;
 
     public final void markDraftChanged() {
+        invalidateDraftSnapshot(null);
+        advanceDraftRevision();
+    }
+
+    /** All mutations in this edit belong to this model; notes are always captured separately. */
+    public final void markDraftChanged(Object changedModel) {
+        invalidateDraftSnapshot(changedModel);
+        advanceDraftRevision();
+    }
+
+    protected void invalidateDraftSnapshot(Object changedModel) { }
+
+    private void advanceDraftRevision() {
         hasUnsavedChanges = true;
         revision++;
         onDraftChanged(revision);

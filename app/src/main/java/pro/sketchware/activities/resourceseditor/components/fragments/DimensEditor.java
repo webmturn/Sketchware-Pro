@@ -20,6 +20,7 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
 import pro.sketchware.activities.resourceseditor.ResourceEditorDraftState;
+import pro.sketchware.activities.resourceseditor.ResourceEditorSnapshotCache;
 import pro.sketchware.activities.resourceseditor.ResourceEditorSaveResult;
 import pro.sketchware.activities.resourceseditor.components.adapters.DimensAdapter;
 import pro.sketchware.activities.resourceseditor.components.models.DimenModel;
@@ -31,6 +32,13 @@ import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.XmlUtil;
 
 public class DimensEditor extends ResourceEditorFragment {
+
+    private final ResourceEditorSnapshotCache draftSnapshots = new ResourceEditorSnapshotCache();
+
+    @Override protected void invalidateDraftSnapshot(Object changedModel) {
+        if (changedModel == null) draftSnapshots.invalidateAll();
+        else draftSnapshots.invalidate(changedModel);
+    }
 
     public String contentPath;
     public final ArrayList<DimenModel> dimenList = new ArrayList<>();
@@ -68,11 +76,12 @@ public class DimensEditor extends ResourceEditorFragment {
     @Nullable
     @Override
     public ResourceEditorDraftState.Snapshot snapshotDraft() {
-        return hasUnsavedChanges ? ResourceEditorDraftState.snapshot(dimenList, notesMap) : null;
+        return hasUnsavedChanges ? draftSnapshots.capture(dimenList, notesMap) : null;
     }
 
     @Override
     public void restoreSnapshot(@NonNull ResourceEditorDraftState.Snapshot snapshot, String filePath) {
+        draftSnapshots.invalidateAll();
         ResourceEditorDraftState.apply(snapshot, dimenList, notesMap);
         contentPath = filePath;
         dimensEditorManager.contentPath = filePath;
@@ -190,7 +199,8 @@ public class DimensEditor extends ResourceEditorFragment {
             } else {
                 addDimen(key, value, Objects.requireNonNull(dialogBinding.stringHeaderInput.getText()).toString());
             }
-            markDraftChanged();
+            markDraftChanged(dimenModel != null ? dimenModel :
+                    dimenList.isEmpty() ? null : dimenList.get(dimenList.size() - 1));
             updateNoContentLayout();
         });
 
@@ -212,7 +222,7 @@ public class DimensEditor extends ResourceEditorFragment {
                 adapter = new DimensAdapter(dimenList, activity, notesMap);
                 binding.recyclerView.setAdapter(adapter);
                 updateNoContentLayout();
-                markDraftChanged();
+                markDraftChanged(dimenModel);
                 v1.dismiss();
             });
         }

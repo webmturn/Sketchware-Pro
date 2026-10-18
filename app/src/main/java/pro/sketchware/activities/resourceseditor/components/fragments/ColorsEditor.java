@@ -27,6 +27,7 @@ import pro.sketchware.core.project.ProjectThemeColors;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
 import pro.sketchware.activities.resourceseditor.ResourceEditorDraftState;
+import pro.sketchware.activities.resourceseditor.ResourceEditorSnapshotCache;
 import pro.sketchware.activities.resourceseditor.ResourceEditorSaveResult;
 import pro.sketchware.activities.resourceseditor.components.adapters.ColorsAdapter;
 import pro.sketchware.activities.resourceseditor.components.utils.ColorsEditorManager;
@@ -39,6 +40,13 @@ import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.XmlUtil;
 
 public class ColorsEditor extends ResourceEditorFragment {
+
+    private final ResourceEditorSnapshotCache draftSnapshots = new ResourceEditorSnapshotCache();
+
+    @Override protected void invalidateDraftSnapshot(Object changedModel) {
+        if (changedModel == null) draftSnapshots.invalidateAll();
+        else draftSnapshots.invalidate(changedModel);
+    }
 
     public static String contentPath;
     public final ArrayList<ColorModel> colorList = new ArrayList<>();
@@ -78,11 +86,12 @@ public class ColorsEditor extends ResourceEditorFragment {
     @Nullable
     @Override
     public ResourceEditorDraftState.Snapshot snapshotDraft() {
-        return hasUnsavedChanges ? ResourceEditorDraftState.snapshot(colorList, notesMap) : null;
+        return hasUnsavedChanges ? draftSnapshots.capture(colorList, notesMap) : null;
     }
 
     @Override
     public void restoreSnapshot(@NonNull ResourceEditorDraftState.Snapshot snapshot, String filePath) {
+        draftSnapshots.invalidateAll();
         ResourceEditorDraftState.apply(snapshot, colorList, notesMap);
         contentPath = filePath;
         colorsEditorManager.contentPath = filePath;
@@ -274,7 +283,8 @@ public class ColorsEditor extends ResourceEditorFragment {
             } else {
                 addColor(key, value, Objects.requireNonNull(dialogBinding.stringHeaderInput.getText()).toString());
             }
-            markDraftChanged();
+            markDraftChanged(colorModel != null ? colorModel :
+                    colorList.isEmpty() ? null : colorList.get(colorList.size() - 1));
             updateNoContentLayout();
         });
 
@@ -316,7 +326,7 @@ public class ColorsEditor extends ResourceEditorFragment {
                 adapter = new ColorsAdapter(colorsEditorManager, colorList, activity, notesMap);
                 binding.recyclerView.setAdapter(adapter);
                 updateNoContentLayout();
-                markDraftChanged();
+                markDraftChanged(colorModel);
                 v1.dismiss();
             });
         }

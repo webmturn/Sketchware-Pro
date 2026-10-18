@@ -28,6 +28,7 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
 import pro.sketchware.activities.resourceseditor.ResourceEditorDraftState;
+import pro.sketchware.activities.resourceseditor.ResourceEditorSnapshotCache;
 import pro.sketchware.activities.resourceseditor.ResourceEditorSaveResult;
 import pro.sketchware.activities.resourceseditor.components.adapters.ArraysAdapter;
 import pro.sketchware.activities.resourceseditor.components.models.ArrayModel;
@@ -40,6 +41,13 @@ import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 
 public class ArraysEditor extends ResourceEditorFragment {
+
+    private final ResourceEditorSnapshotCache draftSnapshots = new ResourceEditorSnapshotCache();
+
+    @Override protected void invalidateDraftSnapshot(Object changedModel) {
+        if (changedModel == null) draftSnapshots.invalidateAll();
+        else draftSnapshots.invalidate(changedModel);
+    }
 
     private ResourcesEditorFragmentBinding binding;
 
@@ -115,11 +123,12 @@ public class ArraysEditor extends ResourceEditorFragment {
     @Nullable
     @Override
     public ResourceEditorDraftState.Snapshot snapshotDraft() {
-        return hasUnsavedChanges ? ResourceEditorDraftState.snapshot(arraysList, notesMap) : null;
+        return hasUnsavedChanges ? draftSnapshots.capture(arraysList, notesMap) : null;
     }
 
     @Override
     public void restoreSnapshot(@NonNull ResourceEditorDraftState.Snapshot snapshot, String filePath) {
+        draftSnapshots.invalidateAll();
         ResourceEditorDraftState.apply(snapshot, arraysList, notesMap);
         this.filePath = filePath;
         hasUnsavedChanges = true;
@@ -220,7 +229,7 @@ public class ArraysEditor extends ResourceEditorFragment {
             adapter = new ArraysAdapter(arraysList, this, notesMap);
             ArraysEditor.this.binding.recyclerView.setAdapter(adapter);
             updateNoContentLayout();
-            markDraftChanged();
+            markDraftChanged(array);
         });
 
         dialog.setNegativeButton(Helper.getResString(R.string.cancel), null);
@@ -306,7 +315,7 @@ public class ArraysEditor extends ResourceEditorFragment {
             }
             adapter = new ArraysAdapter(arraysList, this, notesMap);
             ArraysEditor.this.binding.recyclerView.setAdapter(adapter);
-            markDraftChanged();
+            markDraftChanged(array);
         });
         dialog.setNeutralButton(Helper.getResString(R.string.common_word_delete), (d, which) -> new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.common_word_warning)
@@ -331,7 +340,7 @@ public class ArraysEditor extends ResourceEditorFragment {
                     ArraysEditor.this.binding.recyclerView.setAdapter(adapter);
                     d.dismiss();
                     updateNoContentLayout();
-                    markDraftChanged();
+                    markDraftChanged(array);
                 })
                 .setNegativeButton(R.string.common_word_cancel, null)
                 .show());
@@ -369,7 +378,7 @@ public class ArraysEditor extends ResourceEditorFragment {
                                     attributes.remove(attr);
                                     array.setAttributes(attributes);
                                     attributesAdapter.submitList(new ArrayList<>(attributes.keySet()));
-                                    markDraftChanged();
+                                    markDraftChanged(array);
                                 })
                                 .setNegativeButton(R.string.common_word_cancel, null)
                                 .create()
@@ -426,7 +435,7 @@ public class ArraysEditor extends ResourceEditorFragment {
             array.addAttribute(attribute, value);
             attributesAdapter.submitList(new ArrayList<>(array.getAttributes().keySet()));
             attributesAdapter.notifyDataSetChanged();
-            markDraftChanged();
+            markDraftChanged(array);
         });
 
         dialog.setNegativeButton(Helper.getResString(R.string.cancel), null);

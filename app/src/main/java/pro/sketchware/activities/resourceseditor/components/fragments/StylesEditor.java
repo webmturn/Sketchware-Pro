@@ -26,6 +26,7 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
 import pro.sketchware.activities.resourceseditor.ResourceEditorDraftState;
+import pro.sketchware.activities.resourceseditor.ResourceEditorSnapshotCache;
 import pro.sketchware.activities.resourceseditor.ResourceEditorSaveResult;
 import pro.sketchware.activities.resourceseditor.components.adapters.StylesAdapter;
 import pro.sketchware.activities.resourceseditor.components.models.StyleModel;
@@ -38,6 +39,13 @@ import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 
 public class StylesEditor extends ResourceEditorFragment {
+
+    private final ResourceEditorSnapshotCache draftSnapshots = new ResourceEditorSnapshotCache();
+
+    @Override protected void invalidateDraftSnapshot(Object changedModel) {
+        if (changedModel == null) draftSnapshots.invalidateAll();
+        else draftSnapshots.invalidate(changedModel);
+    }
 
     private ResourcesEditorFragmentBinding binding;
 
@@ -79,11 +87,12 @@ public class StylesEditor extends ResourceEditorFragment {
     @Nullable
     @Override
     public ResourceEditorDraftState.Snapshot snapshotDraft() {
-        return hasUnsavedChanges ? ResourceEditorDraftState.snapshot(stylesList, notesMap) : null;
+        return hasUnsavedChanges ? draftSnapshots.capture(stylesList, notesMap) : null;
     }
 
     @Override
     public void restoreSnapshot(@NonNull ResourceEditorDraftState.Snapshot snapshot, String filePath) {
+        draftSnapshots.invalidateAll();
         ResourceEditorDraftState.apply(snapshot, stylesList, notesMap);
         this.filePath = filePath;
         hasUnsavedChanges = true;
@@ -186,7 +195,7 @@ public class StylesEditor extends ResourceEditorFragment {
             if (!header.isEmpty()) {
                 notesMap.put(notifyPosition, header);
             }
-            markDraftChanged();
+            markDraftChanged(style);
             adapter = new StylesAdapter(stylesList, this, notesMap);
             StylesEditor.this.binding.recyclerView.setAdapter(adapter);
             updateNoContentLayout();
@@ -268,7 +277,7 @@ public class StylesEditor extends ResourceEditorFragment {
             } else {
                 notesMap.put(currentIndex, header);
             }
-            markDraftChanged();
+            markDraftChanged(style);
             adapter = new StylesAdapter(stylesList, this, notesMap);
             StylesEditor.this.binding.recyclerView.setAdapter(adapter);
         });
@@ -295,7 +304,7 @@ public class StylesEditor extends ResourceEditorFragment {
                     StylesEditor.this.binding.recyclerView.setAdapter(adapter);
                     d.dismiss();
                     updateNoContentLayout();
-                    markDraftChanged();
+                    markDraftChanged(style);
                 })
                 .setNegativeButton(R.string.common_word_cancel, null)
                 .create()
@@ -334,7 +343,7 @@ public class StylesEditor extends ResourceEditorFragment {
                                     attributes.remove(attr);
                                     style.setAttributes(attributes);
                                     attributesAdapter.submitList(new ArrayList<>(attributes.keySet()));
-                                    markDraftChanged();
+                                    markDraftChanged(style);
                                 })
                                 .setNegativeButton(R.string.common_word_cancel, null)
                                 .create()
@@ -382,7 +391,7 @@ public class StylesEditor extends ResourceEditorFragment {
             style.addAttribute(attribute, value);
             attributesAdapter.submitList(new ArrayList<>(style.getAttributes().keySet()));
             attributesAdapter.notifyDataSetChanged();
-            markDraftChanged();
+            markDraftChanged(style);
         });
 
         dialog.setNegativeButton(Helper.getResString(R.string.cancel), null);

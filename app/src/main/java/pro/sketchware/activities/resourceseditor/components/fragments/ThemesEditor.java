@@ -26,6 +26,7 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
 import pro.sketchware.activities.resourceseditor.ResourceEditorDraftState;
+import pro.sketchware.activities.resourceseditor.ResourceEditorSnapshotCache;
 import pro.sketchware.activities.resourceseditor.ResourceEditorSaveResult;
 import pro.sketchware.activities.resourceseditor.components.adapters.StylesAdapter;
 import pro.sketchware.activities.resourceseditor.components.models.StyleModel;
@@ -38,6 +39,13 @@ import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 
 public class ThemesEditor extends ResourceEditorFragment {
+
+    private final ResourceEditorSnapshotCache draftSnapshots = new ResourceEditorSnapshotCache();
+
+    @Override protected void invalidateDraftSnapshot(Object changedModel) {
+        if (changedModel == null) draftSnapshots.invalidateAll();
+        else draftSnapshots.invalidate(changedModel);
+    }
 
     private ResourcesEditorFragmentBinding binding;
     private ResourcesEditorActivity activity;
@@ -79,11 +87,12 @@ public class ThemesEditor extends ResourceEditorFragment {
     @Nullable
     @Override
     public ResourceEditorDraftState.Snapshot snapshotDraft() {
-        return hasUnsavedChanges ? ResourceEditorDraftState.snapshot(themesList, notesMap) : null;
+        return hasUnsavedChanges ? draftSnapshots.capture(themesList, notesMap) : null;
     }
 
     @Override
     public void restoreSnapshot(@NonNull ResourceEditorDraftState.Snapshot snapshot, String filePath) {
+        draftSnapshots.invalidateAll();
         ResourceEditorDraftState.apply(snapshot, themesList, notesMap);
         this.filePath = filePath;
         hasUnsavedChanges = true;
@@ -176,7 +185,7 @@ public class ThemesEditor extends ResourceEditorFragment {
             adapter = new StylesAdapter(themesList, this, notesMap);
             ThemesEditor.this.binding.recyclerView.setAdapter(adapter);
             updateNoContentLayout();
-            markDraftChanged();
+            markDraftChanged(theme);
         });
         dialog.setNegativeButton(Helper.getResString(R.string.cancel), null);
         dialog.setView(binding.getRoot());
@@ -224,7 +233,7 @@ public class ThemesEditor extends ResourceEditorFragment {
 
             adapter = new StylesAdapter(themesList, this, notesMap);
             ThemesEditor.this.binding.recyclerView.setAdapter(adapter);
-            markDraftChanged();
+            markDraftChanged(theme);
         });
         dialog.setNeutralButton(Helper.getResString(R.string.common_word_delete), (d, which) -> new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.common_word_warning)
@@ -249,7 +258,7 @@ public class ThemesEditor extends ResourceEditorFragment {
                     ThemesEditor.this.binding.recyclerView.setAdapter(adapter);
                     d.dismiss();
                     updateNoContentLayout();
-                    markDraftChanged();
+                    markDraftChanged(theme);
                 })
                 .setNegativeButton(R.string.common_word_cancel, null)
                 .create()
@@ -322,7 +331,7 @@ public class ThemesEditor extends ResourceEditorFragment {
                                     attributes.remove(attr);
                                     theme.setAttributes(attributes);
                                     attributesAdapter.submitList(new ArrayList<>(attributes.keySet()));
-                                    markDraftChanged();
+                                    markDraftChanged(theme);
                                 })
                                 .setNegativeButton(R.string.common_word_cancel, null)
                                 .create()
@@ -370,7 +379,7 @@ public class ThemesEditor extends ResourceEditorFragment {
             theme.addAttribute(attribute, value);
             attributesAdapter.submitList(new ArrayList<>(theme.getAttributes().keySet()));
             attributesAdapter.notifyDataSetChanged();
-            markDraftChanged();
+            markDraftChanged(theme);
         });
 
         dialog.setNegativeButton(Helper.getResString(R.string.cancel), null);

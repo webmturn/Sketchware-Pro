@@ -68,32 +68,34 @@ public final class ResourceEditorDraftState {
 
     public static Snapshot snapshot(List<?> entries, Map<Integer, String> notes) {
         List<Object> copy = new ArrayList<>(entries.size());
-        for (Object entry : entries) {
-            if (entry instanceof ColorModel color) {
-                copy.add(new ColorModel(color.getColorName(), color.getColorValue()));
-            } else if (entry instanceof DimenModel dimen) {
-                copy.add(new DimenModel(dimen.getDimenName(), dimen.getDimenValue()));
-            } else if (entry instanceof StyleModel style) {
-                copy.add(new StyleModel(style.getStyleName(), style.getParent(),
-                        style.getAttributes() == null ? null : new LinkedHashMap<>(style.getAttributes())));
-            } else if (entry instanceof ArrayModel array) {
-                copy.add(new ArrayModel(array.getArrayName(), array.getArrayType(),
-                        array.getAttributes() == null ? null : new LinkedHashMap<>(array.getAttributes())));
-            } else if (entry instanceof Map<?, ?> map) {
-                // String resources contain scalar string values, including optional XML attributes.
-                HashMap<String, Object> row = new HashMap<>();
-                for (Map.Entry<?, ?> value : map.entrySet()) {
-                    if (value.getValue() != null && !(value.getValue() instanceof String)) {
-                        throw new IllegalArgumentException("Non-string resource attribute");
-                    }
-                    row.put((String) value.getKey(), value.getValue());
-                }
-                copy.add(row);
-            } else {
-                throw new IllegalArgumentException("Unknown resource model");
-            }
-        }
+        for (Object entry : entries) copy.add(copyEntry(entry));
         return new Snapshot(copy, new HashMap<>(notes));
+    }
+
+    static Object copyEntry(Object entry) {
+        if (entry instanceof ColorModel color) {
+            return new ColorModel(color.getColorName(), color.getColorValue());
+        } else if (entry instanceof DimenModel dimen) {
+            return new DimenModel(dimen.getDimenName(), dimen.getDimenValue());
+        } else if (entry instanceof StyleModel style) {
+            return new StyleModel(style.getStyleName(), style.getParent(),
+                    style.getAttributes() == null ? null : new LinkedHashMap<>(style.getAttributes()));
+        } else if (entry instanceof ArrayModel array) {
+            return new ArrayModel(array.getArrayName(), array.getArrayType(),
+                    array.getAttributes() == null ? null : new LinkedHashMap<>(array.getAttributes()));
+        } else if (entry instanceof Map<?, ?> map) {
+            // String resources contain scalar string values, including optional XML attributes.
+            HashMap<String, Object> row = new HashMap<>();
+            for (Map.Entry<?, ?> value : map.entrySet()) {
+                if (value.getValue() != null && !(value.getValue() instanceof String)) {
+                    throw new IllegalArgumentException("Non-string resource attribute");
+                }
+                row.put((String) value.getKey(), value.getValue());
+            }
+            return row;
+        } else {
+            throw new IllegalArgumentException("Unknown resource model");
+        }
     }
 
     @SuppressWarnings("unchecked")
