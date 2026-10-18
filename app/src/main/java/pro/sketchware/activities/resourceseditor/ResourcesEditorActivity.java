@@ -361,6 +361,25 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         return protectedNow;
     }
 
+    /** Called by every page's checked XML writer, including XML-only and source navigation. */
+    @Nullable
+    public String prepareResourceXmlWrite(ResourceEditorFragment editor, String xml) throws java.io.IOException {
+        if (draftController == null) throw new java.io.IOException("Missing draft controller");
+        return draftController.prepareLegacyXml(resourcePage(editor), xml);
+    }
+
+    public void confirmResourceXmlWrite(ResourceEditorFragment editor, @Nullable String token) {
+        if (token == null || draftController == null) return;
+        try { draftController.confirmLegacyXml(resourcePage(editor), token); }
+        catch (java.io.IOException failure) { pro.sketchware.util.LogUtil.w("ResourceDrafts", "Missing XML page", failure); }
+    }
+
+    private int resourcePage(ResourceEditorFragment editor) throws java.io.IOException {
+        Fragment[] pages = editors();
+        for (int i = 0; i < pages.length; i++) if (pages[i] == editor) return i;
+        throw new java.io.IOException("Unknown resource editor page");
+    }
+
     private void releaseLegacySource() {
         if (pendingDrafts != null) {
             legacyRestoreIncomplete = false;
@@ -386,7 +405,8 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         } else if (result.state == ResourceEditorDraftStore.LEGACY_PARTIAL) {
             releaseLegacySource();
             if (hadCorrupt) {
-                SketchwareUtil.toastError(getString(R.string.resources_editor_legacy_corrupt));
+                SketchwareUtil.toastError(getString(result.xmlBarrierBlocked
+                        ? R.string.resources_editor_legacy_xml_unverified : R.string.resources_editor_legacy_corrupt));
             }
         } else if (result.state == ResourceEditorDraftStore.LEGACY_DEFERRED
                 || result.state == ResourceEditorDraftStore.LEGACY_FAILED) {
@@ -496,7 +516,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
             return true;
         }
         // A proven XML commit outranks any legacy content on the same page.
-        if (currentStore != null && currentStore.wasXmlCommitted(position)) {
+        if (currentStore != null && (currentStore.wasXmlCommitted(position) || currentStore.wasLegacySuperseded(position))) {
             settleLegacyPage(position);
             return false;
         }

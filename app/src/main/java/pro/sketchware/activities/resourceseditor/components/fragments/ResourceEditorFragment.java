@@ -65,7 +65,10 @@ public abstract class ResourceEditorFragment extends Fragment implements Resourc
 
     protected final ResourceEditorSaveResult.XmlWrite writeResourceXml(String path, String xml) {
         try {
+            ResourcesEditorActivity activity = getActivity() instanceof ResourcesEditorActivity editor ? editor : null;
+            String legacyToken = activity == null ? null : activity.prepareResourceXmlWrite(this, xml);
             ResourceXmlWriter.write(path, xml);
+            if (activity != null) activity.confirmResourceXmlWrite(this, legacyToken);
             markDraftClean();
             return ResourceEditorSaveResult.XmlWrite.SAVED;
         } catch (IOException | RuntimeException failure) {

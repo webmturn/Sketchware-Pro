@@ -59,6 +59,9 @@ final class ResourceEditorDraftStore {
     private final long owner;
     private final Faults faults;
     private final String[] xmlPaths;
+    private final ResourceEditorLegacyXmlBarrier legacyXml;
+    private final boolean[] legacySupersededPages = new boolean[ResourceEditorTabs.COUNT];
+    private boolean legacyXmlBlocked;
     private final boolean[] xmlCommittedPages = new boolean[ResourceEditorTabs.COUNT];
     private volatile Manifest manifest;
     private volatile boolean durable;
@@ -85,6 +88,7 @@ final class ResourceEditorDraftStore {
         this.owner = owner;
         this.faults = faults;
         this.xmlPaths = xmlPaths == null ? null : xmlPaths.clone();
+        legacyXml = new ResourceEditorLegacyXmlBarrier(root, project, variant, session, xmlPaths, faults);
     }
 
     private static String parseUuid(String value) throws IOException {
@@ -191,6 +195,29 @@ final class ResourceEditorDraftStore {
     boolean isDurable() { return durable; }
     long generation() { return manifest == null ? -1 : manifest.generation; }
     boolean wasXmlCommitted(int page) { return xmlCommittedPages[page]; }
+    boolean wasLegacySuperseded(int page) { return legacySupersededPages[page]; }
+    boolean hasLegacyXmlHistory() { return legacyXml.hasHistory(); }
+
+    String prepareLegacyXml(int page, String xml) throws IOException {
+        synchronized (gate) {
+            requireOwner();
+            return legacyXml.prepare(page, xml);
+        }
+    }
+
+    void confirmLegacyXml(int page, String token) throws IOException {
+        synchronized (gate) {
+            requireOwner();
+            legacyXml.confirm(page, token);
+        }
+    }
+
+    private void flushLegacySources() throws IOException {
+        synchronized (gate) {
+            requireOwner();
+            legacyXml.flushSources();
+        }
+    }
 
     static final int LEGACY_NONE = 0;
     static final int LEGACY_MIGRATED = 1;
@@ -204,6 +231,7 @@ final class ResourceEditorDraftStore {
         final int state;
         final Map<Integer, ResourceEditorDraftState.Snapshot> pages;
         final Bundle corrupt;
+        boolean xmlBarrierBlocked;
 
         LegacyImport(int state, Map<Integer, ResourceEditorDraftState.Snapshot> pages, Bundle corrupt) {
             this.state = state;
@@ -216,10 +244,12 @@ final class ResourceEditorDraftStore {
         }
     }
 
-    private static LegacyImport legacyResult(int state,
+    private LegacyImport legacyResult(int state,
                                              Map<Integer, ResourceEditorDraftState.Snapshot> pages,
                                              Bundle corrupt) {
-        return new LegacyImport(state, pages == null ? new HashMap<>() : pages, corrupt);
+        LegacyImport result = new LegacyImport(state, pages == null ? new HashMap<>() : pages, corrupt);
+        result.xmlBarrierBlocked = legacyXmlBlocked;
+        return result;
     }
 
     /**
@@ -231,6 +261,8 @@ final class ResourceEditorDraftStore {
         Bundle corrupt = new Bundle();
         try {
             requireOwner();
+            legacyXmlBlocked = false;
+            java.util.Arrays.fill(legacySupersededPages, false);
             if (drafts == null || drafts.isEmpty()) return legacyResult(LEGACY_NONE, null, corrupt);
             Map<Integer, ResourceEditorDraftState.Snapshot> migrated = new HashMap<>();
             boolean anyXmlCommitted = false;
@@ -245,6 +277,20 @@ final class ResourceEditorDraftStore {
                     return legacyResult(LEGACY_FAILED, null, corrupt);
                 }
                 if (page == null) continue;
+                try {
+                    String source = ResourceEditorLegacyXmlBarrier.fingerprint(page);
+                    if (legacyXml.superseded(i, source)) {
+                        legacySupersededPages[i] = true;
+                        continue;
+                    }
+                    legacyXml.remember(i, source);
+                } catch (IOException unverified) {
+                    LogUtil.w("ResourceDrafts", "Unable to verify legacy XML source " + i, unverified);
+                    legacySupersededPages[i] = true;
+                    legacyXmlBlocked = true;
+                    corrupt.putBundle(Integer.toString(i), new Bundle(page));
+                    continue;
+                }
                 // Superseded input need not be parsed or retained as corrupt material.
                 if (xmlCommittedPages[i] || manifest.pages[i].dirty) continue;
                 ResourceEditorDraftState.Snapshot snapshot;
@@ -264,6 +310,7 @@ final class ResourceEditorDraftStore {
                 // manifest page is a newer draft. Neither may be replaced by the old Bundle.
                 migrated.put(i, snapshot);
             }
+            flushLegacySources();
             if (anyXmlCommitted && !migrated.isEmpty()) {
                 // commit() rewrites every page, including the XML-committed one for which no
                 // complete snapshot exists here. Defer until that page is loaded and protected.
@@ -450,6 +497,7 @@ final class ResourceEditorDraftStore {
 
     void commit(long[] revisions, boolean[] dirty, Map<Integer, ResourceEditorDraftState.Snapshot> snapshots) throws IOException {
         requireOwner();
+        flushLegacySources();
         Manifest next = fresh();
         next.generation = manifest.generation + 1;
         for (int i = 0; i < ResourceEditorTabs.COUNT; i++) {
@@ -786,6 +834,7 @@ final class ResourceEditorDraftStore {
         synchronized (gate) {
             requireOwner();
             faults.at("before_close_manifest");
+            if (legacyXml.hasHistory()) legacyXml.discardSession();
             Manifest closed = fresh();
             closed.closed = true;
             closed.generation = manifest.generation + 1;

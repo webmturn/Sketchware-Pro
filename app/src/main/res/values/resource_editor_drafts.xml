@@ -21,4 +21,5 @@
     <string name="resources_editor_unsafe_discard">Discard and exit</string>
     <string name="resources_editor_legacy_state_too_large">Legacy drafts or diagnostic material exceed the safe saved-state budget and are not fully protected. Keep this editor open and retry saving; unprotected content may not survive process termination.</string>
     <string name="resources_editor_legacy_restore_incomplete">Some legacy drafts or diagnostic material could not be protected previously. This restore may be incomplete; existing protected drafts and XML are unaffected.</string>
+    <string name="resources_editor_legacy_xml_unverified">An old draft could not be safely matched to the saved XML. Its recovery material has been retained; the old content was not applied.</string>
 </resources>

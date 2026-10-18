@@ -21,4 +21,5 @@
     <string name="resources_editor_unsafe_navigation_message">项目 XML 可能已写入，但旧草稿恢复点未能安全处理。请重试保存，或明确放弃并退出。</string>
     <string name="resources_editor_unsafe_retry">重试保存</string>
     <string name="resources_editor_unsafe_discard">放弃并退出</string>
+    <string name="resources_editor_legacy_xml_unverified">无法安全确认旧草稿与已保存 XML 的关系。已保留恢复材料，未应用旧内容。</string>
 </resources>

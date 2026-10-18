@@ -74,6 +74,7 @@ final class ResourceEditorDraftController {
                     }
                 }
                 ResourceEditorDraftStore.pruneClosedSessions(root);
+                ResourceEditorDraftOrphans.prune(root, OWNERS.keySet());
                 return loaded;
             } catch (IOException failure) { throw new java.util.concurrent.CompletionException(failure); }
         }, IO);
@@ -169,6 +170,39 @@ final class ResourceEditorDraftController {
 
     boolean isWriting() { return writing != null && !writing.isDone(); }
 
+    String prepareLegacyXml(int page, String xml) throws IOException {
+        if (detached) throw new IOException("Draft controller detached");
+        try {
+            Loaded loaded = opening.join();
+            if (!loaded.store.hasLegacyXmlHistory()) return null;
+            return CompletableFuture.supplyAsync(() -> {
+                try { return loaded.store.prepareLegacyXml(page, xml); }
+                catch (IOException failure) { throw new java.util.concurrent.CompletionException(failure); }
+            }, IO).get();
+        } catch (InterruptedException failure) {
+            Thread.currentThread().interrupt();
+            throw new IOException("Legacy XML protection interrupted", failure);
+        } catch (ExecutionException | RuntimeException failure) {
+            throw new IOException("Unable to protect legacy XML source", failure);
+        }
+    }
+
+    void confirmLegacyXml(int page, String token) {
+        if (token == null || detached) return;
+        try {
+            Loaded loaded = opening.join();
+            CompletableFuture.runAsync(() -> {
+                try { loaded.store.confirmLegacyXml(page, token); }
+                catch (IOException failure) { throw new java.util.concurrent.CompletionException(failure); }
+            }, IO).get();
+        } catch (InterruptedException failure) {
+            Thread.currentThread().interrupt();
+            LogUtil.w("ResourceDrafts", "Legacy XML confirmation interrupted; intent retained", failure);
+        } catch (ExecutionException | RuntimeException failure) {
+            LogUtil.w("ResourceDrafts", "Legacy XML confirmation deferred; intent retained", failure);
+        }
+    }
+
     /** Persists the per-page XML commit intent before the XML-only path writes project files. */
     boolean writeXmlCommitIntent(Map<Integer, String> hashes) {
         if (detached) return false;
@@ -222,9 +256,9 @@ final class ResourceEditorDraftController {
         if (detached) return;
         detached = true;
         if (close) {
-            opening.thenAcceptAsync(loaded -> {
-                try { loaded.store.close(); }
-                catch (IOException failure) { LogUtil.w("ResourceDrafts", "Unable to close draft session", failure); }
+            opening.whenCompleteAsync((loaded, failure) -> {
+                try { if (loaded != null) loaded.store.close(); }
+                catch (IOException closeFailure) { LogUtil.w("ResourceDrafts", "Unable to close draft session", closeFailure); }
                 finally { releaseOwnership(); }
             }, IO);
         } else releaseOwnership();
