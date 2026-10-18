@@ -171,7 +171,7 @@ public class StringsEditor extends ResourceEditorFragment {
 
         activity.runOnUiThread(() -> {
             if (!isAdded() || getActivity() == null || binding == null || activity.isFinishing() || activity.isDestroyed()) return;
-            notesMap = rebuildNotesMap(existingStrings, existingNotes, defaultStrings, defaultNotes, listmap);
+            notesMap = rebuildNotesMap(existingStrings, existingNotes, defaultStrings, defaultNotes, listmap, updateMode);
             adapter = new StringsAdapter(activity, listmap, notesMap);
             binding.recyclerView.setAdapter(adapter);
             activity.checkForInvalidResources();
@@ -236,7 +236,9 @@ public class StringsEditor extends ResourceEditorFragment {
         HashMap<String, Object> map = new HashMap<>();
         map.put("key", key);
         map.put("text", text);
+        String trailingNote = notesMap.remove(listmap.size());
         listmap.add(map);
+        if (trailingNote != null) notesMap.put(listmap.size(), trailingNote);
         if (!note.isEmpty()) {
             notesMap.put(listmap.size() - 1, note);
         }
@@ -249,7 +251,7 @@ public class StringsEditor extends ResourceEditorFragment {
                                                          HashMap<Integer, String> existingNotes,
                                                          ArrayList<T> importedItems,
                                                          HashMap<Integer, String> importedNotes,
-                                                         ArrayList<T> finalItems) {
+                                                         ArrayList<T> finalItems, int updateMode) {
         IdentityHashMap<T, Integer> existingIndexes = new IdentityHashMap<>();
         for (int i = 0; i < existingItems.size(); i++) {
             existingIndexes.put(existingItems.get(i), i);
@@ -276,6 +278,15 @@ public class StringsEditor extends ResourceEditorFragment {
             }
         }
 
+        String trailing = importedNotes.get(importedItems.size());
+        if (updateMode == 1 || updateMode == 2) {
+            String existingTrailing = existingNotes.get(existingItems.size());
+            if (existingTrailing != null) {
+                trailing = trailing == null || existingTrailing.equals(trailing)
+                        ? existingTrailing : existingTrailing + "\n" + trailing;
+            }
+        }
+        if (trailing != null) rebuiltNotes.put(finalItems.size(), trailing);
         return rebuiltNotes;
     }
 

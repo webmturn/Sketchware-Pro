@@ -70,6 +70,15 @@ public class StringResourceResolver {
 
         if (key.equals("app_name")) {
             hasAppNameKey = true;
+            // Comments parsed at the current row belong to app_name. Earlier row comments
+            // must move with their rows when this entry is placed first.
+            int position = list.size();
+            HashMap<Integer, String> reordered = new HashMap<>();
+            for (Map.Entry<Integer, String> note : notesMap.entrySet()) {
+                reordered.put(note.getKey() == position ? 0 : note.getKey() + 1, note.getValue());
+            }
+            notesMap.clear();
+            notesMap.putAll(reordered);
             list.add(0, map);
         } else {
             list.add(map);

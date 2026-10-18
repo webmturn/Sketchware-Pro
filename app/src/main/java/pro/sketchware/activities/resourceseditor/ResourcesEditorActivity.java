@@ -555,6 +555,33 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         }
     }
 
+    private void requestSourceEditor(int page) {
+        if (restoreReferenceUnsafe) {
+            showUnsafeNavigationDialog(() -> attemptSave(() -> openSourceEditor(page)));
+        } else openSourceEditor(page);
+    }
+
+    private void openSourceEditor(int page) {
+        String[] names = {"strings.xml", "colors.xml", "styles.xml", "themes.xml", "arrays.xml", "dimens.xml"};
+        String[] paths = {stringsFilePath, colorsFilePath, stylesFilePath, themesFilePath, arrayFilePath, dimensFilePath};
+        ResourceEditorFragment editor = (ResourceEditorFragment) editors()[page];
+        if (!editor.hasDraftChanges() && !new java.io.File(paths[page]).isFile()) {
+            // A generated clean model still needs protection before creating a missing XML.
+            editor.markDraftChanged();
+        }
+        if (!protectDrafts()) {
+            // Explicit confirmation saves all XML through the existing intent/CLOSED protocol.
+            // After rotation, no old dirty target remains to compete with source edits.
+            showXmlOnlyDialog(() -> goToCodeEditor(names[page], paths[page]));
+            return;
+        }
+        if (savePage(page) == ResourceEditorSaveResult.XmlWrite.FAILED) {
+            SketchwareUtil.toastError(getString(R.string.resources_editor_xml_save_failed));
+            return;
+        }
+        if (protectDrafts()) goToCodeEditor(names[page], paths[page]);
+    }
+
     private void goToCodeEditor(String title, String contentPath) {
         builder = null;
         isComingFromSrcCodeEditor = true;
@@ -572,7 +599,13 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle(Helper.getResString(R.string.resources_manager_xml_load_failed_title))
                 .setMessage(String.format(Helper.getResString(R.string.resources_manager_xml_load_failed_message), title))
-                .setPositiveButton(R.string.resources_open_code_editor, (dialog, which) -> goToCodeEditor(title, contentPath))
+                .setPositiveButton(R.string.resources_open_code_editor, (dialog, which) -> {
+                    builder = null;
+                    String[] paths = {stringsFilePath, colorsFilePath, stylesFilePath, themesFilePath, arrayFilePath, dimensFilePath};
+                    for (int page = 0; page < paths.length; page++) {
+                        if (paths[page].equals(contentPath)) { requestSourceEditor(page); break; }
+                    }
+                })
                 .setNegativeButton(Helper.getResString(R.string.common_word_exit), (dialogInterface, i) -> finish())
                 .setCancelable(false)
                 .create()
@@ -770,21 +803,8 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
             }
             importFromDefaultVariant();
         } else if (id == R.id.action_open_editor) {
-            if (restoreReferenceUnsafe) {
-                showUnsafeNavigationDialog(() -> attemptSave(null));
-                return true;
-            }
-            int currentItem = binding.viewPager.getCurrentItem();
-            ((ResourceEditorFragment) editors()[currentItem]).markDraftChanged();
-            if (protectDrafts()) {
-                if (savePage(currentItem) != ResourceEditorSaveResult.XmlWrite.FAILED) {
-                    if (protectDrafts()) {
-                        String[] names = {"strings.xml", "colors.xml", "styles.xml", "themes.xml", "arrays.xml", "dimens.xml"};
-                        String[] paths = {stringsFilePath, colorsFilePath, stylesFilePath, themesFilePath, arrayFilePath, dimensFilePath};
-                        goToCodeEditor(names[currentItem], paths[currentItem]);
-                    }
-                } else SketchwareUtil.toastError(getString(R.string.resources_editor_xml_save_failed));
-            }
+            requestSourceEditor(binding.viewPager.getCurrentItem());
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

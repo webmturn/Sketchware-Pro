@@ -26,6 +26,9 @@ public class StringsEditorManager extends StringResourceResolver {
         HashMap<String, Object> map = new HashMap<>();
         map.put("key", "app_name");
         map.put("text", MapValueHelper.getString(ProjectListManager.getProjectById(sc_id), "my_app_name"));
+        HashMap<Integer, String> shiftedNotes = new HashMap<>();
+        notesMap.forEach((position, note) -> shiftedNotes.put(position + 1, note));
+        notesMap = shiftedNotes;
         listMap.add(0, map);
         XmlUtil.saveXml(SketchwarePaths.getProjectResourceValuesFilePath(sc_id, "strings.xml"), convertListMapToXmlStrings(listMap, notesMap));
     }
