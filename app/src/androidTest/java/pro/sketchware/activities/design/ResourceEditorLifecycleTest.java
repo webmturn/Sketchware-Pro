@@ -9,6 +9,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.SystemClock;
 import android.os.Bundle;
+import android.os.Parcel;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
@@ -34,6 +35,7 @@ import java.util.HashMap;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.ResourceEditorTabs;
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
+import pro.sketchware.activities.resourceseditor.ResourceEditorDraftState;
 import pro.sketchware.activities.resourceseditor.components.models.StyleModel;
 import pro.sketchware.activities.resourceseditor.components.models.ArrayModel;
 import pro.sketchware.core.project.ProjectDataManager;
@@ -43,6 +45,155 @@ import pro.sketchware.databinding.ResourcesEditorFragmentBinding;
 /** Exercises live pager fragments and loading callbacks using a disposable project. */
 @RunWith(AndroidJUnit4.class)
 public class ResourceEditorLifecycleTest {
+    @Test public void incrementalStringEditsSurviveRecreationAndKeepFormalXmlUnchanged() throws Exception {
+        withEditor((fixture, scenario) -> {
+            awaitLoaded(scenario, "base");
+            byte[] original = Files.readAllBytes(resourceFile(fixture.id,"","strings.xml").toPath());
+            String[] session = {null};
+            scenario.onActivity(a -> {
+                for (int i=0;i<2048;i++) a.stringsEditor.listmap.add(new HashMap<>(java.util.Map.of("key","chunk_"+i,"text","original "+i)));
+                a.stringsEditor.markDraftChanged();
+                saveForIncrementalTest(a);
+                a.stringsEditor.addString("incremental_append","appended","tail note");
+                a.stringsEditor.listmap.get(640).put("text","edited <&> 😀");
+                a.stringsEditor.markStringChanged(640,false);
+                Bundle saved=saveForIncrementalTest(a); session[0]=saved.getString("resource_draft_session");
+                File manifest=new File(a.getNoBackupFilesDir(),"resource-editor-drafts/"+session[0]+"/manifest.json");
+                try {
+                    String text=new String(Files.readAllBytes(manifest.toPath()),StandardCharsets.UTF_8);
+                    assertTrue("Small changes must reach the chunked storage path",text.contains("strings-chunks-utf8-v1"));
+                } catch(Exception failure) { throw new AssertionError(failure); }
+            });
+            scenario.recreate(); awaitLoaded(scenario,"base");
+            scenario.onActivity(a -> {
+                assertEquals("edited <&> 😀",a.stringsEditor.listmap.get(640).get("text"));
+                assertTrue(a.stringsEditor.listmap.stream().anyMatch(row -> "incremental_append".equals(row.get("key"))));
+                assertTrue(a.stringsEditor.hasUnsavedChanges);
+                a.stringsEditor.listmap.get(900).put("text","after recreate");
+                a.stringsEditor.markStringChanged(900,false); saveForIncrementalTest(a);
+            });
+            scenario.recreate(); awaitLoaded(scenario,"base");
+            scenario.onActivity(a -> assertEquals("after recreate",a.stringsEditor.listmap.get(900).get("text")));
+            assertArrayEquals(original,Files.readAllBytes(resourceFile(fixture.id,"","strings.xml").toPath()));
+        });
+    }
+
+    private static Bundle saveForIncrementalTest(ResourcesEditorActivity activity) {
+        try {
+            Bundle saved=new Bundle();
+            Method method=ResourcesEditorActivity.class.getDeclaredMethod("onSaveInstanceState",Bundle.class);
+            method.setAccessible(true); method.invoke(activity,saved);
+            return saved;
+        } catch(Exception failure) { throw new AssertionError(failure); }
+    }
+
+    @Test @SdkSuppress(minSdkVersion=29)
+    public void largeDraftBackgroundAndRepeatedRecreationUseOnlySmallState() throws Exception {
+        withEditor((fixture, scenario) -> {
+            awaitLoaded(scenario, "base");
+            File xml = resourceFile(fixture.id, "", "strings.xml");
+            byte[] original = Files.readAllBytes(xml.toPath());
+            scenario.onActivity(a -> {
+                String value = new String(new char[100]).replace('\0', 'x');
+                for (int i = 0; i < 10000; i++) {
+                    HashMap<String, Object> entry = new HashMap<>();
+                    entry.put("key", "large_" + i); entry.put("text", value);
+                    a.stringsEditor.listmap.add(entry);
+                }
+                a.stringsEditor.addString("large_unsaved", "kept", "large note");
+            });
+            Application app = (Application) InstrumentationRegistry.getInstrumentation().getTargetContext().getApplicationContext();
+            int[] saves = {0};
+            Application.ActivityLifecycleCallbacks observer = new EmptyCallbacks() {
+                @Override public void onActivityPostSaveInstanceState(Activity activity, Bundle state) {
+                    if (!(activity instanceof ResourcesEditorActivity a) || !fixture.id.equals(a.sc_id)) return;
+                    assertFalse(state.containsKey("resource_editor_drafts"));
+                    assertNotNull(state.getString("resource_draft_session"));
+                    Parcel parcel = Parcel.obtain();
+                    try { parcel.writeBundle(state); assertTrue("Resource text must not enter saved state", parcel.dataSize() < 128 * 1024); }
+                    finally { parcel.recycle(); }
+                    saves[0]++;
+                }
+            };
+            app.registerActivityLifecycleCallbacks(observer);
+            try {
+                scenario.moveToState(Lifecycle.State.CREATED);
+                scenario.moveToState(Lifecycle.State.RESUMED);
+                scenario.recreate();
+                scenario.recreate();
+                awaitLoaded(scenario, "base");
+                scenario.onActivity(a -> {
+                    assertTrue(a.stringsEditor.hasUnsavedChanges);
+                    assertTrue(a.stringsEditor.listmap.stream().anyMatch(row -> "large_unsaved".equals(row.get("key"))));
+                    assertTrue(a.stringsEditor.listmap.size() >= 10002);
+                });
+                assertTrue(saves[0] >= 3);
+                assertArrayEquals(original, Files.readAllBytes(xml.toPath()));
+            } finally { app.unregisterActivityLifecycleCallbacks(observer); }
+        });
+    }
+
+    @Test public void failedXmlSaveKeepsDraftAndDoesNotReportClean() throws Exception {
+        withEditor((fixture, scenario) -> {
+            awaitLoaded(scenario, "base");
+            File original = resourceFile(fixture.id, "", "strings.xml");
+            byte[] bytes = Files.readAllBytes(original.toPath());
+            File blocked = new File(original.getParentFile(), "blocked-destination");
+            assertTrue(blocked.mkdir());
+            scenario.onActivity(a -> {
+                a.stringsEditor.addString("failed_save_probe", "recoverable", "");
+                a.colorsEditor.colorList.get(0).setColorValue("#778899");
+                a.colorsEditor.markDraftChanged();
+                a.stringsEditor.filePath = blocked.getPath();
+                saveFromToolbar(a);
+                assertTrue(a.stringsEditor.hasUnsavedChanges);
+                assertFalse("Other successful pages become clean", a.colorsEditor.hasUnsavedChanges);
+            });
+            assertArrayEquals(bytes, Files.readAllBytes(original.toPath()));
+            assertTrue(new String(Files.readAllBytes(resourceFile(fixture.id, "", "colors.xml").toPath()), StandardCharsets.UTF_8).contains("#778899"));
+            scenario.recreate();
+            awaitLoaded(scenario, "base");
+            scenario.onActivity(a -> {
+                assertTrue(a.stringsEditor.hasUnsavedChanges);
+                assertTrue(a.stringsEditor.listmap.stream().anyMatch(row -> "failed_save_probe".equals(row.get("key"))));
+                saveFromToolbar(a);
+                assertFalse(a.stringsEditor.hasUnsavedChanges);
+            });
+            assertTrue(new String(Files.readAllBytes(original.toPath()), StandardCharsets.UTF_8).contains("failed_save_probe"));
+        });
+    }
+
+    @Test @SdkSuppress(minSdkVersion=29)
+    public void legacyInlineDraftMigratesAndSurvivesAnotherRecreation() throws Exception {
+        withEditor((fixture, scenario) -> {
+            awaitLoaded(scenario, "base");
+            scenario.onActivity(a -> a.stringsEditor.addString("legacy_probe", "legacy", "note"));
+            Application app = (Application) InstrumentationRegistry.getInstrumentation().getTargetContext().getApplicationContext();
+            Application.ActivityLifecycleCallbacks legacy = new EmptyCallbacks() {
+                @Override public void onActivityPostSaveInstanceState(Activity activity, Bundle state) {
+                    if (!(activity instanceof ResourcesEditorActivity a) || !fixture.id.equals(a.sc_id)) return;
+                    Bundle drafts = new Bundle(); drafts.putBundle("0", a.stringsEditor.saveDraftState());
+                    state.remove("resource_draft_session"); state.putBundle("resource_editor_drafts", drafts);
+                }
+            };
+            app.registerActivityLifecycleCallbacks(legacy);
+            try { scenario.recreate(); } finally { app.unregisterActivityLifecycleCallbacks(legacy); }
+            scenario.recreate();
+            awaitLoaded(scenario, "base");
+            scenario.onActivity(a -> assertTrue(a.stringsEditor.listmap.stream().anyMatch(row -> "legacy_probe".equals(row.get("key")))));
+        });
+    }
+
+    private static class EmptyCallbacks implements Application.ActivityLifecycleCallbacks {
+        @Override public void onActivityCreated(Activity activity, Bundle state) { }
+        @Override public void onActivityStarted(Activity activity) { }
+        @Override public void onActivityResumed(Activity activity) { }
+        @Override public void onActivityPaused(Activity activity) { }
+        @Override public void onActivityStopped(Activity activity) { }
+        @Override public void onActivitySaveInstanceState(Activity activity, Bundle state) { }
+        @Override public void onActivityDestroyed(Activity activity) { }
+    }
+
     @Test public void recreationUsesRestoredEditorsAndLoadsEveryTab() throws Exception {
         withEditor((fixture, scenario) -> {
             awaitLoaded(scenario, "base");
@@ -196,7 +347,7 @@ public class ResourceEditorLifecycleTest {
             awaitLoaded(scenario, "base");
             scenario.onActivity(a -> {
                 a.colorsEditor.colorList.get(0).setColorValue("#445566");
-                a.colorsEditor.hasUnsavedChanges = true;
+                a.colorsEditor.markDraftChanged();
                 a.isComingFromSrcCodeEditor = true;
             });
             scenario.moveToState(Lifecycle.State.STARTED);
@@ -219,15 +370,15 @@ public class ResourceEditorLifecycleTest {
             scenario.onActivity(a -> {
                 a.stringsEditor.addString("unsaved_probe", "draft <&> value", "draft note");
                 a.colorsEditor.colorList.get(0).setColorValue("#445566");
-                a.colorsEditor.hasUnsavedChanges = true;
+                a.colorsEditor.markDraftChanged();
                 list(a.stylesEditor, "stylesList", StyleModel.class).get(0).addAttribute("android:text", "draft <&> style");
-                a.stylesEditor.hasUnsavedChanges = true;
+                a.stylesEditor.markDraftChanged();
                 list(a.themesEditor, "themesList", StyleModel.class).get(0).setParent("Theme.AppCompat.DayNight.NoActionBar");
-                a.themesEditor.hasUnsavedChanges = true;
+                a.themesEditor.markDraftChanged();
                 list(a.arraysEditor, "arraysList", ArrayModel.class).get(0).addAttribute("draft_item", "draft <&> array");
-                a.arraysEditor.hasUnsavedChanges = true;
+                a.arraysEditor.markDraftChanged();
                 a.dimensEditor.dimenList.clear();
-                a.dimensEditor.hasUnsavedChanges = true;
+                a.dimensEditor.markDraftChanged();
                 for (Fragment editor : editors(a)) notes(editor).put(0, "draft note <&>\nsecond line");
             });
             scenario.recreate();
@@ -292,7 +443,7 @@ public class ResourceEditorLifecycleTest {
             awaitLoaded(scenario, "base");
             scenario.onActivity(a -> {
                 a.colorsEditor.colorList.get(0).setColorValue("#445566");
-                a.colorsEditor.hasUnsavedChanges = true;
+                a.colorsEditor.markDraftChanged();
                 a.isComingFromSrcCodeEditor = true;
             });
             Files.write(resourceFile(fixture.id, "", "strings.xml").toPath(), strings("edited_in_code").getBytes(StandardCharsets.UTF_8));
@@ -371,7 +522,23 @@ public class ResourceEditorLifecycleTest {
             if (loaded[0]) { InstrumentationRegistry.getInstrumentation().waitForIdleSync(); return; }
             SystemClock.sleep(30);
         }
-        fail("All resource editors should load: " + value);
+        StringBuilder detail = new StringBuilder();
+        scenario.onActivity(a -> {
+            detail.append(" lifecycle=").append(a.getLifecycle().getCurrentState());
+            for (Fragment fragment : editors(a)) detail.append(" ").append(fragment.getClass().getSimpleName())
+                    .append(":added=").append(fragment.isAdded()).append(",view=").append(fragment.getView() != null);
+            for (String fieldName : new String[]{"editorsLoaded", "initialLoadPending", "draftController"}) {
+                try {
+                    Field field = ResourcesEditorActivity.class.getDeclaredField(fieldName); field.setAccessible(true);
+                    Object fieldValue = field.get(a); detail.append(" ").append(fieldName).append("=").append(fieldValue);
+                    if (fieldName.equals("draftController") && fieldValue != null) {
+                        Field opening = fieldValue.getClass().getDeclaredField("opening"); opening.setAccessible(true);
+                        detail.append(" opening=").append(opening.get(fieldValue));
+                    }
+                } catch (Exception failure) { detail.append(failure); }
+            }
+        });
+        fail("All resource editors should load: " + value + detail);
     }
 
     private static void awaitOrientation(ActivityScenario<ResourcesEditorActivity> scenario, int expected) {

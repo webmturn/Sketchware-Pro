@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="resources_editor_draft_save_failed">Unable to protect the latest edits. Keep this editor open and save again; only an earlier draft may be recoverable.</string>
+    <string name="resources_editor_draft_restore_failed">Unable to restore the resource draft. Loading the saved XML files instead.</string>
+    <string name="resources_editor_xml_save_failed">Some resource files could not be saved. Their edits and drafts have been kept; please try again.</string>
+    <string name="resources_editor_draft_xml_only_title">Draft protection failed</string>
+    <string name="resources_editor_draft_xml_only_message">The latest edits could not be saved to a draft, but the project XML can still be written. \"Save XML only\" writes the resource files and discards the old draft; unsaved content in other pages may no longer be recoverable.</string>
+    <string name="resources_editor_draft_xml_only_confirm">Save XML only</string>
+    <string name="resources_editor_xml_saved_restore_dirty">Resource XML saved. The draft is still marked unsaved and may be offered again next time.</string>
+    <string name="resources_editor_xml_saved_draft_discarded">Resource XML saved and the old draft discarded.</string>
+    <string name="resources_editor_xml_saved_restore_unsafe">Resource XML was written, but the old restore point could not be discarded. Keep this editor open and retry.</string>
+    <string name="resources_editor_xml_partial_saved">Some resource XML was saved, but the restore state is not safe. Retry the failed pages before leaving.</string>
+    <string name="resources_editor_xml_prepare_failed">Unable to prepare the resource XML, so no file was written. Please try again.</string>
+    <string name="resources_editor_xml_intent_failed">Unable to record the XML save intent, so no resource file was written. Please try again.</string>
+    <string name="resources_editor_draft_xml_conflict_loaded">A saved resource XML is newer than the old draft, so the XML was loaded for that page.</string>
+    <string name="resources_editor_unsafe_navigation_title">Restore state is not safe yet</string>
+    <string name="resources_editor_unsafe_navigation_message">The project XML may already be written, but the old draft restore point could not be handled safely. Retry the save, or explicitly discard and exit.</string>
+    <string name="resources_editor_unsafe_retry">Retry save</string>
+    <string name="resources_editor_unsafe_discard">Discard and exit</string>
+</resources>

@@ -27,11 +27,16 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.lang.ref.WeakReference;
 
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.ProjectListManager;
@@ -47,6 +52,7 @@ import pro.sketchware.activities.resourceseditor.components.fragments.DimensEdit
 import pro.sketchware.activities.resourceseditor.components.fragments.StringsEditor;
 import pro.sketchware.activities.resourceseditor.components.fragments.StylesEditor;
 import pro.sketchware.activities.resourceseditor.components.fragments.ThemesEditor;
+import pro.sketchware.activities.resourceseditor.components.fragments.ResourceEditorFragment;
 import pro.sketchware.core.resources.ColorModel;
 import pro.sketchware.databinding.ResourcesEditorImportDialogBinding;
 import pro.sketchware.databinding.ResourcesEditorsActivityBinding;
@@ -85,8 +91,15 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
     private boolean initialLoadPending;
     private boolean sourceReloadPending;
     private Bundle pendingDrafts;
+    private ResourceEditorDraftController draftController;
+    private ResourceEditorDraftState.Snapshot[] restoredDrafts;
+    private String savedDraftSession;
+    private int sourceEditorPage = -1;
+    private boolean draftFailureShown;
+    private boolean restoreReferenceUnsafe;
     private final Handler resourceHandler = new Handler(Looper.getMainLooper());
     private final Runnable loadEditorsTask = this::loadPendingEditors;
+    private final Runnable prewriteDraftTask = this::prewriteDrafts;
     private final FragmentManager.FragmentLifecycleCallbacks editorLifecycleCallbacks =
             new FragmentManager.FragmentLifecycleCallbacks() {
                 @Override
@@ -108,6 +121,8 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
             currentTabPosition = savedInstanceState.getInt("current_tab_position", ResourceEditorTabs.STRINGS);
             resourceSearchQuery = savedInstanceState.getString("resource_search_query", "");
             pendingDrafts = savedInstanceState.getBundle("resource_editor_drafts");
+            savedDraftSession = savedInstanceState.getString("resource_draft_session");
+            sourceEditorPage = savedInstanceState.getInt("resource_source_page", -1);
             sourceReloadPending = savedInstanceState.getBoolean("resource_source_reload", false);
         }
 
@@ -171,7 +186,15 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
     }
 
     private void initializeBackgroundTask(String variant) {
-        if (this.variant != null && !this.variant.equals(variant)) pendingDrafts = null;
+        if (this.variant != null && !this.variant.equals(variant)) {
+            pendingDrafts = null;
+            savedDraftSession = null;
+            restoredDrafts = null;
+            restoreReferenceUnsafe = false;
+            resourceHandler.removeCallbacks(prewriteDraftTask);
+            draftController.detach(true);
+            draftController = null;
+        }
         this.variant = variant;
         stringsFilePath = SketchwarePaths.getProjectResourceValuesFilePath(sc_id, variant, "strings.xml");
         colorsFilePath = SketchwarePaths.getProjectResourceValuesFilePath(sc_id, variant, "colors.xml");
@@ -179,6 +202,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         themesFilePath = SketchwarePaths.getProjectResourceValuesFilePath(sc_id, variant, "themes.xml");
         arrayFilePath = SketchwarePaths.getProjectResourceValuesFilePath(sc_id, variant, "arrays.xml");
         dimensFilePath = SketchwarePaths.getProjectResourceValuesFilePath(sc_id, variant, "dimens.xml");
+        if (draftController == null) openDraftSession();
 
         if (binding.viewPager.getAdapter() == null) setupViewPager();
         else updateTabTitles();
@@ -212,7 +236,9 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
     private void schedulePendingLoad() {
         resourceHandler.removeCallbacks(loadEditorsTask);
         if ((!initialLoadPending && !sourceReloadPending) || isFinishing() || isDestroyed()
-                || !getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED) || !areEditorsReady()) return;
+                || !getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED) || !areEditorsReady()
+                || draftController == null || !draftController.opening.isDone()
+                || draftController.opening.isCompletedExceptionally()) return;
         resourceHandler.post(loadEditorsTask);
     }
 
@@ -226,9 +252,84 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         editorsLoaded = true;
         applyResourceSearch();
         dismissLoadingDialog();
+        onResourceDraftChanged();
+    }
+
+    private ResourceEditorDraftState.Owner[] draftOwners() {
+        Fragment[] fragments = editors();
+        ResourceEditorDraftState.Owner[] owners = new ResourceEditorDraftState.Owner[fragments.length];
+        for (int i = 0; i < fragments.length; i++) owners[i] = (ResourceEditorDraftState.Owner) fragments[i];
+        return owners;
+    }
+
+    private void openDraftSession() {
+        draftController = new ResourceEditorDraftController(this, sc_id, variant, savedDraftSession,
+                new String[]{stringsFilePath, colorsFilePath, stylesFilePath, themesFilePath, arrayFilePath, dimensFilePath});
+        ResourceEditorDraftController controller = draftController;
+        WeakReference<ResourcesEditorActivity> reference = new WeakReference<>(this);
+        controller.opening.whenComplete((loaded, failure) -> new Handler(Looper.getMainLooper()).post(() -> {
+            ResourcesEditorActivity activity = reference.get();
+            if (activity == null || activity.isDestroyed() || activity.isFinishing() || activity.draftController != controller) return;
+            if (failure != null) {
+                pro.sketchware.util.LogUtil.e("ResourceDrafts", "Unable to restore draft", failure);
+                SketchwareUtil.toastError(activity.getString(R.string.resources_editor_draft_restore_failed));
+                controller.detach(false);
+                activity.savedDraftSession = null;
+                activity.openDraftSession();
+            } else {
+                activity.restoredDrafts = loaded.pages;
+                activity.schedulePendingLoad();
+            }
+        }));
+    }
+
+    public void onResourceDraftChanged() {
+        if (!editorsLoaded || isFinishing() || isDestroyed()) return;
+        resourceHandler.removeCallbacks(prewriteDraftTask);
+        resourceHandler.postDelayed(prewriteDraftTask, 250);
+    }
+
+    private void prewriteDrafts() {
+        if (!editorsLoaded || isFinishing() || isDestroyed()) return;
+        ResourceEditorDraftController controller = draftController;
+        WeakReference<ResourcesEditorActivity> reference = new WeakReference<>(this);
+        try {
+            if (controller.isWriting()) {
+                onResourceDraftChanged();
+                return;
+            }
+            controller.prewrite(draftOwners()).whenComplete((unused, failure) -> new Handler(Looper.getMainLooper()).post(() -> {
+                ResourcesEditorActivity activity = reference.get();
+                if (activity == null || activity.isDestroyed() || activity.isFinishing() || activity.draftController != controller) return;
+                if (failure != null) activity.reportDraftFailure();
+                else activity.draftFailureShown = false;
+            }));
+        } catch (RuntimeException failure) { reportDraftFailure(); }
+    }
+
+    private void reportDraftFailure() {
+        if (!draftFailureShown) SketchwareUtil.toastError(getString(R.string.resources_editor_draft_save_failed));
+        draftFailureShown = true;
+    }
+
+    private boolean protectDrafts() {
+        resourceHandler.removeCallbacks(prewriteDraftTask);
+        if (draftController.checkpoint(draftOwners())) {
+            draftFailureShown = false;
+            return true;
+        }
+        reportDraftFailure();
+        return false;
     }
 
     private void loadDataInBackground() {
+        ResourceEditorDraftController.Loaded loaded = draftController.opening.join();
+        ResourceEditorDraftStore store = loaded.store;
+        if (restoredDrafts == null) restoredDrafts = loaded.pages;
+        Fragment[] fragments = editors();
+        for (int i = 0; i < fragments.length; i++) {
+            ((ResourceEditorFragment) fragments[i]).restoreDraftRevision(store.revision(i));
+        }
         if (!restoreDraft(stringsEditor, ResourceEditorTabs.STRINGS, stringsFilePath))
             stringsEditor.updateStringsList(stringsFilePath, 0, false);
         if (!restoreDraft(colorsEditor, ResourceEditorTabs.COLORS, colorsFilePath))
@@ -241,11 +342,22 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
             arraysEditor.updateArraysList(arrayFilePath, 0, false);
         if (!restoreDraft(dimensEditor, ResourceEditorTabs.DIMENS, dimensFilePath))
             dimensEditor.updateDimensList(dimensFilePath, 0, false);
+        boolean xmlConflict = false;
+        boolean[] committed = new boolean[ResourceEditorTabs.COUNT];
+        for (int i = 0; i < committed.length; i++) committed[i] = store.wasXmlCommitted(i);
+        for (boolean value : committed) xmlConflict |= value;
+        if (xmlConflict) SketchwareUtil.toast(Helper.getResString(R.string.resources_editor_draft_xml_conflict_loaded));
         pendingDrafts = null;
+        restoredDrafts = null;
+        java.util.Arrays.fill(loaded.pages, null);
         checkForInvalidResources();
     }
 
     private boolean restoreDraft(ResourceEditorDraftState.Owner editor, int position, String filePath) {
+        if (restoredDrafts != null && restoredDrafts[position] != null) {
+            editor.restoreSnapshot(restoredDrafts[position], filePath);
+            return true;
+        }
         Bundle draft = pendingDrafts == null ? null : pendingDrafts.getBundle(Integer.toString(position));
         if (draft == null) return false;
         editor.restoreDraftState(draft, filePath);
@@ -284,6 +396,8 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
     private void goToCodeEditor(String title, String contentPath) {
         builder = null;
         isComingFromSrcCodeEditor = true;
+        String[] paths = {stringsFilePath, colorsFilePath, stylesFilePath, themesFilePath, arrayFilePath, dimensFilePath};
+        for (int i = 0; i < paths.length; i++) if (paths[i].equals(contentPath)) sourceEditorPage = i;
         Intent intent = new Intent();
         intent.setClass(getApplicationContext(), SrcCodeEditor.class);
         intent.putExtra("title", title);
@@ -307,6 +421,10 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
+                if (restoreReferenceUnsafe) {
+                    showUnsafeNavigationDialog(null);
+                    return;
+                }
                 ArrayList<String> unsavedFiles = getUnsavedFilesList();
 
                 if (!unsavedFiles.isEmpty()) {
@@ -316,10 +434,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
                     new MaterialAlertDialogBuilder(ResourcesEditorActivity.this)
                             .setTitle(Helper.getResString(R.string.common_word_warning))
                             .setMessage(message)
-                            .setPositiveButton(Helper.getResString(R.string.design_quit_button_save_and_exit), (dialog, which) -> {
-                                saveEditorsChanges();
-                                finish();
-                            })
+                            .setPositiveButton(Helper.getResString(R.string.design_quit_button_save_and_exit), (dialog, which) -> saveAndExit())
                             .setNegativeButton(Helper.getResString(R.string.common_word_exit), (dialog, which) -> finish())
                             .setNeutralButton(Helper.getResString(R.string.common_word_cancel), null)
                             .create()
@@ -397,7 +512,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
     }
 
     private void reloadFromCodeEditor() {
-        int currentItem = binding.viewPager.getCurrentItem();
+        int currentItem = sourceEditorPage >= 0 ? sourceEditorPage : binding.viewPager.getCurrentItem();
 
         if (currentItem == ResourceEditorTabs.STRINGS || stringsEditor.stringsEditorManager.isDataLoadingFailed) {
             stringsEditor.updateStringsList(stringsFilePath, 0, false);
@@ -423,6 +538,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
             dimensEditor.updateDimensList(dimensFilePath, 0, false);
         }
         checkForInvalidResources();
+        sourceEditorPage = -1;
     }
 
     @Override
@@ -435,6 +551,8 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
     @Override
     public void onDestroy() {
         resourceHandler.removeCallbacks(loadEditorsTask);
+        resourceHandler.removeCallbacks(prewriteDraftTask);
+        if (draftController != null) draftController.detach(isFinishing());
         getSupportFragmentManager().unregisterFragmentLifecycleCallbacks(editorLifecycleCallbacks);
         if (tabMediator != null) tabMediator.detach();
         super.onDestroy();
@@ -476,44 +594,34 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         if (!editorsLoaded) return super.onOptionsItemSelected(item);
         int id = item.getItemId();
         if (id == R.id.action_save) {
-            saveEditorsChanges();
+            attemptSave(null);
         } else if (id == R.id.action_select_variant) {
+            if (restoreReferenceUnsafe) {
+                showUnsafeNavigationDialog(() -> attemptSave(this::changeTheVariantDialog));
+                return true;
+            }
             changeTheVariantDialog();
         } else if (id == R.id.action_get_from_variant) {
+            if (restoreReferenceUnsafe) {
+                showUnsafeNavigationDialog(() -> attemptSave(null));
+                return true;
+            }
             importFromDefaultVariant();
-        } else if (id != R.id.action_search) {
+        } else if (id == R.id.action_open_editor) {
+            if (restoreReferenceUnsafe) {
+                showUnsafeNavigationDialog(() -> attemptSave(null));
+                return true;
+            }
             int currentItem = binding.viewPager.getCurrentItem();
-            switch (currentItem) {
-                case ResourceEditorTabs.STRINGS -> {
-                    stringsEditor.hasUnsavedChanges = true;
-                    stringsEditor.saveStringsFile();
-                    goToCodeEditor("strings.xml", stringsFilePath);
-                }
-                case ResourceEditorTabs.COLORS -> {
-                    colorsEditor.hasUnsavedChanges = true;
-                    colorsEditor.saveColorsFile();
-                    goToCodeEditor("colors.xml", colorsFilePath);
-                }
-                case ResourceEditorTabs.STYLES -> {
-                    stylesEditor.hasUnsavedChanges = true;
-                    stylesEditor.saveStylesFile();
-                    goToCodeEditor("styles.xml", stylesFilePath);
-                }
-                case ResourceEditorTabs.THEMES -> {
-                    themesEditor.hasUnsavedChanges = true;
-                    themesEditor.saveThemesFile();
-                    goToCodeEditor("themes.xml", themesFilePath);
-                }
-                case ResourceEditorTabs.ARRAYS -> {
-                    arraysEditor.hasUnsavedChanges = true;
-                    arraysEditor.saveArraysFile();
-                    goToCodeEditor("arrays.xml", arrayFilePath);
-                }
-                case ResourceEditorTabs.DIMENS -> {
-                    dimensEditor.hasUnsavedChanges = true;
-                    dimensEditor.saveDimensFile();
-                    goToCodeEditor("dimens.xml", dimensFilePath);
-                }
+            ((ResourceEditorFragment) editors()[currentItem]).markDraftChanged();
+            if (protectDrafts()) {
+                if (savePage(currentItem) != ResourceEditorSaveResult.XmlWrite.FAILED) {
+                    if (protectDrafts()) {
+                        String[] names = {"strings.xml", "colors.xml", "styles.xml", "themes.xml", "arrays.xml", "dimens.xml"};
+                        String[] paths = {stringsFilePath, colorsFilePath, stylesFilePath, themesFilePath, arrayFilePath, dimensFilePath};
+                        goToCodeEditor(names[currentItem], paths[currentItem]);
+                    }
+                } else SketchwareUtil.toastError(getString(R.string.resources_editor_xml_save_failed));
             }
         }
         return super.onOptionsItemSelected(item);
@@ -526,40 +634,201 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
         outState.putString("resource_variant", variant);
         outState.putString("resource_search_query", resourceSearchQuery);
         outState.putBoolean("resource_source_reload", isComingFromSrcCodeEditor || sourceReloadPending);
-        Bundle drafts = pendingDrafts == null ? new Bundle() : new Bundle(pendingDrafts);
+        outState.putInt("resource_source_page", sourceEditorPage);
         Fragment[] editors = editors();
         for (int i = 0; i < editors.length; i++) {
             if (editors[i].isAdded()) getSupportFragmentManager().putFragment(outState, "resource_editor_" + i, editors[i]);
-            if (editorsLoaded) {
-                Bundle draft = ((ResourceEditorDraftState.Owner) editors[i]).saveDraftState();
-                if (draft != null) drafts.putBundle(Integer.toString(i), draft);
-            }
         }
-        outState.putBundle("resource_editor_drafts", drafts);
+        if (editorsLoaded) {
+            if (protectDrafts()) restoreReferenceUnsafe = false;
+        } else if (pendingDrafts != null && !draftController.migrateLegacy(pendingDrafts)) reportDraftFailure();
+        // Keep the session UUID: the per-page XML commit intent decides which draft pages are
+        // older than an already-written XML. Dropping the UUID would lose failed pages' A.
+        if (draftController.hasCheckpoint()) outState.putString("resource_draft_session", draftController.session);
+        else if (!editorsLoaded && savedDraftSession != null) outState.putString("resource_draft_session", savedDraftSession);
     }
 
-    private void saveEditorsChanges() {
-        stringsEditor.saveStringsFile();
-        colorsEditor.saveColorsFile();
-        stylesEditor.saveStylesFile();
-        themesEditor.saveThemesFile();
-        arraysEditor.saveArraysFile();
-        dimensEditor.saveDimensFile();
-        updateProjectMetadata();
-        SketchwareUtil.toast(Helper.getResString(R.string.toast_save_completed));
+    private ResourceEditorSaveResult.XmlWrite savePage(int page) {
+        try {
+            return switch (page) {
+                case ResourceEditorTabs.STRINGS -> stringsEditor.saveStringsFile();
+                case ResourceEditorTabs.COLORS -> colorsEditor.saveColorsFile();
+                case ResourceEditorTabs.STYLES -> stylesEditor.saveStylesFile();
+                case ResourceEditorTabs.THEMES -> themesEditor.saveThemesFile();
+                case ResourceEditorTabs.ARRAYS -> arraysEditor.saveArraysFile();
+                case ResourceEditorTabs.DIMENS -> dimensEditor.saveDimensFile();
+                default -> throw new IllegalArgumentException("Invalid resource page");
+            };
+        } catch (RuntimeException failure) {
+            pro.sketchware.util.LogUtil.e("ResourceEditor", "Unable to save resource page", failure);
+            return ResourceEditorSaveResult.XmlWrite.FAILED;
+        }
     }
 
-    private void updateProjectMetadata() {
+    private ResourceEditorSaveResult saveEditorsChanges() {
+        resourceHandler.removeCallbacks(prewriteDraftTask);
+        if (!draftController.checkpoint(draftOwners())) {
+            reportDraftFailure();
+            return ResourceEditorSaveResult.draftFailure();
+        }
+        restoreReferenceUnsafe = false;
+        ResourceEditorSaveResult.XmlWrite[] pages = new ResourceEditorSaveResult.XmlWrite[ResourceEditorTabs.COUNT];
+        for (int i = 0; i < pages.length; i++) pages[i] = savePage(i);
+        boolean allXmlSaved = true;
+        for (ResourceEditorSaveResult.XmlWrite page : pages) allXmlSaved &= page != ResourceEditorSaveResult.XmlWrite.FAILED;
+        updateProjectMetadata(pages[ResourceEditorTabs.STRINGS] != ResourceEditorSaveResult.XmlWrite.FAILED,
+                pages[ResourceEditorTabs.COLORS] != ResourceEditorSaveResult.XmlWrite.FAILED);
+        boolean cleanConfirmed = draftController.checkpoint(draftOwners());
+        ResourceEditorSaveResult.DraftState draftState = cleanConfirmed && allXmlSaved
+                ? ResourceEditorSaveResult.DraftState.CLEAN_CONFIRMED
+                : ResourceEditorSaveResult.DraftState.CONTENT_PROTECTED;
+        ResourceEditorSaveResult result = new ResourceEditorSaveResult(pages, draftState, true, false);
+        if (result.failedPages > 0) SketchwareUtil.toastError(getString(R.string.resources_editor_xml_save_failed));
+        else if (draftState == ResourceEditorSaveResult.DraftState.CLEAN_CONFIRMED)
+            SketchwareUtil.toast(Helper.getResString(R.string.toast_save_completed));
+        else SketchwareUtil.toast(Helper.getResString(R.string.resources_editor_xml_saved_restore_dirty));
+        return result;
+    }
+
+    private void attemptSave(@Nullable Runnable onSuccess) {
+        ResourceEditorSaveResult result = saveEditorsChanges();
+        if (result.canSaveXmlOnly) {
+            showXmlOnlyDialog(onSuccess);
+            return;
+        }
+        if (result.navigationAllowed) {
+            restoreReferenceUnsafe = false;
+            if (onSuccess != null) onSuccess.run();
+        }
+    }
+
+    private void saveAndExit() {
+        if (restoreReferenceUnsafe) {
+            showUnsafeNavigationDialog(null);
+            return;
+        }
+        attemptSave(() -> {
+            setResult(RESULT_OK);
+            finish();
+        });
+    }
+
+    private void showUnsafeNavigationDialog(@Nullable Runnable retrySuccess) {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(getString(R.string.resources_editor_unsafe_navigation_title))
+                .setMessage(getString(R.string.resources_editor_unsafe_navigation_message))
+                .setPositiveButton(getString(R.string.resources_editor_unsafe_retry), (dialog, which) -> {
+                    if (retrySuccess != null) retrySuccess.run();
+                    else attemptSave(() -> {
+                        setResult(RESULT_OK);
+                        finish();
+                    });
+                })
+                .setNegativeButton(getString(R.string.resources_editor_unsafe_discard), (dialog, which) -> {
+                    setResult(RESULT_CANCELED);
+                    finish();
+                })
+                .setNeutralButton(getString(R.string.common_word_cancel), null)
+                .setCancelable(false)
+                .show();
+    }
+
+    private void showXmlOnlyDialog(@Nullable Runnable onSuccess) {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(getString(R.string.resources_editor_draft_xml_only_title))
+                .setMessage(getString(R.string.resources_editor_draft_xml_only_message))
+                .setPositiveButton(getString(R.string.resources_editor_draft_xml_only_confirm),
+                        (dialog, which) -> performXmlOnlySave(onSuccess))
+                .setNegativeButton(getString(R.string.common_word_cancel), null)
+                .setCancelable(false)
+                .show();
+    }
+
+    /**
+     * Explicit degraded path: write the project XML, then close the old draft session so it cannot
+     * restore older content. Only completes when every requested XML was written.
+     */
+    private void performXmlOnlySave(@Nullable Runnable onSuccess) {
+        resourceHandler.removeCallbacks(prewriteDraftTask);
+        String[] xml = new String[ResourceEditorTabs.COUNT];
+        Map<Integer, String> hashes = new HashMap<>();
+        try {
+            for (int i = 0; i < xml.length; i++) {
+                if (!((ResourceEditorFragment) editors()[i]).hasDraftChanges()) continue;
+                xml[i] = renderPageXml(i);
+                hashes.put(i, sha256(xml[i]));
+            }
+        } catch (RuntimeException failure) {
+            restoreReferenceUnsafe = true;
+            SketchwareUtil.toastError(getString(R.string.resources_editor_xml_prepare_failed));
+            return;
+        }
+        if (!hashes.isEmpty() && !draftController.writeXmlCommitIntent(hashes)) {
+            restoreReferenceUnsafe = true;
+            SketchwareUtil.toastError(getString(R.string.resources_editor_xml_intent_failed));
+            return;
+        }
+        ResourceEditorSaveResult.XmlWrite[] pages = new ResourceEditorSaveResult.XmlWrite[ResourceEditorTabs.COUNT];
+        for (int i = 0; i < pages.length; i++) {
+            pages[i] = xml[i] == null ? savePage(i) : writePageXml(i, xml[i]);
+        }
+        updateProjectMetadata(pages[ResourceEditorTabs.STRINGS] != ResourceEditorSaveResult.XmlWrite.FAILED,
+                pages[ResourceEditorTabs.COLORS] != ResourceEditorSaveResult.XmlWrite.FAILED);
+        boolean allXmlSaved = true;
+        for (ResourceEditorSaveResult.XmlWrite page : pages) allXmlSaved &= page != ResourceEditorSaveResult.XmlWrite.FAILED;
+        if (!allXmlSaved) {
+            restoreReferenceUnsafe = true;
+            SketchwareUtil.toastError(getString(R.string.resources_editor_xml_partial_saved));
+            return;
+        }
+        if (!draftController.discardSession()) {
+            restoreReferenceUnsafe = true;
+            SketchwareUtil.toastError(getString(R.string.resources_editor_xml_saved_restore_unsafe));
+            return;
+        }
+        draftController = null;
+        savedDraftSession = null;
+        restoredDrafts = null;
+        pendingDrafts = null;
+        restoreReferenceUnsafe = false;
+        draftFailureShown = false;
+        openDraftSession();
+        SketchwareUtil.toast(Helper.getResString(R.string.resources_editor_xml_saved_draft_discarded));
+        if (onSuccess != null) onSuccess.run();
+    }
+
+    private String renderPageXml(int page) {
+        return ((ResourceEditorFragment) editors()[page]).renderXml();
+    }
+
+    private ResourceEditorSaveResult.XmlWrite writePageXml(int page, String xml) {
+        ResourceEditorFragment editor = (ResourceEditorFragment) editors()[page];
+        return editor.writePreparedXml(editor.resourcePath(), xml);
+    }
+
+    private static String sha256(String value) {
+        try {
+            byte[] digest = MessageDigest.getInstance("SHA-256")
+                    .digest(value.getBytes(StandardCharsets.UTF_8));
+            StringBuilder result = new StringBuilder(digest.length * 2);
+            for (byte item : digest) result.append(String.format("%02x", item & 0xff));
+            return result.toString();
+        } catch (NoSuchAlgorithmException impossible) {
+            throw new AssertionError(impossible);
+        }
+    }
+
+    private void updateProjectMetadata(boolean stringsSaved, boolean colorsSaved) {
         if (variant.isEmpty()) {
             HashMap<String, Object> metadata = projectFilePaths.metadata;
 
-            for (ColorModel color : colorsEditor.colorList) {
+            if (colorsSaved) for (ColorModel color : colorsEditor.colorList) {
                 if (colorsEditor.defaultColors.containsKey(color.getColorName())) {
                     metadata.put(colorsEditor.defaultColors.get(color.getColorName()), PropertiesUtil.parseColor(colorsEditor.colorsEditorManager.getColorValue(getApplicationContext(), color.getColorValue(), 3)));
                 }
             }
 
-            for (HashMap<String, Object> map : stringsEditor.listmap) {
+            if (stringsSaved) for (HashMap<String, Object> map : stringsEditor.listmap) {
                 Object key = map.get("key");
                 if ("app_name".equals(String.valueOf(key))) {
                     Object text = map.get("text");
@@ -602,6 +871,10 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
     }
 
     private void changeTheVariantDialog() {
+        if (restoreReferenceUnsafe) {
+            showUnsafeNavigationDialog(() -> attemptSave(this::changeTheVariantDialog));
+            return;
+        }
         ArrayList<String> unsavedFiles = getUnsavedFilesList();
 
         if (!unsavedFiles.isEmpty()) {
@@ -612,8 +885,7 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
                     .setTitle(Helper.getResString(R.string.common_word_warning))
                     .setMessage(message)
                     .setPositiveButton(Helper.getResString(R.string.common_word_save), (dialog, which) -> {
-                        saveEditorsChanges();
-                        changeTheVariantDialog();
+                        attemptSave(this::changeTheVariantDialog);
                     })
                     .setNegativeButton(Helper.getResString(R.string.common_word_cancel), null)
                     .create()
@@ -695,6 +967,10 @@ public class ResourcesEditorActivity extends BaseAppCompatActivity {
     }
 
     private void saveVariant(ResourcesVariantSelectorDialogBinding binding, ArrayList<String> variants, AtomicInteger selectedChoice) {
+        if (restoreReferenceUnsafe) {
+            showUnsafeNavigationDialog(() -> attemptSave(this::changeTheVariantDialog));
+            return;
+        }
         currentTabPosition = this.binding.viewPager.getCurrentItem();
         String newVariant = Objects.requireNonNull(binding.input.getText()).toString().trim();
         if (!newVariant.equals(variantFullNameStarts)) {

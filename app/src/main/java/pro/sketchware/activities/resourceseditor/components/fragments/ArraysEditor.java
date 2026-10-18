@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -29,6 +28,7 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
 import pro.sketchware.activities.resourceseditor.ResourceEditorDraftState;
+import pro.sketchware.activities.resourceseditor.ResourceEditorSaveResult;
 import pro.sketchware.activities.resourceseditor.components.adapters.ArraysAdapter;
 import pro.sketchware.activities.resourceseditor.components.models.ArrayModel;
 import pro.sketchware.activities.resourceseditor.components.utils.ArraysEditorManager;
@@ -39,7 +39,7 @@ import pro.sketchware.databinding.ResourcesEditorFragmentBinding;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 
-public class ArraysEditor extends Fragment implements ResourceEditorDraftState.Owner {
+public class ArraysEditor extends ResourceEditorFragment {
 
     private ResourcesEditorFragmentBinding binding;
 
@@ -51,7 +51,6 @@ public class ArraysEditor extends Fragment implements ResourceEditorDraftState.O
 
     public ArraysEditorManager arraysEditorManager;
 
-    public boolean hasUnsavedChanges;
     private String filePath;
     private ResourcesEditorActivity activity;
 
@@ -110,7 +109,18 @@ public class ArraysEditor extends Fragment implements ResourceEditorDraftState.O
 
     @Override
     public void restoreDraftState(@NonNull Bundle state, String filePath) {
-        ResourceEditorDraftState.restore(state, arraysList, notesMap, ArrayModel.class);
+        restoreSnapshot(ResourceEditorDraftState.fromLegacy(state, ArrayModel.class), filePath);
+    }
+
+    @Nullable
+    @Override
+    public ResourceEditorDraftState.Snapshot snapshotDraft() {
+        return hasUnsavedChanges ? ResourceEditorDraftState.snapshot(arraysList, notesMap) : null;
+    }
+
+    @Override
+    public void restoreSnapshot(@NonNull ResourceEditorDraftState.Snapshot snapshot, String filePath) {
+        ResourceEditorDraftState.apply(snapshot, arraysList, notesMap);
         this.filePath = filePath;
         hasUnsavedChanges = true;
         adapter = new ArraysAdapter(arraysList, this, notesMap);
@@ -119,7 +129,8 @@ public class ArraysEditor extends Fragment implements ResourceEditorDraftState.O
     }
 
     public void updateArraysList(String filePath, int updateMode, boolean hasUnsavedChangesStatus) {
-        hasUnsavedChanges = hasUnsavedChangesStatus;
+        if (hasUnsavedChangesStatus) markDraftChanged();
+        else markDraftClean();
         this.filePath = filePath;
         boolean isSkippingMode = updateMode == 1;
         boolean isMergeAndReplace = updateMode == 2;
@@ -209,7 +220,7 @@ public class ArraysEditor extends Fragment implements ResourceEditorDraftState.O
             adapter = new ArraysAdapter(arraysList, this, notesMap);
             ArraysEditor.this.binding.recyclerView.setAdapter(adapter);
             updateNoContentLayout();
-            hasUnsavedChanges = true;
+            markDraftChanged();
         });
 
         dialog.setNegativeButton(Helper.getResString(R.string.cancel), null);
@@ -295,7 +306,7 @@ public class ArraysEditor extends Fragment implements ResourceEditorDraftState.O
             }
             adapter = new ArraysAdapter(arraysList, this, notesMap);
             ArraysEditor.this.binding.recyclerView.setAdapter(adapter);
-            hasUnsavedChanges = true;
+            markDraftChanged();
         });
         dialog.setNeutralButton(Helper.getResString(R.string.common_word_delete), (d, which) -> new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.common_word_warning)
@@ -320,7 +331,7 @@ public class ArraysEditor extends Fragment implements ResourceEditorDraftState.O
                     ArraysEditor.this.binding.recyclerView.setAdapter(adapter);
                     d.dismiss();
                     updateNoContentLayout();
-                    hasUnsavedChanges = true;
+                    markDraftChanged();
                 })
                 .setNegativeButton(R.string.common_word_cancel, null)
                 .show());
@@ -358,7 +369,7 @@ public class ArraysEditor extends Fragment implements ResourceEditorDraftState.O
                                     attributes.remove(attr);
                                     array.setAttributes(attributes);
                                     attributesAdapter.submitList(new ArrayList<>(attributes.keySet()));
-                                    hasUnsavedChanges = true;
+                                    markDraftChanged();
                                 })
                                 .setNegativeButton(R.string.common_word_cancel, null)
                                 .create()
@@ -415,7 +426,7 @@ public class ArraysEditor extends Fragment implements ResourceEditorDraftState.O
             array.addAttribute(attribute, value);
             attributesAdapter.submitList(new ArrayList<>(array.getAttributes().keySet()));
             attributesAdapter.notifyDataSetChanged();
-            hasUnsavedChanges = true;
+            markDraftChanged();
         });
 
         dialog.setNegativeButton(Helper.getResString(R.string.cancel), null);
@@ -423,11 +434,13 @@ public class ArraysEditor extends Fragment implements ResourceEditorDraftState.O
         dialog.show();
     }
 
-    public void saveArraysFile() {
-        if (hasUnsavedChanges) {
-            FileUtil.writeFile(filePath, arraysEditorManager.convertArraysToXML(arraysList, notesMap));
-            hasUnsavedChanges = false;
-        }
+    @Override public String renderXml() { return arraysEditorManager.convertArraysToXML(arraysList, notesMap); }
+
+    @Override public String resourcePath() { return filePath; }
+
+    public ResourceEditorSaveResult.XmlWrite saveArraysFile() {
+        if (!hasUnsavedChanges) return ResourceEditorSaveResult.XmlWrite.UNCHANGED;
+        return writeResourceXml(filePath, renderXml());
     }
 
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="resources_editor_draft_save_failed">最新修改的草稿保护失败。请保持编辑器打开并重试保存；恢复时可能只能找回较早的草稿。</string>
+    <string name="resources_editor_draft_restore_failed">资源草稿恢复失败，将读取已保存的 XML 文件。</string>
+    <string name="resources_editor_xml_save_failed">部分资源文件保存失败，已保留对应修改和草稿，请重试。</string>
+    <string name="resources_editor_draft_xml_only_title">草稿保护失败</string>
+    <string name="resources_editor_draft_xml_only_message">最新修改无法写入草稿，但项目 XML 仍可保存。“仅保存 XML”会写入资源文件并丢弃旧草稿；其他页面的未保存内容可能无法再恢复。</string>
+    <string name="resources_editor_draft_xml_only_confirm">仅保存 XML</string>
+    <string name="resources_editor_xml_saved_restore_dirty">资源 XML 已保存，但草稿仍标记为未保存，下次打开可能再次提示。</string>
+    <string name="resources_editor_xml_saved_draft_discarded">资源 XML 已保存，旧草稿已丢弃。</string>
+    <string name="resources_editor_xml_saved_restore_unsafe">资源 XML 已写入，但旧恢复点无法丢弃。请保持编辑器打开并重试。</string>
+    <string name="resources_editor_xml_partial_saved">部分资源 XML 已保存，但恢复状态不安全。请在离开前重试失败的页面。</string>
+    <string name="resources_editor_xml_prepare_failed">无法准备资源 XML，未写入任何文件。请重试。</string>
+    <string name="resources_editor_xml_intent_failed">无法记录 XML 保存意图，未写入任何资源文件。请重试。</string>
+    <string name="resources_editor_draft_xml_conflict_loaded">检测到已保存的资源 XML 比旧草稿新，该页已加载 XML。</string>
+    <string name="resources_editor_unsafe_navigation_title">恢复状态尚未安全完成</string>
+    <string name="resources_editor_unsafe_navigation_message">项目 XML 可能已写入，但旧草稿恢复点未能安全处理。请重试保存，或明确放弃并退出。</string>
+    <string name="resources_editor_unsafe_retry">重试保存</string>
+    <string name="resources_editor_unsafe_discard">放弃并退出</string>
+</resources>

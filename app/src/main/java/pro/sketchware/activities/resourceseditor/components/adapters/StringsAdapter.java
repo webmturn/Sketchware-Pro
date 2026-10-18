@@ -20,6 +20,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -35,13 +36,15 @@ import pro.sketchware.util.SketchwareUtil;
 public class StringsAdapter extends RecyclerView.Adapter<StringsAdapter.ViewHolder> {
 
     private final ArrayList<HashMap<String, Object>> originalData;
+    private final ArrayList<HashMap<String, Object>> sourceData;
     private final ResourcesEditorActivity activity;
     private final HashMap<Integer, String> notesMap;
     private ArrayList<HashMap<String, Object>> filteredData;
 
     public StringsAdapter(ResourcesEditorActivity activity, ArrayList<HashMap<String, Object>> data, HashMap<Integer, String> notesMap) {
+        sourceData = data;
         originalData = new ArrayList<>(data);
-        filteredData = data;
+        filteredData = new ArrayList<>(data);
         this.activity = activity;
         this.notesMap = notesMap;
     }
@@ -63,7 +66,7 @@ public class StringsAdapter extends RecyclerView.Adapter<StringsAdapter.ViewHold
         holder.binding.title.setText(key);
         holder.binding.sub.setText(text);
 
-        int originalIndex = originalData.indexOf(item);
+        int originalIndex = identityIndexOf(sourceData, item);
         if (originalIndex >= 0 && notesMap.containsKey(originalIndex)) {
             holder.binding.tvTitle.setText(notesMap.get(originalIndex));
             holder.binding.tvTitle.setVisibility(View.VISIBLE);
@@ -99,7 +102,7 @@ public class StringsAdapter extends RecyclerView.Adapter<StringsAdapter.ViewHold
             });
             dialogBinding.stringKeyInput.setText((String) currentItem.get("key"));
             dialogBinding.stringValueInput.setText((String) currentItem.get("text"));
-            int origIdx = originalData.indexOf(currentItem);
+            int origIdx = identityIndexOf(sourceData, currentItem);
             dialogBinding.stringHeaderInput.setText(origIdx >= 0 ? notesMap.getOrDefault(origIdx, "") : "");
 
             if ("app_name".equals(currentItem.get("key"))) {
@@ -114,24 +117,13 @@ public class StringsAdapter extends RecyclerView.Adapter<StringsAdapter.ViewHold
                     SketchwareUtil.toast(Helper.getResString(R.string.error_fill_all_fields), Toast.LENGTH_SHORT);
                     return;
                 }
-                currentItem.put("key", keyInput);
-                currentItem.put("text", valueInput);
                 String note = Objects.requireNonNull(dialogBinding.stringHeaderInput.getText()).toString().trim();
-                int filteredIndex = filteredData.indexOf(currentItem);
-                int oi = originalData.indexOf(currentItem);
-                if (oi >= 0) {
-                    if (note.isEmpty()) {
-                        notesMap.remove(oi);
-                    } else {
-                        notesMap.put(oi, note);
-                    }
+                int index = editString(currentItem, keyInput, valueInput, note);
+                if (index < 0) {
+                    SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                    return;
                 }
-                if (filteredIndex >= 0) {
-                    notifyItemChanged(filteredIndex);
-                } else {
-                    notifyDataSetChanged();
-                }
-                activity.stringsEditor.hasUnsavedChanges = true;
+                activity.stringsEditor.markStringChanged(index, false);
             });
 
             String keyInput = Objects.requireNonNull(dialogBinding.stringKeyInput.getText()).toString();
@@ -140,29 +132,13 @@ public class StringsAdapter extends RecyclerView.Adapter<StringsAdapter.ViewHold
                     if (isXmlStringUsed(key)) {
                         SketchwareUtil.toastError(Helper.getResString(R.string.logic_editor_title_remove_xml_string_error));
                     } else {
-                        int filteredIndex = filteredData.indexOf(currentItem);
-                        int removedIndex = originalData.indexOf(currentItem);
-                        if (filteredIndex < 0 || removedIndex < 0) {
+                        int removedIndex = removeString(currentItem);
+                        if (removedIndex < 0) {
                             SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
                             return;
                         }
-                        filteredData.remove(filteredIndex);
-                        originalData.remove(currentItem);
-                        activity.stringsEditor.listmap.remove(currentItem);
-                        if (removedIndex >= 0) {
-                            notesMap.remove(removedIndex);
-                            HashMap<Integer, String> reindexedNotes = new HashMap<>();
-                            for (Map.Entry<Integer, String> entry : notesMap.entrySet()) {
-                                int noteIndex = entry.getKey();
-                                reindexedNotes.put(noteIndex > removedIndex ? noteIndex - 1 : noteIndex, entry.getValue());
-                            }
-                            notesMap.clear();
-                            notesMap.putAll(reindexedNotes);
-                        }
-                        notifyItemRemoved(filteredIndex);
-                        notifyItemRangeChanged(filteredIndex, filteredData.size() - filteredIndex);
                         activity.stringsEditor.updateNoContentLayout();
-                        activity.stringsEditor.hasUnsavedChanges = true;
+                        activity.stringsEditor.markStringChanged(removedIndex, true);
                     }
                 });
             }
@@ -170,6 +146,45 @@ public class StringsAdapter extends RecyclerView.Adapter<StringsAdapter.ViewHold
             dialog.setView(dialogBinding.getRoot());
             dialog.show();
         });
+    }
+
+    // Resolve positions before mutating a Map: equal resource contents do not identify the same row.
+    private int editString(HashMap<String, Object> item, String key, String value, String note) {
+        int sourceIndex = identityIndexOf(sourceData, item);
+        int filteredIndex = identityIndexOf(filteredData, item);
+        if (sourceIndex < 0 || identityIndexOf(originalData, item) < 0) return -1;
+        item.put("key", key);
+        item.put("text", value);
+        if (note.isEmpty()) notesMap.remove(sourceIndex);
+        else notesMap.put(sourceIndex, note);
+        if (filteredIndex >= 0) notifyItemChanged(filteredIndex);
+        else notifyDataSetChanged();
+        return sourceIndex;
+    }
+
+    private int removeString(HashMap<String, Object> item) {
+        int sourceIndex = identityIndexOf(sourceData, item);
+        int originalIndex = identityIndexOf(originalData, item);
+        int filteredIndex = identityIndexOf(filteredData, item);
+        if (sourceIndex < 0 || originalIndex < 0 || filteredIndex < 0) return -1;
+        sourceData.remove(sourceIndex);
+        originalData.remove(originalIndex);
+        filteredData.remove(filteredIndex);
+        Map<Integer, String> reindexedNotes = new HashMap<>();
+        for (Map.Entry<Integer, String> entry : notesMap.entrySet()) {
+            int index = entry.getKey();
+            if (index != sourceIndex) reindexedNotes.put(index > sourceIndex ? index - 1 : index, entry.getValue());
+        }
+        notesMap.clear();
+        notesMap.putAll(reindexedNotes);
+        notifyItemRemoved(filteredIndex);
+        notifyItemRangeChanged(filteredIndex, filteredData.size() - filteredIndex);
+        return sourceIndex;
+    }
+
+    private static int identityIndexOf(List<?> items, Object item) {
+        for (int i = 0; i < items.size(); i++) if (items.get(i) == item) return i;
+        return -1;
     }
 
     @Override

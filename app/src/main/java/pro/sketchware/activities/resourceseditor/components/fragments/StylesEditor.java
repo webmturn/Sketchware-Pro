@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -27,6 +26,7 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
 import pro.sketchware.activities.resourceseditor.ResourceEditorDraftState;
+import pro.sketchware.activities.resourceseditor.ResourceEditorSaveResult;
 import pro.sketchware.activities.resourceseditor.components.adapters.StylesAdapter;
 import pro.sketchware.activities.resourceseditor.components.models.StyleModel;
 import pro.sketchware.activities.resourceseditor.components.utils.StylesEditorManager;
@@ -37,7 +37,7 @@ import pro.sketchware.databinding.StyleEditorAddBinding;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 
-public class StylesEditor extends Fragment implements ResourceEditorDraftState.Owner {
+public class StylesEditor extends ResourceEditorFragment {
 
     private ResourcesEditorFragmentBinding binding;
 
@@ -49,7 +49,6 @@ public class StylesEditor extends Fragment implements ResourceEditorDraftState.O
 
     public final StylesEditorManager stylesEditorManager = new StylesEditorManager();
 
-    public boolean hasUnsavedChanges;
     private String filePath;
     private ResourcesEditorActivity activity;
 
@@ -74,7 +73,18 @@ public class StylesEditor extends Fragment implements ResourceEditorDraftState.O
 
     @Override
     public void restoreDraftState(@NonNull Bundle state, String filePath) {
-        ResourceEditorDraftState.restore(state, stylesList, notesMap, StyleModel.class);
+        restoreSnapshot(ResourceEditorDraftState.fromLegacy(state, StyleModel.class), filePath);
+    }
+
+    @Nullable
+    @Override
+    public ResourceEditorDraftState.Snapshot snapshotDraft() {
+        return hasUnsavedChanges ? ResourceEditorDraftState.snapshot(stylesList, notesMap) : null;
+    }
+
+    @Override
+    public void restoreSnapshot(@NonNull ResourceEditorDraftState.Snapshot snapshot, String filePath) {
+        ResourceEditorDraftState.apply(snapshot, stylesList, notesMap);
         this.filePath = filePath;
         hasUnsavedChanges = true;
         adapter = new StylesAdapter(stylesList, this, notesMap);
@@ -83,7 +93,8 @@ public class StylesEditor extends Fragment implements ResourceEditorDraftState.O
     }
 
     public void updateStylesList(String filePath, int updateMode, boolean hasUnsavedChangesStatus) {
-        hasUnsavedChanges = hasUnsavedChangesStatus;
+        if (hasUnsavedChangesStatus) markDraftChanged();
+        else markDraftClean();
         this.filePath = filePath;
         boolean isSkippingMode = updateMode == 1;
         boolean isMergeAndReplace = updateMode == 2;
@@ -175,7 +186,7 @@ public class StylesEditor extends Fragment implements ResourceEditorDraftState.O
             if (!header.isEmpty()) {
                 notesMap.put(notifyPosition, header);
             }
-            hasUnsavedChanges = true;
+            markDraftChanged();
             adapter = new StylesAdapter(stylesList, this, notesMap);
             StylesEditor.this.binding.recyclerView.setAdapter(adapter);
             updateNoContentLayout();
@@ -257,7 +268,7 @@ public class StylesEditor extends Fragment implements ResourceEditorDraftState.O
             } else {
                 notesMap.put(currentIndex, header);
             }
-            hasUnsavedChanges = true;
+            markDraftChanged();
             adapter = new StylesAdapter(stylesList, this, notesMap);
             StylesEditor.this.binding.recyclerView.setAdapter(adapter);
         });
@@ -284,7 +295,7 @@ public class StylesEditor extends Fragment implements ResourceEditorDraftState.O
                     StylesEditor.this.binding.recyclerView.setAdapter(adapter);
                     d.dismiss();
                     updateNoContentLayout();
-                    hasUnsavedChanges = true;
+                    markDraftChanged();
                 })
                 .setNegativeButton(R.string.common_word_cancel, null)
                 .create()
@@ -323,7 +334,7 @@ public class StylesEditor extends Fragment implements ResourceEditorDraftState.O
                                     attributes.remove(attr);
                                     style.setAttributes(attributes);
                                     attributesAdapter.submitList(new ArrayList<>(attributes.keySet()));
-                                    hasUnsavedChanges = true;
+                                    markDraftChanged();
                                 })
                                 .setNegativeButton(R.string.common_word_cancel, null)
                                 .create()
@@ -371,7 +382,7 @@ public class StylesEditor extends Fragment implements ResourceEditorDraftState.O
             style.addAttribute(attribute, value);
             attributesAdapter.submitList(new ArrayList<>(style.getAttributes().keySet()));
             attributesAdapter.notifyDataSetChanged();
-            hasUnsavedChanges = true;
+            markDraftChanged();
         });
 
         dialog.setNegativeButton(Helper.getResString(R.string.cancel), null);
@@ -379,11 +390,13 @@ public class StylesEditor extends Fragment implements ResourceEditorDraftState.O
         dialog.show();
     }
 
-    public void saveStylesFile() {
-        if (hasUnsavedChanges) {
-            FileUtil.writeFile(filePath, stylesEditorManager.convertStylesToXML(stylesList, notesMap));
-            hasUnsavedChanges = false;
-        }
+    @Override public String renderXml() { return stylesEditorManager.convertStylesToXML(stylesList, notesMap); }
+
+    @Override public String resourcePath() { return filePath; }
+
+    public ResourceEditorSaveResult.XmlWrite saveStylesFile() {
+        if (!hasUnsavedChanges) return ResourceEditorSaveResult.XmlWrite.UNCHANGED;
+        return writeResourceXml(filePath, renderXml());
     }
 
 }

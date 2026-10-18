@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -25,6 +24,8 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
 import pro.sketchware.activities.resourceseditor.ResourceEditorDraftState;
+import pro.sketchware.activities.resourceseditor.ResourceEditorSaveResult;
+import pro.sketchware.activities.resourceseditor.ResourceEditorStringChanges;
 import pro.sketchware.activities.resourceseditor.components.adapters.StringsAdapter;
 import pro.sketchware.activities.resourceseditor.components.utils.StringsEditorManager;
 import pro.sketchware.databinding.ResourcesEditorFragmentBinding;
@@ -33,7 +34,7 @@ import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.XmlUtil;
 
-public class StringsEditor extends Fragment implements ResourceEditorDraftState.Owner {
+public class StringsEditor extends ResourceEditorFragment {
     private ResourcesEditorFragmentBinding binding;
 
     private ResourcesEditorActivity activity;
@@ -42,8 +43,24 @@ public class StringsEditor extends Fragment implements ResourceEditorDraftState.
 
     public final ArrayList<HashMap<String, Object>> listmap = new ArrayList<>();
     private HashMap<Integer, String> notesMap = new HashMap<>();
+    private final ResourceEditorStringChanges draftChanges = new ResourceEditorStringChanges();
+    private boolean specificDraftChange;
 
-    public boolean hasUnsavedChanges;
+    @Override protected void onDraftChanged(long revision) {
+        if (!specificDraftChange) draftChanges.reset(revision);
+    }
+
+    public void markStringChanged(int index, boolean shiftsFollowingRows) {
+        if (index < 0) {
+            markDraftChanged();
+            return;
+        }
+        specificDraftChange = true;
+        try { markDraftChanged(); }
+        finally { specificDraftChange = false; }
+        draftChanges.changed(index, shiftsFollowingRows, listmap.size(), draftRevision());
+    }
+
     public String filePath;
 
     public final StringsEditorManager stringsEditorManager = new StringsEditorManager();
@@ -70,7 +87,23 @@ public class StringsEditor extends Fragment implements ResourceEditorDraftState.
 
     @Override
     public void restoreDraftState(@NonNull Bundle state, String filePath) {
-        ResourceEditorDraftState.restore(state, listmap, notesMap, HashMap.class);
+        restoreSnapshot(ResourceEditorDraftState.fromLegacy(state, HashMap.class), filePath);
+    }
+
+    @Nullable
+    @Override
+    public ResourceEditorDraftState.Snapshot snapshotDraft() {
+        return hasUnsavedChanges ? ResourceEditorDraftState.snapshot(listmap, notesMap) : null;
+    }
+
+    @Override public ResourceEditorDraftState.Snapshot snapshotDraft(long protectedRevision) {
+        return hasUnsavedChanges ? draftChanges.snapshot(listmap, notesMap, protectedRevision) : null;
+    }
+
+    @Override
+    public void restoreSnapshot(@NonNull ResourceEditorDraftState.Snapshot snapshot, String filePath) {
+        ResourceEditorDraftState.apply(snapshot, listmap, notesMap);
+        draftChanges.restored(draftRevision(), listmap.size(), notesMap);
         this.filePath = filePath;
         hasUnsavedChanges = true;
         stringsEditorManager.isDefaultVariant = activity.variant.isEmpty();
@@ -81,7 +114,8 @@ public class StringsEditor extends Fragment implements ResourceEditorDraftState.
 
     public void updateStringsList(String filePath, int updateMode, boolean hasUnsavedChangesStatus) {
         this.filePath = filePath;
-        hasUnsavedChanges = hasUnsavedChangesStatus;
+        if (hasUnsavedChangesStatus) markDraftChanged();
+        else markDraftClean();
 
         boolean isSkippingMode = updateMode == 1;
         boolean isMergeAndReplace = updateMode == 2;
@@ -199,7 +233,6 @@ public class StringsEditor extends Fragment implements ResourceEditorDraftState.
     }
 
     public void addString(final String key, final String text, String note) {
-        hasUnsavedChanges = true;
         HashMap<String, Object> map = new HashMap<>();
         map.put("key", key);
         map.put("text", text);
@@ -207,6 +240,7 @@ public class StringsEditor extends Fragment implements ResourceEditorDraftState.
         if (!note.isEmpty()) {
             notesMap.put(listmap.size() - 1, note);
         }
+        markStringChanged(listmap.size() - 1, false);
         adapter = new StringsAdapter(activity, listmap, notesMap);
         binding.recyclerView.setAdapter(adapter);
     }
@@ -245,10 +279,12 @@ public class StringsEditor extends Fragment implements ResourceEditorDraftState.
         return rebuiltNotes;
     }
 
-    public void saveStringsFile() {
-        if (hasUnsavedChanges) {
-            XmlUtil.saveXml(filePath, stringsEditorManager.convertListMapToXmlStrings(listmap, notesMap));
-            hasUnsavedChanges = false;
-        }
+    @Override public String renderXml() { return stringsEditorManager.convertListMapToXmlStrings(listmap, notesMap); }
+
+    @Override public String resourcePath() { return filePath; }
+
+    public ResourceEditorSaveResult.XmlWrite saveStringsFile() {
+        if (!hasUnsavedChanges) return ResourceEditorSaveResult.XmlWrite.UNCHANGED;
+        return writeResourceXml(filePath, renderXml());
     }
 }

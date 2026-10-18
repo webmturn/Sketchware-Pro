@@ -8,7 +8,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -21,6 +20,7 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
 import pro.sketchware.activities.resourceseditor.ResourceEditorDraftState;
+import pro.sketchware.activities.resourceseditor.ResourceEditorSaveResult;
 import pro.sketchware.activities.resourceseditor.components.adapters.DimensAdapter;
 import pro.sketchware.activities.resourceseditor.components.models.DimenModel;
 import pro.sketchware.activities.resourceseditor.components.utils.DimensEditorManager;
@@ -30,12 +30,11 @@ import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.XmlUtil;
 
-public class DimensEditor extends Fragment implements ResourceEditorDraftState.Owner {
+public class DimensEditor extends ResourceEditorFragment {
 
     public String contentPath;
     public final ArrayList<DimenModel> dimenList = new ArrayList<>();
     public DimensAdapter adapter;
-    public boolean hasUnsavedChanges;
     public DimensEditorManager dimensEditorManager;
     private ResourcesEditorActivity activity;
     private ResourcesEditorFragmentBinding binding;
@@ -63,7 +62,18 @@ public class DimensEditor extends Fragment implements ResourceEditorDraftState.O
 
     @Override
     public void restoreDraftState(@NonNull Bundle state, String filePath) {
-        ResourceEditorDraftState.restore(state, dimenList, notesMap, DimenModel.class);
+        restoreSnapshot(ResourceEditorDraftState.fromLegacy(state, DimenModel.class), filePath);
+    }
+
+    @Nullable
+    @Override
+    public ResourceEditorDraftState.Snapshot snapshotDraft() {
+        return hasUnsavedChanges ? ResourceEditorDraftState.snapshot(dimenList, notesMap) : null;
+    }
+
+    @Override
+    public void restoreSnapshot(@NonNull ResourceEditorDraftState.Snapshot snapshot, String filePath) {
+        ResourceEditorDraftState.apply(snapshot, dimenList, notesMap);
         contentPath = filePath;
         dimensEditorManager.contentPath = filePath;
         hasUnsavedChanges = true;
@@ -73,7 +83,8 @@ public class DimensEditor extends Fragment implements ResourceEditorDraftState.O
     }
 
     public void updateDimensList(String filePath, int updateMode, boolean hasUnsavedChangesStatus) {
-        hasUnsavedChanges = hasUnsavedChangesStatus;
+        if (hasUnsavedChangesStatus) markDraftChanged();
+        else markDraftClean();
         contentPath = filePath;
         dimensEditorManager.contentPath = contentPath;
 
@@ -179,7 +190,7 @@ public class DimensEditor extends Fragment implements ResourceEditorDraftState.O
             } else {
                 addDimen(key, value, Objects.requireNonNull(dialogBinding.stringHeaderInput.getText()).toString());
             }
-            hasUnsavedChanges = true;
+            markDraftChanged();
             updateNoContentLayout();
         });
 
@@ -201,7 +212,7 @@ public class DimensEditor extends Fragment implements ResourceEditorDraftState.O
                 adapter = new DimensAdapter(dimenList, activity, notesMap);
                 binding.recyclerView.setAdapter(adapter);
                 updateNoContentLayout();
-                hasUnsavedChanges = true;
+                markDraftChanged();
                 v1.dismiss();
             });
         }
@@ -261,10 +272,12 @@ public class DimensEditor extends Fragment implements ResourceEditorDraftState.O
         return rebuiltNotes;
     }
 
-    public void saveDimensFile() {
-        if (hasUnsavedChanges) {
-            XmlUtil.saveXml(contentPath, dimensEditorManager.convertListToXml(dimenList, notesMap));
-            hasUnsavedChanges = false;
-        }
+    @Override public String renderXml() { return dimensEditorManager.convertListToXml(dimenList, notesMap); }
+
+    @Override public String resourcePath() { return contentPath; }
+
+    public ResourceEditorSaveResult.XmlWrite saveDimensFile() {
+        if (!hasUnsavedChanges) return ResourceEditorSaveResult.XmlWrite.UNCHANGED;
+        return writeResourceXml(contentPath, renderXml());
     }
 }

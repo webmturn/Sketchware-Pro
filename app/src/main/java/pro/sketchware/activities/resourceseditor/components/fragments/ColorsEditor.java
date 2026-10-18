@@ -12,7 +12,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
 
 import pro.sketchware.widgets.ColorPickerDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -28,6 +27,7 @@ import pro.sketchware.core.project.ProjectThemeColors;
 import pro.sketchware.R;
 import pro.sketchware.activities.resourceseditor.ResourcesEditorActivity;
 import pro.sketchware.activities.resourceseditor.ResourceEditorDraftState;
+import pro.sketchware.activities.resourceseditor.ResourceEditorSaveResult;
 import pro.sketchware.activities.resourceseditor.components.adapters.ColorsAdapter;
 import pro.sketchware.activities.resourceseditor.components.utils.ColorsEditorManager;
 import pro.sketchware.core.resources.ColorModel;
@@ -38,14 +38,13 @@ import pro.sketchware.util.PropertiesUtil;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.XmlUtil;
 
-public class ColorsEditor extends Fragment implements ResourceEditorDraftState.Owner {
+public class ColorsEditor extends ResourceEditorFragment {
 
     public static String contentPath;
     public final ArrayList<ColorModel> colorList = new ArrayList<>();
     public final HashMap<String, String> defaultColors = new HashMap<>();
     private ResourcesEditorActivity activity;
     public ColorsAdapter adapter;
-    public boolean hasUnsavedChanges;
     public ColorsEditorManager colorsEditorManager;
     private ResourcesEditorFragmentBinding binding;
     private boolean isNightVariant;
@@ -73,7 +72,18 @@ public class ColorsEditor extends Fragment implements ResourceEditorDraftState.O
 
     @Override
     public void restoreDraftState(@NonNull Bundle state, String filePath) {
-        ResourceEditorDraftState.restore(state, colorList, notesMap, ColorModel.class);
+        restoreSnapshot(ResourceEditorDraftState.fromLegacy(state, ColorModel.class), filePath);
+    }
+
+    @Nullable
+    @Override
+    public ResourceEditorDraftState.Snapshot snapshotDraft() {
+        return hasUnsavedChanges ? ResourceEditorDraftState.snapshot(colorList, notesMap) : null;
+    }
+
+    @Override
+    public void restoreSnapshot(@NonNull ResourceEditorDraftState.Snapshot snapshot, String filePath) {
+        ResourceEditorDraftState.apply(snapshot, colorList, notesMap);
         contentPath = filePath;
         colorsEditorManager.contentPath = filePath;
         colorsEditorManager.isDefaultVariant = activity.variant.isEmpty();
@@ -85,7 +95,8 @@ public class ColorsEditor extends Fragment implements ResourceEditorDraftState.O
     }
 
     public void updateColorsList(String filePath, int updateMode, boolean hasUnsavedChangesStatus) {
-        hasUnsavedChanges = hasUnsavedChangesStatus;
+        if (hasUnsavedChangesStatus) markDraftChanged();
+        else markDraftClean();
         contentPath = filePath;
         colorsEditorManager.contentPath = contentPath;
 
@@ -263,7 +274,7 @@ public class ColorsEditor extends Fragment implements ResourceEditorDraftState.O
             } else {
                 addColor(key, value, Objects.requireNonNull(dialogBinding.stringHeaderInput.getText()).toString());
             }
-            hasUnsavedChanges = true;
+            markDraftChanged();
             updateNoContentLayout();
         });
 
@@ -305,7 +316,7 @@ public class ColorsEditor extends Fragment implements ResourceEditorDraftState.O
                 adapter = new ColorsAdapter(colorsEditorManager, colorList, activity, notesMap);
                 binding.recyclerView.setAdapter(adapter);
                 updateNoContentLayout();
-                hasUnsavedChanges = true;
+                markDraftChanged();
                 v1.dismiss();
             });
         }
@@ -369,10 +380,12 @@ public class ColorsEditor extends Fragment implements ResourceEditorDraftState.O
         return rebuiltNotes;
     }
 
-    public void saveColorsFile() {
-        if (hasUnsavedChanges) {
-            XmlUtil.saveXml(contentPath, colorsEditorManager.convertListToXml(colorList, notesMap));
-            hasUnsavedChanges = false;
-        }
+    @Override public String renderXml() { return colorsEditorManager.convertListToXml(colorList, notesMap); }
+
+    @Override public String resourcePath() { return contentPath; }
+
+    public ResourceEditorSaveResult.XmlWrite saveColorsFile() {
+        if (!hasUnsavedChanges) return ResourceEditorSaveResult.XmlWrite.UNCHANGED;
+        return writeResourceXml(contentPath, renderXml());
     }
 }
