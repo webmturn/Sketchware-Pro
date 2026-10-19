@@ -1,0 +1,5 @@
+<resources>
+    <string name="manifest_required">请填写此项</string>
+    <string name="manifest_activity_exists">此 Activity 已在列表中</string>
+    <string name="manifest_attributes_read_error">无法读取已有属性，原文件已保留。</string>
+</resources>

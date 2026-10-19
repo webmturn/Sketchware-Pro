@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 
 import pro.sketchware.activities.editor.manage.library.LibraryCategoryView;
@@ -60,6 +61,9 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
         if (getIntent().hasExtra("sc_id") && getIntent().hasExtra("file_name")) {
             sc_id = getIntent().getStringExtra("sc_id");
             currentActivityName = getIntent().getStringExtra("file_name").replace(".java", "");
+        } else {
+            finish();
+            return;
         }
 
         setupCustomToolbar();
@@ -103,6 +107,7 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
                 return;
             }
             for (int i = 0; i < data.size(); i++) {
+                if (data.get(i) == null) continue;
                 Object rawName = data.get(i).get("name");
                 if ("_application_attrs".equals(rawName)) {
                     Object rawValue = data.get(i).get("value");
@@ -176,63 +181,61 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
         startActivity(intent);
     }
 
-    private void showLauncherActDialog(String actnamr) {
-        MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
-        dialog.setIcon(R.drawable.ic_mtrl_lifecycle);
-        dialog.setTitle(Helper.getResString(R.string.change_launcher_activity_dialog_title));
-        View view = ViewUtil.inflateLayout(this, R.layout.dialog_add_custom_activity);
-
-        TextInputEditText activity_name_input = view.findViewById(R.id.activity_name_input);
-
-        activity_name_input.setText(actnamr);
-
-        dialog.setView(view);
-        dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {
-            if (!Helper.getText(activity_name_input).trim().isEmpty()) {
-                AndroidManifestInjector.setLauncherActivity(sc_id, Helper.getText(activity_name_input));
-                SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
-                v.dismiss();
-            } else {
-                activity_name_input.setError(Helper.getResString(R.string.error_enter_activity_name));
-            }
-        });
-        dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
-        dialog.show();
+    private void showLauncherActDialog(String activityName) {
+        showActivityNameDialog(true, activityName);
     }
 
     public void showAddActivityDialog() {
-        MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
-        dialog.setIcon(R.drawable.ic_mtrl_add);
-        dialog.setTitle(Helper.getResString(R.string.common_word_add_activtiy));
-        View inflate = ViewUtil.inflateLayout(this, R.layout.dialog_add_custom_activity);
+        showActivityNameDialog(false, currentActivityName);
+    }
 
-        TextInputEditText activity_name_input = inflate.findViewById(R.id.activity_name_input);
-
-        activity_name_input.setText(currentActivityName);
-
-        dialog.setView(inflate);
-        dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {
-            if (!Helper.getText(activity_name_input).trim().isEmpty()) {
-                addNewActivity(Helper.getText(activity_name_input));
-                SketchwareUtil.toast(Helper.getResString(R.string.toast_new_activity_added));
-                v.dismiss();
-            } else {
-                activity_name_input.setError(Helper.getResString(R.string.error_enter_activity_name));
+    private void showActivityNameDialog(boolean launcher, String initialName) {
+        View view = ViewUtil.inflateLayout(this, R.layout.dialog_add_custom_activity);
+        TextInputEditText input = view.findViewById(R.id.activity_name_input);
+        input.setText(initialName);
+        AlertDialog dialog = new MaterialAlertDialogBuilder(this)
+                .setIcon(launcher ? R.drawable.ic_mtrl_lifecycle : R.drawable.ic_mtrl_add)
+                .setTitle(launcher ? R.string.change_launcher_activity_dialog_title : R.string.common_word_add_activtiy)
+                .setView(view)
+                .setPositiveButton(R.string.common_word_save, null)
+                .setNegativeButton(R.string.common_word_cancel, null).create();
+        dialog.setOnShowListener(ignored -> dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            String name = Helper.getText(input).trim();
+            if (name.isEmpty()) {
+                input.setError(getString(R.string.error_enter_activity_name));
+                return;
             }
-        });
-        dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
+            if (launcher) {
+                AndroidManifestInjector.setLauncherActivity(sc_id, name);
+            } else {
+                for (HashMap<String, Object> item : activitiesListMap) {
+                    if (name.equals(item.get("act_name"))) {
+                        input.setError(getString(R.string.manifest_activity_exists));
+                        return;
+                    }
+                }
+                if (!addNewActivity(name)) return;
+            }
+            SketchwareUtil.toast(getString(launcher ? R.string.common_word_saved : R.string.toast_new_activity_added));
+            dialog.dismiss();
+        }));
         dialog.show();
     }
 
-    private void addNewActivity(String componentName) {
+    private boolean addNewActivity(String componentName) {
         String path = getAttributesPath();
         ArrayList<HashMap<String, Object>> data = new ArrayList<>();
         if (FileUtil.isExistFile(path)) {
             try {
                 data = getGson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
             } catch (JsonSyntaxException e) {
-            LogUtil.w("AndroidManifestInjection", "Caught JsonSyntaxException", e);
+                SketchwareUtil.toastError(getString(R.string.manifest_attributes_read_error));
+                return false;
+            }
         }
+        if (data == null) {
+            SketchwareUtil.toastError(getString(R.string.manifest_attributes_read_error));
+            return false;
         }
         {
             HashMap<String, Object> _item = new HashMap<>();
@@ -280,6 +283,7 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
 
         FileUtil.writeFile(path, getGson().toJson(data));
         refreshList();
+        return true;
     }
 
     private void refreshList() {
@@ -297,6 +301,7 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
                 return;
             }
             for (int i = 0; i < data.size(); i++) {
+                if (data.get(i) == null) continue;
                 Object rawName = data.get(i).get("name");
                 if (rawName != null) {
                     String name = rawName.toString();
@@ -355,6 +360,7 @@ public class AndroidManifestInjection extends BaseAppCompatActivity {
                 return;
             }
             for (int i = data.size() - 1; i > -1; i--) {
+                if (data.get(i) == null) continue;
                 Object rawName = data.get(i).get("name");
                 if (activityName.equals(rawName)) {
                     data.remove(i);

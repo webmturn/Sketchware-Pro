@@ -1,0 +1,5 @@
+<resources>
+    <string name="manifest_required">This field is required</string>
+    <string name="manifest_activity_exists">This activity is already listed</string>
+    <string name="manifest_attributes_read_error">Could not read the existing attributes. The file has been kept unchanged.</string>
+</resources>

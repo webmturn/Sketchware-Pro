@@ -4,6 +4,8 @@ import static pro.sketchware.util.GsonUtils.getGson;
 import static pro.sketchware.util.SketchwareUtil.dpToPx;
 
 import com.google.gson.JsonSyntaxException;
+import androidx.appcompat.app.AlertDialog;
+import pro.sketchware.util.SketchwareUtil;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -33,7 +35,7 @@ import pro.sketchware.util.ThemeUtils;
 
 public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
 
-    private static String ATTRIBUTES_FILE_PATH;
+    private String attributesFilePath;
     private final ArrayList<HashMap<String, Object>> listMap = new ArrayList<>();
     private String src_id;
     private String activityName;
@@ -56,7 +58,7 @@ public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
             finish();
             return;
         }
-        ATTRIBUTES_FILE_PATH = SketchwarePaths.getAndroidManifestAttributesPath(src_id);
+        attributesFilePath = SketchwarePaths.getAndroidManifestAttributesPath(src_id);
         setupConst();
         setToolbar();
         setupViews();
@@ -83,6 +85,8 @@ public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
     }
 
     private void setupViews() {
+        binding.addAttrFab.setContentDescription(getString(type.equals("permission")
+                ? R.string.manifest_add_permission : R.string.manifest_add_attribute));
         binding.addAttrFab.setOnClickListener(v -> showAddDial());
         refreshList();
     }
@@ -90,9 +94,9 @@ public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
     private void refreshList() {
         listMap.clear();
         ArrayList<HashMap<String, Object>> data;
-        if (FileUtil.isExistFile(ATTRIBUTES_FILE_PATH)) {
+        if (FileUtil.isExistFile(attributesFilePath)) {
             try {
-                data = getGson().fromJson(FileUtil.readFile(ATTRIBUTES_FILE_PATH), Helper.TYPE_MAP_LIST);
+                data = getGson().fromJson(FileUtil.readFile(attributesFilePath), Helper.TYPE_MAP_LIST);
             } catch (JsonSyntaxException e) {
                 return;
             }
@@ -100,6 +104,7 @@ public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
                 return;
             }
             for (HashMap<String, Object> item : data) {
+                if (item == null) continue;
                 Object itemName = item.get("name");
                 if (itemName != null && constant.equals(itemName.toString())) {
                     listMap.add(item);
@@ -140,66 +145,85 @@ public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
     }
 
     private void showDial(int pos) {
-        MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
-        dialog.setTitle(R.string.manifest_edit_value);
-        DialogCreateNewFileLayoutBinding attributeBinding = DialogCreateNewFileLayoutBinding.inflate(getLayoutInflater());
-        attributeBinding.chipGroupTypes.setVisibility(View.GONE);
-        dialog.setView(attributeBinding.getRoot());
-
-        Object dialogValue = listMap.get(pos).get("value");
-        attributeBinding.inputText.setText(dialogValue != null ? dialogValue.toString() : "");
-        attributeBinding.inputText.setHint(Helper.getResString(R.string.manifest_hint_attr_value));
-        dialog.setPositiveButton(R.string.common_word_save, (dialog1, which) -> {
-            listMap.get(pos).put("value", Helper.getText(attributeBinding.inputText));
-            applyChange();
-        });
-
+        DialogCreateNewFileLayoutBinding input = DialogCreateNewFileLayoutBinding.inflate(getLayoutInflater());
+        input.chipGroupTypes.setVisibility(View.GONE);
+        Object value = listMap.get(pos).get("value");
+        input.inputText.setText(value != null ? value.toString() : "");
+        input.inputText.setHint(R.string.manifest_hint_attr_value);
+        AlertDialog dialog = new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.manifest_edit_value).setView(input.getRoot())
+                .setPositiveButton(R.string.common_word_save, null).create();
+        dialog.setOnShowListener(ignored -> dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            String updatedValue = Helper.getText(input.inputText);
+            if (updatedValue.trim().isEmpty()) {
+                input.inputText.setError(getString(R.string.manifest_required));
+                return;
+            }
+            ArrayList<HashMap<String, Object>> updated = new ArrayList<>(listMap);
+            HashMap<String, Object> entry = new HashMap<>(updated.get(pos));
+            entry.put("value", updatedValue);
+            updated.set(pos, entry);
+            if (applyChange(updated)) dialog.dismiss();
+        }));
         dialog.show();
     }
 
     private void showAddDial() {
-        MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
-        dialog.setTitle(type.equals("permission") ? R.string.manifest_add_permission : R.string.manifest_add_attribute);
-        CustomDialogAttributeBinding attributeBinding = CustomDialogAttributeBinding.inflate(getLayoutInflater());
-        dialog.setView(attributeBinding.getRoot());
+        CustomDialogAttributeBinding input = CustomDialogAttributeBinding.inflate(getLayoutInflater());
         if (type.equals("permission")) {
-            attributeBinding.inputRes.setText("android");
-            attributeBinding.inputAttr.setText("name");
-            attributeBinding.inputLayoutValue.setHint(Helper.getResString(R.string.manifest_hint_permission));
+            input.inputRes.setText("android");
+            input.inputAttr.setText("name");
+            input.inputLayoutValue.setHint(R.string.manifest_hint_permission);
         }
-        dialog.setPositiveButton(R.string.common_word_save, (dialog1, which) -> {
-            String fstr = Helper.getText(attributeBinding.inputRes).trim() + ":" + Helper.getText(attributeBinding.inputAttr).trim() + "=\"" + Helper.getText(attributeBinding.inputValue).trim() + "\"";
-            HashMap<String, Object> map = new HashMap<>();
-            map.put("name", constant);
-            map.put("value", fstr);
-            listMap.add(map);
-            applyChange();
-            dialog1.dismiss();
-        });
-        dialog.setNegativeButton(R.string.common_word_cancel, (dialog1, which) -> dialog1.dismiss());
+        AlertDialog dialog = new MaterialAlertDialogBuilder(this)
+                .setTitle(type.equals("permission") ? R.string.manifest_add_permission : R.string.manifest_add_attribute)
+                .setView(input.getRoot()).setPositiveButton(R.string.common_word_save, null)
+                .setNegativeButton(R.string.common_word_cancel, null).create();
+        dialog.setOnShowListener(ignored -> dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            String namespace = Helper.getText(input.inputRes).trim();
+            String attribute = Helper.getText(input.inputAttr).trim();
+            String value = Helper.getText(input.inputValue).trim();
+            if (namespace.isEmpty()) {
+                input.inputRes.setError(getString(R.string.manifest_required));
+                return;
+            }
+            if (attribute.isEmpty()) {
+                input.inputAttr.setError(getString(R.string.manifest_required));
+                return;
+            }
+            if (type.equals("permission") && value.isEmpty()) {
+                input.inputValue.setError(getString(R.string.manifest_required));
+                return;
+            }
+            HashMap<String, Object> entry = new HashMap<>();
+            entry.put("name", constant);
+            entry.put("value", namespace + ":" + attribute + "=\"" + value + "\"");
+            ArrayList<HashMap<String, Object>> updated = new ArrayList<>(listMap);
+            updated.add(entry);
+            if (applyChange(updated)) dialog.dismiss();
+        }));
         dialog.show();
     }
 
-    private void applyChange() {
-        ArrayList<HashMap<String, Object>> data;
-        if (FileUtil.isExistFile(ATTRIBUTES_FILE_PATH)) {
+    private boolean applyChange(ArrayList<HashMap<String, Object>> updated) {
+        ArrayList<HashMap<String, Object>> data = new ArrayList<>();
+        if (FileUtil.isExistFile(attributesFilePath)) {
             try {
-                data = getGson().fromJson(FileUtil.readFile(ATTRIBUTES_FILE_PATH), Helper.TYPE_MAP_LIST);
+                data = getGson().fromJson(FileUtil.readFile(attributesFilePath), Helper.TYPE_MAP_LIST);
             } catch (JsonSyntaxException e) {
-                data = new ArrayList<>();
+                SketchwareUtil.toastError(getString(R.string.manifest_attributes_read_error));
+                return false;
             }
-            for (int i = data.size() - 1; i > -1; i--) {
-                Object itemName = data.get(i).get("name");
-                if (itemName != null && constant.equals(itemName.toString())) {
-                    data.remove(i);
-                }
+            if (data == null) {
+                SketchwareUtil.toastError(getString(R.string.manifest_attributes_read_error));
+                return false;
             }
-            data.addAll(listMap);
-        } else {
-            data = new ArrayList<>(listMap);
+            data.removeIf(item -> item != null && constant.equals(item.get("name")));
         }
-        FileUtil.writeFile(ATTRIBUTES_FILE_PATH, getGson().toJson(data));
+        data.addAll(updated);
+        FileUtil.writeFile(attributesFilePath, getGson().toJson(data));
         refreshList();
+        return true;
     }
 
     private TextView newText(String text, float size, int color, int width, int height, float weight) {
@@ -262,8 +286,9 @@ public class AndroidManifestInjectionDetails extends BaseAppCompatActivity {
                         .setTitle(R.string.manifest_delete_attr_title)
                         .setMessage(R.string.manifest_delete_attr_msg)
                         .setPositiveButton(R.string.common_word_delete, (dialog, which) -> {
-                            listMap.remove(position);
-                            applyChange();
+                            ArrayList<HashMap<String, Object>> updated = new ArrayList<>(listMap);
+                            updated.remove(position);
+                            applyChange(updated);
                         })
                         .setNegativeButton(R.string.common_word_cancel, null)
                         .show();

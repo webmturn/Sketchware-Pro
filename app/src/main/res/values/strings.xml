@@ -2558,9 +2558,9 @@ But, components should be added manually for working correctly."</string>
     <string name="manifest_activities">Activities</string>
     <string name="manifest_add_attribute">Add new attribute</string>
     <string name="manifest_add_permission">Add new permission</string>
-    <string name="manifest_attrs_all_activities">Attributes for all activities</string>
-    <string name="manifest_attrs_application">Application Attributes</string>
-    <string name="manifest_attrs_permissions">Application Permissions</string>
+    <string name="manifest_attrs_all_activities">All activities</string>
+    <string name="manifest_attrs_application">App attributes</string>
+    <string name="manifest_attrs_permissions">Permissions</string>
     <string name="manifest_components_title_format">%s Components</string>
     <string name="manifest_delete_attr_msg">This action cannot be undone.</string>
     <string name="manifest_delete_attr_title">Delete this attribute?</string>

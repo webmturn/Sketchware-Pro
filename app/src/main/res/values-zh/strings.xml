@@ -2504,8 +2504,8 @@
 
     <!-- ========== Manifest - 精确补充 ========== -->
     <string name="manifest_activities">Activity 列表</string>
-    <string name="manifest_attrs_all_activities">所有 Activities 属性</string>
-    <string name="manifest_attrs_application">Application 属性</string>
+    <string name="manifest_attrs_all_activities">全部 Activity</string>
+    <string name="manifest_attrs_application">应用属性</string>
     <string name="manifest_attrs_permissions">权限</string>
     <string name="manifest_components_title_format">%s 组件</string>
     <string name="manifest_delete_attr_msg">确定要删除此属性吗？</string>
