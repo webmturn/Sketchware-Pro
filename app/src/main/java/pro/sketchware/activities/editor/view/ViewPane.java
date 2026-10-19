@@ -561,9 +561,8 @@ public class ViewPane extends RelativeLayout {
                         }
                     }
                 } catch (Exception vectorException) {
-                    if (crashlytics != null) crashlytics.recordException(vectorException);
-                    FileUtil.deleteFile(new VectorDrawableLoader().getVectorFullPath(sc_id, imgResName));
-                    viewBean.image.resName = "default_image";
+                    Log.w("ViewPane", "Failed to preview image: " + imgResName, vectorException);
+                    // A preview fallback must preserve both the source file and its model reference.
                     ((ImageView) view).setImageResource(R.drawable.default_image);
                 }
             }
