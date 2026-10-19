@@ -8,6 +8,7 @@ import android.widget.CompoundButton;
 
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.color.MaterialColors;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,8 +39,26 @@ public class ManageProguardActivity extends BaseAppCompatActivity
         }
     }
 
+    private void showShrinkerHelp() {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.proguard_about)
+                .setMessage(getString(R.string.code_shrinker_obfuscate_def) + "\n\n"
+                        + getString(R.string.code_shrinker_warning))
+                .setPositiveButton(R.string.common_word_ok, null)
+                .show();
+    }
+
     private void fmDialog() {
         ManageLocalLibrary mll = new ManageLocalLibrary(getIntent().getStringExtra("sc_id"));
+
+        if (mll.list.isEmpty()) {
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.proguard_select_local_libs)
+                    .setMessage(R.string.proguard_no_libraries)
+                    .setPositiveButton(R.string.common_word_ok, null)
+                    .show();
+            return;
+        }
 
         String[] libraries = new String[mll.list.size()];
         boolean[] enabledLibraries = new boolean[mll.list.size()];
@@ -85,11 +104,10 @@ public class ManageProguardActivity extends BaseAppCompatActivity
         int id = buttonView.getId();
         if (id == binding.swPgEnabled.getId()) {
             proguardHandler.setProguardEnabled(isChecked);
-        } else if (id == binding.r8Enabled.getId()) {
-            proguardHandler.setR8Enabled(isChecked);
         } else if (id == binding.swPgDebug.getId()) {
             proguardHandler.setDebugEnabled(isChecked);
         }
+        updateControls();
     }
 
     @Override
@@ -98,15 +116,24 @@ public class ManageProguardActivity extends BaseAppCompatActivity
         binding = ManageProguardBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        initialize();
         initializeLogic();
+        initialize();
     }
 
     private void initialize() {
         binding.swPgEnabled.setOnCheckedChangeListener(this);
+        binding.shrinkerMasterRow.setOnClickListener(view -> binding.swPgEnabled.performClick());
         binding.lnPgRules.setOnClickListener(this);
-        binding.r8Enabled.setOnCheckedChangeListener(this);
+        binding.shrinkerChoice.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
+            if (isChecked) {
+                proguardHandler.setR8Enabled(checkedId == R.id.engine_r8);
+                updateControls();
+            }
+        });
         binding.swPgDebug.setOnCheckedChangeListener(this);
+        binding.debugRow.setOnClickListener(view -> {
+            if (binding.swPgDebug.isEnabled()) binding.swPgDebug.performClick();
+        });
         binding.lnPgFm.setOnClickListener(this);
     }
 
@@ -115,11 +142,48 @@ public class ManageProguardActivity extends BaseAppCompatActivity
         proguardHandler = new ProguardHandler(getIntent().getStringExtra("sc_id"));
         binding.swPgEnabled.setChecked(proguardHandler.isShrinkingEnabled());
         binding.swPgDebug.setChecked(proguardHandler.isDebugFilesEnabled());
-        binding.r8Enabled.setChecked(proguardHandler.isR8Enabled());
+        binding.shrinkerChoice.check(proguardHandler.isR8Enabled() ? R.id.engine_r8 : R.id.engine_proguard);
+        updateControls();
+    }
+
+    private void updateControls() {
+        boolean enabled = binding.swPgEnabled.isChecked();
+        boolean r8 = binding.shrinkerChoice.getCheckedButtonId() == R.id.engine_r8;
+        binding.shrinkerMasterCard.setCardBackgroundColor(MaterialColors.getColor(binding.getRoot(),
+                enabled ? R.attr.colorPrimaryContainer : R.attr.colorSurfaceContainerHigh));
+        int titleColor = MaterialColors.getColor(binding.getRoot(),
+                enabled ? R.attr.colorOnPrimaryContainer : R.attr.colorOnSurface);
+        binding.shrinkerTitle.setTextColor(titleColor);
+        binding.shrinkerStatus.setTextColor(enabled ? titleColor
+                : MaterialColors.getColor(binding.getRoot(), R.attr.colorOnSurfaceVariant));
+        binding.shrinkerStatus.setText(enabled
+                ? getString(R.string.proguard_enabled_summary,
+                        getString(r8 ? R.string.proguard_engine_r8 : R.string.proguard_engine_proguard))
+                : getString(R.string.proguard_disabled_summary));
+        binding.engineR8.setEnabled(enabled);
+        binding.engineProguard.setEnabled(enabled);
+        binding.swPgDebug.setEnabled(enabled && !r8);
+        binding.debugRow.setEnabled(enabled && !r8);
+        binding.debugTitle.setAlpha(enabled && !r8 ? 1f : 0.6f);
+        binding.debugSummary.setText(r8 ? R.string.proguard_debug_r8_summary : R.string.proguard_debug_summary);
+        binding.lnPgFm.setEnabled(enabled);
+        binding.fullModeTitle.setAlpha(enabled ? 1f : 0.6f);
+        binding.fullModeIcon.setAlpha(enabled ? 1f : 0.45f);
+        binding.fullModeArrow.setAlpha(enabled ? 1f : 0.45f);
+        binding.fullModeSummary.setText(enabled
+                ? R.string.proguard_libraries_summary : R.string.proguard_libraries_disabled);
     }
 
     private void _initToolbar() {
-        binding.toolbar.setTitle(R.string.proguard_title);
+        binding.toolbar.setTitle(R.string.proguard_page_title);
+        binding.toolbar.inflateMenu(R.menu.menu_proguard_manager);
+        binding.toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.action_shrinker_help) {
+                showShrinkerHelp();
+                return true;
+            }
+            return false;
+        });
         binding.toolbar.setNavigationOnClickListener(view -> getOnBackPressedDispatcher().onBackPressed());
     }
 }

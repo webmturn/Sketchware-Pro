@@ -1,0 +1,18 @@
+<resources>
+    <string name="proguard_enable_title">启用代码缩减</string>
+    <string name="proguard_page_title">代码缩减</string>
+    <string name="proguard_enabled_summary">%1$s · 下次构建生效</string>
+    <string name="proguard_disabled_summary">已关闭，构建时不执行缩减</string>
+    <string name="proguard_build_options">缩减设置</string>
+    <string name="proguard_engine_title">缩减器</string>
+    <string name="proguard_debug_title">生成调试报告</string>
+    <string name="proguard_debug_summary">混淆映射、保留及移除记录</string>
+    <string name="proguard_debug_r8_summary">R8 自动生成映射文件，无需开启。</string>
+    <string name="proguard_rules_and_libraries">规则与库</string>
+    <string name="proguard_rules_title">自定义规则</string>
+    <string name="proguard_libraries_title">本地库完整模式</string>
+    <string name="proguard_libraries_summary">让所选库参与缩减，构建会更慢。</string>
+    <string name="proguard_libraries_disabled">开启代码缩减后，可配置参与处理的本地库。</string>
+    <string name="proguard_no_libraries">当前项目没有启用的本地库。请先在本地库管理器中添加并启用库。</string>
+    <string name="proguard_about">关于代码缩减</string>
+</resources>

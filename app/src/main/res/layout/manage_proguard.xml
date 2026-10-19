@@ -1,14 +1,16 @@
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
     android:fitsSystemWindows="true">
-
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
-
+        android:background="?attr/colorSurface"
+        android:fitsSystemWindows="true"
+        app:liftOnScroll="true">
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -16,108 +18,203 @@
             app:navigationIcon="?attr/homeAsUpIndicator" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/proguard_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:paddingBottom="16dp"
+        android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="16dp"
-            android:paddingTop="8dp">
-
-            <!-- Switches section -->
+            android:paddingTop="12dp"
+            android:paddingBottom="16dp">
             <com.google.android.material.card.MaterialCardView
                 style="?attr/materialCardViewFilledStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="?attr/colorSurfaceContainer">
-
+                app:cardBackgroundColor="?attr/colorPrimaryContainer"
+                android:id="@+id/shrinker_master_card">
                 <LinearLayout
+                    android:id="@+id/shrinker_master_row"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="8dp">
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:gravity="center_vertical"
+                    android:minHeight="88dp"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="12dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/proguard_enable_title"
+                            android:textAppearance="?attr/textAppearanceTitleMedium"
+                            android:textColor="?attr/colorOnPrimaryContainer"
+                            android:id="@+id/shrinker_title" />
+
+                        <TextView
+                            android:id="@+id/shrinker_status"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:accessibilityLiveRegion="polite"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnPrimaryContainer" />
+                    </LinearLayout>
 
                     <com.google.android.material.materialswitch.MaterialSwitch
                         android:id="@+id/sw_pg_enabled"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:paddingVertical="12dp"
-                        android:text="@string/proguard_activated"
-                        android:textAppearance="?attr/textAppearanceBodyLarge" />
-
-                    <!-- R8 code shrinker my beloved, I'll come to your house if your remove it -->
-                    <com.google.android.material.materialswitch.MaterialSwitch
-                        android:id="@+id/r8_enabled"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:paddingVertical="12dp"
-                        android:text="@string/code_shrinker_use_r8"
-                        android:textAppearance="?attr/textAppearanceBodyLarge" />
-
-                    <com.google.android.material.materialswitch.MaterialSwitch
-                        android:id="@+id/sw_pg_debug"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:paddingVertical="12dp"
-                        android:text="@string/code_shrinker_generate_debug_files"
-                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+                        android:contentDescription="@string/proguard_enable_title"
+                        android:minHeight="48dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Info section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp"
+                android:paddingHorizontal="4dp"
+                android:text="@string/proguard_build_options"
+                android:textAppearance="?attr/textAppearanceTitleSmall"
+                android:textColor="?attr/colorOnSurfaceVariant" />
+
             <com.google.android.material.card.MaterialCardView
                 style="?attr/materialCardViewFilledStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                app:cardBackgroundColor="?attr/colorSurfaceContainer">
-
+                app:cardBackgroundColor="?attr/colorSurfaceContainerLow">
                 <LinearLayout
+                    android:id="@+id/build_options"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="16dp">
-
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/code_shrinker_obfuscate_def"
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
+                        android:text="@string/proguard_engine_title"
+                        android:textAppearance="?attr/textAppearanceTitleMedium"
+                        android:textColor="?attr/colorOnSurface" />
 
-                    <TextView
+                    <com.google.android.material.button.MaterialButtonToggleGroup
+                        android:id="@+id/shrinker_choice"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/code_shrinker_warning"
-                        android:textAppearance="?attr/textAppearanceBodySmall"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
+                        android:layout_marginTop="10dp"
+                        app:selectionRequired="true"
+                        app:singleSelection="true">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/engine_r8"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:minWidth="0dp"
+                            android:minHeight="48dp"
+                            android:paddingHorizontal="8dp"
+                            android:text="@string/proguard_engine_r8"
+                            android:textAllCaps="false" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/engine_proguard"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:minWidth="0dp"
+                            android:minHeight="48dp"
+                            android:paddingHorizontal="8dp"
+                            android:text="@string/proguard_engine_proguard"
+                            android:textAllCaps="false" />
+                    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="8dp" />
+
+                    <LinearLayout
+                        android:id="@+id/debug_row"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="false"
+                        android:gravity="center_vertical"
+                        android:minHeight="64dp"
+                        android:orientation="horizontal"
+                        android:paddingVertical="8dp">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="12dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <TextView
+                                android:id="@+id/debug_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/proguard_debug_title"
+                                android:textAppearance="?attr/textAppearanceBodyLarge"
+                                android:textColor="?attr/colorOnSurface" />
+
+                            <TextView
+                                android:id="@+id/debug_summary"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceBodySmall"
+                                android:textColor="?attr/colorOnSurfaceVariant"
+                                android:layout_marginTop="2dp" />
+                        </LinearLayout>
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/sw_pg_debug"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minHeight="48dp"
+                            android:contentDescription="@string/proguard_debug_title" />
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Actions section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp"
+                android:paddingHorizontal="4dp"
+                android:text="@string/proguard_rules_and_libraries"
+                android:textAppearance="?attr/textAppearanceTitleSmall"
+                android:textColor="?attr/colorOnSurfaceVariant" />
+
             <com.google.android.material.card.MaterialCardView
                 style="?attr/materialCardViewFilledStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                app:cardBackgroundColor="?attr/colorSurfaceContainer">
-
+                app:cardBackgroundColor="?attr/colorSurfaceContainerLow">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-
                     <LinearLayout
                         android:id="@+id/ln_pg_rules"
                         android:layout_width="match_parent"
@@ -126,43 +223,44 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:gravity="center_vertical"
+                        android:minHeight="76dp"
                         android:orientation="horizontal"
-                        android:paddingHorizontal="16dp"
-                        android:paddingVertical="16dp">
-
+                        android:padding="16dp">
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_marginEnd="16dp"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/ic_edit_white_48dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_mtrl_code"
                             app:tint="?attr/colorPrimary" />
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginEnd="12dp"
                             android:layout_weight="1"
                             android:orientation="vertical">
-
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@string/code_shrinker_rules"
+                                android:text="@string/proguard_rules_title"
                                 android:textAppearance="?attr/textAppearanceBodyLarge"
                                 android:textColor="?attr/colorOnSurface" />
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
-                                android:text="@string/code_shrinker_configure_shrinker"
-                                android:textAppearance="?attr/textAppearanceBodyMedium"
+                                android:layout_marginTop="4dp"
+                                android:fontFamily="monospace"
+                                android:text="@string/proguard_rules_filename"
+                                android:textAppearance="?attr/textAppearanceBodySmall"
                                 android:textColor="?attr/colorOnSurfaceVariant" />
                         </LinearLayout>
 
                         <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:importantForAccessibility="no"
                             android:src="@drawable/ic_chevron_right_white_24dp"
                             app:tint="?attr/colorOnSurfaceVariant" />
                     </LinearLayout>
@@ -170,7 +268,8 @@
                     <com.google.android.material.divider.MaterialDivider
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:dividerInsetStart="56dp" />
+                        app:dividerInsetStart="56dp"
+                        app:dividerInsetEnd="16dp" />
 
                     <LinearLayout
                         android:id="@+id/ln_pg_fm"
@@ -180,48 +279,51 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:gravity="center_vertical"
+                        android:minHeight="84dp"
                         android:orientation="horizontal"
-                        android:paddingHorizontal="16dp"
-                        android:paddingVertical="16dp">
-
+                        android:padding="16dp">
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_marginEnd="16dp"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/ic_mtrl_settings"
-                            app:tint="?attr/colorPrimary" />
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_mtrl_deployed_code"
+                            app:tint="?attr/colorPrimary"
+                            android:id="@+id/full_mode_icon" />
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginEnd="12dp"
                             android:layout_weight="1"
                             android:orientation="vertical">
-
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@string/proguard_full_mode"
+                                android:text="@string/proguard_libraries_title"
                                 android:textAppearance="?attr/textAppearanceBodyLarge"
-                                android:textColor="?attr/colorOnSurface" />
+                                android:textColor="?attr/colorOnSurface"
+                                android:id="@+id/full_mode_title" />
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:id="@+id/full_mode_summary"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
-                                android:text="@string/code_shrinker_full_mode_def"
-                                android:textAppearance="?attr/textAppearanceBodyMedium"
+                                android:layout_marginTop="4dp"
+                                android:textAppearance="?attr/textAppearanceBodySmall"
                                 android:textColor="?attr/colorOnSurfaceVariant" />
                         </LinearLayout>
 
                         <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:importantForAccessibility="no"
                             android:src="@drawable/ic_chevron_right_white_24dp"
-                            app:tint="?attr/colorOnSurfaceVariant" />
+                            app:tint="?attr/colorOnSurfaceVariant"
+                            android:id="@+id/full_mode_arrow" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,21 @@
+<resources>
+    <string name="proguard_enable_title">Enable code shrinking</string>
+    <string name="proguard_page_title">Code shrinking</string>
+    <string name="proguard_enabled_summary">%1$s · next build</string>
+    <string name="proguard_disabled_summary">Off · not applied to builds</string>
+    <string name="proguard_build_options">Shrinking options</string>
+    <string name="proguard_engine_title">Code shrinker</string>
+    <string name="proguard_engine_r8" translatable="false">R8</string>
+    <string name="proguard_engine_proguard" translatable="false">ProGuard</string>
+    <string name="proguard_debug_title">Debug reports</string>
+    <string name="proguard_debug_summary">Mapping, kept and removed code.</string>
+    <string name="proguard_debug_r8_summary">R8 creates a mapping file automatically.</string>
+    <string name="proguard_rules_and_libraries">Rules and libraries</string>
+    <string name="proguard_rules_filename" translatable="false">proguard-rules.pro</string>
+    <string name="proguard_rules_title">Custom rules</string>
+    <string name="proguard_libraries_title">Library full mode</string>
+    <string name="proguard_libraries_summary">Shrink selected libraries. Builds take longer.</string>
+    <string name="proguard_libraries_disabled">Enable code shrinking to configure local libraries.</string>
+    <string name="proguard_no_libraries">This project has no enabled local libraries. Add and enable a library in the Local library manager first.</string>
+    <string name="proguard_about">About code shrinking</string>
+</resources>
