@@ -2044,7 +2044,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
                     intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     makeBlockLauncher.launch(intent);
                 } else if (tag.equals("componentAdd")) {
-                    AddComponentBottomSheet addComponentBottomSheet = AddComponentBottomSheet.newInstance(scId, projectFile, () -> onBlockSizeChanged(7, ContextCompat.getColor(this, R.color.palette_component)));
+                    AddComponentBottomSheet addComponentBottomSheet = AddComponentBottomSheet.newInstance(scId, projectFile);
                     addComponentBottomSheet.show(getSupportFragmentManager(), null);
                 } else if (tag.equals("blockImport")) {
                     showMoreBlockImporter();
@@ -2224,6 +2224,12 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         });
 
         extraPaletteBlock = new ExtraPaletteBlock(this, isViewBindingEnabled);
+        getSupportFragmentManager().setFragmentResultListener(AddComponentBottomSheet.resultKey(scId),
+                this, (key, result) -> {
+                    if (projectFile.getJavaName().equals(result.getString(AddComponentBottomSheet.RESULT_JAVA_FILE))) {
+                        onBlockSizeChanged(7, ContextCompat.getColor(this, R.color.palette_component));
+                    }
+                });
 
         svgUtils = new SvgUtils(this);
     }

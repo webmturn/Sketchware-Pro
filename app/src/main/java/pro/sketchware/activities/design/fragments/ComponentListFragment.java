@@ -67,8 +67,9 @@ public class ComponentListFragment extends DesignProjectFragment implements View
 
     @Override
     public void onClick(View v) {
-        if (!UIHelper.isClickThrottled() && v.getId() == binding.fab.getId()) {
-            AddComponentBottomSheet addComponentBottomSheet = AddComponentBottomSheet.newInstance(sc_id, projectFile, () -> refreshData());
+        if (binding != null && projectFile != null && !UIHelper.isClickThrottled()
+                && v.getId() == binding.fab.getId() && !getParentFragmentManager().isStateSaved()) {
+            AddComponentBottomSheet addComponentBottomSheet = AddComponentBottomSheet.newInstance(sc_id, projectFile);
             addComponentBottomSheet.show(getParentFragmentManager(), null);
         }
     }
@@ -90,6 +91,13 @@ public class ComponentListFragment extends DesignProjectFragment implements View
                 .observe(getViewLifecycleOwner(), projectFile -> {
                     if (projectFile != null) {
                         setProjectFile(projectFile);
+                        refreshData();
+                    }
+                });
+        getParentFragmentManager().setFragmentResultListener(AddComponentBottomSheet.resultKey(sc_id),
+                getViewLifecycleOwner(), (key, result) -> {
+                    if (projectFile != null && projectFile.getJavaName()
+                            .equals(result.getString(AddComponentBottomSheet.RESULT_JAVA_FILE))) {
                         refreshData();
                     }
                 });

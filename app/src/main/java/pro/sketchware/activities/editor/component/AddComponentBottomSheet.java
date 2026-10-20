@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import pro.sketchware.beans.ComponentBean;
@@ -28,16 +30,15 @@ import pro.sketchware.databinding.LogicAddComponentBinding;
 import pro.sketchware.dialogs.InnerAddComponentBottomSheet;
 
 public class AddComponentBottomSheet extends BottomSheetDialogFragment {
+    public static final String RESULT_JAVA_FILE = "java_file";
     private String sc_id;
     private ProjectFileBean projectFileBean;
 
     private ArrayList<ComponentBean> componentList;
     private LogicAddComponentBinding binding;
-    private OnComponentCreateListener onComponentCreateListener;
 
-    public static AddComponentBottomSheet newInstance(String scId, ProjectFileBean projectFileBean, OnComponentCreateListener onComponentCreateListener) {
+    public static AddComponentBottomSheet newInstance(String scId, ProjectFileBean projectFileBean) {
         AddComponentBottomSheet addComponentBottomSheet = new AddComponentBottomSheet();
-        addComponentBottomSheet.setOnComponentCreateListener(onComponentCreateListener);
         Bundle args = new Bundle();
         args.putString("sc_id", scId);
         args.putParcelable("project_file_bean", projectFileBean);
@@ -45,13 +46,39 @@ public class AddComponentBottomSheet extends BottomSheetDialogFragment {
         return addComponentBottomSheet;
     }
 
+    public static String resultKey(String projectId) {
+        return AddComponentBottomSheet.class.getName() + ":" + projectId;
+    }
+
+    /** Notify the current host, including after FragmentManager has recreated the sheets. */
+    public static void dispatchAdded(FragmentManager manager, String projectId, String javaFile) {
+        Bundle result = new Bundle();
+        result.putString(RESULT_JAVA_FILE, javaFile);
+        manager.setFragmentResult(resultKey(projectId), result);
+        for (Fragment fragment : manager.getFragments()) {
+            if (fragment instanceof AddComponentBottomSheet selector
+                    && projectId.equals(selector.sc_id) && selector.projectFileBean != null
+                    && javaFile.equals(selector.projectFileBean.getJavaName())) {
+                selector.dismiss();
+            }
+        }
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Bundle args = getArguments();
+        if (args == null) {
+            dismissAllowingStateLoss();
+            return;
+        }
         sc_id = args.getString("sc_id");
         projectFileBean = args.getParcelable("project_file_bean");
+        if (sc_id == null || projectFileBean == null) {
+            dismissAllowingStateLoss();
+            return;
+        }
 
         initializeComponentBeans();
     }
@@ -107,6 +134,7 @@ public class AddComponentBottomSheet extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (sc_id == null || projectFileBean == null) return;
 
         FlexboxLayoutManager flexboxLayoutManager = new FlexboxLayoutManager(getContext(), FlexDirection.ROW, FlexWrap.WRAP);
         flexboxLayoutManager.setJustifyContent(JustifyContent.SPACE_BETWEEN);
@@ -120,6 +148,8 @@ public class AddComponentBottomSheet extends BottomSheetDialogFragment {
         binding.componentList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (binding == null || recyclerView != binding.componentList
+                        || recyclerView.getAdapter() == null) return;
                 FlexboxLayoutManager lm = (FlexboxLayoutManager) recyclerView.getLayoutManager();
                 if (lm == null) return;
                 int first = lm.findFirstCompletelyVisibleItemPosition();
@@ -135,7 +165,6 @@ public class AddComponentBottomSheet extends BottomSheetDialogFragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        onComponentCreateListener = null;
     }
 
     @Override
@@ -145,21 +174,12 @@ public class AddComponentBottomSheet extends BottomSheetDialogFragment {
         super.onSaveInstanceState(savedInstanceState);
     }
 
-    private void setOnComponentCreateListener(OnComponentCreateListener onComponentCreateListener) {
-        this.onComponentCreateListener = onComponentCreateListener;
-    }
-
     private void showAddComponentDialog(ComponentBean componentBean) {
-        InnerAddComponentBottomSheet innerAddComponentBottomSheet = InnerAddComponentBottomSheet.newInstance(sc_id, projectFileBean, componentBean, sheet -> {
-            sheet.dismiss();
-            dismiss();
-            onComponentCreateListener.invoke();
-        });
-        innerAddComponentBottomSheet.show(getParentFragmentManager(), null);
-    }
-
-    public interface OnComponentCreateListener {
-        void invoke();
+        if (!isAdded() || getParentFragmentManager().isStateSaved()) return;
+        String tag = InnerAddComponentBottomSheet.class.getName();
+        if (getParentFragmentManager().findFragmentByTag(tag) != null) return;
+        InnerAddComponentBottomSheet.newInstance(sc_id, projectFileBean, componentBean)
+                .showNow(getParentFragmentManager(), tag);
     }
 
     private class ComponentsAdapter extends RecyclerView.Adapter<ComponentsAdapter.ComponentBeanViewHolder> {

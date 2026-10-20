@@ -34,11 +34,12 @@ import pro.sketchware.core.project.ComponentsHandler;
 import pro.sketchware.R;
 import pro.sketchware.databinding.LogicAddComponentDialogBinding;
 import pro.sketchware.util.ThrottledClickListener;
+import pro.sketchware.activities.editor.component.AddComponentBottomSheet;
 
 public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
     private final AtomicInteger selectedMime = new AtomicInteger(0);
     private LogicAddComponentDialogBinding binding;
-    private OnSaveClickListener onSaveClickListener;
+    private boolean componentAdded;
     private String scId;
     private ComponentBean componentBean;
     private ProjectFileBean projectFileBean;
@@ -48,9 +49,8 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
     private LengthRangeValidator componentFirebasePathValidator;
     private LengthRangeValidator componentMimeTypeValidator;
 
-    public static InnerAddComponentBottomSheet newInstance(String scId, ProjectFileBean projectFileBean, ComponentBean componentBean, OnSaveClickListener onSaveClickListener) {
+    public static InnerAddComponentBottomSheet newInstance(String scId, ProjectFileBean projectFileBean, ComponentBean componentBean) {
         InnerAddComponentBottomSheet sheet = new InnerAddComponentBottomSheet();
-        sheet.setOnSaveClickListener(onSaveClickListener);
 
         Bundle args = new Bundle();
         args.putString("sc_id", scId);
@@ -158,11 +158,15 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
         binding.btnSave.setOnClickListener(new ThrottledClickListener() {
             @Override
             protected void onThrottledClick(View v) {
-                if (checks() && getContext() != null) {
-                    SketchToast.toast(requireContext(), Helper.getResString(R.string.component_message_component_block_added), SketchToast.TOAST_WARNING).show();
-                    UIHelper.hideKeyboard(requireContext(), binding.edInput);
-                    onSaveClickListener.onSaveClick(InnerAddComponentBottomSheet.this);
-                }
+                if (componentAdded || binding == null || !isAdded() || getContext() == null
+                        || getParentFragmentManager().isStateSaved()) return;
+                if (!checks()) return;
+                componentAdded = true;
+                binding.btnSave.setEnabled(false);
+                SketchToast.toast(requireContext(), Helper.getResString(R.string.component_message_component_block_added), SketchToast.TOAST_WARNING).show();
+                UIHelper.hideKeyboard(requireContext(), binding.edInput);
+                AddComponentBottomSheet.dispatchAdded(getParentFragmentManager(), scId, projectFileBean.getJavaName());
+                dismiss();
             }
         });
     }
@@ -171,11 +175,10 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        onSaveClickListener = null;
-    }
-
-    private void setOnSaveClickListener(OnSaveClickListener onSaveClickListener) {
-        this.onSaveClickListener = onSaveClickListener;
+        componentNameValidator = null;
+        componentFileNameValidator = null;
+        componentFirebasePathValidator = null;
+        componentMimeTypeValidator = null;
     }
 
     private void showFilePickerMimeTypeSelectionDialog() {
@@ -294,7 +297,4 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
         dialog.show();
     }
 
-    public interface OnSaveClickListener {
-        void onSaveClick(InnerAddComponentBottomSheet sheet);
-    }
 }
