@@ -20,6 +20,7 @@ import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import pro.sketchware.activities.base.BaseAppCompatActivity;
@@ -29,7 +30,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,6 +46,7 @@ import pro.sketchware.databinding.DialogCreateNewFileLayoutBinding;
 import pro.sketchware.databinding.DialogInputLayoutBinding;
 import pro.sketchware.databinding.ManageFileBinding;
 import pro.sketchware.databinding.ManageJavaItemHsBinding;
+import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 
@@ -55,6 +56,7 @@ public class ManageAssetsActivity extends BaseAppCompatActivity {
     private String current_path;
     private AssetsAdapter assetsAdapter;
     private String sc_id;
+    private AssetsImportViewModel importModel;
 
     private ManageFileBinding binding;
 
@@ -87,8 +89,45 @@ public class ManageAssetsActivity extends BaseAppCompatActivity {
         setupUI();
 
         current_path = Uri.parse(SketchwarePaths.getProjectAssetsPath(sc_id)).getPath();
+        if (savedInstanceState != null) {
+            String restored = savedInstanceState.getString("assets_current_path");
+            if (restored != null && new File(restored).isDirectory()
+                    && new File(restored).toPath().normalize().startsWith(new File(current_path).toPath().normalize())) {
+                current_path = restored;
+            }
+        }
 
         refresh();
+        importModel = new ViewModelProvider(this).get(AssetsImportViewModel.class);
+        importModel.state().observe(this, state -> {
+            boolean running = state != null && state.running();
+            binding.importNewButton.setEnabled(!running);
+            if (running) {
+                showLoadingDialog();
+                return;
+            }
+            dismissLoadingDialog();
+            if (state != null) {
+                importModel.clearCompleted();
+                refresh();
+                if (!state.failedFiles().isEmpty()) {
+                    SketchwareUtil.toastError(Helper.getResString(R.string.error_import_file,
+                            String.join(", ", state.failedFiles())));
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle state) {
+        state.putString("assets_current_path", current_path);
+        super.onSaveInstanceState(state);
+    }
+
+    @Override
+    public void onDestroy() {
+        dismissLoadingDialog();
+        super.onDestroy();
     }
 
     private void setupUI() {
@@ -200,14 +239,8 @@ public class ManageAssetsActivity extends BaseAppCompatActivity {
         FilePickerCallback callback = new FilePickerCallback() {
             @Override
             public void onFilesSelected(@NotNull List<? extends File> files) {
-                for (File file : files) {
-                    try {
-                        FileUtil.copyDirectory(file, new File(current_path, file.getName()));
-                        refresh();
-                    } catch (IOException e) {
-                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.error_import_file), e.getMessage()));
-                    }
-                }
+                if (isFinishing() || isDestroyed()) return;
+                importModel.start(TaskHost.of(ManageAssetsActivity.this), files, new File(current_path));
             }
         };
 
@@ -259,7 +292,6 @@ public class ManageAssetsActivity extends BaseAppCompatActivity {
     private void refresh() {
         if (!FileUtil.isExistFile(SketchwarePaths.getProjectAssetsPath(sc_id))) {
             FileUtil.makeDir(SketchwarePaths.getProjectAssetsPath(sc_id));
-            refresh();
         }
 
         currentTree.clear();
