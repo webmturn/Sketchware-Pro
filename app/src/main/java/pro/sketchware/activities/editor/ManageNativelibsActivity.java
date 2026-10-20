@@ -20,6 +20,7 @@ import android.widget.PopupMenu;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import pro.sketchware.activities.base.BaseAppCompatActivity;
@@ -28,7 +29,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +44,7 @@ import pro.sketchware.databinding.DialogInputLayoutBinding;
 import pro.sketchware.databinding.ManageFileBinding;
 import pro.sketchware.databinding.ManageJavaItemHsBinding;
 import pro.sketchware.core.project.FileResConfig;
+import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 
@@ -52,6 +53,7 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
     private FileResConfig frc;
     private String numProj;
     private String nativeLibrariesPath;
+    private NativeImportViewModel importModel;
 
     private ManageFileBinding binding;
 
@@ -83,12 +85,42 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
         frc = new FileResConfig(numProj);
 
         setupDialog();
-        checkDir();
+        checkDir(savedInstanceState);
         setupUI();
+        importModel = new ViewModelProvider(this).get(NativeImportViewModel.class);
+        importModel.state().observe(this, state -> {
+            boolean running = state != null && state.running();
+            binding.showOptionsButton.setEnabled(!running);
+            if (running) {
+                showLoadingDialog();
+                return;
+            }
+            dismissLoadingDialog();
+            if (state != null) {
+                importModel.clearCompleted();
+                handleAdapter(nativeLibrariesPath);
+                handleFab();
+                if (!state.failedFiles().isEmpty()) {
+                    SketchwareUtil.toastError(Helper.getResString(R.string.nativelib_error_import,
+                            String.join(", ", state.failedFiles())));
+                }
+            }
+        });
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle state) {
+        state.putString("native_current_path", nativeLibrariesPath);
+        super.onSaveInstanceState(state);
+    }
 
-    private void checkDir() {
+    @Override
+    public void onDestroy() {
+        dismissLoadingDialog();
+        super.onDestroy();
+    }
+
+    private void checkDir(Bundle savedInstanceState) {
         if (!FileUtil.isExistFile(SketchwarePaths.getProjectNativeLibsPath(numProj))) {
             FileUtil.makeDir(SketchwarePaths.getProjectNativeLibsPath(numProj));
             FileUtil.makeDir(SketchwarePaths.getProjectNativeLibsPath(numProj) + "/armeabi");
@@ -97,6 +129,13 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
             FileUtil.makeDir(SketchwarePaths.getProjectNativeLibsPath(numProj) + "/x86");
         }
         nativeLibrariesPath = SketchwarePaths.getProjectNativeLibsPath(numProj);
+        if (savedInstanceState != null) {
+            String restored = savedInstanceState.getString("native_current_path");
+            if (restored != null && new File(restored).isDirectory()
+                    && new File(restored).toPath().normalize().startsWith(new File(nativeLibrariesPath).toPath().normalize())) {
+                nativeLibrariesPath = restored;
+            }
+        }
         handleAdapter(nativeLibrariesPath);
         handleFab();
     }
@@ -236,16 +275,8 @@ public class ManageNativelibsActivity extends BaseAppCompatActivity implements V
         FilePickerCallback callback = new FilePickerCallback() {
             @Override
             public void onFilesSelected(@NotNull List<? extends File> files) {
-                for (File file : files) {
-                    try {
-                        FileUtil.copyDirectory(file, new File(nativeLibrariesPath + File.separator + Uri.fromFile(file).getLastPathSegment()));
-                    } catch (IOException e) {
-                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.nativelib_error_import), e.getMessage()));
-                    }
-                }
-
-                handleAdapter(nativeLibrariesPath);
-                handleFab();
+                if (isFinishing() || isDestroyed()) return;
+                importModel.start(TaskHost.of(ManageNativelibsActivity.this), files, new File(nativeLibrariesPath));
             }
         };
 
