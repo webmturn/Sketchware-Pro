@@ -81,13 +81,16 @@ public class LocalLibrariesUtil {
 
     public static ArrayList<HashMap<String, Object>> getLocalLibraries(String scId) {
         File localLibFile = getLocalLibFile(scId);
-        String fileContent;
-        if (!localLibFile.exists() || (fileContent = readFile(localLibFile.getAbsolutePath())).isEmpty()) {
-            writeFile(localLibFile.getAbsolutePath(), "[]");
+        if (!localLibFile.exists()) {
+            return new ArrayList<>();
+        }
+        String fileContent = readFile(localLibFile.getAbsolutePath());
+        if (fileContent.trim().isEmpty()) {
             return new ArrayList<>();
         }
         try {
-            return new Gson().fromJson(fileContent, Helper.TYPE_MAP_LIST);
+            ArrayList<HashMap<String, Object>> libraries = new Gson().fromJson(fileContent, Helper.TYPE_MAP_LIST);
+            return libraries != null ? libraries : new ArrayList<>();
         } catch (com.google.gson.JsonSyntaxException e) {
             return new ArrayList<>();
         }

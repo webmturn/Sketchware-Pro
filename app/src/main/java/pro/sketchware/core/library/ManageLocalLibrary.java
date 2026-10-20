@@ -30,16 +30,18 @@ public class ManageLocalLibrary {
         String localLibraryConfigPath = SketchwarePaths.getProjectLocalLibraryPath(projectId);
         if (FileUtil.isExistFile(localLibraryConfigPath)) {
             try {
+                String content = FileUtil.readFile(localLibraryConfigPath);
+                if (content.trim().isEmpty()) {
+                    list = new ArrayList<>();
+                    return;
+                }
                 Gson gson = new Gson();
-                list = gson.fromJson(FileUtil.readFile(localLibraryConfigPath), Helper.TYPE_MAP_LIST);
+                list = gson.fromJson(content, Helper.TYPE_MAP_LIST);
 
                 if (list == null) {
-                    LogUtil.w(getClass().getSimpleName(), "Read null from file " + localLibraryConfigPath + ", deleting invalid configuration.");
-                    if (!new File(localLibraryConfigPath).delete()) {
-                        LogUtil.e(getClass().getSimpleName(), "Couldn't delete file " + localLibraryConfigPath);
-                    }
-
-                    // fall-through to shared error handler
+                    // A JSON null also means that no local libraries were selected.
+                    list = new ArrayList<>();
+                    return;
                 } else {
                     ArrayList<HashMap<String, Object>> normalizedList = new ArrayList<>();
                     boolean changed = false;
