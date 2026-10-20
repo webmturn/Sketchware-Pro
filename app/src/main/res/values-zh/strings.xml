@@ -963,7 +963,7 @@
 
     <!-- ========== 版本控制 (Version Control) ========== -->
     <string name="version_control_title">高级版本控制</string>
-    <string name="version_error_invalid_code">无效的版本号</string>
+    <string name="version_error_invalid_code">版本号必须为 1 到 2100000000 的整数</string>
     <string name="version_error_invalid_name">无效的版本名</string>
     <string name="version_hint_code">版本号</string>
     <string name="version_hint_name">版本名</string>

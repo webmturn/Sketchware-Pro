@@ -43,6 +43,7 @@ import pro.sketchware.util.DeviceUtil;
 import pro.sketchware.util.SketchToast;
 import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.validation.VariableNameValidator;
+import pro.sketchware.core.validation.ProjectVersionCode;
 import pro.sketchware.core.project.ProjectListManager;
 import pro.sketchware.util.UIHelper;
 import pro.sketchware.util.format.DateTimeUtil;
@@ -171,7 +172,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
             binding.etProjectName.setText(MapValueHelper.getString(metadata, "my_ws_name"));
             binding.etAppName.setText(MapValueHelper.getString(metadata, "my_app_name"));
             binding.okButton.setText(Helper.getResString(R.string.project_save_changes));
-            projectVersionCode = parseInt(MapValueHelper.getString(metadata, "sc_ver_code"), 1);
+            projectVersionCode = ProjectVersionCode.clampForPicker(MapValueHelper.getString(metadata, "sc_ver_code"));
             parseVersion(MapValueHelper.getString(metadata, "sc_ver_name"));
             binding.verCode.setText(MapValueHelper.getString(metadata, "sc_ver_code"));
             binding.verName.setText(MapValueHelper.getString(metadata, "sc_ver_name"));
@@ -204,7 +205,7 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
             if (newProjectVersionName == null || newProjectVersionName.isEmpty()) {
                 newProjectVersionName = "1.0";
             }
-            projectVersionCode = parseInt(newProjectVersionCode, 1);
+            projectVersionCode = ProjectVersionCode.clampForPicker(newProjectVersionCode);
             parseVersion(newProjectVersionName);
             binding.verCode.setText(newProjectVersionCode);
             binding.verName.setText(newProjectVersionName);
@@ -294,28 +295,28 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
         versionNameFirstPartPicker.setWrapSelectorWheel(false);
         versionNameSecondPartPicker.setWrapSelectorWheel(false);
 
-        int versionCode = parseInt(Helper.getText(binding.verCode), 1);
-        int versionCodeMinimum = versionCode - 5;
+        int versionCode = ProjectVersionCode.clampForPicker(Helper.getText(binding.verCode));
+        int versionCodeMinimum = Math.max(ProjectVersionCode.MIN, versionCode - 5);
         int versionNameFirstPartMinimum = 1;
-        if (versionCodeMinimum <= 0) {
-            versionCodeMinimum = 1;
-        }
         versionCodePicker.setMinValue(versionCodeMinimum);
-        versionCodePicker.setMaxValue(versionCode + 5);
+        versionCodePicker.setMaxValue((int) Math.min(ProjectVersionCode.MAX, (long) versionCode + 5));
         versionCodePicker.setValue(versionCode);
 
-        String[] split = Helper.getText(binding.verName).split("\\.");
-        AtomicInteger projectNewVersionNameFirstPart = new AtomicInteger(parseInt(split[0], 1));
-        AtomicInteger projectNewVersionNameSecondPart = new AtomicInteger(parseInt(split.length > 1 ? split[1] : "0", 0));
+        String[] split = Helper.getText(binding.verName).split("\\.", -1);
+        AtomicInteger projectNewVersionNameFirstPart = new AtomicInteger(Math.max(1, parseInt(split[0], 1)));
+        AtomicInteger projectNewVersionNameSecondPart = new AtomicInteger(Math.max(0,
+                parseInt(split.length > 1 ? split[1] : "0", 0)));
         if (projectNewVersionNameFirstPart.get() - 5 > 0) {
             versionNameFirstPartMinimum = projectNewVersionNameFirstPart.get() - 5;
         }
         versionNameFirstPartPicker.setMinValue(versionNameFirstPartMinimum);
-        versionNameFirstPartPicker.setMaxValue(projectNewVersionNameFirstPart.get() + 5);
+        versionNameFirstPartPicker.setMaxValue((int) Math.min(Integer.MAX_VALUE,
+                (long) projectNewVersionNameFirstPart.get() + 5));
         versionNameFirstPartPicker.setValue(projectNewVersionNameFirstPart.get());
 
         versionNameSecondPartPicker.setMinValue(Math.max(projectNewVersionNameSecondPart.get() - 20, 0));
-        versionNameSecondPartPicker.setMaxValue(projectNewVersionNameSecondPart.get() + 20);
+        versionNameSecondPartPicker.setMaxValue((int) Math.min(Integer.MAX_VALUE,
+                (long) projectNewVersionNameSecondPart.get() + 20));
         versionNameSecondPartPicker.setValue(projectNewVersionNameSecondPart.get());
         dialog.setView(view);
 
@@ -420,7 +421,15 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
     }
 
     private boolean isInputValid() {
-        return projectPackageNameValidator.isValid() && projectNameValidator.isValid() && projectAppNameValidator.isValid();
+        if (!projectPackageNameValidator.isValid() || !projectNameValidator.isValid()
+                || !projectAppNameValidator.isValid()) return false;
+        int versionCode = ProjectVersionCode.parse(Helper.getText(binding.verCode));
+        if (versionCode == 0) {
+            SketchwareUtil.toastError(Helper.getResString(R.string.version_error_invalid_code));
+            return false;
+        }
+        binding.verCode.setText(Integer.toString(versionCode));
+        return true;
     }
 
     private void showPackageNameChangeWarning() {

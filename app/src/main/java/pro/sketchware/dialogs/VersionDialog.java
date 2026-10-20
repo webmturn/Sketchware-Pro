@@ -4,6 +4,8 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 
+import androidx.appcompat.app.AlertDialog;
+
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import pro.sketchware.util.UIHelper;
@@ -11,6 +13,7 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.databinding.DialogAdvancedVersionControlBinding;
 import pro.sketchware.core.validation.VersionNamePostfixValidator;
+import pro.sketchware.core.validation.ProjectVersionCode;
 
 public class VersionDialog {
 
@@ -39,44 +42,44 @@ public class VersionDialog {
         dialog.setIcon(R.drawable.numbers_48);
         dialog.setTitle(R.string.version_control_title);
 
-        try {
-            binding.versionCode.setText(String.valueOf(Integer.parseInt(initialVersionCode)));
-        } catch (NumberFormatException e) {
-            binding.versionCode.setText(initialVersionCode);
-        }
-        binding.versionName1.setText(initialVersionName.split(" ")[0]);
-        if (initialVersionName.split(" ").length > 1)
-            binding.versionName2.setText(initialVersionName.split(" ")[1]);
+        // Preserve invalid imported values so the user can correct or cancel them explicitly.
+        binding.versionCode.setText(initialVersionCode);
+        VersionNamePostfixValidator postfixValidator =
+                new VersionNamePostfixValidator(context, binding.tilVersionNameExtra);
+        String[] versionName = (initialVersionName == null ? "" : initialVersionName).split(" ", 2);
+        binding.versionName1.setText(versionName[0]);
+        binding.versionName2.setText(versionName.length > 1 ? versionName[1] : "");
 
         dialog.setView(binding.getRoot());
-        dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (v, which) -> {
-            String verCode = Helper.getText(binding.versionCode);
-            String verName = Helper.getText(binding.versionName1);
+        dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), null);
+        dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
+        AlertDialog shownDialog = dialog.create();
+        shownDialog.show();
+        shownDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            int verCode = ProjectVersionCode.parse(Helper.getText(binding.versionCode));
+            String verName = Helper.getText(binding.versionName1).trim();
             String verNamePostfix = Helper.getText(binding.versionName2);
 
-            boolean validVerCode = !TextUtils.isEmpty(verCode);
+            boolean validVerCode = verCode != 0;
             boolean validVerName = !TextUtils.isEmpty(verName);
 
             if (validVerCode) {
-                binding.versionCode.setError(null);
+                binding.tilVersionCode.setError(null);
             } else {
-                binding.versionCode.setError(Helper.getResString(R.string.version_error_invalid_code));
+                binding.tilVersionCode.setError(Helper.getResString(R.string.version_error_invalid_code));
             }
 
             if (validVerName) {
-                binding.versionName1.setError(null);
+                binding.tilVersionName.setError(null);
             } else {
-                binding.versionName1.setError(Helper.getResString(R.string.version_error_invalid_name));
+                binding.tilVersionName.setError(Helper.getResString(R.string.version_error_invalid_name));
             }
 
-            if (!UIHelper.isClickThrottled() && validVerCode && validVerName) {
-                listener.onVersionSaved(verCode, !verNamePostfix.isEmpty() ? verName + " " + verNamePostfix : verName);
-                v.dismiss();
+            if (validVerCode && validVerName && postfixValidator.isValid() && !UIHelper.isClickThrottled()) {
+                listener.onVersionSaved(Integer.toString(verCode),
+                        !verNamePostfix.isEmpty() ? verName + " " + verNamePostfix : verName);
+                shownDialog.dismiss();
             }
         });
-
-        binding.versionName2.addTextChangedListener(new VersionNamePostfixValidator(context, binding.tilVersionNameExtra));
-        dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
-        dialog.show();
     }
 }

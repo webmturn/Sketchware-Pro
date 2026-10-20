@@ -199,6 +199,7 @@ public class ProjectEditorPersistenceTest {
                     new File(SketchwarePaths.getImagesPath(), id),
                     new File(SketchwarePaths.getSoundsPath(), id),
                     new File(SketchwarePaths.getFontsResourcePath(), id),
+                    new File(SketchwarePaths.getIconsPath(), id),
                     new File(SketchwarePaths.getProjectListPath(id)),
                     new File(SketchwarePaths.getMyscPath(id))};
         }

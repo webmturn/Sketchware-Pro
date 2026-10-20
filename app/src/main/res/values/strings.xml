@@ -3774,7 +3774,7 @@ Please try again later"</string>
 
     <!-- ========== 版本控制 (Version Control) ========== -->
     <string name="version_control_title">Advanced Version Control</string>
-    <string name="version_error_invalid_code">Invalid Version Code</string>
+    <string name="version_error_invalid_code">Version code must be an integer from 1 to 2100000000</string>
     <string name="version_error_invalid_name">Invalid Version Name</string>
     <string name="version_hint_code">Version code</string>
     <string name="version_hint_name">Version name</string>
