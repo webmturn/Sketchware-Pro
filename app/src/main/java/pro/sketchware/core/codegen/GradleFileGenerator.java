@@ -2,6 +2,7 @@ package pro.sketchware.core.codegen;
 import pro.sketchware.core.project.BuildConfig;
 import pro.sketchware.core.library.BuiltInLibrary;
 import pro.sketchware.core.project.SketchwarePaths;
+import pro.sketchware.core.project.ShrinkingConfig;
 
 import com.google.gson.Gson;
 
@@ -52,6 +53,7 @@ public class GradleFileGenerator {
                     \r
                     """);
         }
+        boolean shrinkEnabled = ShrinkingConfig.isEnabled(new File(SketchwarePaths.getProjectProguardConfigPath(metadata.sc_id)));
         content.append("defaultConfig {\r\n" + "applicationId \"")
                 .append(metadata.packageName)
                 .append("\"\r\n")
@@ -74,7 +76,7 @@ public class GradleFileGenerator {
                 .append("\r\n")
                 .append("buildTypes {\r\n")
                 .append("release {\r\n")
-                .append("minifyEnabled false\r\n")
+                .append("minifyEnabled ").append(shrinkEnabled).append("\r\n")
                 .append("proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\r\n")
                 .append("}\r\n")
                 .append("}\r\n");

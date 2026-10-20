@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.IOException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -136,24 +137,7 @@ public class ProguardHandler {
     }
 
     public boolean isShrinkingEnabled() {
-        boolean proguardEnabled = true;
-        if (FileUtil.isExistFile(config_path)) {
-            try {
-                HashMap<String, String> config = new Gson().fromJson(FileUtil.readFile(config_path), Helper.TYPE_STRING_MAP);
-
-                String enabled = config.get("enabled");
-                if (enabled == null) {
-                    proguardEnabled = false;
-                } else {
-                    proguardEnabled = enabled.equals("true");
-                }
-
-            } catch (JsonSyntaxException e) {
-                proguardEnabled = false;
-            }
-        }
-
-        return proguardEnabled;
+        return ShrinkingConfig.isEnabled(new File(config_path));
     }
 
     public void setProguardEnabled(boolean proguardEnabled) {
