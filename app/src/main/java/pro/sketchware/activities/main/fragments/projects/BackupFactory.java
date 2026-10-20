@@ -34,7 +34,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import javax.crypto.Cipher;
@@ -42,6 +41,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import pro.sketchware.core.project.ProjectListManager;
+import pro.sketchware.core.project.BackupArchiveInspector;
 import pro.sketchware.util.MapValueHelper;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.library.LocalLibrariesUtil;
@@ -277,14 +277,8 @@ public class BackupFactory {
     }
 
     public static boolean zipContainsFile(String zipPath, String fileName) {
-        try (ZipInputStream zp = new ZipInputStream(new FileInputStream(zipPath))) {
-            ZipEntry en;
-            while ((en = zp.getNextEntry()) != null) {
-                String name = en.getName();
-                if (name.equals(fileName) || name.startsWith(fileName + File.separator)) {
-                    return true;
-                }
-            }
+        try {
+            return BackupArchiveInspector.containsEntry(new File(zipPath), fileName);
         } catch (Exception e) {
             Log.e("BackupFactory", "Failed to check zip contents", e);
         }

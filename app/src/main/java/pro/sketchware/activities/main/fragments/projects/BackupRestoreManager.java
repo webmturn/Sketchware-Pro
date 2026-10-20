@@ -5,12 +5,17 @@ import pro.sketchware.core.settings.ApplicationSettings;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -18,14 +23,19 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import pro.sketchware.core.project.ProjectListManager;
+import pro.sketchware.core.project.BackupArchiveInspector;
+import pro.sketchware.core.async.BackgroundTasks;
+import pro.sketchware.core.async.TaskHost;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
 import pro.sketchware.util.Helper;
+import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ProgressMsgBoxBinding;
 import pro.sketchware.util.FileUtil;
@@ -39,6 +49,9 @@ public class BackupRestoreManager {
     private ProjectsFragment projectsFragment;
 
     private HashMap<Integer, Boolean> backupDialogStates;
+    private MutableLiveData<List<ArchiveInspection>> inspectionResults;
+
+    private record ArchiveInspection(String path, boolean libraries, String failure) {}
 
     public BackupRestoreManager(Activity act) {
         this.act = act;
@@ -145,35 +158,95 @@ public class BackupRestoreManager {
         FilePickerCallback callback = new FilePickerCallback() {
             @Override
             public void onFilesSelected(@NotNull List<? extends File> files) {
+                if (act.isFinishing() || act.isDestroyed() || projectsFragment.getView() == null) return;
                 if (!files.isEmpty()) {
                     File parent = files.get(0).getParentFile();
                     if (parent != null) {
                         ApplicationSettings.setLastRestoreDirectory(parent.getAbsolutePath());
                     }
                 }
-                for (int i = 0; i < files.size(); i++) {
-                    String backupFilePath = files.get(i).getAbsolutePath();
-
-                    if (BackupFactory.zipContainsFile(backupFilePath, "local_libs")) {
-                        boolean restoringMultipleBackups = files.size() > 1;
-
-                        new MaterialAlertDialogBuilder(act)
-                                .setTitle(R.string.common_word_warning)
-                                .setMessage(getRestoreIntegratedLocalLibrariesMessage(restoringMultipleBackups, i, files.size(),
-                                        FileUtil.getFileNameNoExtension(backupFilePath)))
-                                .setPositiveButton(R.string.backup_button_copy_libs, (dialog, which) -> doRestore(backupFilePath, true))
-                                .setNegativeButton(R.string.backup_button_dont_copy_libs, (dialog, which) -> doRestore(backupFilePath, false))
-                                .setNeutralButton(R.string.common_word_cancel, null)
-                                .show();
-
-                    } else {
-                        doRestore(backupFilePath, false);
-                    }
-                }
+                inspectAndRestore(files, false);
             }
         };
 
         new FilePickerDialogFragment(options, callback).show(projectsFragment.getChildFragmentManager(), "file_picker");
+    }
+
+    /** Shared by the backup picker and ACTION_VIEW, retaining their existing no-library defaults. */
+    public void inspectAndRestore(List<? extends File> files, boolean restoreLibrariesIfAbsent) {
+        View sourceView = projectsFragment == null ? null : projectsFragment.getView();
+        if (files.isEmpty() || !canPresentRestore(sourceView) || !(act instanceof LifecycleOwner activityOwner)) return;
+        if (inspectionResults != null && inspectionResults.getValue() == null) return;
+        LifecycleOwner owner = projectsFragment == null ? activityOwner : projectsFragment.getViewLifecycleOwner();
+        if (owner.getLifecycle().getCurrentState() == Lifecycle.State.DESTROYED) return;
+        List<File> selected = List.copyOf(files);
+        MutableLiveData<List<ArchiveInspection>> results = new MutableLiveData<>();
+        inspectionResults = results;
+        AlertDialog progress = new MaterialAlertDialogBuilder(act)
+                .setTitle(R.string.common_word_please_wait)
+                .setMessage(Helper.getResString(R.string.common_message_loading))
+                .setCancelable(false).create();
+        dismissWithOwner(progress, owner);
+        progress.show();
+        results.observe(owner, inspected -> {
+            results.removeObservers(owner);
+            progress.dismiss();
+            if (!canPresentRestore(sourceView)) return;
+            for (int i = 0; i < inspected.size(); i++) {
+                ArchiveInspection archive = inspected.get(i);
+                if (archive.failure() != null) {
+                    SketchwareUtil.toastError(Helper.getResString(R.string.backup_error_restore, archive.failure()), Toast.LENGTH_LONG);
+                } else if (archive.libraries()) {
+                    AlertDialog question = new MaterialAlertDialogBuilder(act)
+                            .setTitle(R.string.common_word_warning)
+                            .setMessage(getRestoreIntegratedLocalLibrariesMessage(inspected.size() > 1, i, inspected.size(),
+                                    FileUtil.getFileNameNoExtension(archive.path())))
+                            .setPositiveButton(R.string.backup_button_copy_libs, (dialog, which) -> {
+                                if (canPresentRestore(sourceView)) doRestore(archive.path(), true);
+                            })
+                            .setNegativeButton(R.string.backup_button_dont_copy_libs, (dialog, which) -> {
+                                if (canPresentRestore(sourceView)) doRestore(archive.path(), false);
+                            })
+                            .setNeutralButton(R.string.common_word_cancel, null).create();
+                    dismissWithOwner(question, owner);
+                    question.show();
+                } else {
+                    doRestore(archive.path(), restoreLibrariesIfAbsent);
+                }
+            }
+        });
+        // Work holds only the immutable selection and LiveData; its observer disappears with the page.
+        BackgroundTasks.runIo(TaskHost.of(act), "BackupInspection",
+                () -> results.postValue(inspectArchives(selected)), null, null);
+    }
+
+    private boolean canPresentRestore(View sourceView) {
+        return !act.isFinishing() && !act.isDestroyed()
+                && (projectsFragment == null || (sourceView != null && projectsFragment.isAdded()
+                && projectsFragment.getActivity() == act && projectsFragment.getView() == sourceView));
+    }
+
+    private static List<ArchiveInspection> inspectArchives(List<File> files) {
+        ArrayList<ArchiveInspection> inspected = new ArrayList<>();
+        for (File file : files) {
+            String path = file.getPath();
+            try {
+                path = file.getAbsolutePath();
+                inspected.add(new ArchiveInspection(path, BackupArchiveInspector.containsEntry(file, "local_libs"), null));
+            } catch (Exception e) {
+                LogUtil.e("BackupInspection", "Failed to inspect " + file.getName(), e);
+                inspected.add(new ArchiveInspection(path, false, file.getName() + ": " + e.getMessage()));
+            }
+        }
+        return List.copyOf(inspected);
+    }
+
+    private static void dismissWithOwner(AlertDialog dialog, LifecycleOwner owner) {
+        DefaultLifecycleObserver cleanup = new DefaultLifecycleObserver() {
+            @Override public void onDestroy(@NotNull LifecycleOwner destroyed) { dialog.dismiss(); }
+        };
+        owner.getLifecycle().addObserver(cleanup);
+        dialog.setOnDismissListener(ignored -> owner.getLifecycle().removeObserver(cleanup));
     }
 
     public void doRestore(String file, boolean restoreLocalLibs) {

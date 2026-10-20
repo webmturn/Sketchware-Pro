@@ -41,13 +41,13 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 import pro.sketchware.util.CrashLogManager;
 
 import pro.sketchware.util.io.SharedPrefsHelper;
 import pro.sketchware.util.DeviceUtil;
-import pro.sketchware.activities.main.fragments.projects.BackupFactory;
 import pro.sketchware.activities.main.fragments.projects.BackupRestoreManager;
 import pro.sketchware.util.Helper;
 import pro.sketchware.activities.main.fragments.projects.SingleCopyTask;
@@ -276,17 +276,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
                         if (wasSuccessful) {
                             BackupRestoreManager manager = new BackupRestoreManager(MainActivity.this, projectsFragment);
 
-                            if (BackupFactory.zipContainsFile(path, "local_libs")) {
-                                new MaterialAlertDialogBuilder(MainActivity.this)
-                                        .setTitle(R.string.common_word_warning)
-                                        .setMessage(BackupRestoreManager.getRestoreIntegratedLocalLibrariesMessage(false, -1, -1, null))
-                                        .setPositiveButton(R.string.common_word_copy, (dialog, which) -> manager.doRestore(path, true))
-                                        .setNegativeButton(R.string.common_word_dont_copy, (dialog, which) -> manager.doRestore(path, false))
-                                        .setNeutralButton(R.string.common_word_cancel, null)
-                                        .show();
-                            } else {
-                                manager.doRestore(path, true);
-                            }
+                            manager.inspectAndRestore(List.of(new File(path)), true);
 
                             // Clear intent so it doesn't duplicate
                             getIntent().setData(null);
