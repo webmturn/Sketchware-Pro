@@ -102,7 +102,15 @@ public class AddViewActivity extends BaseAppCompatActivity {
     }
 
     private boolean isValid(ActivityNameValidator validator) {
+        revalidateName();
         return validator.isValid();
+    }
+
+    private void revalidateName() {
+        if (nameValidator != null) {
+            CharSequence input = binding.edName.getText();
+            nameValidator.onTextChanged(input, 0, 0, input.length());
+        }
     }
 
     private void slideOutHorizontally(View view, String direction) {
@@ -220,6 +228,7 @@ public class AddViewActivity extends BaseAppCompatActivity {
         binding.viewTypeSelector.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (isChecked) {
                 setManifestViewState(checkedId == R.id.select_activity);
+                revalidateName();
             }
         });
 
@@ -269,7 +278,7 @@ public class AddViewActivity extends BaseAppCompatActivity {
     }
 
     private void handleCreateFile() {
-        String fileName = Helper.getText(binding.edName) + getSuffix(binding.viewTypeSelector);
+        String fileName = getFileName();
         ProjectFileBean projectFileBean = new ProjectFileBean(ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY, fileName, getSelectedButtonIndex(binding.screenOrientationSelector), getSelectedButtonIndex(binding.keyboardSettingsSelector), featureToolbar, !featureStatusBar, featureFab, featureDrawer);
         Intent intent = new Intent();
         intent.putExtra("project_file", projectFileBean);
@@ -283,7 +292,14 @@ public class AddViewActivity extends BaseAppCompatActivity {
 
     private void handleEditModeInitialization() {
         nameValidator = new ActivityNameValidator(getApplicationContext(), binding.tiName, BlockConstants.RESERVED_KEYWORDS, new ArrayList<>(), projectFileBean.fileName);
-        binding.edName.setText(projectFileBean.fileName);
+        String displayName = projectFileBean.fileName;
+        for (String suffix : new String[]{"_bottomdialog_fragment", "_dialog_fragment", "_fragment"}) {
+            if (displayName.endsWith(suffix)) {
+                displayName = displayName.substring(0, displayName.length() - suffix.length());
+                break;
+            }
+        }
+        binding.edName.setText(displayName);
         binding.edName.setEnabled(false);
         binding.edName.setBackgroundResource(R.color.transparent);
         initItem(projectFileBean.options);
@@ -305,9 +321,32 @@ public class AddViewActivity extends BaseAppCompatActivity {
     private void handleCreateModeInitialization() {
         featureToolbar = true;
         featureStatusBar = true;
-        nameValidator = new ActivityNameValidator(getApplicationContext(), binding.tiName, BlockConstants.RESERVED_KEYWORDS, screenNames);
+        // Validate identifiers first, then compare the actual filename including its type suffix.
+        nameValidator = new ActivityNameValidator(getApplicationContext(), binding.tiName,
+                BlockConstants.RESERVED_KEYWORDS, new ArrayList<>()) {
+            @Override
+            public void onTextChanged(CharSequence input, int start, int before, int count) {
+                super.onTextChanged(input, start, before, count);
+                if (!valid) return;
+                String fileName = getFileName();
+                if (fileName.length() > 100) {
+                    textInputLayout.setErrorEnabled(true);
+                    textInputLayout.setError(Helper.getResString(R.string.invalid_value_max_lenth, 100));
+                    valid = false;
+                } else if (screenNames != null && screenNames.contains(fileName)) {
+                    textInputLayout.setErrorEnabled(true);
+                    textInputLayout.setError(Helper.getResString(R.string.common_message_name_unavailable));
+                    valid = false;
+                }
+            }
+        };
     }
 
+    private String getFileName() {
+        String rawName = Helper.getText(binding.edName).trim();
+        String suffix = getSuffix(binding.viewTypeSelector);
+        return rawName.endsWith(suffix) ? rawName : rawName + suffix;
+    }
 
     private String getSuffix(MaterialButtonToggleGroup toggleGroup) {
         return switch (getSelectedButtonIndex(toggleGroup)) {

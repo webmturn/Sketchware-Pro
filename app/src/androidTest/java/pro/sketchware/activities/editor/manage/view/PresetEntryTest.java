@@ -48,6 +48,7 @@ import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.UIHelper;
 import pro.sketchware.util.io.EncryptedFileUtil;
+import pro.sketchware.util.locale.LocalizedDisplayNames;
 
 /** Verifies typed Intent transport and real preset selection/result paths on isolated projects. */
 @RunWith(AndroidJUnit4.class)
@@ -75,7 +76,7 @@ public class PresetEntryTest {
             Intent intent = new Intent(context(), PresetSettingActivity.class).putExtra("request_code", code);
             try (ActivityScenario<PresetSettingActivity> scenario = ActivityScenario.launchActivityForResult(intent)) {
                 scenario.onActivity(activity -> {
-                    assertEquals(firstPreset(code), label(activity));
+                    assertEquals(LocalizedDisplayNames.get(firstPreset(code)), label(activity));
                     activity.findViewById(R.id.common_dialog_ok_button).performClick();
                 });
                 waitUntil(() -> scenario.getState() == Lifecycle.State.DESTROYED);
@@ -172,9 +173,9 @@ public class PresetEntryTest {
             Map<String, List<String>> before = fixture.views();
             onMain(() -> {
                 entry.activity.findViewById(R.id.btn_left).performClick();
-                assertEquals("Text Activity", label(entry.activity));
+                assertEquals(LocalizedDisplayNames.get("Text Activity"), label(entry.activity));
                 entry.activity.findViewById(R.id.btn_right).performClick();
-                assertEquals("Empty Activity", label(entry.activity));
+                assertEquals(LocalizedDisplayNames.get("Empty Activity"), label(entry.activity));
                 entry.activity.findViewById(R.id.btn_left).performClick();
             });
             entry.importPreset();
@@ -188,7 +189,7 @@ public class PresetEntryTest {
             assertTrue("Preset entry must send an integer", entry.activity.getIntent().getExtras().get("request_code") instanceof Integer);
             assertEquals(code, entry.activity.getIntent().getIntExtra("request_code", -1));
             assertTrue(entry.activity.getIntent().getBooleanExtra("edit_mode", false));
-            assertEquals(firstPreset(code), label(entry.activity));
+            assertEquals(LocalizedDisplayNames.get(firstPreset(code)), label(entry.activity));
         });
     }
 
