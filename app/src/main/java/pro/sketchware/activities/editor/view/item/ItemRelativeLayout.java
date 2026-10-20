@@ -51,16 +51,7 @@ public class ItemRelativeLayout extends RelativeLayout implements ItemView, Scro
 
     @Override
     public void addView(View child, int index) {
-        int childCount = getChildCount();
-        if (index > childCount) {
-            super.addView(child);
-            return;
-        }
-        int insertIdx = 0;
-        while (insertIdx < childCount && getChildAt(insertIdx).getVisibility() != View.GONE) {
-            insertIdx++;
-        }
-        super.addView(child, index);
+        super.addView(child, ItemView.safeInsertionIndex(this, index, false));
     }
 
     @Override
