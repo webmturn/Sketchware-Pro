@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import pro.sketchware.activities.base.BaseAppCompatActivity;
@@ -46,12 +47,13 @@ import pro.sketchware.databinding.DialogInputLayoutBinding;
 import pro.sketchware.databinding.ManageFileBinding;
 import pro.sketchware.databinding.ManageJavaItemHsBinding;
 import pro.sketchware.core.project.FileResConfig;
+import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.SketchwareUtil;
 
 public class ManageJavaActivity extends BaseAppCompatActivity {
 
-    // works for both Java & Kotlin files
+    // Works for both Java and Kotlin files.
     private static final String PACKAGE_DECL_REGEX = "package (.*?);?\\n";
 
     private static final String ACTIVITY_TEMPLATE = """
@@ -105,6 +107,7 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
     private FileResConfig frc;
     private String sc_id;
     private FilesAdapter filesAdapter;
+    private JavaImportViewModel importModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -132,9 +135,45 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
         setupUI();
         frc = new FileResConfig(sc_id);
         current_path = Uri.parse(SketchwarePaths.getProjectJavaPath(sc_id)).getPath();
+        if (savedInstanceState != null) {
+            String restored = savedInstanceState.getString("java_current_path");
+            if (restored != null && new File(restored).isDirectory()
+                    && new File(restored).toPath().normalize().startsWith(new File(current_path).toPath().normalize())) {
+                current_path = restored;
+            }
+        }
         refresh();
+        importModel = new ViewModelProvider(this).get(JavaImportViewModel.class);
+        importModel.state().observe(this, state -> {
+            boolean running = state != null && state.running();
+            binding.importNewButton.setEnabled(!running);
+            if (running) {
+                showLoadingDialog();
+                return;
+            }
+            dismissLoadingDialog();
+            if (state != null) {
+                importModel.clearCompleted();
+                refresh();
+                if (!state.failedFiles().isEmpty()) {
+                    SketchwareUtil.toastError(Helper.getResString(R.string.error_import_file,
+                            String.join(", ", state.failedFiles())));
+                }
+            }
+        });
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle state) {
+        state.putString("java_current_path", current_path);
+        super.onSaveInstanceState(state);
+    }
+
+    @Override
+    public void onDestroy() {
+        dismissLoadingDialog();
+        super.onDestroy();
+    }
 
     private void setupUI() {
         binding.topAppBar.setNavigationOnClickListener(Helper.getBackPressedClickListener(this));
@@ -277,16 +316,8 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
         FilePickerCallback callback = new FilePickerCallback() {
             @Override
             public void onFilesSelected(@NotNull List<? extends File> files) {
-                for (File file : files) {
-                    String fileContent = FileUtil.readFile(file.getAbsolutePath());
-
-                    if (fileContent.contains("package ")) {
-                        fileContent = fileContent.replaceFirst(PACKAGE_DECL_REGEX, "package " + getCurrentPkgName() + (file.getName().endsWith(".java") ? ";" : "") + "\n");
-                    }
-
-                    FileUtil.writeFile(new File(current_path, file.getName()).getAbsolutePath(), fileContent);
-                    refresh();
-                }
+                if (isFinishing() || isDestroyed()) return;
+                importModel.start(TaskHost.of(ManageJavaActivity.this), files, new File(current_path), getCurrentPkgName());
             }
         };
 
@@ -354,12 +385,10 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
     private void refresh() {
         if (!FileUtil.isExistFile(SketchwarePaths.getProjectJavaPath(sc_id))) {
             FileUtil.makeDir(SketchwarePaths.getProjectJavaPath(sc_id));
-            refresh();
         }
 
         if (!FileUtil.isExistFile(SketchwarePaths.getProjectJavaManifestPath(sc_id))) {
             FileUtil.writeFile(SketchwarePaths.getProjectJavaManifestPath(sc_id), "");
-            refresh();
         }
 
         currentTree.clear();
