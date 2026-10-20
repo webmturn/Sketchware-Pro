@@ -44,7 +44,13 @@ public class SketchwareUtil {
     }
 
     public static void showMessage(Context context, String _s) {
-        Toast.makeText(context, _s, Toast.LENGTH_SHORT).show();
+        BackgroundTasks.postMain(() -> {
+            try {
+                Toast.makeText(context, _s, Toast.LENGTH_SHORT).show();
+            } catch (RuntimeException e) {
+                LogUtil.e("SketchwareUtil", "Failed to toast message: \"" + _s + "\"", e);
+            }
+        });
     }
 
     public static int getRandom(int _min, int _max) {
@@ -66,11 +72,13 @@ public class SketchwareUtil {
      * @param length  The toast's length, either {@link Toast#LENGTH_SHORT} or {@link Toast#LENGTH_LONG}
      */
     public static void toast(String message, int length) {
-        try {
-            SketchToast.toast(getContext(), message, length).show();
-        } catch (RuntimeException e) {
-            LogUtil.e("SketchwareUtil", "Failed to toast regular message, " + "Toast's message was: \"" + message + "\"", e);
-        }
+        BackgroundTasks.postMain(() -> {
+            try {
+                SketchToast.toast(getContext(), message, length).show();
+            } catch (RuntimeException e) {
+                LogUtil.e("SketchwareUtil", "Failed to toast regular message, " + "Toast's message was: \"" + message + "\"", e);
+            }
+        });
     }
 
     /**
@@ -89,11 +97,13 @@ public class SketchwareUtil {
      * @param length  The toast's length, either {@link Toast#LENGTH_SHORT} or {@link Toast#LENGTH_LONG}
      */
     public static void toastError(String message, int length) {
-        try {
-            SketchToast.warning(getContext(), message, length).show();
-        } catch (RuntimeException e) {
-            LogUtil.e("SketchwareUtil", "Failed to toast regular message, " + "Toast's message was: \"" + message + "\"", e);
-        }
+        BackgroundTasks.postMain(() -> {
+            try {
+                SketchToast.warning(getContext(), message, length).show();
+            } catch (RuntimeException e) {
+                LogUtil.e("SketchwareUtil", "Failed to toast regular message, " + "Toast's message was: \"" + message + "\"", e);
+            }
+        });
     }
 
     /**
