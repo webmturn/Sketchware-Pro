@@ -3,7 +3,6 @@ package pro.sketchware.activities.editor.manage.font;
 import static pro.sketchware.util.Helper.addBasicTextChangedListener;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +18,7 @@ import pro.sketchware.util.SketchToast;
 import pro.sketchware.core.project.BlockConstants;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.Helper;
+import pro.sketchware.util.FontPreview;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageFontAddBinding;
 import pro.sketchware.core.validation.FontNameValidator;
@@ -57,7 +57,7 @@ public class AddFontCollectionActivity extends BaseDialogActivity implements Vie
         dialogCancelButton.setOnClickListener(this);
         fontValidator = new FontNameValidator(this, binding.tiInput, BlockConstants.RESERVED_KEYWORDS, getExistingFontNames(), projectResourceBean.resName);
         binding.edInput.setText(projectResourceBean.resName);
-        binding.fontPreviewTxt.setTypeface(Typeface.createFromFile(getFontFilePath(projectResourceBean)));
+        FontPreview.bind(binding.fontPreviewTxt, getFontFilePath(projectResourceBean), R.string.font_preview_sample);
         addBasicTextChangedListener(binding.edInput, str -> {
             binding.clearInput.setVisibility(str.isEmpty() ? View.GONE : View.VISIBLE);
             binding.buttonsHolder.animate().translationY(str.isEmpty() ? 0 : 50);

@@ -3,7 +3,6 @@ package pro.sketchware.activities.editor.manage.font;
 import androidx.activity.OnBackPressedCallback;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +27,7 @@ import pro.sketchware.util.SketchToast;
 import pro.sketchware.util.UIHelper;
 import pro.sketchware.core.project.BlockConstants;
 import pro.sketchware.util.Helper;
+import pro.sketchware.util.FontPreview;
 import pro.sketchware.R;
 import pro.sketchware.databinding.ManageFontImportBinding;
 
@@ -53,8 +53,7 @@ public class ManageFontImportActivity extends BaseAppCompatActivity implements V
 
     private void showPreview(int position) {
         String fontFilePath = selectedCollection.get(position).resFullName;
-        binding.textFont.setTypeface(Typeface.createFromFile(fontFilePath));
-        binding.textFont.setText(R.string.design_manager_font_description_example_sentence);
+        FontPreview.bind(binding.textFont, fontFilePath, R.string.design_manager_font_description_example_sentence);
     }
 
     private ArrayList<String> getReservedSelectedCollectionNames() {

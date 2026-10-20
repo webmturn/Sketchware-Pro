@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -26,7 +25,7 @@ import pro.sketchware.core.project.FontCollectionManager;
 import pro.sketchware.activities.base.BaseFragment;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.Helper;
-import pro.sketchware.util.LogUtil;
+import pro.sketchware.util.FontPreview;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FrManageFontListBinding;
 import pro.sketchware.databinding.ManageFontBinding;
@@ -195,13 +194,8 @@ public class FontManagerFragment extends BaseFragment {
             holder.binding.chkSelect.setChecked(resource.isSelected);
             holder.binding.tvFontName.setText(resource.resName + ".ttf");
 
-            try {
-                holder.binding.tvFontPreview.setTypeface(Typeface.createFromFile(fontPath));
-            } catch (Exception e) {
-                LogUtil.e("FontManagerFragment", "Failed to load font from path: " + fontPath, e);
-                // Set default font as fallback
-                holder.binding.tvFontPreview.setTypeface(Typeface.DEFAULT);
-            }
+            FontPreview.bind(holder.binding.tvFontPreview, fontPath,
+                    R.string.design_manager_font_description_example_sentence);
         }
 
         @NonNull

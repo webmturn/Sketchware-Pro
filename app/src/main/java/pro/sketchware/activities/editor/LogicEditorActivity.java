@@ -127,6 +127,7 @@ import pro.sketchware.activities.editor.makeblock.ReturnMoreblockManager;
 import pro.sketchware.activities.editor.makeblock.MoreblockImporterDialog;
 import pro.sketchware.core.project.ProjectSettings;
 import pro.sketchware.util.Helper;
+import pro.sketchware.util.FontPreview;
 import pro.sketchware.dialogs.AsdDialog;
 import pro.sketchware.activities.editor.makeblock.MoreblockImporter;
 import pro.sketchware.core.block.view.BlockUtil;
@@ -1504,25 +1505,13 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         linearLayout.addView(name);
         TextView preview = new TextView(this);
         preview.setLayoutParams(layoutParams);
-        preview.setText(Helper.getResString(R.string.font_preview));
-
-        Typeface typeface;
         if (fontName.equalsIgnoreCase("default_font")) {
-            typeface = Typeface.DEFAULT;
+            preview.setTypeface(Typeface.DEFAULT);
+            preview.setText(R.string.font_preview);
         } else {
-            try {
-                typeface = Typeface.createFromFile(ProjectDataManager.getResourceManager(scId).getFontPath(fontName));
-            } catch (RuntimeException e) {
-                if (crashlytics != null) {
-                    crashlytics.log("Loading font preview");
-                    crashlytics.recordException(e);
-                }
-                typeface = Typeface.DEFAULT;
-                preview.setText(Helper.getResString(R.string.font_load_failed));
-            }
+            FontPreview.bind(preview, ProjectDataManager.getResourceManager(scId).getFontPath(fontName),
+                    R.string.font_preview);
         }
-
-        preview.setTypeface(typeface);
         linearLayout.addView(preview);
         return linearLayout;
     }

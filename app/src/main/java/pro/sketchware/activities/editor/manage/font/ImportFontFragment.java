@@ -5,7 +5,6 @@ import android.content.Intent;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import android.content.res.Configuration;
-import android.graphics.Typeface;
 import android.util.Log;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -34,6 +33,7 @@ import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.util.io.EncryptedFileUtil;
 import pro.sketchware.activities.base.BaseFragment;
 import pro.sketchware.util.Helper;
+import pro.sketchware.util.FontPreview;
 import pro.sketchware.R;
 import pro.sketchware.databinding.FrManageFontListBinding;
 import pro.sketchware.databinding.ManageFontBinding;
@@ -391,11 +391,7 @@ public class ImportFontFragment extends BaseFragment implements MenuProvider {
                 fontPath = getResourceFilePath(resource);
             }
 
-            try {
-                holder.binding.tvFontPreview.setTypeface(Typeface.createFromFile(fontPath));
-            } catch (Exception e) {
-                Log.w("ImportFontFragment", "Failed to load font preview: " + fontPath, e);
-            }
+            FontPreview.bind(holder.binding.tvFontPreview, fontPath, R.string.common_word_preview);
         }
 
         @NonNull
