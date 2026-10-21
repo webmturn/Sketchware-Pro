@@ -9,6 +9,8 @@ class ViewBindingBuilder(
     private val outputDir: File,
     private val packageName: String = "dev.pranav.viewbinding"
 ) {
+    private val bindingPackageName = "$packageName.databinding"
+
     fun generateBindings() {
         inputFiles.forEach { generateBindingForLayoutAndWrite(it) }
     }
@@ -23,8 +25,9 @@ class ViewBindingBuilder(
 
         val content = """
 // Generated file. Do not modify.
-package $packageName;
+package $bindingPackageName;
 
+import $packageName.R;
 ${generateImports(views, rootView)}
 
 public final class $name {
@@ -152,7 +155,7 @@ ${
                             views.add(
                                 View(
                                     generateFileNameForLayout(layout),
-                                    packageName + "." + generateFileNameForLayout(layout),
+                                    bindingPackageName + "." + generateFileNameForLayout(layout),
                                     id.nodeValue.substringAfter("/"),
                                     true
                                 )
