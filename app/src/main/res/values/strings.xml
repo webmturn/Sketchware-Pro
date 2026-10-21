@@ -3716,6 +3716,7 @@ Please try again later"</string>
     <string name="import_icon_filter">Filter</string>
     <string name="import_icon_filter_title">Filter icons</string>
     <string name="save_icon_hint_name">Enter icon name</string>
+    <string name="import_icon_source_unavailable">The icon file is missing, empty, or unreadable. Select another icon and try again.</string>
     <string name="save_icon_licence">This icon is available under the Apache Licence Version 2.0. Press to read more.</string>
     <string name="title_activity_icon_creator">IconCreatorActivity</string>
 

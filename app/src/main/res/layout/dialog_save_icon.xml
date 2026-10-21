@@ -23,6 +23,18 @@
             tools:src="@drawable/user_48_grey_filled" />
     </com.google.android.material.card.MaterialCardView>
 
+    <TextView
+        android:id="@+id/source_error"
+        style="@style/TextAppearance.Material3.BodySmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="12dp"
+        android:accessibilityLiveRegion="polite"
+        android:text="@string/import_icon_source_unavailable"
+        android:textColor="?attr/colorError"
+        android:visibility="gone" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout"
         android:layout_width="match_parent"

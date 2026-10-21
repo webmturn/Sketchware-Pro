@@ -856,6 +856,7 @@
     <string name="import_icon_filter">筛选</string>
     <string name="import_icon_filter_title">筛选图标</string>
     <string name="save_icon_hint_name">输入图标名称</string>
+    <string name="import_icon_source_unavailable">图标文件缺失、为空或无法读取，请重新选择图标后重试。</string>
     <string name="save_icon_licence">此图标可根据 Apache 许可证 2.0 版使用。点击了解更多。</string>
 
     <!-- ========== Material3 ========== -->

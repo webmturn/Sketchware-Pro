@@ -391,6 +391,11 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
             Button positiveButton = ((AlertDialog) dialogInterface).getButton(DialogInterface.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(view -> {
                 if (iconNameValidator.isValid()) {
+                    File source = new File(iconPath);
+                    if (!source.isFile() || !source.canRead() || source.length() == 0) {
+                        dialogBinding.sourceError.setVisibility(View.VISIBLE);
+                        return;
+                    }
                     Intent intent = new Intent();
                     intent.putExtra("iconName", Helper.getText(dialogBinding.inputText));
                     intent.putExtra("iconPath", iconPath);

@@ -5,11 +5,14 @@ import static org.junit.Assert.*;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.SystemClock;
 import android.util.Pair;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inspector.WindowInspector;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.core.app.ActivityScenario;
@@ -45,6 +48,112 @@ import pro.sketchware.util.UIHelper;
 /** Uses private SVG fixtures and returns intents; never imports files into a user's project. */
 @RunWith(AndroidJUnit4.class)
 public class IconImportConsistencyTest {
+    @Test public void missingSourceKeepsDialogAndNameThenAllowsRetry() throws Exception {
+        try (Fixture fixture = new Fixture()) {
+            fixture.catalog(2);
+            Path source = Path.of(fixture.catalog.get(0).second, "round.svg");
+            byte[] original = Files.readAllBytes(source);
+            Files.delete(source);
+            openSave(fixture, "my_saved_icon");
+            assertSourceRejected(fixture, "my_saved_icon");
+            Files.write(source, original);
+            fixture.on(activity -> dialog().findViewById(android.R.id.button1).performClick());
+            var result = fixture.scenario.getResult();
+            assertEquals(Activity.RESULT_OK, result.getResultCode());
+            assertEquals("my_saved_icon", result.getResultData().getStringExtra("iconName"));
+            assertEquals(source.toString(), result.getResultData().getStringExtra("iconPath"));
+        }
+    }
+
+    @Test public void sourceRemovedAfterOpeningCannotBeImported() throws Exception {
+        assertInvalidSource("removed");
+    }
+
+    @Test public void emptySourceCannotBeImported() throws Exception {
+        assertInvalidSource("empty");
+    }
+
+    @Test public void directoryCannotBeImportedAsSvg() throws Exception {
+        assertInvalidSource("directory");
+    }
+
+    @Test public void unreadableSourceCannotBeImported() throws Exception {
+        assertInvalidSource("unreadable");
+    }
+
+    @Test public void sourceErrorIsLocalizedAndFailedDialogCanBeCanceled() throws Exception {
+        Context base = context();
+        Configuration configuration = new Configuration(base.getResources().getConfiguration());
+        configuration.setLocale(Locale.SIMPLIFIED_CHINESE);
+        String chinese = base.createConfigurationContext(configuration).getString(R.string.import_icon_source_unavailable);
+        assertTrue(chinese, chinese.contains("图标文件"));
+        configuration.setLocale(Locale.ENGLISH);
+        assertTrue(base.createConfigurationContext(configuration).getString(R.string.import_icon_source_unavailable).contains("icon file"));
+        try (Fixture fixture = new Fixture()) {
+            fixture.catalog(2);
+            openSave(fixture, "my_saved_icon");
+            Files.delete(Path.of(fixture.catalog.get(0).second, "round.svg"));
+            assertSourceRejected(fixture, "my_saved_icon");
+            fixture.on(activity -> {
+                dialog().findViewById(android.R.id.button2).performClick();
+                assertFalse(activity.isFinishing());
+            });
+            InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+            fixture.on(activity -> assertNull(dialog()));
+        }
+    }
+
+    private static void assertInvalidSource(String state) throws Exception {
+        try (Fixture fixture = new Fixture()) {
+            fixture.catalog(2);
+            Path source = Path.of(fixture.catalog.get(0).second, "round.svg");
+            openSave(fixture, "my_saved_icon");
+            try {
+                switch (state) {
+                    case "removed": Files.delete(source); break;
+                    case "empty": Files.write(source, new byte[0]); break;
+                    case "directory": Files.delete(source); Files.createDirectory(source); break;
+                    case "unreadable":
+                        assertTrue(source.toFile().setReadable(false, false));
+                        assertFalse("Fixture must actually be unreadable by this app", source.toFile().canRead());
+                        break;
+                    default: throw new AssertionError(state);
+                }
+                assertSourceRejected(fixture, "my_saved_icon");
+            } finally {
+                if (Files.isRegularFile(source)) assertTrue(source.toFile().setReadable(true, true));
+            }
+        }
+    }
+
+    private static void openSave(Fixture fixture, String name) throws Exception {
+        fixture.on(activity -> {
+            UIHelper.lastClickTime = 0;
+            activity.onIconSelected(0);
+            assertNotNull(dialog());
+            ((EditText) dialog().findViewById(R.id.inputText)).setText(name);
+        });
+        // Dialog installs the real Save listener in an asynchronously dispatched OnShow callback.
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+    }
+
+    private static void assertSourceRejected(Fixture fixture, String name) throws Exception {
+        AtomicReference<Boolean> finishing = new AtomicReference<>(false);
+        fixture.on(activity -> {
+            assertTrue(dialog().findViewById(android.R.id.button1).performClick());
+            finishing.set(activity.isFinishing());
+        });
+        assertFalse("Invalid SVG must leave the dialog open instead of returning RESULT_OK", finishing.get());
+        fixture.on(activity -> {
+            View root = dialog(); assertNotNull(root);
+            TextView message = root.findViewById(R.id.source_error);
+            assertNotNull(message); assertEquals(View.VISIBLE, message.getVisibility());
+            assertEquals(activity.getString(R.string.import_icon_source_unavailable), message.getText().toString());
+            assertEquals(name, ((EditText) root.findViewById(R.id.inputText)).getText().toString());
+            assertTrue(root.findViewById(android.R.id.button1).isEnabled());
+        });
+    }
+
     @Test public void filteredResultsNeverAppendUnfilteredPages() throws Exception {
         try (Fixture fixture = new Fixture()) {
             fixture.catalog(95);
