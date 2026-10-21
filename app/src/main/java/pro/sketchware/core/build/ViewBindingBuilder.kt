@@ -113,13 +113,7 @@ ${
             "import ${rootView.fullType};"
         )
 
-        copy.forEach {
-            if (it.fullType == "android.widget.WebView") {
-                imports.add("import android.webkit.WebView;")
-            } else {
-                imports.add("import ${it.fullType};")
-            }
-        }
+        copy.forEach { imports.add("import ${it.fullType};") }
 
         return imports.sorted().joinToString("\n")
     }
@@ -127,9 +121,10 @@ ${
     private fun getTopLevelView(layoutFile: File): View {
         val document = XmlUtil.newSecureDocumentBuilderFactory().newDocumentBuilder().parse(layoutFile)
         val element = document.documentElement
+        val fullType = resolveViewType(element)
         return View(
-            element.nodeName.substringAfterLast("."),
-            if (element.nodeName.contains(".")) element.nodeName else "android.widget.${element.nodeName}",
+            fullType.substringAfterLast("."),
+            fullType,
             element.attributes?.getNamedItem("android:id")?.nodeValue?.substringAfter("/")
                 ?: "rootView"
         )
@@ -163,10 +158,11 @@ ${
                         }
                     }
                 } else {
+                    val fullType = resolveViewType(node)
                     views.add(
                         View(
-                            node.nodeName.substringAfterLast("."),
-                            if (node.nodeName.contains(".")) node.nodeName else "android.widget.${node.nodeName}",
+                            fullType.substringAfterLast("."),
+                            fullType,
                             id.nodeValue.substringAfter("/")
                         )
                     )
@@ -175,6 +171,17 @@ ${
             for (i in 0 until node.childNodes.length) {
                 parseNode(node.childNodes.item(i), views)
             }
+        }
+    }
+
+    private fun resolveViewType(node: Node): String {
+        val name = if (node.nodeName == "view") {
+            node.attributes?.getNamedItem("class")?.nodeValue ?: node.nodeName
+        } else node.nodeName
+        return when (name) {
+            "View", "ViewGroup", "ViewStub", "SurfaceView", "TextureView" -> "android.view.$name"
+            "WebView" -> "android.webkit.WebView"
+            else -> if (name.contains('.')) name else "android.widget.$name"
         }
     }
 

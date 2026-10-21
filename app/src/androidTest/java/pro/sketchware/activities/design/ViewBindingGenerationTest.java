@@ -166,6 +166,70 @@ public class ViewBindingGenerationTest {
         }
     }
 
+    @Test public void shortFrameworkRootsCompileAndBindTheirActualViewTypes() throws Exception {
+        for (String tag : new String[]{"View", "ViewStub", "SurfaceView", "TextureView"}) {
+            try (Project project = new Project()) {
+                project.rootLayout(tag, ""); project.generate();
+                ClassLoader loader = project.compileAndLoad();
+                Class<?> expected = Class.forName("android.view." + tag);
+                assertEquals(expected, loader.loadClass(PACKAGE + ".databinding.MainBinding").getMethod("getRoot").getReturnType());
+                onMain(() -> {
+                    View view = (View) expected.getConstructor(Context.class).newInstance(context());
+                    Object binding = bind(loader, "MainBinding", view);
+                    assertSame(view, binding.getClass().getMethod("getRoot").invoke(binding));
+                });
+            }
+        }
+    }
+
+    @Test public void shortWebViewTagsUseTheSamePlatformTypeAtRootAndInChildren() throws Exception {
+        Class<?> webView = Class.forName("android.webkit.WebView", false, context().getClassLoader());
+        try (Project project = new Project()) {
+            project.rootLayout("WebView", ""); project.generate();
+            ClassLoader loader = project.compileAndLoad();
+            assertEquals(webView, loader.loadClass(PACKAGE + ".databinding.MainBinding").getMethod("getRoot").getReturnType());
+        }
+        try (Project project = new Project()) {
+            project.layout("main", "<WebView android:id=\"@+id/status\"/>"); project.generate();
+            ClassLoader loader = project.compileAndLoad();
+            assertEquals(webView, loader.loadClass(PACKAGE + ".databinding.MainBinding").getField("status").getType());
+        }
+    }
+
+    @Test public void viewClassAttributesResolveInBothRootAndChildPositions() throws Exception {
+        try (Project project = new Project()) {
+            project.xmlLayout("main", "<view xmlns:android=\"http://schemas.android.com/apk/res/android\""
+                    + " class=\"android.view.View\" android:id=\"@+id/status\"/>");
+            project.generate(); ClassLoader loader = project.compileAndLoad();
+            onMain(() -> {
+                View view = new View(context()); view.setId(STATUS);
+                Object binding = bind(loader, "MainBinding", view);
+                assertSame(view, binding.getClass().getMethod("getRoot").invoke(binding));
+                assertSame(view, binding.getClass().getField("status").get(binding));
+            });
+        }
+        try (Project project = new Project()) {
+            project.layout("main", "<view class=\"android.widget.TextView\" android:id=\"@+id/status\"/>");
+            project.generate(); ClassLoader loader = project.compileAndLoad();
+            onMain(() -> {
+                LinearLayout root = new LinearLayout(context()); TextView status = status(); root.addView(status);
+                Object binding = bind(loader, "MainBinding", root);
+                assertSame(status, binding.getClass().getField("status").get(binding));
+            });
+        }
+    }
+
+    @Test public void fullyQualifiedPlatformTagsKeepTheirDeclaredClass() throws Exception {
+        for (String tag : new String[]{"android.view.View", "android.webkit.WebView", "android.widget.FrameLayout"}) {
+            try (Project project = new Project()) {
+                project.rootLayout(tag, ""); project.generate();
+                ClassLoader loader = project.compileAndLoad();
+                assertEquals(Class.forName(tag, false, context().getClassLoader()),
+                        loader.loadClass(PACKAGE + ".databinding.MainBinding").getMethod("getRoot").getReturnType());
+            }
+        }
+    }
+
     private static final class Project implements AutoCloseable {
         final ProjectEditorPersistenceTest.Fixture fixture = new ProjectEditorPersistenceTest.Fixture();
         final Path directory = Files.createTempDirectory(root, "project_");
@@ -190,8 +254,17 @@ public class ViewBindingGenerationTest {
         }
 
         void layout(String name, String children) throws Exception {
-            Files.write(Path.of(paths.layoutFilesPath, name + ".xml"), ("<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\">"
-                    + children + "</LinearLayout>").getBytes(StandardCharsets.UTF_8));
+            xmlLayout(name, "<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\">"
+                    + children + "</LinearLayout>");
+        }
+
+        void rootLayout(String tag, String children) throws Exception {
+            xmlLayout("main", "<" + tag + " xmlns:android=\"http://schemas.android.com/apk/res/android\">"
+                    + children + "</" + tag + ">");
+        }
+
+        void xmlLayout(String name, String xml) throws Exception {
+            Files.write(Path.of(paths.layoutFilesPath, name + ".xml"), xml.getBytes(StandardCharsets.UTF_8));
         }
 
         void generate() throws Exception {
