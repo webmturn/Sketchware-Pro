@@ -113,6 +113,23 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
             sc_id = savedInstanceState.getString("sc_id");
         }
 
+        config = ExcludeBuiltInLibrariesConfig.readConfig(sc_id);
+        if (savedInstanceState == null) {
+            isExcludingEnabled = config != null && config.first;
+            excludedLibraries = config == null ? new ArrayList<>() : new ArrayList<>(config.second);
+        } else {
+            isExcludingEnabled = savedInstanceState.getBoolean("isExcludingEnabled");
+            excludedLibraries = savedInstanceState.getParcelableArrayList("excludedLibraryNames");
+            if (excludedLibraries == null) {
+                excludedLibraries = new ArrayList<>();
+            } else {
+                // Parcel recreates objects; the picker and unchanged-config check use known instances.
+                excludedLibraries = excludedLibraries.stream()
+                        .map(library -> BuiltInLibraries.BuiltInLibrary.ofName(library.getName()).orElse(library))
+                        .collect(Collectors.toList());
+            }
+        }
+
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -127,7 +144,7 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
             isExcludingEnabled = isChecked;
             refresh();
         });
-        config = ExcludeBuiltInLibrariesConfig.readConfig(sc_id);
+        refresh();
     }
 
     @Override
@@ -166,20 +183,6 @@ public class ExcludeBuiltInLibrariesActivity extends BaseAppCompatActivity {
         outState.putBoolean("isExcludingEnabled", isExcludingEnabled);
         outState.putParcelableArrayList("excludedLibraryNames", new ArrayList<>(excludedLibraries));
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        if (savedInstanceState == null) {
-            isExcludingEnabled = ExcludeBuiltInLibrariesConfig.isExcludingEnabled(sc_id);
-            excludedLibraries = ExcludeBuiltInLibrariesConfig.getExcludedLibraries(sc_id);
-        } else {
-            isExcludingEnabled = savedInstanceState.getBoolean("isExcludingEnabled");
-            excludedLibraries = savedInstanceState.getParcelableArrayList("excludedLibraryNames");
-        }
-
-        refresh();
     }
 
     private void refresh() {
