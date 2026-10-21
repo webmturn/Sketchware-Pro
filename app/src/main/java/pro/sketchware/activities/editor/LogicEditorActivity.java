@@ -165,6 +165,7 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     private LogicEditorDrawer editorDrawer;
     private ObjectAnimator paletteShowAnimator, paletteHideAnimator, topMenuShowAnimator, topMenuHideAnimator, drawerShowAnimator, drawerHideAnimator;
     private ExtraPaletteBlock extraPaletteBlock;
+    private long collectionLoadRequest;
     private PaletteBuildInterceptor paletteBuildInterceptor;
     private ViewLogicEditor viewLogicEditor;
     private ViewDummy dummy;
@@ -2769,11 +2770,33 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
     }
 
     public void loadBlockCollections() {
-        editorDrawer.clearAllBlocks();
-        for (BlockCollectionBean next : BlockCollectionManager.getInstance().getBlocks()) {
-            editorDrawer.addBlockCollection(next.name, next.blocks).setOnTouchListener(this);
-        }
+        long request = ++collectionLoadRequest;
+        WeakReference<LogicEditorActivity> owner = new WeakReference<>(this);
+        BackgroundTasks.callIoIfAlive(TaskHost.of(this), "LogicEditorBlockCollections", () -> {
+            BlockCollectionManager manager = BlockCollectionManager.getInstance();
+            return new CollectionLoad(manager, manager.getBlocksSnapshot());
+        }, loaded -> {
+            LogicEditorActivity activity = owner.get();
+            if (activity == null || request != activity.collectionLoadRequest) return;
+            // An add, rename or deletion during parsing invalidates the entire old result.
+            if (!loaded.manager().isCurrent(loaded.snapshot())) {
+                activity.loadBlockCollections();
+                return;
+            }
+            activity.editorDrawer.clearAllBlocks();
+            for (BlockCollectionBean collection : loaded.snapshot().blocks()) {
+                View block = activity.editorDrawer.addBlockCollection(collection.name, collection.blocks);
+                if (block != null) block.setOnTouchListener(activity);
+            }
+        }, error -> {
+            LogicEditorActivity activity = owner.get();
+            if (activity != null && request == activity.collectionLoadRequest) {
+                SketchToast.warning(activity, R.string.common_error_an_error_occurred, Toast.LENGTH_LONG).show();
+            }
+        });
     }
+
+    private record CollectionLoad(BlockCollectionManager manager, BlockCollectionManager.BlocksSnapshot snapshot) {}
 
     private static class ProjectSaver {
         private final WeakReference<LogicEditorActivity> activity;
