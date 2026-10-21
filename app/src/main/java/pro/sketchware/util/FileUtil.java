@@ -167,36 +167,23 @@ public class FileUtil {
     }
 
     public static String readFile(String path) {
-        if (!isExistFile(path)) {
-            return "";
-        }
-
-        StringBuilder sb = new StringBuilder();
-        try (FileReader fr = new FileReader(path)) {
-            char[] buff = new char[1024];
-            int length;
-
-            while ((length = fr.read(buff)) > 0) {
-                sb.append(new String(buff, 0, length));
-            }
-        } catch (IOException e) {
-            Log.e("FileUtil", e.getMessage(), e);
-        }
-
-        return sb.toString();
+        return readFileIfExist(path);
     }
 
     public static String readFileIfExist(String path) {
-        if (!isExistFile(path)) {
+        if (path == null || path.isEmpty()) {
             return "";
         }
+        File file = new File(path);
+        // A readable procfs file may report length zero; do not use length as an EOF test.
+        if (!file.isFile()) return "";
         StringBuilder sb = new StringBuilder();
-        try (FileReader fr = new FileReader(path)) {
+        try (FileReader fr = new FileReader(file)) {
             char[] buff = new char[1024];
             int length;
 
             while ((length = fr.read(buff)) > 0) {
-                sb.append(new String(buff, 0, length));
+                sb.append(buff, 0, length);
             }
         } catch (IOException e) {
             Log.e("FileUtil", e.getMessage(), e);
