@@ -25,6 +25,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
+import androidx.lifecycle.ViewModelProvider;
 
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 import pro.sketchware.widgets.ColorPickerDialog;
@@ -34,12 +35,13 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 
+import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.util.io.UriPathResolver;
 import pro.sketchware.graphics.BitmapUtil;
 import pro.sketchware.core.project.SketchwarePaths;
@@ -73,16 +75,7 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
     private String iconFilePath;
     private String texturesFilePath;
     private Bitmap appIconBitmap;
-
-    private void saveBitmapTo(Bitmap bitmap, String path) {
-        FileUtil.makeDir(path.substring(0, path.lastIndexOf(File.separator)));
-        try (FileOutputStream fileOutputStream = new FileOutputStream(path)) {
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
-            fileOutputStream.flush();
-        } catch (IOException e) {
-            Log.e("IconCreatorActivity", "Failed to save bitmap to " + path, e);
-        }
-    }
+    private IconExportViewModel exportModel;
 
     private Bitmap captureAppIco(View view) {
         Bitmap bitmap = Bitmap.createBitmap(
@@ -104,42 +97,35 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
     }
 
     private Bitmap captureForeground(View view, boolean score, boolean pattern, View pattView, View scoreView, View bg) {
+        int backgroundVisibility = bg.getVisibility();
+        int scoreVisibility = scoreView.getVisibility();
+        int patternVisibility = pattView.getVisibility();
+        Bitmap bitmap = null;
+        try {
+            bg.setVisibility(View.INVISIBLE);
+            if (!score) scoreView.setVisibility(View.INVISIBLE);
+            if (!pattern) pattView.setVisibility(View.INVISIBLE);
 
-        bg.setVisibility(View.INVISIBLE);
-        if (!score) scoreView.setVisibility(View.INVISIBLE);
-        if (!pattern) pattView.setVisibility(View.INVISIBLE);
+            int padding = 75;
+            bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            Drawable bgDrawable = view.getBackground();
+            if (bgDrawable != null) {
+                bgDrawable.draw(canvas);
+            } else {
+                view.draw(canvas);
+            }
 
-        int padding = 75;
-
-        Bitmap bitmap = Bitmap.createBitmap(
-                view.getWidth(),
-                view.getHeight(),
-                Bitmap.Config.ARGB_8888
-        );
-
-        Canvas canvas = new Canvas(bitmap);
-        Drawable bgDrawable = view.getBackground();
-
-        if (bgDrawable != null) {
-            bgDrawable.draw(canvas);
-        } else {
-            view.draw(canvas);
+            Bitmap paddedBitmap = Bitmap.createBitmap(bitmap.getWidth() + padding * 2,
+                    bitmap.getHeight() + padding * 2, Bitmap.Config.ARGB_8888);
+            new Canvas(paddedBitmap).drawBitmap(bitmap, padding, padding, null);
+            return paddedBitmap;
+        } finally {
+            bg.setVisibility(backgroundVisibility);
+            scoreView.setVisibility(scoreVisibility);
+            pattView.setVisibility(patternVisibility);
+            if (bitmap != null) bitmap.recycle();
         }
-
-
-        int paddedSize = padding * 2;
-        Bitmap paddedBitmap = Bitmap.createBitmap(bitmap.getWidth() + paddedSize, bitmap.getHeight() + paddedSize, Bitmap.Config.ARGB_8888);
-
-        Canvas paddedCanvas = new Canvas(paddedBitmap);
-        paddedCanvas.drawBitmap(bitmap, padding, padding, null);
-
-        bg.setVisibility(View.VISIBLE);
-        if (score) scoreView.setVisibility(View.VISIBLE);
-        if (pattern) pattView.setVisibility(View.VISIBLE);
-
-        bitmap.recycle();
-
-        return paddedBitmap;
     }
 
     @Override
@@ -197,7 +183,33 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
                 });
         binding = ActivityIconCreatorBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        exportModel = new ViewModelProvider(this).get(IconExportViewModel.class);
         initialize();
+        exportModel.state().observe(this, state -> {
+            if (state == null || isFinishing()) return;
+            binding.save.setEnabled(!state.running());
+            if (state.running()) {
+                showLoadingDialog();
+                return;
+            }
+            dismissLoadingDialog();
+            if (state.failed()) {
+                SketchwareUtil.toastError(Helper.getResString(R.string.common_message_save_failed));
+                exportModel.clearFailure();
+            } else {
+                Intent result = new Intent(getApplicationContext(), MyProjectSettingActivity.class);
+                result.putExtra("appIco", state.launcher());
+                result.putExtra("isIconAdaptive", state.adaptive());
+                setResult(RESULT_OK, result);
+                finish();
+            }
+        });
+    }
+
+    @Override
+    public void onDestroy() {
+        dismissLoadingDialog();
+        super.onDestroy();
     }
 
     private void initialize() {
@@ -250,19 +262,7 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
 
         binding.appIcoItems.setOnClickListener(v -> showCustomIconOptions());
 
-        binding.save.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), MyProjectSettingActivity.class);
-            saveChanges();
-            saveIconToRes();
-            intent.putExtra("appIco", captureAppIco(binding.appIcoCard));
-            if (binding.adaptiveCheck.isChecked()) {
-                intent.putExtra("isIconAdaptive", binding.adaptiveCheck.isChecked());
-                saveForegroundToRes();
-            }
-
-            setResult(RESULT_OK, intent);
-            finish();
-        });
+        binding.save.setOnClickListener(v -> exportIcon());
 
         binding.bgType.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (isChecked) {
@@ -535,30 +535,38 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
         create.show();
     }
 
-    private static final String[] MIPMAP_DENSITIES = {
-            "mipmap-mdpi", "mipmap-hdpi", "mipmap-xhdpi", "mipmap-xxhdpi", "mipmap-xxxhdpi"
-    };
-
-    private void saveBitmapToAllDensities(Bitmap bitmap, String fileName) {
-        for (String density : MIPMAP_DENSITIES) {
-            saveBitmapTo(bitmap, getIconPath(density, fileName));
+    private void exportIcon() {
+        if (exportModel.isRunning()) return;
+        Map<String, Bitmap> layers = new LinkedHashMap<>();
+        Bitmap croppedIcon = null;
+        IconExport.Snapshot snapshot;
+        try {
+            // View drawing and state capture must finish on the main thread before queuing work.
+            boolean adaptive = binding.adaptiveCheck.isChecked();
+            Map<String, Object> settings = captureSettings();
+            layers.put("ic_launcher.png", captureAppIco(binding.appIcoCard));
+            if (adaptive) {
+                layers.put("ic_launcher_foreground.png", captureForeground(binding.appIcoItems, eff_score,
+                        eff_texture, binding.appIcoTexture, binding.appIcoScore, binding.appIcoBg));
+                layers.put("ic_launcher_monochrome.png", captureForeground(binding.appIcoItems, false,
+                        false, binding.appIcoTexture, binding.appIcoScore, binding.appIcoBg));
+                layers.put("ic_launcher_background.png", captureAppIco(binding.appIcoBg));
+            }
+            if (appIconBitmap != null) {
+                croppedIcon = appIconBitmap.copy(Bitmap.Config.ARGB_8888, false);
+                if (croppedIcon == null) throw new IllegalStateException("Could not capture cropped icon");
+            }
+            snapshot = new IconExport.Snapshot(new File(baseDir()),
+                    new File(SketchwarePaths.getIconsPath(), sc_id + "/temp_icons"), getCacheDir(),
+                    settings, layers, texturesFilePath, iconFilePath, croppedIcon, adaptive);
+        } catch (RuntimeException e) {
+            for (Bitmap bitmap : layers.values()) bitmap.recycle();
+            if (croppedIcon != null) croppedIcon.recycle();
+            Log.e("IconCreatorActivity", "Failed to capture icon", e);
+            SketchwareUtil.toastError(Helper.getResString(R.string.common_message_save_failed));
+            return;
         }
-    }
-
-    private void saveIconToRes() {
-        Bitmap launcherIcon = captureAppIco(binding.appIcoCard);
-        saveBitmapToAllDensities(launcherIcon, "ic_launcher.png");
-    }
-
-    private void saveForegroundToRes() {
-        Bitmap foreground = captureForeground(binding.appIcoItems, eff_score, eff_texture, binding.appIcoTexture, binding.appIcoScore, binding.appIcoBg);
-        saveBitmapToAllDensities(foreground, "ic_launcher_foreground.png");
-
-        Bitmap monochrome = captureForeground(binding.appIcoItems, false, false, binding.appIcoTexture, binding.appIcoScore, binding.appIcoBg);
-        saveBitmapToAllDensities(monochrome, "ic_launcher_monochrome.png");
-
-        Bitmap background = captureAppIco(binding.appIcoBg);
-        saveBitmapToAllDensities(background, "ic_launcher_background.png");
+        exportModel.start(TaskHost.of(this), snapshot);
     }
 
     private void loadSelectedTexture(int selectedTextureType) {
@@ -571,7 +579,7 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
         }
     }
 
-    private void saveChanges() {
+    private Map<String, Object> captureSettings() {
         HashMap<String, Object> data = new HashMap<>();
         data.put("gradient_background_type", binding.bgGradient.isChecked());
         data.put("background_color", bgClr);
@@ -599,34 +607,7 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
         data.put("badge_text_color", badgeTxtClr);
         data.put("badge_bg_color", badgeClr);
         data.put("adaptive_icon", binding.adaptiveCheck.isChecked());
-        FileUtil.writeFile(baseDir() + "data.json", new Gson().toJson(data));
-        saveIconsToStorage();
-    }
-
-    public void saveIconsToStorage() {
-        if (texturesFilePath != null && !texturesFilePath.equals(baseDir() + "texture.png")) {
-            FileUtil.copyFile(texturesFilePath, baseDir() + "texture.png");
-        }
-        if (iconFilePath != null && !iconFilePath.equals(baseDir() + "app_icon.png")) {
-            FileUtil.copyFile(iconFilePath, baseDir() + "app_icon.png");
-        }
-        if (appIconBitmap != null) {
-            try {
-                String path = baseDir() + "app_icon.png";
-                File file = new File(path);
-                file.getParentFile().mkdirs();
-
-                try (FileOutputStream fos = new FileOutputStream(file)) {
-                    appIconBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                    fos.flush();
-                }
-
-                iconFilePath = path;
-
-            } catch (Exception e) {
-                Log.e("IconCreatorActivity", "Failed to save app icon bitmap", e);
-            }
-        }
+        return data;
     }
 
     private void loadSavedData() {
@@ -764,7 +745,4 @@ public class IconCreatorActivity extends BaseAppCompatActivity {
         return SketchwarePaths.getDataPath(sc_id) + File.separator + "files" + File.separator + "app-icon" + File.separator;
     }
 
-    private String getIconPath(String folder, String fileName) {
-        return SketchwarePaths.getIconsPath() + File.separator + sc_id + File.separator + "temp_icons" + File.separator + folder + File.separator + fileName;
-    }
 }
