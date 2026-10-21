@@ -112,8 +112,8 @@ public class DesignDrawer extends LinearLayout {
         content.setOrientation(VERTICAL);
         scrollView.addView(content);
 
-        UI.addSystemWindowInsetToPadding(scrollView, false, true, false, false);
-        UI.addSystemWindowInsetToPadding(this, false, false, true, true);
+        UI.addSystemWindowInsetToPadding(scrollView, false, true, false, true);
+        UI.addSystemWindowInsetToPadding(this, false, false, true, false);
 
         addDrawerSubheaderItem(R.string.design_drawer_menu_title, content);
         addDrawerItem(R.id.item_library_manager, R.drawable.ic_mtrl_category, R.string.design_drawer_menu_title_library, R.string.design_drawer_menu_description_library, content);
@@ -135,10 +135,8 @@ public class DesignDrawer extends LinearLayout {
         addDrawerItem(R.id.item_xml_command_manager, R.drawable.ic_mtrl_code, R.string.design_drawer_menu_title_xml_command, R.string.design_drawer_menu_description_xml_command, content);
         addDrawerItem(R.id.item_logcat_reader, R.drawable.ic_mtrl_article, R.string.design_drawer_menu_title_logcat_reader, R.string.design_drawer_menu_subtitle_logcat_reader, content);
 
-        // if you want to show text "Global", uncomment next line
-        // addDrawerSubheaderItem(R.string.design_drawer_menu_bottom_title, this);
-        addDrawerDivider(this);
-        addDrawerItem(R.id.item_collection_manager, R.drawable.ic_mtrl_bookmark, R.string.design_drawer_menu_title_collection, R.string.design_drawer_menu_description_collection, this);
+        addDrawerDivider(content);
+        addDrawerItem(R.id.item_collection_manager, R.drawable.ic_mtrl_bookmark, R.string.design_drawer_menu_title_collection, R.string.design_drawer_menu_description_collection, content);
     }
 
     @Override
