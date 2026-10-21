@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
+import java.util.List;
 
 import pro.sketchware.databinding.ImportIconListItemBinding;
 import pro.sketchware.graphics.SvgUtils;
@@ -26,12 +27,13 @@ public class IconAdapter extends ListAdapter<Pair<String, String>, IconAdapter.V
 
         @Override
         public boolean areContentsTheSame(@NonNull Pair<String, String> oldItem, @NonNull Pair<String, String> newItem) {
-            return true;
+            return oldItem.equals(newItem);
         }
     };
 
     private final SvgUtils svgUtils;
     private final OnIconSelectedListener listener;
+    private static final Object COLOR_PAYLOAD = new Object();
     private String selected_icon_type;
     private int selected_color;
 
@@ -44,11 +46,24 @@ public class IconAdapter extends ListAdapter<Pair<String, String>, IconAdapter.V
     }
 
     public void setSelectedIconType(String selected_icon_type) {
+        if (this.selected_icon_type.equals(selected_icon_type)) return;
         this.selected_icon_type = selected_icon_type;
+        notifyItemRangeChanged(0, getItemCount());
     }
 
     public void setSelectedColor(int selected_color) {
+        if (this.selected_color == selected_color) return;
         this.selected_color = selected_color;
+        notifyItemRangeChanged(0, getItemCount(), COLOR_PAYLOAD);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull List<Object> payloads) {
+        if (!payloads.isEmpty() && payloads.stream().allMatch(payload -> payload == COLOR_PAYLOAD)) {
+            holder.itemBinding.img.setColorFilter(selected_color, PorterDuff.Mode.SRC_IN);
+        } else {
+            onBindViewHolder(holder, position);
+        }
     }
 
     @Override
@@ -77,8 +92,8 @@ public class IconAdapter extends ListAdapter<Pair<String, String>, IconAdapter.V
             super(binding.getRoot());
             itemBinding = binding;
             binding.getRoot().setOnClickListener(v -> {
-                int position = getLayoutPosition();
-                if (position == RecyclerView.NO_POSITION) return;
+                int position = getBindingAdapterPosition();
+                if (position == RecyclerView.NO_POSITION || position >= getItemCount()) return;
                 if (listener != null) {
                     listener.onIconSelected(position);
                 }
