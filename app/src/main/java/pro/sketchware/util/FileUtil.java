@@ -56,6 +56,9 @@ import java.util.zip.ZipInputStream;
 
 @SuppressWarnings("unused")
 public class FileUtil {
+    private static final int COPY_BUFFER_SIZE = 32 * 1024;
+    private static final int ZIP_BUFFER_SIZE = 8 * 1024;
+
     public static long getFileSize(File file) {
         if (file == null || !file.exists()) {
             return 0;
@@ -146,6 +149,8 @@ public class FileUtil {
     }
 
     public static void createNewFileIfNotPresent(String path) {
+        if (path == null || path.isEmpty()) return;
+
         int lastSep = path.lastIndexOf(File.separator);
         if (lastSep > 0) {
             String dirPath = path.substring(0, lastSep);
@@ -217,7 +222,7 @@ public class FileUtil {
 
         try (FileInputStream fis = new FileInputStream(sourcePath);
              FileOutputStream fos = new FileOutputStream(destPath, false)) {
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[COPY_BUFFER_SIZE];
             int length;
 
             while ((length = fis.read(buffer)) > 0) {
@@ -241,7 +246,7 @@ public class FileUtil {
             if (parentFile == null || parentFile.exists() || parentFile.mkdirs()) {
                 try (FileInputStream fileInputStream = new FileInputStream(source);
                      FileOutputStream fileOutputStream = new FileOutputStream(copyInto)) {
-                    byte[] buffer = new byte[2048];
+                    byte[] buffer = new byte[COPY_BUFFER_SIZE];
                     while (true) {
                         int read = fileInputStream.read(buffer);
                         if (read <= 0) {
@@ -270,7 +275,7 @@ public class FileUtil {
 
     public static void extractFileFromZip(InputStream inputStream, File file) throws IOException {
         try (OutputStream outputStream = new FileOutputStream(file)) {
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[ZIP_BUFFER_SIZE];
             while (true) {
                 int read = inputStream.read(buffer);
                 if (read > 0) {
@@ -319,16 +324,17 @@ public class FileUtil {
     }
 
     public static boolean isExistFile(String path) {
+        if (path == null || path.isEmpty()) return false;
         return new File(path).exists();
     }
 
     public static void makeDir(String path) {
-        if (!isExistFile(path)) {
-            try {
-                new File(path).mkdirs();
-            } catch (SecurityException e) {
-                Log.e("FileUtil", "Error creating directory: " + path, e);
-            }
+        if (path == null || path.isEmpty()) return;
+        try {
+            File directory = new File(path);
+            if (!directory.exists()) directory.mkdirs();
+        } catch (SecurityException e) {
+            Log.e("FileUtil", "Error creating directory: " + path, e);
         }
     }
 
