@@ -74,7 +74,6 @@ public class CompileLogActivity extends BaseAppCompatActivity {
         binding.clearButton.setOnClickListener(v -> {
             if (compileErrorSaver.logFileExists()) {
                 compileErrorSaver.deleteSavedLogs();
-                getIntent().removeExtra("error");
                 SketchwareUtil.toast(Helper.getResString(R.string.toast_compile_logs_cleared));
             } else {
                 SketchwareUtil.toast(Helper.getResString(R.string.toast_no_compile_logs));
@@ -119,8 +118,7 @@ public class CompileLogActivity extends BaseAppCompatActivity {
     }
 
     private void setErrorText() {
-        String error = getIntent().getStringExtra("error");
-        if (error == null) error = compileErrorSaver.getLogsFromFile();
+        String error = compileErrorSaver.getLogsFromFile();
         if (error == null) {
             binding.noContentLayout.setVisibility(View.VISIBLE);
             binding.optionsLayout.setVisibility(View.GONE);

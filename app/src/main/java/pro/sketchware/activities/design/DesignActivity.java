@@ -313,7 +313,6 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
             if (!UIHelper.isClickThrottled()) {
                 snackbar.dismiss();
                 Intent intent = new Intent(getApplicationContext(), CompileLogActivity.class);
-                intent.putExtra("error", error);
                 intent.putExtra("sc_id", sc_id);
                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
