@@ -49,6 +49,8 @@ import java.io.RandomAccessFile;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -479,6 +481,35 @@ public class ProjectBuilder {
      * @throws Exception Thrown if merging had problems
      */
     private Collection<File> dexLibraries(File outputDirectory, List<File> dexes) throws IOException {
+        if (dexes == null || dexes.isEmpty()) {
+            throw new IOException("No DEX files to merge");
+        }
+        // Invalidate before publishing: a failed replacement must never leave a cache hit.
+        Files.deleteIfExists(new File(outputDirectory, "dex_merge_fingerprint").toPath());
+        File staging = Files.createTempDirectory(outputDirectory.toPath(), ".dex-merge-").toFile();
+        try {
+            Collection<File> staged = mergeDexLibraries(staging, dexes);
+            Set<String> currentNames = new HashSet<>();
+            Collection<File> published = new ArrayList<>();
+            for (File file : staged) {
+                File target = new File(outputDirectory, file.getName());
+                Files.move(file.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                currentNames.add(target.getName());
+                published.add(target);
+            }
+            // Only remove obsolete generated DEX files after every new DEX has been merged.
+            for (File previous : listMergedDexFiles(outputDirectory)) {
+                if (!currentNames.contains(previous.getName())) Files.delete(previous.toPath());
+            }
+            return published;
+        } finally {
+            File[] leftovers = staging.listFiles();
+            if (leftovers != null) for (File file : leftovers) file.delete();
+            staging.delete();
+        }
+    }
+
+    private Collection<File> mergeDexLibraries(File outputDirectory, List<File> dexes) throws IOException {
         int lastDexNumber = 1;
         Collection<File> resultDexFiles = new LinkedList<>();
         LinkedList<Dex> dexObjects = new LinkedList<>();
@@ -971,7 +1002,8 @@ public class ProjectBuilder {
      */
     public void buildApk() throws SketchwareException {
         long savedTimeMillis = System.currentTimeMillis();
-        String firstDexPath = dexesToAddButNotMerge.isEmpty() ? projectFilePaths.classesDexPath : dexesToAddButNotMerge.remove(0).getAbsolutePath();
+        boolean mergedDexFiles = dexesToAddButNotMerge.isEmpty();
+        String firstDexPath = mergedDexFiles ? projectFilePaths.classesDexPath : dexesToAddButNotMerge.get(0).getAbsolutePath();
         try {
             ApkBuilder apkBuilder = new ApkBuilder(new File(projectFilePaths.unsignedUnalignedApkPath), new File(projectFilePaths.resourcesApkPath), new File(firstDexPath), null, null, System.out);
 
@@ -996,7 +1028,7 @@ public class ProjectBuilder {
                 apkBuilder.addNativeLibraries(new File(nativeLibraryDirectory));
             }
 
-            if (dexesToAddButNotMerge.isEmpty()) {
+            if (mergedDexFiles) {
                 List<String> dexFiles = FileUtil.listFiles(projectFilePaths.binDirectoryPath, "dex");
                 for (String dexFile : dexFiles) {
                     String dexFileName = new File(dexFile).getName();
@@ -1007,8 +1039,8 @@ public class ProjectBuilder {
             } else {
                 int dexNumber = 2;
 
-                for (File dexFile : dexesToAddButNotMerge) {
-                    apkBuilder.addFile(dexFile, "classes" + dexNumber + ".dex");
+                for (int index = 1; index < dexesToAddButNotMerge.size(); index++) {
+                    apkBuilder.addFile(dexesToAddButNotMerge.get(index), "classes" + dexNumber + ".dex");
                     dexNumber++;
                 }
             }
@@ -1105,17 +1137,22 @@ public class ProjectBuilder {
             dexes.add(new File(dexFilePath));
         }
 
+        if (dexes.isEmpty()) {
+            throw new IOException("No DEX files to package");
+        }
+
         LogUtil.d(TAG, "Will merge these " + dexes.size() + " DEX files to classes.dex: " + dexes);
 
         if (settings.getMinSdkVersion() < Build.VERSION_CODES.LOLLIPOP || !projectFilePaths.buildConfig.isDebugBuild) {
+            dexesToAddButNotMerge.clear();
             // Cache: skip merge if all input DEX files are unchanged
             String dexFingerprint = computeDexMergeFingerprint(dexes);
             File fingerprintFile = new File(projectFilePaths.binDirectoryPath, "dex_merge_fingerprint");
             File mergedClassesDex = new File(projectFilePaths.binDirectoryPath, "classes.dex");
             if (mergedClassesDex.exists() && fingerprintFile.exists()) {
                 try {
-                    String cached = new String(java.nio.file.Files.readAllBytes(fingerprintFile.toPath()));
-                    if (dexFingerprint.equals(cached)) {
+                    String cached = new String(Files.readAllBytes(fingerprintFile.toPath()), StandardCharsets.UTF_8);
+                    if (dexMergeCacheState(dexFingerprint).equals(cached)) {
                         Log.d(TAG, "Skipping DEX merge: all input DEX files unchanged (cached). Saved ~"
                                 + (System.currentTimeMillis() - savedTimeMillis) + " ms");
                         if (progressReceiver != null) {
@@ -1130,7 +1167,7 @@ public class ProjectBuilder {
             dexLibraries(new File(projectFilePaths.binDirectoryPath), dexes);
             // Save fingerprint after successful merge
             try {
-                java.nio.file.Files.write(fingerprintFile.toPath(), dexFingerprint.getBytes());
+                Files.write(fingerprintFile.toPath(), dexMergeCacheState(dexFingerprint).getBytes(StandardCharsets.UTF_8));
             } catch (IOException e) {
                 Log.d(TAG, "Failed to save DEX merge fingerprint: " + e.getMessage());
             }
@@ -1254,6 +1291,19 @@ public class ProjectBuilder {
               .append(f.lastModified()).append('\n');
         }
         return sb.toString();
+    }
+
+    private List<File> listMergedDexFiles(File directory) {
+        File[] files = directory.listFiles((dir, name) -> name.matches("classes(?:[0-9]+)?\\.dex")
+                && new File(dir, name).isFile());
+        if (files == null) return new ArrayList<>();
+        Arrays.sort(files, java.util.Comparator.comparing(File::getName));
+        return Arrays.asList(files);
+    }
+
+    private String dexMergeCacheState(String inputFingerprint) {
+        return "dex-merge-v2\n" + inputFingerprint + "--- outputs ---\n"
+                + computeDexMergeFingerprint(listMergedDexFiles(new File(projectFilePaths.binDirectoryPath)));
     }
 
     private void mergeDexes(File target, List<Dex> dexes) throws IOException {
