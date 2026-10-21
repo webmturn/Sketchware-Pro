@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
@@ -79,8 +80,8 @@ public class AppBundleCompiler {
                                 .addAllUncompressedGlob(uncompressedModuleMainPaths).build()
                         ).build()
                 );
-        if (builder.proguard.isShrinkingEnabled() && builder.proguard.isDebugFilesEnabled()) {
-            Path mapping = Paths.get(builder.projectFilePaths.proguardMappingPath);
+        Path mapping = Paths.get(builder.projectFilePaths.proguardMappingPath);
+        if (builder.proguard.isShrinkingEnabled() && Files.isRegularFile(mapping)) {
             LogUtil.d(TAG, "Adding metadata file " + mapping + " as com.android.tools.build.obfuscation/proguard.map");
             bundleBuilder.addMetadataFile("com.android.tools.build.obfuscation", "proguard.map", mapping);
         }

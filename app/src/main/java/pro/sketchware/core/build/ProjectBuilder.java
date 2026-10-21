@@ -47,6 +47,8 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -1319,6 +1321,8 @@ public class ProjectBuilder {
      */
     public void runR8() throws IOException {
         long savedTimeMillis = System.currentTimeMillis();
+        // A later bundle must never pick up a mapping from a previous shrinker run.
+        Files.deleteIfExists(Paths.get(projectFilePaths.proguardMappingPath));
 
         ArrayList<String> config = new ArrayList<>();
         config.add(ProguardHandler.ANDROID_PROGUARD_RULES_PATH);
@@ -1360,6 +1364,7 @@ public class ProjectBuilder {
      */
     public void runProguard() throws IOException {
         long savedTimeMillis = System.currentTimeMillis();
+        Files.deleteIfExists(Paths.get(projectFilePaths.proguardMappingPath));
 
         ArrayList<String> args = new ArrayList<>();
 
