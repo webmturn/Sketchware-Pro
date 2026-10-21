@@ -2,20 +2,21 @@ package pro.sketchware.activities.main.fragments.projects;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
-import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import pro.sketchware.activities.export.ExportProjectActivity;
 import pro.sketchware.widgets.LoadingDialog;
 import pro.sketchware.activities.projects.MyProjectSettingActivity;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -43,6 +44,7 @@ import pro.sketchware.databinding.MyprojectsItemBinding;
 public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ProjectViewHolder> {
     private final ProjectsFragment projectsFragment;
     private final Activity activity;
+    private final RequestManager iconRequests;
     private final SharedPrefsHelper preference;
     private List<HashMap<String, Object>> shownProjects = new ArrayList<>();
     private List<HashMap<String, Object>> allProjects;
@@ -50,6 +52,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
     public ProjectsAdapter(ProjectsFragment projectsFragment, List<HashMap<String, Object>> allProjects) {
         this.projectsFragment = projectsFragment;
         activity = projectsFragment.requireActivity();
+        iconRequests = Glide.with(projectsFragment);
         this.allProjects = allProjects;
         preference = new SharedPrefsHelper(activity, "project");
 
@@ -140,6 +143,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
         HashMap<String, Object> projectMap = shownProjects.get(position);
         String scId = MapValueHelper.getString(projectMap, "sc_id");
 
+        iconRequests.clear(holder.binding.imgIcon);
         holder.binding.imgIcon.setImageResource(R.drawable.default_icon);
 
         if (MapValueHelper.getString(projectMap, "sc_ver_code").isEmpty()) {
@@ -153,17 +157,17 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
             ProjectListManager.updateProject(scId, projectMap);
         }
 
-        if (MapValueHelper.get(projectMap, "custom_icon")) {
+        if (MapValueHelper.get(projectMap, "custom_icon") && !activity.isFinishing() && !activity.isDestroyed()
+                && projectsFragment.isAdded() && projectsFragment.getView() != null) {
             String iconFolder = SketchwarePaths.getIconsPath() + File.separator + scId;
             File iconFile = new File(iconFolder, "icon.png");
-            if (iconFile.exists()) {
-                Uri uri;
-                String providerPath = activity.getPackageName() + ".provider";
-                uri = FileProvider.getUriForFile(activity, providerPath, iconFile);
-                holder.binding.imgIcon.setImageURI(uri);
-            } else {
-                holder.binding.imgIcon.setImageResource(R.drawable.default_icon);
-            }
+            // Icons are overwritten at a fixed path; even timestamp/size can remain unchanged.
+            iconRequests.load(iconFile)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .placeholder(R.drawable.default_icon)
+                    .error(R.drawable.default_icon)
+                    .into(holder.binding.imgIcon);
         }
 
         if (isPinned(projectMap)) {
@@ -208,6 +212,13 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
     public ProjectViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         MyprojectsItemBinding binding = MyprojectsItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new ProjectViewHolder(binding);
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull ProjectViewHolder holder) {
+        iconRequests.clear(holder.binding.imgIcon);
+        holder.binding.imgIcon.setImageResource(R.drawable.default_icon);
+        super.onViewRecycled(holder);
     }
 
     private void deleteProject(HashMap<String, Object> projectMap, int position) {
