@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.text.format.Formatter;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -109,7 +108,8 @@ public final class CrashLogManager {
                     .append(" (").append(info.versionCode).append(")\n");
             long apkSize = new File(info.applicationInfo.sourceDir).length();
             sb.append("APK Size: ")
-                    .append(Formatter.formatFileSize(appContext, apkSize))
+                    // Android Formatter can still use the process locale for digits on older APIs.
+                    .append(String.format(Locale.ROOT, "%.2f MB", apkSize / 1_000_000.0))
                     .append(" (").append(apkSize).append(" B)\n");
         } catch (PackageManager.NameNotFoundException ignored) {
         }
