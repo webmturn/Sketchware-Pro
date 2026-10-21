@@ -553,6 +553,8 @@ public class ViewPane extends RelativeLayout {
                                 Bitmap imageBitmap = FileUtil.decodeSampleBitmapFromPath(imagelocation, 512, 512);
                                 if (imageBitmap != null) {
                                     ((ImageView) view).setImageBitmap(imageBitmap);
+                                } else {
+                                    ((ImageView) view).setImageResource(R.drawable.default_image);
                                 }
                             }
                         } else {
