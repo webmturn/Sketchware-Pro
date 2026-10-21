@@ -3,8 +3,10 @@ package pro.sketchware.core.library;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import pro.sketchware.core.build.ProjectBuilder;
 
@@ -14,7 +16,7 @@ import pro.sketchware.core.build.ProjectBuilder;
 
 public class BuiltInLibraryManager {
 
-    private final ArrayList<String> libraryNames = new ArrayList<>();
+    private final Set<String> processedLibraries = new HashSet<>();
     private final ArrayList<BuiltInLibrary> libraries = new ArrayList<>();
     private final List<BuiltInLibraries.BuiltInLibrary> excludedLibraries;
 
@@ -32,18 +34,18 @@ public class BuiltInLibraryManager {
      * @param libraryName The built-in library's name, e.g. material-1.0.0
      */
     public void addLibrary(String libraryName) {
+        if (processedLibraries.contains(libraryName)) {
+            return;
+        }
         Optional<BuiltInLibraries.BuiltInLibrary> library = BuiltInLibraries.BuiltInLibrary.ofName(libraryName);
         //noinspection SimplifyOptionalCallChains because #isEmpty() isn't available on Android.
         if (!library.isPresent() || !excludedLibraries.contains(library.get())) {
-            if (!libraryNames.contains(libraryName)) {
-                Log.d(ProjectBuilder.TAG, "Added built-in library \"" + libraryName + "\" to project's dependencies");
-                libraryNames.add(libraryName);
-                libraries.add(new BuiltInLibrary(libraryName));
-                addDependencies(libraryName);
-            }
-        } else {
-            addDependencies(libraryName);
+            Log.d(ProjectBuilder.TAG, "Added built-in library \"" + libraryName + "\" to project's dependencies");
+            libraries.add(new BuiltInLibrary(libraryName));
         }
+        // Excluded libraries also participate in cycles and shared dependency paths.
+        processedLibraries.add(libraryName);
+        addDependencies(libraryName);
     }
 
     private void addDependencies(String libraryName) {

@@ -2,7 +2,10 @@ package pro.sketchware.core.library;
 
 import static org.junit.Assert.*;
 
+import android.os.Bundle;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.After;
 import org.junit.Before;
@@ -26,6 +29,7 @@ public class BuiltInLibraryExclusionTest {
     private String projectId;
     private byte[] expectedBytes;
     private long expectedModified;
+    private final BuiltInLibrary[] originalCatalog = BuiltInLibraries.KNOWN_BUILT_IN_LIBRARIES.clone();
 
     @Before public void prepare() throws Exception {
         projectId = "__builtin_exclusion_" + UUID.randomUUID();
@@ -36,12 +40,17 @@ public class BuiltInLibraryExclusionTest {
     }
 
     @After public void cleanup() throws Exception {
-        if (projectDirectory != null && projectDirectory.exists()) {
-            assertEquals(projectId, projectDirectory.getName());
-            assertFalse(Files.isSymbolicLink(projectDirectory.toPath()));
-            assertEquals(projectDirectory.getCanonicalFile(), configFile.getCanonicalFile().getParentFile());
-            Files.deleteIfExists(configFile.toPath());
-            Files.delete(projectDirectory.toPath());
+        try {
+            if (projectDirectory != null && projectDirectory.exists()) {
+                assertEquals(projectId, projectDirectory.getName());
+                assertFalse(Files.isSymbolicLink(projectDirectory.toPath()));
+                assertEquals(projectDirectory.getCanonicalFile(), configFile.getCanonicalFile().getParentFile());
+                Files.deleteIfExists(configFile.toPath());
+                Files.delete(projectDirectory.toPath());
+            }
+        } finally {
+            System.arraycopy(originalCatalog, 0, BuiltInLibraries.KNOWN_BUILT_IN_LIBRARIES,
+                    0, originalCatalog.length);
         }
     }
 
@@ -104,6 +113,83 @@ public class BuiltInLibraryExclusionTest {
             assertEquals(BuiltInLibraries.GSON, config.second.get(0).getName());
             assertConfigUnchanged();
         }
+    }
+
+    @Test public void mutuallyExcludedRealLibrariesDoNotCauseUnboundedRecursion() throws Exception {
+        assertTrue(List.of(BuiltInLibraryUtils.getKnownDependencies(BuiltInLibraries.ANDROIDX_CORE))
+                .contains(BuiltInLibraries.ANDROIDX_CORE_KTX));
+        assertTrue(List.of(BuiltInLibraryUtils.getKnownDependencies(BuiltInLibraries.ANDROIDX_CORE_KTX))
+                .contains(BuiltInLibraries.ANDROIDX_CORE));
+        List<String> expected = names(resolve(BuiltInLibraries.ANDROIDX_APPCOMPAT));
+        expected.removeAll(List.of(BuiltInLibraries.ANDROIDX_CORE, BuiltInLibraries.ANDROIDX_CORE_KTX));
+        configure(true, BuiltInLibraries.ANDROIDX_CORE, BuiltInLibraries.ANDROIDX_CORE_KTX);
+        BuiltInLibraryManager manager;
+        try {
+            manager = resolve(BuiltInLibraries.ANDROIDX_APPCOMPAT);
+        } catch (StackOverflowError expectedBeforeFix) {
+            status("excluded_dependency_cycle_overflow", "captured");
+            fail("The real core/core-ktx exclusion cycle must terminate without overflowing the build thread");
+            return;
+        }
+        assertEquals("Only the selected libraries should be removed; dependency order must remain stable",
+                expected, names(manager));
+        assertConfigUnchanged();
+    }
+
+    @Test public void sharedExcludedDependencyIsExpandedOnlyOnce() throws Exception {
+        List<String> expected = names(resolve(BuiltInLibraries.ANDROIDX_APPCOMPAT));
+        expected.remove(BuiltInLibraries.ANDROIDX_CORE);
+        CountingLibrary core = observe(BuiltInLibraries.ANDROIDX_CORE);
+        configure(true, BuiltInLibraries.ANDROIDX_CORE);
+        BuiltInLibraryManager manager = resolve(BuiltInLibraries.ANDROIDX_APPCOMPAT);
+        status("excluded_core_expansions", Integer.toString(core.expansions));
+        assertEquals(expected, names(manager));
+        assertEquals("An excluded common dependency must not be expanded for every incoming path", 1,
+                core.expansions);
+        assertConfigUnchanged();
+    }
+
+    @Test public void requestingAnExcludedRootAgainDoesNotExpandItsDependenciesAgain() throws Exception {
+        CountingLibrary root = observe(BuiltInLibraries.ANDROIDX_APPCOMPAT);
+        configure(true, BuiltInLibraries.ANDROIDX_APPCOMPAT);
+        BuiltInLibraryManager manager = resolve(BuiltInLibraries.ANDROIDX_APPCOMPAT);
+        List<String> firstResult = names(manager);
+        manager.addLibrary(BuiltInLibraries.ANDROIDX_APPCOMPAT);
+        status("excluded_root_expansions", Integer.toString(root.expansions));
+        assertEquals(firstResult, names(manager));
+        assertFalse(manager.containsLibrary(BuiltInLibraries.ANDROIDX_APPCOMPAT));
+        assertEquals("Repeated roots must preserve the result without repeating the excluded subtree", 1,
+                root.expansions);
+        assertConfigUnchanged();
+    }
+
+    private CountingLibrary observe(String name) {
+        for (int i = 0; i < BuiltInLibraries.KNOWN_BUILT_IN_LIBRARIES.length; i++) {
+            BuiltInLibrary original = BuiltInLibraries.KNOWN_BUILT_IN_LIBRARIES[i];
+            if (name.equals(original.getName())) {
+                CountingLibrary counted = new CountingLibrary(original);
+                BuiltInLibraries.KNOWN_BUILT_IN_LIBRARIES[i] = counted;
+                return counted;
+            }
+        }
+        throw new AssertionError("The real catalog entry is missing: " + name);
+    }
+
+    private static final class CountingLibrary extends BuiltInLibrary {
+        int expansions;
+        CountingLibrary(BuiltInLibrary source) {
+            super(source.getName(), source.getDependencyNames(), source.getPackageName().orElse(null));
+        }
+        @Override public List<String> getDependencyNames() {
+            expansions++;
+            return super.getDependencyNames();
+        }
+    }
+
+    private static void status(String name, String value) {
+        Bundle status = new Bundle();
+        status.putString(name, value);
+        InstrumentationRegistry.getInstrumentation().sendStatus(0, status);
     }
 
     private void configure(boolean enabled, String... names) throws Exception {
