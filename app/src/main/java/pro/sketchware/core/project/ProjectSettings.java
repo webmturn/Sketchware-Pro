@@ -82,6 +82,9 @@ public class ProjectSettings {
         if (FileUtil.isExistFile(path)) {
             try {
                 settings = new Gson().fromJson(FileUtil.readFile(path).trim(), Helper.TYPE_STRING_MAP);
+                if (settings == null) {
+                    settings = new HashMap<>();
+                }
             } catch (JsonSyntaxException e) {
                 Log.e("ProjectSettings", "Failed to read project settings for project " + sc_id + "!", e);
                 settings = new HashMap<>();
@@ -115,15 +118,8 @@ public class ProjectSettings {
     }
 
     public String getValue(String key, String defaultValue) {
-        if (settings != null && settings.containsKey(key)) {
-            if (!settings.get(key).isEmpty()) {
-                return settings.get(key);
-            } else {
-                return defaultValue;
-            }
-        } else {
-            return defaultValue;
-        }
+        String value = settings.get(key);
+        return value == null || value.isEmpty() ? defaultValue : value;
     }
 
     public void setValues(Map<String, String> values) {
