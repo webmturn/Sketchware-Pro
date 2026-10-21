@@ -155,7 +155,8 @@ public class ComponentTypeMapper {
             case "listStr" -> "ListString";
             case "listMap" -> "ListMap";
             case "list" -> "List";
-            case "view" -> "View";
+            case "view", "View" -> "View";
+            case "menuitem", "MenuItem" -> "MenuItem";
             case "textview" -> "TextView";
             case "edittext" -> "EditText";
             case "imageview" -> "ImageView";

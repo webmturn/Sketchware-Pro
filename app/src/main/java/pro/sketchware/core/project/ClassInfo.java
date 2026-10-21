@@ -81,6 +81,7 @@ public class ClassInfo {
                 break;
 
             case "View":
+                classInfos = "View";
                 break;
 
             case "TextView":

@@ -76,7 +76,7 @@ public class ExtraBlocks {
             logicEditor.addPaletteCategory(Helper.getResString(R.string.block_category_menu_item), 0xff555555);
             logicEditor.createPaletteBlock(" ", "menuItemSetVisible");
             logicEditor.createPaletteBlock(" ", "menuItemSetEnabled");
-            logicEditor.createPaletteBlock("v", "menuFindItem");
+            logicEditor.createPaletteBlockWithComponent("", "v", "MenuItem", "menuFindItem");
         }
     }
 

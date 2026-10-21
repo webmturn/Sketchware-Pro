@@ -1152,7 +1152,7 @@ public class ExtraPaletteBlock {
                 logicEditor.createPaletteBlock(" ", "removeView");
                 logicEditor.createPaletteBlock(" ", "removeViews");
                 logicEditor.createPaletteBlock(" ", "addView");
-                logicEditor.createPaletteBlock("v", "viewGetChildAt");
+                logicEditor.createPaletteBlockWithComponent("", "v", "View", "viewGetChildAt");
                 logicEditor.createPaletteBlock(" ", "addViews");
                 logicEditor.createPaletteBlock(" ", "setGravity");
                 logicEditor.createPaletteBlock(" ", "setColorFilterView");
