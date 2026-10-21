@@ -169,8 +169,9 @@ public class CustomBlockBackupTest {
             try {
                 while (true) {
                     ProjectEditorPersistenceTest.Fixture candidate = new ProjectEditorPersistenceTest.Fixture();
-                    if (new File(SketchwarePaths.getIconsPath(), candidate.id).exists()
-                            || new File(CONTEXT.getCacheDir(), "codegenCache/" + candidate.id).exists()) {
+                    // Fixture reserves the icon directory too; only the separate codegen cache
+                    // can still belong to an earlier project with this otherwise unused id.
+                    if (new File(CONTEXT.getCacheDir(), "codegenCache/" + candidate.id).exists()) {
                         skipped.add(candidate);
                         status("backup_rt_owned_reservation", candidate.id);
                     } else { selected = candidate; break; }

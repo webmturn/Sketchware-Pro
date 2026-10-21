@@ -2,12 +2,11 @@ package pro.sketchware.core.codegen;
 
 import pro.sketchware.core.block.DynamicPaletteProvider;
 
-import static com.google.android.material.color.MaterialColors.harmonizeWithPrimary;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.view.ContextThemeWrapper;
 
+import com.google.android.material.color.MaterialColors;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -106,11 +105,19 @@ public class BlockLoader {
 
     private static void loadCustomBlocks() {
         ArrayList<HashMap<String, Object>> palettes = new DynamicPaletteProvider().getPaletteSelector();
+        HashMap<Integer, Integer> paletteColors = new HashMap<>();
+        for (HashMap<String, Object> palette : palettes) {
+            if (palette.get("index") instanceof Integer index && palette.get("color") instanceof Integer color) {
+                paletteColors.put(index, color);
+            }
+        }
 
         blocks = new ArrayList<>();
         blocksByName = new HashMap<>();
 
         ArrayList<HashMap<String, Object>> arrList = ExtraBlockFile.getExtraBlockData();
+        Context colorContext = null;
+        Integer primaryColor = null;
 
         for (int i = 0; i < arrList.size(); i++) {
             HashMap<String, Object> map = arrList.get(i);
@@ -165,9 +172,16 @@ public class BlockLoader {
 
                 if (color instanceof String) {
                     try {
-                        Context context = new ContextThemeWrapper(SketchApplication.getContext(), R.style.Theme_SketchwarePro);
-                        int harmonizedColor = harmonizeWithPrimary(context, Color.parseColor((String) color));
-                        info.setColor(harmonizedColor);
+                        int parsedColor = Color.parseColor((String) color);
+                        if (primaryColor == null) {
+                            if (colorContext == null) {
+                                colorContext = new ContextThemeWrapper(SketchApplication.getContext(), R.style.Theme_SketchwarePro);
+                            }
+                            // Resolve lazily once per load; zero is a valid color, not a failure sentinel.
+                            primaryColor = MaterialColors.getColor(colorContext, R.attr.colorPrimary,
+                                    MaterialColors.class.getCanonicalName());
+                        }
+                        info.setColor(MaterialColors.harmonize(parsedColor, primaryColor));
                     } catch (IllegalArgumentException e) {
                         SketchwareUtil.toastError(String.format(Helper.getResString(R.string.block_error_invalid_color), i + 1));
                         continue;
@@ -181,31 +195,8 @@ public class BlockLoader {
                     if (mapPalette instanceof String) {
                         try {
                             int mapPaletteNumber = Integer.parseInt((String) mapPalette);
-
-                            for (int j = 0, palettesSize = palettes.size(); j < palettesSize; j++) {
-                                HashMap<String, Object> palette = palettes.get(j);
-                                Object paletteIndex = palette.get("index");
-
-                                if (paletteIndex instanceof Integer) {
-                                    int indexInt = (Integer) paletteIndex;
-
-                                    if (mapPaletteNumber == indexInt) {
-                                        Object paletteColor = palette.get("color");
-
-                                        if (paletteColor instanceof Integer) {
-                                            try {
-                                                info.setPaletteColor((Integer) paletteColor);
-                                            } catch (IllegalArgumentException e) {
-                                                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.block_error_invalid_palette_color), j + 1));
-                                            }
-                                        } else {
-                                            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.block_error_invalid_palette_color_type), j + 1));
-                                        }
-                                    }
-                                } else {
-                                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.block_error_invalid_palette_index_type), j + 1));
-                                }
-                            }
+                            Integer paletteColor = paletteColors.get(mapPaletteNumber);
+                            if (paletteColor != null) info.setPaletteColor(paletteColor);
                         } catch (NumberFormatException e) {
                             SketchwareUtil.toastError(String.format(Helper.getResString(R.string.block_error_invalid_palette_number), i + 1));
                             continue;
