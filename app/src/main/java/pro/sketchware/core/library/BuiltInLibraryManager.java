@@ -19,7 +19,9 @@ public class BuiltInLibraryManager {
     private final List<BuiltInLibraries.BuiltInLibrary> excludedLibraries;
 
     public BuiltInLibraryManager(String projectId) {
-        excludedLibraries = ExcludeBuiltInLibrariesConfig.getExcludedLibraries(projectId);
+        var config = ExcludeBuiltInLibrariesConfig.readConfig(projectId);
+        excludedLibraries = config != null && Boolean.TRUE.equals(config.first)
+                ? config.second : List.of();
     }
 
     /**

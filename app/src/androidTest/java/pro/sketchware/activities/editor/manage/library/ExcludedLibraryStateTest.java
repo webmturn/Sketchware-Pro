@@ -40,6 +40,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import pro.sketchware.R;
 import pro.sketchware.core.library.BuiltInLibraries;
 import pro.sketchware.core.library.BuiltInLibraries.BuiltInLibrary;
+import pro.sketchware.core.library.BuiltInLibraryManager;
 import pro.sketchware.core.library.ExcludeBuiltInLibrariesConfig;
 import pro.sketchware.core.project.SketchwarePaths;
 
@@ -236,6 +237,21 @@ public class ExcludedLibraryStateTest {
         assertNotNull(saved);
         assertFalse(saved.first);
         assertEquals(List.of(first.getName()), names(saved.second));
+    }
+
+    @Test public void disablingExclusionsRestoresTheLibraryForTheNextBuild() throws Exception {
+        launch();
+        check(activity -> activity.findViewById(R.id.layout_switch_card).performClick());
+        check(activity -> activity.getOnBackPressedDispatcher().onBackPressed());
+        waitUntil(() -> scenario.getState() == Lifecycle.State.DESTROYED);
+        var saved = ExcludeBuiltInLibrariesConfig.readConfig(projectId);
+        assertNotNull(saved);
+        assertFalse(saved.first);
+        assertEquals(List.of(first.getName()), names(saved.second));
+        BuiltInLibraryManager manager = new BuiltInLibraryManager(projectId);
+        manager.addLibrary(first.getName());
+        assertTrue("Turning the switch off must restore the library for the next build",
+                manager.containsLibrary(first.getName()));
     }
 
     private void launch() {
