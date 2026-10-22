@@ -517,32 +517,46 @@ public class BlocksManager extends BaseAppCompatActivity {
     }
 
     private void swapRelatedBlocks(double f, double s) {
-        final String TEMP_PALETTE = "TEMP_SWAP";
+        String fromPalette = String.valueOf((long) f);
+        String toPalette = String.valueOf((long) s);
         for (Map<String, Object> block : all_blocks_list) {
             if (block == null) continue;
             Object paletteObj = block.get("palette");
-
             if (paletteObj == null) continue;
-            double paletteValue;
-            try {
-                paletteValue = Double.parseDouble(paletteObj.toString());
-            } catch (NumberFormatException e) {
-                continue;
+
+            String oldPalette = paletteObj.toString();
+            String newPalette;
+            if ("TEMP_SWAP".equals(paletteObj)) {
+                // Preserve how the former second pass handled a persisted swap marker.
+                newPalette = toPalette;
+            } else {
+                double paletteValue;
+                try {
+                    paletteValue = Double.parseDouble(oldPalette);
+                } catch (NumberFormatException e) {
+                    continue;
+                }
+                if (paletteValue == f) {
+                    newPalette = toPalette;
+                } else if (paletteValue == s) {
+                    newPalette = fromPalette;
+                } else {
+                    continue;
+                }
             }
 
-            if (paletteValue == f) {
-                block.put("palette", TEMP_PALETTE);
-            } else if (paletteValue == s) {
-                block.put("palette", String.valueOf((long) f));
+            block.put("palette", newPalette);
+            if (!oldPalette.equals(newPalette)) {
+                int remaining = blockCountsByPalette.get(oldPalette) - 1;
+                if (remaining == 0) {
+                    blockCountsByPalette.remove(oldPalette);
+                } else {
+                    blockCountsByPalette.put(oldPalette, remaining);
+                }
+                blockCountsByPalette.merge(newPalette, 1, Integer::sum);
             }
         }
-        for (Map<String, Object> block : all_blocks_list) {
-            if (block != null && TEMP_PALETTE.equals(block.get("palette"))) {
-                block.put("palette", String.valueOf((long) s));
-            }
-        }
-        // Dragging mutates the model without going through readSettings().
-        refreshBlockCounts();
+        // Counts follow each changed record; dragging never changes the recycle-bin count.
     }
 
     private void insertBlocksAt(double _p) {

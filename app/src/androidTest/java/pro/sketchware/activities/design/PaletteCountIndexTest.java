@@ -58,6 +58,100 @@ public class PaletteCountIndexTest {
             });
         }
     }
+    @Test public void dragVisitsEachBlockOnceWithoutRefreshingRecycleText() throws Exception {
+        try (Fixture f = new Fixture(BLOCKS, 3)) {
+            f.run(a -> {
+                AtomicInteger reads = new AtomicInteger();
+                AtomicInteger recycleChanges = new AtomicInteger();
+                @SuppressWarnings("unchecked")
+                var original = (ArrayList<HashMap<String, Object>>) field(a, "all_blocks_list");
+                ArrayList<HashMap<String, Object>> tracked = new ArrayList<>();
+                for (var map : original) tracked.add(new CountingMap(map, reads));
+                setField(a, "all_blocks_list", tracked);
+                android.widget.TextView recycle = a.findViewById(R.id.recycle_sub);
+                recycle.addTextChangedListener(new android.text.TextWatcher() {
+                    @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                    @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        recycleChanges.incrementAndGet();
+                    }
+                    @Override public void afterTextChanged(android.text.Editable s) {}
+                });
+                RecyclerView recycler = a.findViewById(R.id.paletteRecycler);
+                ItemTouchHelper helper = (ItemTouchHelper) field(a, "itemTouchHelper");
+                var callback = (ItemTouchHelper.Callback) field(helper, "mCallback");
+                var from = recycler.findViewHolderForAdapterPosition(0);
+                var to = recycler.findViewHolderForAdapterPosition(1);
+                assertNotNull(from);
+                assertNotNull(to);
+                assertTrue(callback.onMove(recycler, from, to));
+                assertEquals("A move must inspect each block only once", original.size(), reads.get());
+                assertEquals("Dragging cannot change the recycle-bin count", 0, recycleChanges.get());
+                counts(a, 1, 2, 1, 1);
+                callback.clearView(recycler, from);
+            });
+        }
+    }
+    @Test public void repeatedSwapsKeepLegacyValuesAndIndexConsistent() throws Exception {
+        String blocks = "[null,{}, {\"palette\":null},{\"palette\":\"9\"},"
+                + "{\"palette\":\"9.0\"},{\"palette\":9},{\"palette\":\" 9 \"},"
+                + "{\"palette\":\"9e0\"},{\"palette\":\"10\"},{\"palette\":\"10.0\"},"
+                + "{\"palette\":10},{\"palette\":\"11\"},{\"palette\":\"-1\"},"
+                + "{\"palette\":-1},{\"palette\":\"bad\"},{\"palette\":\"TEMP_SWAP\"}]";
+        try (Fixture f = new Fixture(blocks, 3)) {
+            f.run(a -> {
+                @SuppressWarnings("unchecked")
+                var actual = (ArrayList<HashMap<String, Object>>) field(a, "all_blocks_list");
+                // A same-key swap must still normalize a non-String numeric value.
+                actual.get(3).put("palette", 9L);
+                actual.get(8).put("palette", 10);
+                invoke(a, "refreshBlockCounts", new Class[0]);
+                ArrayList<HashMap<String, Object>> expected = new ArrayList<>();
+                for (var block : actual) expected.add(block == null ? null : new HashMap<>(block));
+                for (int[] pair : new int[][]{{9,9},{9,10},{10,11},{11,10},{10,9},{9,10},{10,9}}) {
+                    legacySwap(expected, pair[0], pair[1]);
+                    invoke(a, "swapRelatedBlocks", new Class[]{double.class, double.class},
+                            (double) pair[0], (double) pair[1]);
+                    assertEquals("Swapping must preserve the former model transformation", expected, actual);
+                    assertIndexMatchesModels(a, actual);
+                    assertEquals(1, count(a, -1));
+                }
+                RecyclerView recycler = a.findViewById(R.id.paletteRecycler);
+                ItemTouchHelper helper = (ItemTouchHelper) field(a, "itemTouchHelper");
+                var callback = (ItemTouchHelper.Callback) field(helper, "mCallback");
+                callback.clearView(recycler, recycler.findViewHolderForAdapterPosition(0));
+                invoke(a, "readSettings", new Class[0]);
+                // Existing Gson serialization omits null map values when writing the file.
+                for (var block : expected) {
+                    if (block != null && block.get("palette") == null) block.remove("palette");
+                }
+                assertEquals(expected, field(a, "all_blocks_list"));
+                assertIndexMatchesModels(a, expected);
+            });
+        }
+    }
+    static void legacySwap(ArrayList<HashMap<String, Object>> blocks, double from, double to) {
+        for (var block : blocks) {
+            if (block == null || block.get("palette") == null) continue;
+            double value;
+            try { value = Double.parseDouble(block.get("palette").toString()); }
+            catch (NumberFormatException e) { continue; }
+            if (value == from) block.put("palette", "TEMP_SWAP");
+            else if (value == to) block.put("palette", String.valueOf((long) from));
+        }
+        for (var block : blocks) {
+            if (block != null && "TEMP_SWAP".equals(block.get("palette"))) {
+                block.put("palette", String.valueOf((long) to));
+            }
+        }
+    }
+    static void assertIndexMatchesModels(BlocksManager activity, ArrayList<HashMap<String, Object>> blocks) {
+        Map<String, Integer> expected = new HashMap<>();
+        for (var block : blocks) {
+            if (block != null) expected.merge(String.valueOf(block.get("palette")), 1, Integer::sum);
+        }
+        assertEquals("Index must contain exactly the current raw keys and counts", expected,
+                field(activity, "blockCountsByPalette"));
+    }
     @Test public void insertDeleteRecycleAndEmptyKeepCountsCurrent() throws Exception {
         try(Fixture f=new Fixture(BLOCKS,3)) {
             f.run(a->{
