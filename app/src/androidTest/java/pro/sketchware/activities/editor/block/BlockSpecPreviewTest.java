@@ -62,7 +62,8 @@ public class BlockSpecPreviewTest {
             ViewGroup area = activity.findViewById(R.id.block_area);
             assertEquals(1, area.getChildCount());
             assertTrue(area.getChildAt(0) instanceof TextView);
-            assertTrue(((TextView) area.getChildAt(0)).getText().toString().contains("Error: '%m'"));
+            assertEquals(activity.getString(R.string.block_parameter_syntax_error, 2),
+                    ((TextView) area.getChildAt(0)).getText().toString());
             check(activity, "ready %m.textview", new String[] {"ready"}, new String[] {"%m.textview"});
         });
     }
