@@ -54,7 +54,7 @@ import pro.sketchware.util.SketchwareUtil;
 public class ManageJavaActivity extends BaseAppCompatActivity {
 
     // Works for both Java and Kotlin files.
-    private static final String PACKAGE_DECL_REGEX = "package (.*?);?\\n";
+    private static final Pattern PACKAGE_DECL_PATTERN = Pattern.compile("package (.*?);?\\n");
 
     private static final String ACTIVITY_TEMPLATE = """
             package %s;
@@ -480,7 +480,7 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
                 return getFileNameWoExt(position);
             }
 
-            Matcher m = Pattern.compile(PACKAGE_DECL_REGEX).matcher(readFile);
+            Matcher m = PACKAGE_DECL_PATTERN.matcher(readFile);
             if (m.find()) {
                 return m.group(1) + "." + getFileNameWoExt(position);
             }
@@ -528,10 +528,12 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
             Menu popupMenuMenu = popupMenu.getMenu();
             popupMenuMenu.clear();
 
-            boolean isActivityInManifest = frc.getJavaManifestList().contains(getFullName(position));
-            boolean isServiceInManifest = frc.getServiceManifestList().contains(getFullName(position));
-
             if (!isFolder(position)) {
+                // Resolve once for this opening; menu actions still reread the source so an
+                // external edit while the popup is open cannot leave a cached class name.
+                String fullName = getFullName(position);
+                boolean isActivityInManifest = frc.getJavaManifestList().contains(fullName);
+                boolean isServiceInManifest = frc.getServiceManifestList().contains(fullName);
                 if (isActivityInManifest) {
                     popupMenuMenu.add(Menu.NONE, MENU_REMOVE_ACTIVITY, Menu.NONE, R.string.java_menu_remove_activity);
                 } else if (!isServiceInManifest) {
