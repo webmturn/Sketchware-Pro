@@ -459,8 +459,16 @@ public class ProjectFilePaths {
                 ? fullCustomClassName.substring(packageName.length() + 1) : fullCustomClassName;
         File targetApplicationFile = new File(javaDir,
                 customSourceClassName.replace('.', File.separatorChar) + ".java");
+        boolean projectApplication = fullCustomClassName.startsWith(packageName + ".");
+        boolean customApplicationSource = targetApplicationFile.exists();
+        File generatedApplicationFile = new File(javaFilesPath,
+                fullCustomClassName.replace('.', File.separatorChar) + ".java");
 
-        if (!targetApplicationFile.exists()) {
+        // Classes outside the project package belong to user sources or dependencies.
+        // Also remove a previous generated copy when the user supplies their own source.
+        if (!projectApplication || customApplicationSource) {
+            removeGeneratedApplication(generatedApplicationFile);
+        } else {
             boolean applyMultiDex = projectSettings.getMinSdkVersion() < Build.VERSION_CODES.LOLLIPOP;
             String sketchApplicationFileContent = fileUtil.readAssetFile(
                     context,
@@ -502,7 +510,9 @@ public class ProjectFilePaths {
                     + customClassSimpleName + ".java", sketchApplicationFileContent);
         }
 
-        if (logcatEnabled) {
+        File generatedLoggerFile = new File(javaFilesPath,
+                packageNameAsFolders + File.separator + "SketchLogger.java");
+        if (logcatEnabled || generatedLoggerFile.exists()) {
             File sketchLoggerFile = new File(javaDir, "SketchLogger.java");
             if (!sketchLoggerFile.exists()) {
                 String sketchLoggerFileContent = fileUtil.readAssetFile(
@@ -516,9 +526,39 @@ public class ProjectFilePaths {
 
                 sketchLoggerFileContent = sketchLoggerFileContent.replace("<?class_name?>", customClassSimpleName);
 
-                fileUtil.writeText(javaFilesPath + File.separator + packageNameAsFolders + File.separator + "SketchLogger.java",
-                        sketchLoggerFileContent);
+                if (!projectApplication && !customApplicationSource) {
+                    // A library Application need not implement Sketchware's getContext() helper.
+                    sketchLoggerFileContent = sketchLoggerFileContent
+                            .replace("import " + fullCustomClassName + ";", "")
+                            .replace("private static volatile boolean isRunning", "private static volatile Context libraryContext;\n"
+                                    + "    private static volatile boolean isRunning")
+                            .replace("Context context = " + customClassSimpleName + ".getContext();", String.format("""
+                                    Context context = libraryContext;
+                                            if (context == null) {
+                                                try {
+                                                    context = (Context) Class.forName("%s").getMethod("getContext").invoke(null);
+                                                } catch (ReflectiveOperationException | ClassCastException ignored) {
+                                                    return;
+                                                }
+                                                if (context == null) return;
+                                                libraryContext = context;
+                                            }
+                                    """, fullCustomClassName));
+                }
+
+                fileUtil.writeText(generatedLoggerFile.getAbsolutePath(), sketchLoggerFileContent);
             }
+        }
+    }
+
+    private void removeGeneratedApplication(File generatedApplicationFile) {
+        var generatedRoot = new File(javaFilesPath).toPath().toAbsolutePath().normalize();
+        var target = generatedApplicationFile.toPath().toAbsolutePath().normalize();
+        if (!target.startsWith(generatedRoot)) {
+            throw new IllegalArgumentException("Application source is outside the generated Java directory");
+        }
+        if (generatedApplicationFile.exists() && !generatedApplicationFile.delete()) {
+            throw new IllegalStateException("Cannot remove obsolete generated Application: " + generatedApplicationFile);
         }
     }
 

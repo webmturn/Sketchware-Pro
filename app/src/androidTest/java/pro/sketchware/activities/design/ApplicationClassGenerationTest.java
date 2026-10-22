@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import android.app.Application;
 import android.app.Instrumentation;
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.Intent;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -29,6 +31,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
@@ -92,7 +96,19 @@ public class ApplicationClassGenerationTest {
     }
 
     @Test public void fullClassNameOutsideProjectPackageIsNotPrefixed() throws Exception {
-        verify("custom.MyApplication", "custom.MyApplication", false, false);
+        verifyLibrary(false, false, false);
+    }
+
+    @Test public void libraryApplicationNeedsNoStaticContextGetterForLogging() throws Exception {
+        verifyLibrary(true, false, false);
+    }
+
+    @Test public void libraryContextGetterRemainsOptionalAndCompatible() throws Exception {
+        verifyLibrary(true, false, true);
+    }
+
+    @Test public void staleExternalApplicationAndLoggerAreReconciledWithLoggingOff() throws Exception {
+        verifyLibrary(false, true, false);
     }
 
     @Test public void loggerUsesTheFullyQualifiedApplicationClass() throws Exception {
@@ -113,6 +129,75 @@ public class ApplicationClassGenerationTest {
 
     @Test public void existingExternalPackageSourceIsPreserved() throws Exception {
         verify("custom.MyApplication", "custom.MyApplication", true, true);
+    }
+
+    @Test public void addingCustomSourceRemovesOnlyItsPreviouslyGeneratedCopy() throws Exception {
+        String name = PACKAGE + ".custom.MyApplication";
+        try (Project project = new Project(name, name, true, true)) {
+            Path stale = Path.of(project.paths.javaFilesPath, name.replace('.', '/') + ".java");
+            Files.createDirectories(stale.getParent());
+            Files.write(stale, "old generated content".getBytes(StandardCharsets.UTF_8));
+            Path sentinel = Path.of(project.paths.javaFilesPath, "keep.txt");
+            Files.write(sentinel, "keep".getBytes(StandardCharsets.UTF_8));
+            project.paths.generateDebugFiles(context());
+            assertFalse(Files.exists(stale));
+            assertEquals("keep", read(sentinel));
+            assertEquals(project.customContent, read(project.customFile));
+            ClassLoader loader = project.compile();
+            assertTrue(loader.loadClass(name).getField("CUSTOM_SOURCE").getBoolean(null));
+        }
+    }
+
+    private static void verifyLibrary(boolean logging, boolean staleOutput, boolean getter) throws Exception {
+        String name = "custom.MyApplication";
+        try (Project project = new Project(name, name, logging, false)) {
+            Path jar = project.library(getter);
+            byte[] libraryBytes = Files.readAllBytes(jar);
+            Path generatedApplication = Path.of(project.paths.javaFilesPath, "custom/MyApplication.java");
+            Path loggerFile = Path.of(project.paths.javaFilesPath, PACKAGE.replace('.', '/'), "SketchLogger.java");
+            if (staleOutput) {
+                Files.createDirectories(generatedApplication.getParent());
+                Files.write(generatedApplication, ("package custom; public class MyApplication extends android.app.Application {}")
+                        .getBytes(StandardCharsets.UTF_8));
+                Files.createDirectories(loggerFile.getParent());
+                Files.write(loggerFile, ("package " + PACKAGE + "; public class SketchLogger {"
+                        + " public static android.content.Context context() { return custom.MyApplication.getContext(); } }")
+                        .getBytes(StandardCharsets.UTF_8));
+            }
+            project.paths.generateDebugFiles(context());
+            assertEquals(name, manifestClassName(project.paths));
+            assertFalse("A library's Application must not be generated again", Files.exists(generatedApplication));
+            assertArrayEquals(libraryBytes, Files.readAllBytes(jar));
+            Path caller = Path.of(project.paths.javaFilesPath, PACKAGE.replace('.', '/'), "UsesLibraryApplication.java");
+            Files.createDirectories(caller.getParent());
+            Files.write(caller, ("package " + PACKAGE + "; public class UsesLibraryApplication {"
+                    + " public static boolean libraryApi() { return custom.MyApplication.LIBRARY_SOURCE; } }")
+                    .getBytes(StandardCharsets.UTF_8));
+            ClassLoader loader = project.compile(List.of(jar));
+            Application application = new Instrumentation().newApplication(loader, name, context());
+            assertTrue(application.getClass().getField("LIBRARY_SOURCE").getBoolean(null));
+            assertEquals(true, loader.loadClass(PACKAGE + ".UsesLibraryApplication").getMethod("libraryApi").invoke(null));
+            if (logging || staleOutput) {
+                Class<?> logger = loader.loadClass(PACKAGE + ".SketchLogger");
+                logger.getMethod("broadcastLog", String.class).invoke(null, "library without initialized context");
+                if (getter) {
+                    assertEquals(1, application.getClass().getField("GETTER_CALLS").getInt(null));
+                    int[] broadcasts = {0};
+                    application.getClass().getField("CONTEXT").set(null, new ContextWrapper(context()) {
+                        @Override public void sendBroadcast(Intent intent) {
+                            assertEquals("pro.sketchware.ACTION_NEW_DEBUG_LOG", intent.getAction());
+                            assertEquals("ready", intent.getStringExtra("log"));
+                            broadcasts[0]++;
+                        }
+                    });
+                    logger.getMethod("broadcastLog", String.class).invoke(null, "ready");
+                    logger.getMethod("broadcastLog", String.class).invoke(null, "ready");
+                    assertEquals(2, broadcasts[0]);
+                    assertEquals("Successful context lookup should be cached", 2,
+                            application.getClass().getField("GETTER_CALLS").getInt(null));
+                }
+            }
+        }
     }
 
     private static void verify(String setting, String expected, boolean logging, boolean customSource) throws Exception {
@@ -183,10 +268,40 @@ public class ApplicationClassGenerationTest {
             }
         }
 
-        ClassLoader compile() throws Exception {
+        Path library(boolean getter) throws Exception {
+            Path source = output.resolve("MyApplication.java");
+            Files.write(source, ("package custom; public class MyApplication extends android.app.Application {"
+                    + " public static final boolean LIBRARY_SOURCE=true;"
+                    + (getter ? " public static int GETTER_CALLS; public static android.content.Context CONTEXT;"
+                    + " public static android.content.Context getContext() { GETTER_CALLS++; return CONTEXT; }" : "")
+                    + " }").getBytes(StandardCharsets.UTF_8));
+            Path classes = Files.createDirectory(output.resolve("libraryClasses"));
+            StringWriter diagnostics = new StringWriter();
+            var ecj = new org.eclipse.jdt.internal.compiler.batch.Main(new PrintWriter(diagnostics),
+                    new PrintWriter(diagnostics), false, null, null);
+            assertTrue(diagnostics.toString(), ecj.compile(new String[]{"-1.7", "-proc:none", "-bootclasspath",
+                    androidJar.toString(), "-d", classes.toString(), source.toString()}));
+            Path classpath = Path.of(SketchwarePaths.getProjectClasspathPath(fixture.id));
+            Files.createDirectories(classpath);
+            Path jar = classpath.resolve("application-library.jar");
+            try (JarOutputStream zip = new JarOutputStream(Files.newOutputStream(jar))) {
+                zip.putNextEntry(new JarEntry("custom/MyApplication.class"));
+                Files.copy(classes.resolve("custom/MyApplication.class"), zip);
+                zip.closeEntry();
+            }
+            return jar;
+        }
+
+        ClassLoader compile() throws Exception { return compile(List.of()); }
+
+        ClassLoader compile(List<Path> programJars) throws Exception {
             Path classes = Files.createDirectory(output.resolve("classes"));
             List<String> args = new ArrayList<>(List.of("-1.7", "-proc:none", "-bootclasspath", androidJar.toString(),
                     "-d", classes.toString()));
+            if (!programJars.isEmpty()) {
+                args.add("-classpath");
+                args.add(programJars.stream().map(Path::toString).collect(Collectors.joining(java.io.File.pathSeparator)));
+            }
             for (Path sourceRoot : List.of(Path.of(paths.javaFilesPath), customRoot)) {
                 try (Stream<Path> files = Files.walk(sourceRoot)) {
                     files.filter(path -> path.toString().endsWith(".java")).forEach(path -> args.add(path.toString()));
@@ -201,7 +316,7 @@ public class ApplicationClassGenerationTest {
                 bytecode = files.filter(path -> path.toString().endsWith(".class")).collect(Collectors.toList());
             }
             Path dex = Files.createDirectory(output.resolve("dex"));
-            D8.run(D8Command.builder().addProgramFiles(bytecode).addLibraryFiles(androidJar).setMinApiLevel(26)
+            D8.run(D8Command.builder().addProgramFiles(bytecode).addProgramFiles(programJars).addLibraryFiles(androidJar).setMinApiLevel(26)
                     .setOutput(dex, OutputMode.DexIndexed).build());
             return new DexClassLoader(dex.resolve("classes.dex").toString(), output.toString(), null, context().getClassLoader());
         }
