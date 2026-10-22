@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ScrollView;
 
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.lifecycle.Lifecycle;
@@ -104,7 +105,7 @@ public class SimpleHighlighterTest {
         }
     }
 
-    @Test(timeout = 30000) public void lengthLimitClearsOnlyOwnedSpansAndRecoversAfterShortening() throws Exception {
+    @Test(timeout = 30000) public void longTextKeepsHighlightingWithoutChangingCallerStylesOrComposition() throws Exception {
         try (Editor editor = new Editor()) {
             editor.main(() -> editor.input.setText("return 1;"));
             editor.awaitHighlights();
@@ -119,10 +120,11 @@ public class SimpleHighlighterTest {
                 editor.input.setSelection(3);
                 text.append(" x".repeat(7500));
             });
+            editor.awaitColor(0, 6, SyntaxScheme.JAVA().get(1).color);
             editor.afterDelay(() -> {
                 Editable text = editor.input.getText();
                 assertEquals(15009, text.length());
-                assertEquals("Only caller-owned color should remain", 1, editor.highlights());
+                assertTrue("Long text must keep syntax decorations", editor.highlights() > 1);
                 assertEquals(0, text.getSpanStart(pasted));
                 assertEquals(6, text.getSpanEnd(pasted));
                 assertEquals(0, text.getSpanStart(underline));
@@ -220,7 +222,7 @@ public class SimpleHighlighterTest {
         }
     }
 
-    @Test(timeout = 30000) public void blockCreatorSavesTheEntireCodeWhenHighlightingIsSuspended() throws Exception {
+    @Test(timeout = 30000) public void blockCreatorSavesTheEntireCodeWithViewportHighlighting() throws Exception {
         Path root = Files.createTempDirectory(InstrumentationRegistry.getInstrumentation().getTargetContext().getCacheDir().toPath(), "highlighter-creator-");
         Path file = root.resolve("blocks.json");
         Files.write(file, "[]".getBytes(StandardCharsets.UTF_8));
@@ -237,8 +239,19 @@ public class SimpleHighlighterTest {
             });
             SystemClock.sleep(350);
             scenario.onActivity(activity -> {
+                var views = binding(activity);
+                views.code.clearFocus();
+                views.scrollView.scrollTo(0, views.scrollView.getChildAt(0).getHeight());
+            });
+            int lastReturn = code.lastIndexOf("return");
+            waitUntil(() -> {
+                AtomicBoolean colored = new AtomicBoolean();
+                scenario.onActivity(activity -> colored.set(hasColor(binding(activity).code.getText(),
+                        lastReturn, lastReturn + 6, SyntaxScheme.JAVA().get(1).color)));
+                return colored.get();
+            });
+            scenario.onActivity(activity -> {
                 assertEquals(code, binding(activity).code.getText().toString());
-                assertEquals(0, spans(binding(activity).code.getText()).size());
                 binding(activity).save.performClick();
             });
             waitUntil(() -> scenario.getState() == Lifecycle.State.DESTROYED);
@@ -249,6 +262,152 @@ public class SimpleHighlighterTest {
             assertEquals(InstrumentationRegistry.getInstrumentation().getTargetContext().getCacheDir().getCanonicalFile().toPath(), root.toRealPath().getParent());
             Files.delete(file);
             Files.delete(root);
+        }
+    }
+
+    @Test(timeout = 30000) public void hundredThousandCharactersColorTheEndAfterInternalScrolling() throws Exception {
+        try (Editor editor = new Editor()) {
+            String line = "return 123; // viewport\n";
+            String body = line.repeat(5000);
+            editor.main(() -> { editor.input.setText(body); editor.input.setSelection(0); });
+            editor.awaitColor(0, 6, SyntaxScheme.JAVA().get(1).color);
+            int target = body.length() - line.length();
+            editor.main(() -> {
+                assertTrue("Only viewport decorations should be retained", editor.highlights() < 1200);
+                editor.input.setSelection(target);
+                editor.input.scrollTo(0, editor.input.getLayout().getLineTop(4999));
+            });
+            editor.awaitColor(target, target + 6, SyntaxScheme.JAVA().get(1).color);
+            editor.main(() -> {
+                assertFalse(hasColor(editor.input.getText(), 0, 6, SyntaxScheme.JAVA().get(1).color));
+                assertTrue(editor.highlights() < 1200);
+                assertEquals(body, editor.input.getText().toString());
+                assertEquals(target, editor.input.getSelectionStart());
+            });
+        }
+    }
+
+    @Test(timeout = 30000) public void ancestorScrollingKeepsCrossViewportCommentsAndDoesNotAccumulateSpans() throws Exception {
+        try (Editor editor = new Editor()) {
+            String line = "return 123;\n";
+            String body = "/* start\n" + line.repeat(9000) + "end */";
+            ScrollView[] scroll = new ScrollView[1];
+            editor.main(() -> {
+                editor.root.removeView(editor.input);
+                scroll[0] = new ScrollView(editor.input.getContext());
+                scroll[0].setFocusableInTouchMode(true);
+                scroll[0].addView(editor.input, new ScrollView.LayoutParams(-1, -2));
+                editor.root.addView(scroll[0], new FrameLayout.LayoutParams(-1, 500));
+                editor.input.setText(body);
+                editor.input.clearFocus();
+                scroll[0].requestFocus();
+            });
+            editor.awaitColor(0, body.length(), SyntaxScheme.JAVA().get(8).color);
+            for (int row : new int[]{2000, 6000, 8990, 1000}) {
+                editor.main(() -> scroll[0].scrollTo(0, editor.input.getLayout().getLineTop(row)));
+                int offset = 9 + (row - 1) * line.length();
+                editor.awaitColor(offset, offset + 6, SyntaxScheme.JAVA().get(1).color);
+                editor.awaitColor(0, body.length(), SyntaxScheme.JAVA().get(8).color);
+                editor.main(() -> {
+                    assertTrue(editor.highlights() < 1600);
+                    assertEquals(body, editor.input.getText().toString());
+                });
+            }
+        }
+    }
+
+    @Test(timeout = 30000) public void editsDuringRemovalCancelTheRemainingOldRanges() throws Exception {
+        try (Editor editor = new Editor()) {
+            String original = "return 123; // old\n".repeat(150);
+            editor.main(() -> editor.input.setText(original));
+            editor.awaitColor(0, 6, SyntaxScheme.JAVA().get(1).color);
+            AtomicBoolean edited = new AtomicBoolean();
+            editor.main(() -> {
+                Editable text = editor.input.getText();
+                text.setSpan(new WatchingSpans() {
+                    @Override public void onSpanRemoved(Spannable text, Object span, int start, int end) {
+                        if (isHighlight(span) && edited.compareAndSet(false, true)) {
+                            editor.input.getText().replace(0, editor.input.length(), "return 8;");
+                        }
+                    }
+                }, 0, text.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                // Change token type, so this test exercises removal rather than the reuse path.
+                text.replace(7, 10, "abc");
+            });
+            waitUntil(edited::get);
+            editor.awaitColor(0, 6, SyntaxScheme.JAVA().get(1).color);
+            editor.afterDelay(() -> {
+                assertEquals("return 8;", editor.input.getText().toString());
+                for (CharacterStyle style : spans(editor.input.getText()))
+                    assertTrue(editor.input.getText().getSpanEnd(style) <= 9);
+            });
+        }
+    }
+
+    @Test(timeout = 30000) public void detachDuringApplicationStopsBatchesAndReattachmentUsesNewText() throws Exception {
+        try (Editor editor = new Editor()) {
+            AtomicBoolean detached = new AtomicBoolean();
+            AtomicInteger additions = new AtomicInteger();
+            editor.main(() -> {
+                Editable text = editor.input.getText();
+                text.setSpan(new WatchingSpans() {
+                    @Override public void onSpanAdded(Spannable text, Object span, int start, int end) {
+                        if (!isHighlight(span)) return;
+                        additions.incrementAndGet();
+                        if (detached.compareAndSet(false, true)) editor.root.removeView(editor.input);
+                    }
+                }, 0, 0, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                text.append("return 123; // comment\n".repeat(5000));
+            });
+            waitUntil(detached::get);
+            editor.afterDelay(() -> {
+                assertEquals("No remaining batch may update a detached editor", 1, additions.get());
+                editor.input.setText("return 7;");
+                editor.root.addView(editor.input);
+            });
+            editor.awaitColor(0, 6, SyntaxScheme.JAVA().get(1).color);
+            editor.main(() -> assertEquals("return 7;", editor.input.getText().toString()));
+        }
+    }
+
+    @Test(timeout = 30000) public void unclosedCommentPasteDoesNotStarveLaterEdits() throws Exception {
+        try (Editor editor = new Editor()) {
+            editor.main(() -> editor.input.setText("/* ".repeat(40000)));
+            SystemClock.sleep(180);
+            editor.main(() -> editor.input.setText("return 9;"));
+            editor.awaitColor(0, 6, SyntaxScheme.JAVA().get(1).color);
+            editor.afterDelay(() -> {
+                assertEquals("return 9;", editor.input.getText().toString());
+                for (CharacterStyle style : spans(editor.input.getText()))
+                    assertTrue(editor.input.getText().getSpanEnd(style) <= 9);
+            });
+        }
+    }
+
+    @Test(timeout = 30000) public void changingDigitsReusesUnchangedDecorations() throws Exception {
+        try (Editor editor = new Editor()) {
+            editor.main(() -> editor.input.setText("return 123; // comment"));
+            editor.awaitColor(12, 22, SyntaxScheme.JAVA().get(8).color);
+            List<CharacterStyle> original = new ArrayList<>();
+            AtomicInteger mutations = new AtomicInteger();
+            editor.main(() -> {
+                original.addAll(spans(editor.input.getText()));
+                Editable text = editor.input.getText();
+                text.setSpan(new WatchingSpans() {
+                    @Override public void onSpanAdded(Spannable text, Object span, int start, int end) {
+                        if (isHighlight(span)) mutations.incrementAndGet();
+                    }
+                    @Override public void onSpanRemoved(Spannable text, Object span, int start, int end) {
+                        if (isHighlight(span)) mutations.incrementAndGet();
+                    }
+                }, 0, text.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                text.replace(7, 10, "456");
+            });
+            editor.afterDelay(() -> {
+                assertEquals("return 456; // comment", editor.input.getText().toString());
+                assertEquals(original, spans(editor.input.getText()));
+                assertEquals(0, mutations.get());
+            });
         }
     }
 
