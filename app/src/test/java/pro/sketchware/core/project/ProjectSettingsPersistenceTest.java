@@ -117,4 +117,32 @@ public class ProjectSettingsPersistenceTest {
         assertEquals("default", settings.getValue("missing", "default"));
         assertFalse(file.exists());
     }
+
+    @Test public void applicationClassResolutionPreservesStoredNames() throws Exception {
+        File file = folder.newFile("settings");
+        for (String[] value : new String[][]{
+                {"MyApplication", "com.example.MyApplication"},
+                {".custom.MyApplication", "com.example.custom.MyApplication"},
+                {"com.example.MyApplication", "com.example.MyApplication"},
+                {"custom.MyApplication", "custom.MyApplication"},
+                {" com.example.MyApplication ", "com.example.MyApplication"}
+        }) {
+            String original = new com.google.gson.Gson().toJson(Map.of("app_class", value[0], "hidden", "keep"));
+            write(file, original);
+            ProjectSettings settings = new ProjectSettings("test", file);
+            assertEquals(value[1], settings.getApplicationClassName("com.example"));
+            assertEquals(original, readText(file));
+        }
+    }
+
+    @Test public void defaultApplicationResolutionPreservesEmptyOrMissingConfiguration() throws Exception {
+        File file = new File(folder.getRoot(), "settings");
+        assertEquals("com.example.SketchApplication", new ProjectSettings("test", file).getApplicationClassName("com.example"));
+        assertFalse(file.exists());
+        for (String original : new String[]{"{}", "{\"app_class\":null}", "{\"app_class\":\"\"}", "{\"app_class\":\"  \"}"}) {
+            write(file, original);
+            assertEquals("com.example.SketchApplication", new ProjectSettings("test", file).getApplicationClassName("com.example"));
+            assertEquals(original, readText(file));
+        }
+    }
 }

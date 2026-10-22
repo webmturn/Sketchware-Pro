@@ -447,23 +447,18 @@ public class ProjectFilePaths {
             fileUtil.writeText(javaFilesPath + File.separator + packageNameAsFolders + File.separator + "DebugActivity.java", debugActivityContent);
         }
 
-        String customApplicationClassName = new ProjectSettings(sc_id).getValue(
-                ProjectSettings.SETTING_APPLICATION_CLASS, ".SketchApplication");
-        boolean notUsingCustomApplicationClass = customApplicationClassName.equals(".SketchApplication");
-
-        if (!customApplicationClassName.startsWith(".")) {
-            customApplicationClassName = "." + customApplicationClassName; // since sketchware don't allow creating any java file outside the package name
-        }
-
-        String fullCustomClassName = packageName + customApplicationClassName;
+        String fullCustomClassName = new ProjectSettings(sc_id).getApplicationClassName(packageName);
 
         int lastDot = fullCustomClassName.lastIndexOf('.');
         String customClassSimpleName = fullCustomClassName.substring(lastDot + 1);
         String customClassPackage = fullCustomClassName.substring(0, lastDot);
         String customClassPackageAsFolders = customClassPackage.replace('.', File.separatorChar);
 
-        File targetApplicationFile = new File(javaDir + File.separator +
-                customApplicationClassName.substring(1).replace('.', '/') + ".java");
+        // The Java manager stores project-package sources relative to the project's Java root.
+        String customSourceClassName = fullCustomClassName.startsWith(packageName + ".")
+                ? fullCustomClassName.substring(packageName.length() + 1) : fullCustomClassName;
+        File targetApplicationFile = new File(javaDir,
+                customSourceClassName.replace('.', File.separatorChar) + ".java");
 
         if (!targetApplicationFile.exists()) {
             boolean applyMultiDex = projectSettings.getMinSdkVersion() < Build.VERSION_CODES.LOLLIPOP;
@@ -471,7 +466,9 @@ public class ProjectFilePaths {
                     context,
                     "debug" + File.separator + "SketchApplication.java"
             );
-            sketchApplicationFileContent = PACKAGE_PLACEHOLDER_PATTERN.matcher(sketchApplicationFileContent).replaceAll(packageName);
+            sketchApplicationFileContent = sketchApplicationFileContent.replace("<?package_name?>", customClassPackage);
+            sketchApplicationFileContent = sketchApplicationFileContent.replace(
+                    "public class SketchApplication", "public class " + customClassSimpleName);
 
             if (applyMultiDex) {
                 sketchApplicationFileContent = sketchApplicationFileContent.replace(
@@ -491,12 +488,7 @@ public class ProjectFilePaths {
                                 "mApplicationContext = getApplicationContext();\n        DynamicColors.applyToActivitiesIfAvailable(this);")
                         .replace("import android.util.Log;", "import android.util.Log;\nimport com.google.android.material.color.DynamicColors;");
             }
-            if (!notUsingCustomApplicationClass) {
-                sketchApplicationFileContent = sketchApplicationFileContent.replace(
-                        "public class SketchApplication", "public class " + customClassSimpleName);
-                sketchApplicationFileContent = sketchApplicationFileContent.replace(
-                        "package " + packageName + ";", "package " + customClassPackage + ";");
-
+            if (!customClassPackage.equals(packageName)) {
                 String imports = "import android.util.Log;\nimport " + packageName + ".DebugActivity;";
                 if (logcatEnabled) {
                     imports += "\nimport " + packageName + ".SketchLogger;";

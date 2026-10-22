@@ -122,6 +122,18 @@ public class ProjectSettings {
         return value == null || value.isEmpty() ? defaultValue : value;
     }
 
+    /** Resolves the Application class using Android's relative and fully qualified name rules. */
+    public String getApplicationClassName(String packageName) {
+        String className = getValue(SETTING_APPLICATION_CLASS, ".SketchApplication").trim();
+        if (className.isEmpty()) {
+            className = ".SketchApplication";
+        }
+        if (className.startsWith(".")) {
+            return packageName + className;
+        }
+        return className.indexOf('.') < 0 ? packageName + "." + className : className;
+    }
+
     public void setValues(Map<String, String> values) {
         settings.putAll(values);
         save();
