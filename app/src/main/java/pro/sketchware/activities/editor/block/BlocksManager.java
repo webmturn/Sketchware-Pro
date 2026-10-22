@@ -69,6 +69,7 @@ public class BlocksManager extends BaseAppCompatActivity {
     boolean isDialogShowing;
     View draggedView;
     private ArrayList<HashMap<String, Object>> all_blocks_list = new ArrayList<>();
+    private final Map<String, Integer> blockCountsByPalette = new HashMap<>();
     private String blocks_dir;
     private String pallet_dir;
     private int oldPos;
@@ -381,19 +382,24 @@ public class BlocksManager extends BaseAppCompatActivity {
         pallet_dir = ExtraBlockFile.getExtraBlocksPaletteFile().getAbsolutePath();
         blocks_dir = ExtraBlockFile.getExtraBlocksDataFile().getAbsolutePath();
 
-        if (FileUtil.isExistFile(blocks_dir) && isValidJson(FileUtil.readFile(blocks_dir))) {
-            try {
-                all_blocks_list = getGson().fromJson(FileUtil.readFile(blocks_dir), Helper.TYPE_MAP_LIST);
+        try {
+            if (FileUtil.isExistFile(blocks_dir) && isValidJson(FileUtil.readFile(blocks_dir))) {
+                try {
+                    all_blocks_list = getGson().fromJson(FileUtil.readFile(blocks_dir), Helper.TYPE_MAP_LIST);
 
-                if (all_blocks_list != null) {
-                    return;
+                    if (all_blocks_list != null) {
+                        return;
+                    }
+                    // fall-through to shared handler
+                } catch (JsonParseException e) {
+                    // fall-through to shared handler
                 }
-                // fall-through to shared handler
-            } catch (JsonParseException e) {
-                // fall-through to shared handler
-            }
 
-            SketchwareUtil.showFailedToParseJsonDialog(this, new File(blocks_dir), Helper.getResString(R.string.blocks_custom_blocks), v -> readSettings());
+                SketchwareUtil.showFailedToParseJsonDialog(this, new File(blocks_dir), Helper.getResString(R.string.blocks_custom_blocks), v -> readSettings());
+            }
+        } finally {
+            // Also rebuild when a failed/missing read keeps the previous model or loads null.
+            refreshBlockCounts();
         }
     }
 
@@ -429,7 +435,6 @@ public class BlocksManager extends BaseAppCompatActivity {
 
         filtered_pallet_list.clear();
         filtered_palette_indices.clear();
-        binding.recycleSub.setText(Helper.getResString(R.string.blocks_count_format, (long) getN(-1)));
         if (hasActiveSearchQuery()) {
             filterPalettes(currentQuery);
         } else {
@@ -439,16 +444,20 @@ public class BlocksManager extends BaseAppCompatActivity {
     }
 
     private double getN(double _p) {
-        int n = 0;
-        if (all_blocks_list == null) return 0;
+        return blockCountsByPalette.getOrDefault(String.valueOf((long) _p), 0);
+    }
 
-        for (int i = 0; i < all_blocks_list.size(); i++) {
-            Map<String, Object> block = all_blocks_list.get(i);
-            if (block != null && String.valueOf(block.get("palette")).equals(String.valueOf((long) _p))) {
-                n++;
+    private void refreshBlockCounts() {
+        blockCountsByPalette.clear();
+        if (all_blocks_list != null) {
+            for (Map<String, Object> block : all_blocks_list) {
+                if (block != null) {
+                    // Preserve the original string comparison (e.g. "9" differs from "9.0").
+                    blockCountsByPalette.merge(String.valueOf(block.get("palette")), 1, Integer::sum);
+                }
             }
         }
-        return n;
+        binding.recycleSub.setText(Helper.getResString(R.string.blocks_count_format, (long) getN(-1)));
     }
 
     private void refreshCount() {
@@ -532,6 +541,8 @@ public class BlocksManager extends BaseAppCompatActivity {
                 block.put("palette", String.valueOf((long) s));
             }
         }
+        // Dragging mutates the model without going through readSettings().
+        refreshBlockCounts();
     }
 
     private void insertBlocksAt(double _p) {
@@ -727,7 +738,6 @@ public class BlocksManager extends BaseAppCompatActivity {
             holder.itemBinding.sub.setText(Helper.getResString(R.string.blocks_count_format, (long) getN(sourceIndex + 9)));
             holder.itemBinding.color.setBackgroundColor(backgroundColor);
             holder.itemBinding.dragHandler.setVisibility(hasActiveSearchQuery() ? View.GONE : View.VISIBLE);
-            binding.recycleSub.setText(Helper.getResString(R.string.blocks_count_format, (long) getN(-1)));
 
             holder.itemBinding.backgroundCard.setOnLongClickListener(v -> {
                 PopupMenu popup = new PopupMenu(BlocksManager.this, holder.itemBinding.color);
