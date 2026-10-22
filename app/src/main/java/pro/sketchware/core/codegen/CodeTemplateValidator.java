@@ -2,7 +2,9 @@ package pro.sketchware.core.codegen;
 
 import java.util.IllegalFormatConversionException;
 import java.util.IllegalFormatException;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 import java.util.regex.Matcher;
 
 /** Checks custom-block templates using String arguments, as supplied by BlockInterpreter. */
@@ -42,9 +44,46 @@ public final class CodeTemplateValidator {
 
     /** Returns the first detected problem without formatting the original template's output. */
     public static Problem findProblem(String template, int availableArguments) {
-        Problem format = findFormatProblem(template);
-        if (format != null) return format;
-        CodeTemplateArguments.Analysis arguments = CodeTemplateArguments.analyze(template);
+        if (template == null || template.indexOf('%') < 0) {
+            return argumentProblem(new CodeTemplateArguments.Analysis(0, null), availableArguments);
+        }
+        CodeTemplateArguments.Counter arguments = new CodeTemplateArguments.Counter();
+        Set<String> checkedFormats = null;
+        Matcher matcher = CodeTemplateArguments.FORMAT_SPECIFIER.matcher(template);
+        int end = 0;
+        while ((end = template.indexOf('%', end)) >= 0) {
+            // Keep one native matcher input. region() resets Android's ICU input for every
+            // specifier, repeatedly paying for the full document. Check the next '%' as well
+            // so find() cannot silently skip a malformed earlier specifier.
+            if (!matcher.find() || matcher.start() != end) {
+                return new Problem(Kind.INVALID_FORMAT, "%", end + 1, "MalformedFormatSpecifier", 0, 0);
+            }
+            // Bare general conversions accept String arguments, and bare %% / %n consume none.
+            // Flags, widths, precisions and date conversions still use the runtime Formatter.
+            if (!isBareGeneralConversion(matcher)) {
+                String bounded = "%s%" + matcher.group(2) + bound(matcher.group(3), "1")
+                        + (matcher.group(4) == null ? "" : "." + bound(matcher.group(4), "0"))
+                        + (matcher.group(5) == null ? "" : matcher.group(5)) + matcher.group(6);
+                if (checkedFormats == null) checkedFormats = new HashSet<>();
+                // Normalized format validation is independent of argument selection and source
+                // position. Repeated formats need one Formatter call within this check only.
+                if (checkedFormats.add(bounded)) {
+                    try {
+                        String.format(Locale.ROOT, bounded, "", "");
+                    } catch (IllegalFormatException failure) {
+                        Kind kind = failure instanceof IllegalFormatConversionException ? Kind.STRING_CONVERSION : Kind.INVALID_FORMAT;
+                        return new Problem(kind, matcher.group(), end + 1, failure.getClass().getSimpleName(), 0, 0);
+                    }
+                }
+            }
+            arguments.accept(matcher);
+            end = matcher.end();
+        }
+        // Format errors retain precedence over missing/reused arguments anywhere in the text.
+        return argumentProblem(arguments.result(), availableArguments);
+    }
+
+    private static Problem argumentProblem(CodeTemplateArguments.Analysis arguments, int availableArguments) {
         if (arguments.missingPreviousSpecifier != null) {
             return new Problem(Kind.MISSING_PREVIOUS_ARGUMENT, arguments.missingPreviousSpecifier, 0, null, 0, availableArguments);
         }
@@ -54,29 +93,9 @@ public final class CodeTemplateValidator {
         return null;
     }
 
-    private static Problem findFormatProblem(String template) {
-        if (template == null || template.isEmpty()) return null;
-        Matcher matcher = CodeTemplateArguments.FORMAT_SPECIFIER.matcher(template);
-        int end = 0;
-        while ((end = template.indexOf('%', end)) >= 0) {
-            matcher.region(end, template.length());
-            if (!matcher.lookingAt()) {
-                return new Problem(Kind.INVALID_FORMAT, "%", end + 1, "MalformedFormatSpecifier", 0, 0);
-            }
-            // Argument selection is checked separately. A dummy previous String lets '<' be
-            // validated here without obscuring invalid flags or conversions.
-            String bounded = "%s%" + matcher.group(2) + bound(matcher.group(3), "1")
-                    + (matcher.group(4) == null ? "" : "." + bound(matcher.group(4), "0"))
-                    + (matcher.group(5) == null ? "" : matcher.group(5)) + matcher.group(6);
-            try {
-                String.format(Locale.ROOT, bounded, "", "");
-            } catch (IllegalFormatException failure) {
-                Kind kind = failure instanceof IllegalFormatConversionException ? Kind.STRING_CONVERSION : Kind.INVALID_FORMAT;
-                return new Problem(kind, matcher.group(), end + 1, failure.getClass().getSimpleName(), 0, 0);
-            }
-            end = matcher.end();
-        }
-        return null;
+    private static boolean isBareGeneralConversion(Matcher matcher) {
+        return matcher.group(2).isEmpty() && matcher.group(3) == null && matcher.group(4) == null
+                && matcher.group(5) == null && "sSbBhH%n".indexOf(matcher.group(6).charAt(0)) >= 0;
     }
 
     private static String bound(String number, String replacement) {

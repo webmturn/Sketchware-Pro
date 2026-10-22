@@ -95,6 +95,24 @@ public class CodeTemplateFormatValidationTest {
         status("f32_production_large_width_ms", String.valueOf((System.nanoTime() - started) / 1000000));
     }
 
+    @Test public void repeatedTemplatesKeepArgumentChecksAndLateErrorPositions() {
+        String valid = "%1$s %% %n %1$-8.2s ".repeat(1000);
+        assertNull(CodeTemplateValidator.findProblem(valid, 1));
+        for (String suffix : List.of("%d", "%#s", "%tY", "%.1n", "%--s")) {
+            var expected = CodeTemplateValidator.findProblem(suffix, 2);
+            var actual = CodeTemplateValidator.findProblem(valid + suffix, 2);
+            assertEquals(suffix, expected.kind, actual.kind);
+            assertEquals(suffix, expected.errorType, actual.errorType);
+            assertEquals(suffix, actual.specifier);
+            assertEquals(valid.length() + 1, actual.position);
+        }
+        var missing = CodeTemplateValidator.findProblem("%s ".repeat(1000), 2);
+        assertEquals(CodeTemplateValidator.Kind.NOT_ENOUGH_ARGUMENTS, missing.kind);
+        assertEquals(1000, missing.requiredArguments);
+        assertEquals(CodeTemplateValidator.Kind.MISSING_PREVIOUS_ARGUMENT,
+                CodeTemplateValidator.findProblem("%<s " + valid, 1).kind);
+    }
+
     private void generated(String template, boolean expectedWarning) throws Exception {
         ExtraBlockInfo info = info(template, "call %s.value");
         assertEquals(template, expectedWarning, warned(info));

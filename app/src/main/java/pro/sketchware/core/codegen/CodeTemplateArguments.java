@@ -24,13 +24,23 @@ final class CodeTemplateArguments {
     }
 
     static Analysis analyze(String template) {
-        int ordinaryIndex = 0, previousIndex = 0, requiredCount = 0;
-        String missingPrevious = null;
         if (template == null || template.isEmpty()) return new Analysis(0, null);
+        Counter counter = new Counter();
         Matcher matcher = FORMAT_SPECIFIER.matcher(template);
-        while (matcher.find()) {
+        while (matcher.find()) counter.accept(matcher);
+        return counter.result();
+    }
+
+    /** Also used by validation so argument selection does not need a second regex scan. */
+    static final class Counter {
+        private int ordinaryIndex;
+        private int previousIndex;
+        private int requiredCount;
+        private String missingPrevious;
+
+        void accept(Matcher matcher) {
             String conversion = matcher.group(6);
-            if (matcher.group(5) == null && (conversion.equals("%") || conversion.equals("n"))) continue;
+            if (matcher.group(5) == null && (conversion.equals("%") || conversion.equals("n"))) return;
             int index = argumentIndex(matcher.group(1));
             if (matcher.group(2).indexOf('<') >= 0) index = PREVIOUS_INDEX;
             if (index == PREVIOUS_INDEX) {
@@ -42,7 +52,8 @@ final class CodeTemplateArguments {
             previousIndex = index;
             requiredCount = Math.max(requiredCount, index);
         }
-        return new Analysis(requiredCount, missingPrevious);
+
+        Analysis result() { return new Analysis(requiredCount, missingPrevious); }
     }
 
     private static int argumentIndex(String index) {

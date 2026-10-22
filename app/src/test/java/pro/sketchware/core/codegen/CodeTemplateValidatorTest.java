@@ -65,4 +65,53 @@ public class CodeTemplateValidatorTest {
         }
         assertEquals(3960, checks);
     }
+
+    @Test public void formatFailuresStillTakePrecedenceOverEarlierArgumentFailures() {
+        String prefix = "%<s %999$s " + "%1$-8.2s ".repeat(500);
+        CodeTemplateValidator.Problem problem = CodeTemplateValidator.findProblem(prefix + "%d", 2);
+        assertEquals(CodeTemplateValidator.Kind.STRING_CONVERSION, problem.kind);
+        assertEquals("%d", problem.specifier);
+        assertEquals(prefix.length() + 1, problem.position);
+        problem = CodeTemplateValidator.findProblem(prefix + "%--s", 2);
+        assertEquals(CodeTemplateValidator.Kind.INVALID_FORMAT, problem.kind);
+        assertEquals("%--s", problem.specifier);
+        assertEquals(prefix.length() + 1, problem.position);
+    }
+
+    @Test public void repeatedFormatsStillCountEveryOrdinaryAndExplicitArgument() {
+        assertNull(CodeTemplateValidator.findProblem("%1$s %% %n ".repeat(1000), 1));
+        var ordinary = CodeTemplateValidator.findProblem("%s ".repeat(1000), 2);
+        assertEquals(CodeTemplateValidator.Kind.NOT_ENOUGH_ARGUMENTS, ordinary.kind);
+        assertEquals(1000, ordinary.requiredArguments);
+        String widths = "%1$-8.2s %2$-20.5s ".repeat(1000);
+        assertNull(CodeTemplateValidator.findProblem(widths, 2));
+        var explicit = CodeTemplateValidator.findProblem(widths, 1);
+        assertEquals(2, explicit.requiredArguments);
+        assertEquals(1, explicit.availableArguments);
+    }
+
+    @Test public void cachedFormatsDoNotHideFlagDateOrPrecisionFailures() {
+        String valid = "%1$-8.2s ".repeat(500);
+        for (String invalid : List.of("%#s", "%<d", "%.1n", "%tY", "%--s")) {
+            var expected = CodeTemplateValidator.findProblem(invalid, 3);
+            var actual = CodeTemplateValidator.findProblem(valid + invalid, 3);
+            assertEquals(invalid, expected.kind, actual.kind);
+            assertEquals(invalid, expected.errorType, actual.errorType);
+            assertEquals(invalid, actual.specifier);
+            assertEquals(valid.length() + 1, actual.position);
+        }
+        assertEquals(CodeTemplateValidator.Kind.MISSING_PREVIOUS_ARGUMENT,
+                CodeTemplateValidator.findProblem("%<s " + valid, 3).kind);
+    }
+
+    @Test public void cannotSkipMalformedPercentBeforeALaterValidSpecifier() {
+        for (String broken : List.of("%?", "%.?", "%1$?", "%_", "% ?")) {
+            String template = "prefix " + broken + " literal %s";
+            var problem = CodeTemplateValidator.findProblem(template, 1);
+            assertEquals(broken, CodeTemplateValidator.Kind.INVALID_FORMAT, problem.kind);
+            assertEquals("%", problem.specifier);
+            assertEquals(8, problem.position);
+            assertEquals("MalformedFormatSpecifier", problem.errorType);
+        }
+    }
 }
