@@ -2,7 +2,7 @@ package pro.sketchware.activities.editor.code;
 
 import static pro.sketchware.util.GsonUtils.getGson;
 
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.JsonParseException;
 
 import androidx.activity.OnBackPressedCallback;
 import android.app.Activity;
@@ -26,8 +26,12 @@ import org.xml.sax.InputSource;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -259,21 +263,17 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
 
         if (fromAndroidManifest) {
             String filePath = SketchwarePaths.getAndroidManifestActivitiesComponentsPath(scId);
-            if (FileUtil.isExistFile(filePath)) {
-                ArrayList<HashMap<String, Object>> activityComponents;
-                try {
-                    activityComponents = getGson()
-                            .fromJson(FileUtil.readFile(filePath), Helper.TYPE_MAP_LIST);
-                } catch (JsonSyntaxException e) {
-                    activityComponents = new ArrayList<>();
-                }
-                for (int i = 0; i < activityComponents.size(); i++) {
-                    Object name = activityComponents.get(i).get("name");
+            try {
+                for (HashMap<String, Object> component : readManifestComponents(filePath)) {
+                    if (component == null) continue;
+                    Object name = component.get("name");
                     if (name != null && activityName.equals(name)) {
-                        Object valueObj = activityComponents.get(i).get("value");
+                        Object valueObj = component.get("value");
                         beforeContent = valueObj != null ? valueObj.toString() : "";
                     }
                 }
+            } catch (IOException | JsonParseException e) {
+                SketchwareUtil.toastError(getString(R.string.manifest_attributes_read_error));
             }
         }
 
@@ -322,42 +322,47 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
     }
 
     public void save() {
-        beforeContent = binding.editor.getText().toString();
+        String content = binding.editor.getText().toString();
 
         if (fromAndroidManifest) {
             String filePath = SketchwarePaths.getAndroidManifestActivitiesComponentsPath(scId);
-            if (FileUtil.isExistFile(filePath)) {
-                ArrayList<HashMap<String, Object>> activitiesComponents;
-                try {
-                    activitiesComponents = getGson()
-                            .fromJson(FileUtil.readFile(filePath), Helper.TYPE_MAP_LIST);
-                } catch (JsonSyntaxException e) {
-                    activitiesComponents = new ArrayList<>();
-                }
-                for (int i = 0; i < activitiesComponents.size(); i++) {
-                    if (activityName.equals(activitiesComponents.get(i).get("name"))) {
-                        activitiesComponents.get(i).put("value", beforeContent);
-                        FileUtil.writeFile(filePath, getGson().toJson(activitiesComponents));
-                        SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
-                        return;
-                    }
-                }
-                HashMap<String, Object> map = new HashMap<>();
-                map.put("name", activityName);
-                map.put("value", beforeContent);
-                activitiesComponents.add(map);
-                FileUtil.writeFile(filePath, getGson().toJson(activitiesComponents));
-            } else {
-                ArrayList<HashMap<String, Object>> newComponentsList = new ArrayList<>();
-                HashMap<String, Object> map = new HashMap<>();
-                map.put("name", activityName);
-                map.put("value", beforeContent);
-                newComponentsList.add(map);
-                FileUtil.writeFile(filePath, getGson().toJson(newComponentsList));
+            ArrayList<HashMap<String, Object>> activitiesComponents;
+            try {
+                activitiesComponents = readManifestComponents(filePath);
+            } catch (IOException | JsonParseException e) {
+                SketchwareUtil.toastError(getString(R.string.manifest_attributes_read_error));
+                return;
             }
-        } else FileUtil.writeFile(getIntent().getStringExtra("content"), beforeContent);
+            HashMap<String, Object> current = null;
+            for (HashMap<String, Object> component : activitiesComponents) {
+                if (component != null && activityName.equals(component.get("name"))) {
+                    current = component;
+                    break;
+                }
+            }
+            if (current == null) {
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("name", activityName);
+                activitiesComponents.add(map);
+                current = map;
+            }
+            current.put("value", content);
+            FileUtil.writeFile(filePath, getGson().toJson(activitiesComponents));
+        } else FileUtil.writeFile(getIntent().getStringExtra("content"), content);
 
+        beforeContent = content;
         SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
+    }
+
+    private ArrayList<HashMap<String, Object>> readManifestComponents(String filePath) throws IOException {
+        String json;
+        try {
+            json = new String(Files.readAllBytes(Paths.get(filePath)), StandardCharsets.UTF_8);
+        } catch (NoSuchFileException e) {
+            return new ArrayList<>();
+        }
+        ArrayList<HashMap<String, Object>> components = getGson().fromJson(json, Helper.TYPE_MAP_LIST);
+        return components != null ? components : new ArrayList<>();
     }
 
     private static final int MENU_UNDO = 1, MENU_REDO = 2, MENU_SAVE = 3, MENU_LAYOUT_PREVIEW = 4,
