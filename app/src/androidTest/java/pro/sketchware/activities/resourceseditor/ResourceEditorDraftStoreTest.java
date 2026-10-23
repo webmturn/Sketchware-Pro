@@ -172,6 +172,67 @@ public class ResourceEditorDraftStoreTest {
         try { restore(); fail(); } catch (IOException expected) { }
     }
 
+    @Test public void closingNeverWrittenSessionDoesNotCreateRecoveryMaterial() throws Exception {
+        assertFalse(store.directory.exists());
+        assertFalse(store.isDurable());
+        assertEquals(0, store.generation());
+        store.close();
+        assertTrue(gate.closed);
+        assertFalse("Closing an unpublished empty session must not create a directory", store.directory.exists());
+        assertFalse(store.isDurable());
+        try { restore(); fail("An unpublished session has no recovery checkpoint"); }
+        catch (IOException expected) { }
+        try { commitString(1, "late"); fail("A closed in-memory owner must still reject writes"); }
+        catch (IOException expected) { }
+        assertFalse(store.directory.exists());
+    }
+
+    @Test public void closingCommittedCleanSessionStillWritesClosedMarker() throws Exception {
+        store.commit(new long[6], new boolean[6], Map.of());
+        assertTrue(store.isDurable());
+        store.close();
+        assertClosedMarker();
+        try { restore(); fail("An older clean checkpoint must not reopen after closing"); }
+        catch (IOException expected) { }
+    }
+
+    @Test public void closingFailedFirstWriteStillCleansMaterialAndWritesClosedMarker() throws Exception {
+        failingPoint = "before_manifest";
+        try { commitString(1, "uncommitted first draft"); fail(); }
+        catch (IOException expected) { }
+        assertFalse(store.isDurable());
+        assertEquals(0, store.generation());
+        assertEquals(1, new File(store.directory, "pages").list().length);
+        failingPoint = null;
+        store.close();
+        assertClosedMarker();
+        assertEquals(0, new File(store.directory, "pages").list().length);
+    }
+
+    @Test public void closingUnwrittenSessionWithLegacyHistoryStillDiscardsItsSource() throws Exception {
+        String source = ResourceEditorLegacyXmlBarrier.fingerprint("[]", "{}");
+        ResourceEditorLegacyXmlBarrier barrier = new ResourceEditorLegacyXmlBarrier(
+                root, "project", "-fr", session, null, point -> { });
+        barrier.remember(0, source);
+        barrier.flushSources();
+        assertTrue(store.hasLegacyXmlHistory());
+        assertFalse(store.directory.exists());
+        assertFalse(barrier.superseded(0, source));
+        store.close();
+        assertClosedMarker();
+        assertTrue(barrier.superseded(0, source));
+    }
+
+    private void assertClosedMarker() throws Exception {
+        File file = new File(store.directory, "manifest.json");
+        assertTrue(file.exists());
+        JsonObject closed = JsonParser.parseString(new String(
+                Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8)).getAsJsonObject();
+        assertTrue(closed.get("closed").getAsBoolean());
+        assertTrue(gate.closed);
+        assertTrue(store.isDurable());
+    }
+
     @Test public void atomicXmlFailureKeepsOriginalAndSuccessReplacesIt() throws Exception {
         File xml = new File(root, "resources/strings.xml");
         ResourceXmlWriter.write(xml.getPath(), "original");

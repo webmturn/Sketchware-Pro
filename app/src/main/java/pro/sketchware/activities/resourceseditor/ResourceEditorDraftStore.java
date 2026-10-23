@@ -16,6 +16,7 @@ import java.io.RandomAccessFile;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -833,6 +834,14 @@ final class ResourceEditorDraftStore {
     void close() throws IOException {
         synchronized (gate) {
             requireOwner();
+            // The Activity publishes only durable session IDs. A session with no storage or
+            // legacy recovery records needs only its in-memory owner invalidated on close.
+            if (!durable && manifest.generation == 0
+                    && Files.notExists(directory.toPath(), LinkOption.NOFOLLOW_LINKS)
+                    && !legacyXml.hasHistory()) {
+                gate.closed = true;
+                return;
+            }
             faults.at("before_close_manifest");
             if (legacyXml.hasHistory()) legacyXml.discardSession();
             Manifest closed = fresh();
