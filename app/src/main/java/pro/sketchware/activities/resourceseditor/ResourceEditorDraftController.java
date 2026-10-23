@@ -21,6 +21,7 @@ import pro.sketchware.util.LogUtil;
 final class ResourceEditorDraftController {
     private static final ExecutorService IO = Executors.newSingleThreadExecutor(r -> new Thread(r, "resource-drafts"));
     private static final Map<String, Gate> OWNERS = new ConcurrentHashMap<>();
+    private static final ResourceEditorDraftMaintenance MAINTENANCE = new ResourceEditorDraftMaintenance(IO, OWNERS.keySet());
     static final class Gate {
         volatile long owner;
         volatile boolean closed;
@@ -73,11 +74,10 @@ final class ResourceEditorDraftController {
                         }
                     }
                 }
-                ResourceEditorDraftStore.pruneClosedSessions(root);
-                ResourceEditorDraftOrphans.prune(root, OWNERS.keySet());
                 return loaded;
             } catch (IOException failure) { throw new java.util.concurrent.CompletionException(failure); }
         }, IO);
+        MAINTENANCE.afterOpening(opening, root);
     }
 
     CompletableFuture<Void> prewrite(ResourceEditorDraftState.Owner[] editors) {

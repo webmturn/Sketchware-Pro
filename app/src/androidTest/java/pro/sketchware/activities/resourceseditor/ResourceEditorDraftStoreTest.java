@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import pro.sketchware.activities.resourceseditor.components.fragments.ArraysEditor;
@@ -194,6 +195,29 @@ public class ResourceEditorDraftStoreTest {
         store.close();
         assertTrue(openManifest.setLastModified(1));
         ResourceEditorDraftStore.pruneClosedSessions(root);
+        assertFalse(store.directory.exists());
+    }
+
+    @Test public void queuedClosedCleanupHonorsCurrentOwnerAndDamagedManifest() throws Exception {
+        commitString(1, "protected");
+        failingPoint = "before_cleanup";
+        store.close();
+        File manifest = new File(store.directory, "manifest.json");
+        assertTrue(manifest.setLastModified(1));
+        byte[] closedManifest = Files.readAllBytes(manifest.toPath());
+        ResourceEditorDraftStore.pruneClosedSession(store.directory, Set.of(session), System.currentTimeMillis());
+        assertTrue(manifest.exists());
+        assertEquals(1, new File(store.directory, "pages").list().length);
+
+        Files.write(manifest.toPath(), "broken".getBytes(StandardCharsets.UTF_8));
+        assertTrue(manifest.setLastModified(1));
+        ResourceEditorDraftStore.pruneClosedSession(store.directory, Set.of(), System.currentTimeMillis());
+        assertTrue(manifest.exists());
+        assertEquals(1, new File(store.directory, "pages").list().length);
+
+        Files.write(manifest.toPath(), closedManifest);
+        assertTrue(manifest.setLastModified(1));
+        ResourceEditorDraftStore.pruneClosedSession(store.directory, Set.of(), System.currentTimeMillis());
         assertFalse(store.directory.exists());
     }
 

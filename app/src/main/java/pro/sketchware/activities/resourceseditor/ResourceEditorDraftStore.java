@@ -897,33 +897,40 @@ final class ResourceEditorDraftStore {
 
     /** Only CLOSED sessions are age-pruned. Recoverable unsaved sessions are never evicted. */
     static void pruneClosedSessions(File root) {
-        File[] sessions = root.listFiles(File::isDirectory);
+        if (Files.isSymbolicLink(root.toPath())) return;
+        File[] sessions = root.listFiles();
         if (sessions == null) return;
         long cutoff = System.currentTimeMillis() - java.util.concurrent.TimeUnit.DAYS.toMillis(7);
-        for (File directory : sessions) {
-            if (!directory.getName().matches("[0-9a-f-]{36}") || Files.isSymbolicLink(directory.toPath())) continue;
-            File manifest = new File(directory, "manifest.json");
-            if (!manifest.isFile() || manifest.lastModified() >= cutoff) continue;
-            try {
-                Manifest saved = GSON.fromJson(read(manifest), Manifest.class);
-                if (saved == null || saved.schema != SCHEMA || !saved.closed || !directory.getName().equals(saved.session)) continue;
-                File pages = new File(directory, "pages");
-                if (Files.isSymbolicLink(pages.toPath())) continue;
-                File[] objects = pages.listFiles();
-                if (objects != null) for (File object : objects) {
-                    if (object.isFile() && (object.getName().matches("[0-5]-[0-9a-f-]{36}\\.(json|bin|seg)")
-                            || object.getName().matches("\\.resource-.*\\.tmp"))) object.delete();
-                }
-                if (pages.exists() && !pages.delete()) continue;
-                File[] temporary = directory.listFiles(file -> file.getName().matches("\\.resource-.*\\.tmp"));
-                if (temporary != null) for (File file : temporary) file.delete();
-                File intent = new File(directory, "xml-commit.json");
-                if (intent.isFile()) intent.delete();
-                manifest.delete();
-                directory.delete();
-            } catch (IOException | RuntimeException failure) {
-                LogUtil.w("ResourceDrafts", "Closed-session cleanup deferred", failure);
+        for (File directory : sessions) pruneClosedSession(directory, Set.of(), cutoff);
+    }
+
+    static void pruneClosedSession(File directory, Set<String> activeSessions, long cutoff) {
+        if (Files.isSymbolicLink(directory.getParentFile().toPath()) || !directory.isDirectory()
+                || !directory.getName().matches("[0-9a-f-]{36}") || activeSessions.contains(directory.getName())
+                || Files.isSymbolicLink(directory.toPath())) return;
+        File manifest = new File(directory, "manifest.json");
+        if (Files.isSymbolicLink(manifest.toPath()) || !manifest.isFile() || manifest.lastModified() >= cutoff) return;
+        try {
+            Manifest saved = GSON.fromJson(read(manifest), Manifest.class);
+            if (saved == null || saved.schema != SCHEMA || !saved.closed || !directory.getName().equals(saved.session)) return;
+            File pages = new File(directory, "pages");
+            if (Files.isSymbolicLink(pages.toPath())) return;
+            File[] objects = pages.listFiles();
+            // A queued sweep must not act on owner eligibility captured in an earlier batch.
+            if (activeSessions.contains(directory.getName())) return;
+            if (objects != null) for (File object : objects) {
+                if (object.isFile() && (object.getName().matches("[0-5]-[0-9a-f-]{36}\\.(json|bin|seg)")
+                        || object.getName().matches("\\.resource-.*\\.tmp"))) object.delete();
             }
+            if (pages.exists() && !pages.delete()) return;
+            File[] temporary = directory.listFiles(file -> file.getName().matches("\\.resource-.*\\.tmp"));
+            if (temporary != null) for (File file : temporary) file.delete();
+            File intent = new File(directory, "xml-commit.json");
+            if (intent.isFile()) intent.delete();
+            manifest.delete();
+            directory.delete();
+        } catch (IOException | RuntimeException failure) {
+            LogUtil.w("ResourceDrafts", "Closed-session cleanup deferred", failure);
         }
     }
 

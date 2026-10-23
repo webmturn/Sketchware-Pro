@@ -7,6 +7,8 @@ import org.junit.rules.TemporaryFolder;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.Set;
+import java.util.HashSet;
+import java.util.ArrayDeque;
 import java.util.UUID;
 
 public class ResourceEditorDraftOrphansTest {
@@ -60,5 +62,35 @@ public class ResourceEditorDraftOrphansTest {
             File directory=new File(root,name);assertTrue(directory.mkdir());age(directory);
             ResourceEditorDraftOrphans.prune(root,Set.of());assertTrue(directory.exists());
         }
+    }
+
+    @Test public void queuedCleanupChecksOwnersAndNewIntentAtExecutionTime() throws Exception {
+        File root = temporary.newFolder();
+        File owned = session(root), protectedByIntent = session(root);
+        age(owned); age(protectedByIntent);
+        Set<String> active = new HashSet<>();
+        ArrayDeque<Runnable> queue = new ArrayDeque<>();
+        ResourceEditorDraftMaintenance maintenance = new ResourceEditorDraftMaintenance(queue::addLast,
+                (directory, cutoff) -> ResourceEditorDraftOrphans.pruneDirectory(directory, active, cutoff),
+                failure -> fail(failure.toString()));
+        maintenance.schedule(root);
+        queue.removeFirst().run(); // Enumerate before a new owner and XML intent become visible.
+        active.add(owned.getName());
+        File intent = new File(protectedByIntent, "xml-commit.json");
+        Files.write(intent.toPath(), "protected intent".getBytes());
+        age(protectedByIntent); // The intent, rather than its age, must preserve this directory.
+        while (!queue.isEmpty()) queue.removeFirst().run();
+        assertTrue(owned.exists());
+        assertTrue(intent.exists());
+        assertEquals(1, new File(owned, "pages").list().length);
+        assertEquals(1, new File(protectedByIntent, "pages").list().length);
+
+        active.clear();
+        assertTrue(intent.delete());
+        age(protectedByIntent);
+        maintenance.schedule(root);
+        while (!queue.isEmpty()) queue.removeFirst().run();
+        assertFalse(owned.exists());
+        assertFalse(protectedByIntent.exists());
     }
 }

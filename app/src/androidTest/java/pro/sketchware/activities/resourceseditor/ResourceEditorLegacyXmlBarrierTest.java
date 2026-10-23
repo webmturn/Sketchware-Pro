@@ -128,6 +128,42 @@ public class ResourceEditorLegacyXmlBarrierTest {
         Files.createSymbolicLink(new File(candidate,"pages").toPath(),outside.toPath());assertTrue(candidate.setLastModified(1));
         ResourceEditorDraftOrphans.prune(root,Set.of());assertTrue(candidate.exists());assertTrue(material.exists());
     }
+    @Test public void closedCollectorDoesNotFollowRootSessionPagesOrManifestLinks() throws Exception {
+        for (String kind : new String[]{"root", "session", "pages", "manifest"}) {
+            File container = new File(root, "closed-links-" + kind);
+            assertTrue(container.mkdir());
+            String session = UUID.randomUUID().toString();
+            File candidate = new File(container, session);
+            File pages = new File(candidate, "pages");
+            assertTrue(pages.mkdirs());
+            File payload = new File(pages, "2-" + UUID.randomUUID() + ".seg");
+            write(payload, "keep");
+            File manifest = new File(candidate, "manifest.json");
+            write(manifest, "{\"schema\":1,\"closed\":true,\"session\":\"" + session + "\"}");
+            assertTrue(manifest.setLastModified(1));
+            File scanRoot = container;
+            if (kind.equals("root")) {
+                scanRoot = new File(root, "closed-root-link");
+                Files.createSymbolicLink(scanRoot.toPath(), container.toPath());
+            } else if (kind.equals("session")) {
+                scanRoot = new File(root, "closed-session-link-container");
+                assertTrue(scanRoot.mkdir());
+                Files.createSymbolicLink(new File(scanRoot, session).toPath(), candidate.toPath());
+            } else if (kind.equals("pages")) {
+                File relocated = new File(container, "kept-pages");
+                Files.move(pages.toPath(), relocated.toPath());
+                payload = new File(relocated, payload.getName());
+                Files.createSymbolicLink(pages.toPath(), relocated.toPath());
+            } else {
+                File relocated = new File(container, "kept-manifest.json");
+                Files.move(manifest.toPath(), relocated.toPath());
+                Files.createSymbolicLink(manifest.toPath(), relocated.toPath());
+            }
+            ResourceEditorDraftStore.pruneClosedSessions(scanRoot);
+            assertTrue(kind + " must keep the payload", payload.exists());
+            assertTrue(kind + " must keep the manifest", manifest.exists());
+        }
+    }
     @Test public void failedOpeningStillReleasesItsActiveOwnerWhenDetachedForClose() throws Exception {
         var context=InstrumentationRegistry.getInstrumentation().getTargetContext();
         String missing=UUID.randomUUID().toString();
