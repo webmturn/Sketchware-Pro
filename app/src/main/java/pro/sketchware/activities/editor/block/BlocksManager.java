@@ -12,6 +12,8 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Vibrator;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -49,6 +51,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import pro.sketchware.core.codegen.BlockLoader;
 import pro.sketchware.core.codegen.ExtraBlockFile;
@@ -83,6 +88,34 @@ public class BlocksManager extends BaseAppCompatActivity {
     private ItemTouchHelper itemTouchHelper;
     private ActivityBlocksManagerBinding binding;
     private Vibrator vibrator;
+    private static final ExecutorService SEARCH_EXECUTOR = Executors.newSingleThreadExecutor();
+    private static final Handler MAIN = new Handler(Looper.getMainLooper());
+    private static final AtomicInteger SEARCH_READERS = new AtomicInteger();
+    private SearchCancellation searchTask;
+    private long searchGeneration;
+    private boolean searchInProgress;
+
+    private static final class SearchCancellation {
+        volatile boolean cancelled;
+    }
+
+    private HashMap<String, Object> editableBlock(int index) {
+        HashMap<String, Object> block = all_blocks_list.get(index);
+        return SEARCH_READERS.get() == 0 ? block : new HashMap<>(block);
+    }
+
+    private void cancelPaletteSearch() {
+        searchGeneration++;
+        if (searchTask != null) searchTask.cancelled = true;
+        searchTask = null;
+        searchInProgress = false;
+    }
+
+    @Override
+    public void onDestroy() {
+        cancelPaletteSearch();
+        super.onDestroy();
+    }
 
     @Override
     public void onCreate(Bundle _savedInstanceState) {
@@ -247,6 +280,7 @@ public class BlocksManager extends BaseAppCompatActivity {
     }
 
     private void filterPalettes(String query) {
+        cancelPaletteSearch();
         filtered_pallet_list.clear();
         filtered_palette_indices.clear();
         if (query.isEmpty()) {
@@ -254,51 +288,97 @@ public class BlocksManager extends BaseAppCompatActivity {
                 filtered_pallet_list.add(pallet_listmap.get(i));
                 filtered_palette_indices.add(i);
             }
-        } else {
-            String lowerQuery = query.toLowerCase(Locale.ROOT);
-            for (int i = 0; i < pallet_listmap.size(); i++) {
-                HashMap<String, Object> palette = pallet_listmap.get(i);
-                String name = getPaletteName(palette, i).toLowerCase(Locale.ROOT);
-                if (name.contains(lowerQuery)) {
-                    filtered_pallet_list.add(palette);
-                    filtered_palette_indices.add(i);
-                    continue;
-                }
-                // Also search block names/specs within this palette
-                int paletteIndex = i + 9;
-                if (all_blocks_list != null) {
-                    for (HashMap<String, Object> block : all_blocks_list) {
-                        double pv = getPaletteValueDouble(block);
-                        if (pv == paletteIndex) {
-                            String blockName = String.valueOf(block.get("name")).toLowerCase(Locale.ROOT);
-                            String blockSpec = String.valueOf(block.get("spec")).toLowerCase(Locale.ROOT);
-                            if (blockName.contains(lowerQuery) || blockSpec.contains(lowerQuery)) {
-                                filtered_pallet_list.add(palette);
-                                filtered_palette_indices.add(i);
-                                break;
-                            }
+            Objects.requireNonNull(binding.paletteRecycler.getAdapter()).notifyDataSetChanged();
+            refreshCount();
+            return;
+        }
+        String[] names = new String[pallet_listmap.size()];
+        for (int i = 0; i < names.length; i++) names[i] = getPaletteName(pallet_listmap.get(i), i);
+        String lowerQuery = query.toLowerCase(Locale.ROOT);
+        if (all_blocks_list == null || all_blocks_list.size() <= 1000) {
+            publishPaletteSearch(findPaletteMatches(names, all_blocks_list, lowerQuery, null));
+            return;
+        }
+        // Mutators replace changed maps below, so this cheap list copy stays stable off the UI thread.
+        ArrayList<HashMap<String, Object>> blocks = new ArrayList<>(all_blocks_list);
+        long generation = searchGeneration;
+        searchInProgress = true;
+        Objects.requireNonNull(binding.paletteRecycler.getAdapter()).notifyDataSetChanged();
+        binding.paletteCount.setText(R.string.common_word_please_wait);
+        SearchCancellation cancellation = new SearchCancellation();
+        searchTask = cancellation;
+        SEARCH_READERS.incrementAndGet();
+        SEARCH_EXECUTOR.execute(() -> {
+            ArrayList<Integer> matches;
+            try {
+                matches = findPaletteMatches(names, blocks, lowerQuery, cancellation);
+            } finally {
+                SEARCH_READERS.decrementAndGet();
+            }
+            MAIN.post(() -> {
+                if (generation != searchGeneration || isDestroyed()) return;
+                searchInProgress = false;
+                searchTask = null;
+                publishPaletteSearch(matches);
+            });
+        });
+    }
+
+    private static ArrayList<Integer> findPaletteMatches(String[] names,
+            ArrayList<HashMap<String, Object>> blocks, String lowerQuery, SearchCancellation cancellation) {
+        boolean[] matches = new boolean[names.length];
+        int unmatched = matches.length;
+        for (int i = 0; i < names.length; i++) {
+            if (names[i].toLowerCase(Locale.ROOT).contains(lowerQuery)) {
+                matches[i] = true;
+                unmatched--;
+            }
+        }
+        if (unmatched > 0 && blocks != null) {
+            Map<String, Integer> paletteIndices = new HashMap<>();
+            int visited = 0;
+            for (HashMap<String, Object> block : blocks) {
+                if ((visited++ & 127) == 0 && cancellation != null && cancellation.cancelled) return new ArrayList<>();
+                if (block == null) continue;
+                Object palette = block.get("palette");
+                if (palette == null) continue;
+                String key = palette.toString();
+                Integer index = paletteIndices.get(key);
+                if (index == null) {
+                    index = -1;
+                    try {
+                        double value = Double.parseDouble(key);
+                        if (value >= 9 && value < 9d + matches.length && value == Math.floor(value)) {
+                            index = (int) (value - 9);
                         }
+                    } catch (NumberFormatException ignored) {
                     }
+                    // Query-local only: edits and reloads cannot leave a stale numeric mapping.
+                    paletteIndices.put(key, index);
+                }
+                if (index < 0 || matches[index]) continue;
+                String blockName = String.valueOf(block.get("name")).toLowerCase(Locale.ROOT);
+                String blockSpec = String.valueOf(block.get("spec")).toLowerCase(Locale.ROOT);
+                if (blockName.contains(lowerQuery) || blockSpec.contains(lowerQuery)) {
+                    matches[index] = true;
+                    if (--unmatched == 0) break;
                 }
             }
         }
-        Objects.requireNonNull(binding.paletteRecycler.getAdapter()).notifyDataSetChanged();
-        if (query.isEmpty()) {
-            refreshCount();
-        } else {
-            binding.paletteCount.setText(Helper.getResString(R.string.block_manager_search_result_format, filtered_pallet_list.size()));
-        }
+        ArrayList<Integer> result = new ArrayList<>();
+        for (int i = 0; i < matches.length; i++) if (matches[i]) result.add(i);
+        return result;
     }
 
-    private double getPaletteValueDouble(Map<String, Object> block) {
-        if (block == null) return Double.NaN;
-        Object paletteObj = block.get("palette");
-        if (paletteObj == null) return Double.NaN;
-        try {
-            return Double.parseDouble(paletteObj.toString());
-        } catch (NumberFormatException e) {
-            return Double.NaN;
+    private void publishPaletteSearch(ArrayList<Integer> matches) {
+        filtered_pallet_list.clear();
+        filtered_palette_indices.clear();
+        for (int index : matches) {
+            filtered_pallet_list.add(pallet_listmap.get(index));
+            filtered_palette_indices.add(index);
         }
+        Objects.requireNonNull(binding.paletteRecycler.getAdapter()).notifyDataSetChanged();
+        binding.paletteCount.setText(Helper.getResString(R.string.block_manager_search_result_format, matches.size()));
     }
 
     @Override
@@ -379,6 +459,7 @@ public class BlocksManager extends BaseAppCompatActivity {
     }
 
     private void readSettings() {
+        cancelPaletteSearch();
         pallet_dir = ExtraBlockFile.getExtraBlocksPaletteFile().getAbsolutePath();
         blocks_dir = ExtraBlockFile.getExtraBlocksDataFile().getAbsolutePath();
 
@@ -413,6 +494,7 @@ public class BlocksManager extends BaseAppCompatActivity {
     }
 
     private void refreshList() {
+        cancelPaletteSearch();
         parsePaletteJson:
         {
             String paletteJsonContent;
@@ -504,7 +586,7 @@ public class BlocksManager extends BaseAppCompatActivity {
             double paletteValue = getPaletteValue(all_blocks_list.get(i));
             if (Double.isNaN(paletteValue) || paletteValue != _p) {
                 if (!Double.isNaN(paletteValue) && paletteValue > _p) {
-                    HashMap<String, Object> m = all_blocks_list.get(i);
+                    HashMap<String, Object> m = editableBlock(i);
                     m.put("palette", String.valueOf((long) (paletteValue - 1)));
                     newBlocks.add(m);
                 } else {
@@ -519,7 +601,8 @@ public class BlocksManager extends BaseAppCompatActivity {
     private void swapRelatedBlocks(double f, double s) {
         String fromPalette = String.valueOf((long) f);
         String toPalette = String.valueOf((long) s);
-        for (Map<String, Object> block : all_blocks_list) {
+        for (int i = 0; i < all_blocks_list.size(); i++) {
+            Map<String, Object> block = all_blocks_list.get(i);
             if (block == null) continue;
             Object paletteObj = block.get("palette");
             if (paletteObj == null) continue;
@@ -545,7 +628,9 @@ public class BlocksManager extends BaseAppCompatActivity {
                 }
             }
 
-            block.put("palette", newPalette);
+            HashMap<String, Object> changed = editableBlock(i);
+            changed.put("palette", newPalette);
+            all_blocks_list.set(i, changed);
             if (!oldPalette.equals(newPalette)) {
                 int remaining = blockCountsByPalette.get(oldPalette) - 1;
                 if (remaining == 0) {
@@ -563,7 +648,9 @@ public class BlocksManager extends BaseAppCompatActivity {
         for (int i = 0; i < all_blocks_list.size(); i++) {
             double paletteValue = getPaletteValue(all_blocks_list.get(i));
             if (!Double.isNaN(paletteValue) && (paletteValue > _p || paletteValue == _p)) {
-                all_blocks_list.get(i).put("palette", String.valueOf((long) (paletteValue + 1)));
+                HashMap<String, Object> changed = editableBlock(i);
+                changed.put("palette", String.valueOf((long) (paletteValue + 1)));
+                all_blocks_list.set(i, changed);
             }
         }
         FileUtil.writeFile(blocks_dir, getGson().toJson(all_blocks_list));
@@ -575,7 +662,9 @@ public class BlocksManager extends BaseAppCompatActivity {
         for (int i = 0; i < all_blocks_list.size(); i++) {
             double paletteValue = getPaletteValue(all_blocks_list.get(i));
             if (!Double.isNaN(paletteValue) && paletteValue == _p) {
-                all_blocks_list.get(i).put("palette", "-1");
+                HashMap<String, Object> changed = editableBlock(i);
+                changed.put("palette", "-1");
+                all_blocks_list.set(i, changed);
             }
         }
         FileUtil.writeFile(blocks_dir, getGson().toJson(all_blocks_list));
@@ -664,11 +753,9 @@ public class BlocksManager extends BaseAppCompatActivity {
                         insertBlocksAt(insertAtPosition + 9);
                     }
                 } else {
-                    HashMap<String, Object> palette = pallet_listmap.get(oldPosition);
-                    if (palette == null) {
-                        palette = new HashMap<>();
-                        pallet_listmap.set(oldPosition, palette);
-                    }
+                    HashMap<String, Object> oldPalette = pallet_listmap.get(oldPosition);
+                    HashMap<String, Object> palette = oldPalette == null ? new HashMap<>() : new HashMap<>(oldPalette);
+                    pallet_listmap.set(oldPosition, palette);
                     palette.put("name", nameInput);
                     palette.put("color", colorInput);
                     FileUtil.writeFile(pallet_dir, getGson().toJson(pallet_listmap));
