@@ -98,6 +98,7 @@ public class PaletteCountIndexTest {
                 + "{\"palette\":10},{\"palette\":\"11\"},{\"palette\":\"-1\"},"
                 + "{\"palette\":-1},{\"palette\":\"bad\"},{\"palette\":\"TEMP_SWAP\"}]";
         try (Fixture f = new Fixture(blocks, 3)) {
+            AtomicReference<ArrayList<HashMap<String, Object>>> savedExpected = new AtomicReference<>();
             f.run(a -> {
                 @SuppressWarnings("unchecked")
                 var actual = (ArrayList<HashMap<String, Object>>) field(a, "all_blocks_list");
@@ -119,7 +120,12 @@ public class PaletteCountIndexTest {
                 ItemTouchHelper helper = (ItemTouchHelper) field(a, "itemTouchHelper");
                 var callback = (ItemTouchHelper.Callback) field(helper, "mCallback");
                 callback.clearView(recycler, recycler.findViewHolderForAdapterPosition(0));
+                savedExpected.set(expected);
+            });
+            PaletteOrderSaveTest.awaitSave();
+            f.run(a -> {
                 invoke(a, "readSettings", new Class[0]);
+                var expected = savedExpected.get();
                 // Existing Gson serialization omits null map values when writing the file.
                 for (var block : expected) {
                     if (block != null && block.get("palette") == null) block.remove("palette");
@@ -222,6 +228,6 @@ public class PaletteCountIndexTest {
         }
         void write(String value)throws Exception{Files.write(files.blocks.toPath(),value.getBytes(StandardCharsets.UTF_8));}
         void run(Consumer<BlocksManager> action){AtomicReference<Throwable> failure=new AtomicReference<>();manager.onActivity(a->{try{action.accept(a);}catch(Throwable e){failure.set(e);}});if(failure.get()!=null)throw new AssertionError(failure.get());InstrumentationRegistry.getInstrumentation().waitForIdleSync();}
-        @Override public void close()throws Exception{try{manager.close();}finally{files.close();}}
+        @Override public void close()throws Exception{try{manager.close(); PaletteOrderSaveTest.awaitSave();}finally{files.close();}}
     }
 }

@@ -23,9 +23,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
+import androidx.appcompat.app.AlertDialog;
 import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.appcompat.widget.SearchView;
+import androidx.activity.OnBackPressedCallback;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
@@ -36,6 +39,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 import pro.sketchware.widgets.ColorPickerDialog;
+import pro.sketchware.widgets.LoadingDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
@@ -43,6 +47,13 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -90,7 +101,7 @@ public class BlocksManager extends BaseAppCompatActivity {
     private Vibrator vibrator;
     private static final ExecutorService SEARCH_EXECUTOR = Executors.newSingleThreadExecutor();
     private static final Handler MAIN = new Handler(Looper.getMainLooper());
-    private static final AtomicInteger SEARCH_READERS = new AtomicInteger();
+    private static final AtomicInteger MODEL_READERS = new AtomicInteger();
     private SearchCancellation searchTask;
     private long searchGeneration;
     private boolean searchInProgress;
@@ -99,9 +110,180 @@ public class BlocksManager extends BaseAppCompatActivity {
         volatile boolean cancelled;
     }
 
-    private HashMap<String, Object> editableBlock(int index) {
-        HashMap<String, Object> block = all_blocks_list.get(index);
-        return SEARCH_READERS.get() == 0 ? block : new HashMap<>(block);
+    private static HashMap<String, Object> editableBlock(HashMap<String, Object> block, boolean copy) {
+        return copy ? new HashMap<>(block) : block;
+    }
+
+    private static final ExecutorService ORDER_WRITER = Executors.newSingleThreadExecutor();
+    // Main-thread state: at most one save can own the global palette files at a time.
+    private static OrderSave pendingOrderSave;
+    private boolean paletteOrderChanged;
+    private boolean reloadAfterOrderSave;
+    private LoadingDialog orderSaveDialog;
+    private AlertDialog orderSaveErrorDialog;
+
+    private static final class OrderSave {
+        final String blocksPath;
+        final String palettesPath;
+        final ArrayList<HashMap<String, Object>> blocks;
+        final ArrayList<HashMap<String, Object>> palettes;
+        final ArrayList<WeakReference<BlocksManager>> observers = new ArrayList<>();
+        boolean running;
+        boolean refreshBlockLoader;
+        Exception failure;
+
+        OrderSave(BlocksManager owner) {
+            blocksPath = owner.blocks_dir;
+            palettesPath = owner.pallet_dir;
+            blocks = new ArrayList<>(owner.all_blocks_list);
+            palettes = new ArrayList<>(owner.pallet_listmap);
+        }
+    }
+
+    private void savePaletteOrder() {
+        if (!paletteOrderChanged || pendingOrderSave != null) return;
+        paletteOrderChanged = false;
+        OrderSave save = new OrderSave(this);
+        pendingOrderSave = save;
+        startOrderSave(save);
+        observeOrderSave();
+    }
+
+    private static void startOrderSave(OrderSave save) {
+        save.running = true;
+        save.failure = null;
+        MODEL_READERS.incrementAndGet();
+        ORDER_WRITER.execute(() -> {
+            Exception failure = null;
+            try {
+                // Serialize both snapshots before changing either file; the JSON format stays unchanged.
+                String blocks = getGson().toJson(save.blocks);
+                String palettes = getGson().toJson(save.palettes);
+                writeOrderFiles(save, blocks, palettes);
+            } catch (Exception e) {
+                failure = e;
+            } finally {
+                MODEL_READERS.decrementAndGet();
+            }
+            Exception result = failure;
+            MAIN.post(() -> {
+                save.running = false;
+                save.failure = result;
+                if (result == null) {
+                    ExtraBlockFile.invalidateCache();
+                    pendingOrderSave = null;
+                }
+                for (WeakReference<BlocksManager> observer : new ArrayList<>(save.observers)) {
+                    BlocksManager owner = observer.get();
+                    if (owner != null && !owner.isDestroyed() && !owner.isFinishing()) {
+                        owner.onOrderSaveCompleted(save);
+                    }
+                }
+                // onStop must not reload files while an order save is still writing them.
+                if (result == null && save.refreshBlockLoader) BlockLoader.refresh();
+            });
+        });
+    }
+
+    private static void writeOrderFiles(OrderSave save, String blocks, String palettes) throws IOException {
+        Path blocksPath = new File(save.blocksPath).getCanonicalFile().toPath();
+        Path palettesPath = new File(save.palettesPath).getCanonicalFile().toPath();
+        if (blocksPath.equals(palettesPath)) throw new IOException("Blocks and palettes share a file");
+        Path stagedBlocks = null;
+        Path stagedPalettes = null;
+        try {
+            // Finish both temporary files before replacing either original. Legacy readers always
+            // see a complete base file and do not need to understand AtomicFile backup names.
+            stagedBlocks = stageOrderFile(blocksPath, blocks);
+            stagedPalettes = stageOrderFile(palettesPath, palettes);
+            Files.move(stagedBlocks, blocksPath, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+            stagedBlocks = null;
+            Files.move(stagedPalettes, palettesPath, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+            stagedPalettes = null;
+        } finally {
+            try {
+                if (stagedBlocks != null) Files.deleteIfExists(stagedBlocks);
+            } finally {
+                if (stagedPalettes != null) Files.deleteIfExists(stagedPalettes);
+            }
+        }
+    }
+
+    private static Path stageOrderFile(Path target, String json) throws IOException {
+        if (Files.exists(target) && !Files.isRegularFile(target)) throw new IOException("Not a regular file: " + target);
+        Files.createDirectories(target.getParent());
+        Path temporary = Files.createTempFile(target.getParent(), ".sketchware-order-", ".tmp");
+        boolean complete = false;
+        try {
+            try (FileOutputStream output = new FileOutputStream(temporary.toFile())) {
+                output.write(json.getBytes(StandardCharsets.UTF_8));
+                output.getFD().sync();
+            }
+            complete = true;
+            return temporary;
+        } finally {
+            if (!complete) Files.deleteIfExists(temporary);
+        }
+    }
+
+    private void observeOrderSave() {
+        OrderSave save = pendingOrderSave;
+        if (save == null || isFinishing() || isDestroyed()) return;
+        boolean observed = false;
+        for (WeakReference<BlocksManager> observer : save.observers) {
+            if (observer.get() == this) observed = true;
+        }
+        if (!observed) save.observers.add(new WeakReference<>(this));
+        if (!save.running) {
+            onOrderSaveCompleted(save);
+            return;
+        }
+        if (orderSaveErrorDialog != null) {
+            orderSaveErrorDialog.dismiss();
+            orderSaveErrorDialog = null;
+        }
+        if (orderSaveDialog == null) {
+            orderSaveDialog = new LoadingDialog(this);
+            ((TextView) orderSaveDialog.findViewById(R.id.tv_progress)).setText(R.string.common_word_please_wait);
+        }
+        orderSaveDialog.show();
+        orderSaveDialog.resumeAnimation();
+    }
+
+    private void onOrderSaveCompleted(OrderSave save) {
+        if (orderSaveDialog != null) {
+            orderSaveDialog.pauseAnimation();
+            orderSaveDialog.hide();
+        }
+        if (save.failure != null) {
+            // Keep the snapshot and guard until both files are saved; never silently navigate away.
+            if (orderSaveErrorDialog == null) {
+                orderSaveErrorDialog = new MaterialAlertDialogBuilder(this)
+                        .setMessage(R.string.common_message_save_failed)
+                        .setPositiveButton(R.string.store_retry, (dialog, which) -> {
+                            orderSaveErrorDialog = null;
+                            if (pendingOrderSave == save && !save.running) startOrderSave(save);
+                            observeOrderSave();
+                        }).setCancelable(false).show();
+            }
+        } else {
+            if (orderSaveErrorDialog != null) {
+                orderSaveErrorDialog.dismiss();
+                orderSaveErrorDialog = null;
+            }
+            if (reloadAfterOrderSave) {
+                reloadAfterOrderSave = false;
+                readSettings();
+                refreshList();
+            }
+        }
+    }
+
+    private boolean waitForOrderSave() {
+        if (pendingOrderSave == null) return false;
+        reloadAfterOrderSave = true;
+        observeOrderSave();
+        return true;
     }
 
     private void cancelPaletteSearch() {
@@ -114,6 +296,11 @@ public class BlocksManager extends BaseAppCompatActivity {
     @Override
     public void onDestroy() {
         cancelPaletteSearch();
+        if (orderSaveDialog != null) {
+            orderSaveDialog.cancelAnimation();
+            orderSaveDialog.dismiss();
+        }
+        if (orderSaveErrorDialog != null) orderSaveErrorDialog.dismiss();
         super.onDestroy();
     }
 
@@ -133,11 +320,36 @@ public class BlocksManager extends BaseAppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
-        BlockLoader.refresh();
+        if (pendingOrderSave != null) pendingOrderSave.refreshBlockLoader = true;
+        else BlockLoader.refresh();
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (pendingOrderSave != null) {
+            observeOrderSave();
+            return true;
+        }
+        return super.dispatchTouchEvent(event);
     }
 
     private void initialize() {
         activity = this;
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (pendingOrderSave != null) {
+                    observeOrderSave();
+                    return;
+                }
+                setEnabled(false);
+                try {
+                    getOnBackPressedDispatcher().onBackPressed();
+                } finally {
+                    setEnabled(true);
+                }
+            }
+        });
 
         setSupportActionBar(binding.toolbar);
 
@@ -156,10 +368,10 @@ public class BlocksManager extends BaseAppCompatActivity {
         itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                if (hasActiveSearchQuery()) return false;
+                if (hasActiveSearchQuery() || pendingOrderSave != null) return false;
                 oldPos = viewHolder.getBindingAdapterPosition();
                 newPos = target.getBindingAdapterPosition();
-                if (oldPos == RecyclerView.NO_POSITION || newPos == RecyclerView.NO_POSITION) return false;
+                if (oldPos == RecyclerView.NO_POSITION || newPos == RecyclerView.NO_POSITION || oldPos == newPos) return false;
 
                 Collections.swap(pallet_listmap, oldPos, newPos);
 
@@ -191,13 +403,13 @@ public class BlocksManager extends BaseAppCompatActivity {
             @Override
             public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
                 viewHolder.itemView.setAlpha(1f);
-                FileUtil.writeFile(blocks_dir, getGson().toJson(all_blocks_list));
-                FileUtil.writeFile(pallet_dir, getGson().toJson(pallet_listmap));
+                savePaletteOrder();
             }
 
             @Override
             public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                if (pendingOrderSave != null) return;
                 if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
                     binding.background.setClipChildren(!isItNearTrash(draggedView, binding.recycleBin));
                     if (isItInTrash(draggedView, binding.recycleBin)) {
@@ -307,13 +519,13 @@ public class BlocksManager extends BaseAppCompatActivity {
         binding.paletteCount.setText(R.string.common_word_please_wait);
         SearchCancellation cancellation = new SearchCancellation();
         searchTask = cancellation;
-        SEARCH_READERS.incrementAndGet();
+        MODEL_READERS.incrementAndGet();
         SEARCH_EXECUTOR.execute(() -> {
             ArrayList<Integer> matches;
             try {
                 matches = findPaletteMatches(names, blocks, lowerQuery, cancellation);
             } finally {
-                SEARCH_READERS.decrementAndGet();
+                MODEL_READERS.decrementAndGet();
             }
             MAIN.post(() -> {
                 if (generation != searchGeneration || isDestroyed()) return;
@@ -394,12 +606,14 @@ public class BlocksManager extends BaseAppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        if (waitForOrderSave()) return;
         readSettings();
         refreshList();
         refreshCount();
     }
 
     private void showBlockConfigurationDialog() {
+        if (waitForOrderSave()) return;
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setIcon(R.drawable.ic_folder_48dp);
         dialog.setTitle(R.string.blocks_config_title);
@@ -412,6 +626,7 @@ public class BlocksManager extends BaseAppCompatActivity {
         dialog.setView(dialogBinding.getRoot());
 
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_save), (view, which) -> {
+            if (waitForOrderSave()) return;
             ApplicationSettings.setSetting(ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH, Objects.requireNonNull(dialogBinding.palettesPath.getText()).toString());
             ApplicationSettings.setSetting(ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH, Objects.requireNonNull(dialogBinding.blocksPath.getText()).toString());
 
@@ -424,6 +639,7 @@ public class BlocksManager extends BaseAppCompatActivity {
         dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
 
         dialog.setNeutralButton(R.string.common_word_defaults, (view, which) -> {
+            if (waitForOrderSave()) return;
             ApplicationSettings.setSetting(ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH, ApplicationSettings.getDefaultValue(ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH));
             ApplicationSettings.setSetting(ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH, ApplicationSettings.getDefaultValue(ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH));
 
@@ -442,6 +658,7 @@ public class BlocksManager extends BaseAppCompatActivity {
         dialog.setTitle(R.string.block_move_to_bin);
         dialog.setMessage(R.string.common_message_confirm);
         dialog.setPositiveButton(R.string.common_word_yes, (v, which) -> {
+            if (waitForOrderSave()) return;
             if (position < 0 || position >= pallet_listmap.size()) {
                 SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
                 return;
@@ -459,6 +676,7 @@ public class BlocksManager extends BaseAppCompatActivity {
     }
 
     private void readSettings() {
+        if (waitForOrderSave()) return;
         cancelPaletteSearch();
         pallet_dir = ExtraBlockFile.getExtraBlocksPaletteFile().getAbsolutePath();
         blocks_dir = ExtraBlockFile.getExtraBlocksDataFile().getAbsolutePath();
@@ -494,6 +712,7 @@ public class BlocksManager extends BaseAppCompatActivity {
     }
 
     private void refreshList() {
+        if (waitForOrderSave()) return;
         cancelPaletteSearch();
         parsePaletteJson:
         {
@@ -552,6 +771,7 @@ public class BlocksManager extends BaseAppCompatActivity {
 
     private void recycleBin(View view) {
         view.setOnClickListener(v -> {
+            if (waitForOrderSave()) return;
             Intent intent = new Intent(getApplicationContext(), BlocksManagerDetailsActivity.class);
             intent.putExtra("position", "-1");
             intent.putExtra("dirB", blocks_dir);
@@ -581,12 +801,14 @@ public class BlocksManager extends BaseAppCompatActivity {
     }
 
     private void removeRelatedBlocks(double _p) {
+        // New readers start only on main; during this loop existing readers can only finish.
+        boolean copy = MODEL_READERS.get() != 0;
         List<Map<String, Object>> newBlocks = new LinkedList<>();
         for (int i = 0; i < all_blocks_list.size(); i++) {
             double paletteValue = getPaletteValue(all_blocks_list.get(i));
             if (Double.isNaN(paletteValue) || paletteValue != _p) {
                 if (!Double.isNaN(paletteValue) && paletteValue > _p) {
-                    HashMap<String, Object> m = editableBlock(i);
+                    HashMap<String, Object> m = editableBlock(all_blocks_list.get(i), copy);
                     m.put("palette", String.valueOf((long) (paletteValue - 1)));
                     newBlocks.add(m);
                 } else {
@@ -599,10 +821,13 @@ public class BlocksManager extends BaseAppCompatActivity {
     }
 
     private void swapRelatedBlocks(double f, double s) {
+        // New readers start only on main; during this loop existing readers can only finish.
+        boolean copy = MODEL_READERS.get() != 0;
+        paletteOrderChanged = true;
         String fromPalette = String.valueOf((long) f);
         String toPalette = String.valueOf((long) s);
         for (int i = 0; i < all_blocks_list.size(); i++) {
-            Map<String, Object> block = all_blocks_list.get(i);
+            HashMap<String, Object> block = all_blocks_list.get(i);
             if (block == null) continue;
             Object paletteObj = block.get("palette");
             if (paletteObj == null) continue;
@@ -628,7 +853,7 @@ public class BlocksManager extends BaseAppCompatActivity {
                 }
             }
 
-            HashMap<String, Object> changed = editableBlock(i);
+            HashMap<String, Object> changed = editableBlock(block, copy);
             changed.put("palette", newPalette);
             all_blocks_list.set(i, changed);
             if (!oldPalette.equals(newPalette)) {
@@ -645,10 +870,12 @@ public class BlocksManager extends BaseAppCompatActivity {
     }
 
     private void insertBlocksAt(double _p) {
+        // New readers start only on main; during this loop existing readers can only finish.
+        boolean copy = MODEL_READERS.get() != 0;
         for (int i = 0; i < all_blocks_list.size(); i++) {
             double paletteValue = getPaletteValue(all_blocks_list.get(i));
             if (!Double.isNaN(paletteValue) && (paletteValue > _p || paletteValue == _p)) {
-                HashMap<String, Object> changed = editableBlock(i);
+                HashMap<String, Object> changed = editableBlock(all_blocks_list.get(i), copy);
                 changed.put("palette", String.valueOf((long) (paletteValue + 1)));
                 all_blocks_list.set(i, changed);
             }
@@ -659,10 +886,12 @@ public class BlocksManager extends BaseAppCompatActivity {
     }
 
     private void moveRelatedBlocksToRecycleBin(double _p) {
+        // New readers start only on main; during this loop existing readers can only finish.
+        boolean copy = MODEL_READERS.get() != 0;
         for (int i = 0; i < all_blocks_list.size(); i++) {
             double paletteValue = getPaletteValue(all_blocks_list.get(i));
             if (!Double.isNaN(paletteValue) && paletteValue == _p) {
-                HashMap<String, Object> changed = editableBlock(i);
+                HashMap<String, Object> changed = editableBlock(all_blocks_list.get(i), copy);
                 changed.put("palette", "-1");
                 all_blocks_list.set(i, changed);
             }
@@ -672,6 +901,7 @@ public class BlocksManager extends BaseAppCompatActivity {
     }
 
     private void emptyRecyclebin() {
+        if (waitForOrderSave()) return;
         List<Map<String, Object>> newBlocks = new LinkedList<>();
         for (int i = 0; i < all_blocks_list.size(); i++) {
             double paletteValue = getPaletteValue(all_blocks_list.get(i));
@@ -685,6 +915,7 @@ public class BlocksManager extends BaseAppCompatActivity {
     }
 
     private void showPaletteDialog(boolean isEditing, Integer oldPosition, String oldName, String oldColor, Integer insertAtPosition) {
+        if (waitForOrderSave()) return;
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setIcon(R.drawable.icon_style_white_96);
         dialog.setTitle(!isEditing ? R.string.blocks_title_create_palette : R.string.blocks_title_edit_palette);
@@ -720,6 +951,7 @@ public class BlocksManager extends BaseAppCompatActivity {
         dialog.setNegativeButton(R.string.cancel, null);
         var shown = dialog.show();
         shown.getButton(android.content.DialogInterface.BUTTON_POSITIVE).setOnClickListener(v -> {
+            if (waitForOrderSave()) return;
             String nameInput = Objects.requireNonNull(paletteBinding.nameEditText.getText()).toString();
             String colorInput = Objects.requireNonNull(paletteBinding.colorEditText.getText()).toString();
 
@@ -865,6 +1097,7 @@ public class BlocksManager extends BaseAppCompatActivity {
                                     .setTitle(getPaletteName(selectedPalette, selectedSourceIndex))
                                     .setMessage(R.string.blocks_remove_palette_msg)
                                     .setPositiveButton(R.string.blocks_remove_permanently, (dialog, which) -> {
+                                        if (waitForOrderSave()) return;
                                         pallet_listmap.remove(selectedSourceIndex);
                                         FileUtil.writeFile(pallet_dir, getGson().toJson(pallet_listmap));
                                         removeRelatedBlocks(selectedSourceIndex + 9);
@@ -872,6 +1105,7 @@ public class BlocksManager extends BaseAppCompatActivity {
                                     })
                                     .setNegativeButton(R.string.common_word_cancel, null)
                                     .setNeutralButton(R.string.block_move_to_bin, (dialog, which) -> {
+                                        if (waitForOrderSave()) return;
                                         moveRelatedBlocksToRecycleBin(selectedSourceIndex + 9);
                                         pallet_listmap.remove(selectedSourceIndex);
                                         FileUtil.writeFile(pallet_dir, getGson().toJson(pallet_listmap));
@@ -905,6 +1139,7 @@ public class BlocksManager extends BaseAppCompatActivity {
             });
 
             holder.itemBinding.backgroundCard.setOnClickListener(v -> {
+                if (waitForOrderSave()) return;
                 int pos = holder.getAbsoluteAdapterPosition();
                 if (pos == RecyclerView.NO_POSITION) {
                     return;
