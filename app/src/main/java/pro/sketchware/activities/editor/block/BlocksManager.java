@@ -41,10 +41,7 @@ import pro.sketchware.activities.base.BaseAppCompatActivity;
 import pro.sketchware.widgets.ColorPickerDialog;
 import pro.sketchware.widgets.LoadingDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 
 import java.io.File;
 import java.io.IOException;
@@ -361,8 +358,7 @@ public class BlocksManager extends BaseAppCompatActivity {
         binding.paletteRecycler.setAdapter(new PaletteAdapter());
         binding.fab.setOnClickListener(v -> showPaletteDialog(false, null, null, "#ffffff", null));
 
-        readSettings();
-        refreshList();
+        // onResume loads once on entry and reloads changes made by child pages.
         recycleBin(binding.recycleBinCard);
 
         itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
@@ -682,32 +678,20 @@ public class BlocksManager extends BaseAppCompatActivity {
         blocks_dir = ExtraBlockFile.getExtraBlocksDataFile().getAbsolutePath();
 
         try {
-            if (FileUtil.isExistFile(blocks_dir) && isValidJson(FileUtil.readFile(blocks_dir))) {
+            if (FileUtil.isExistFile(blocks_dir)) {
+                String json = FileUtil.readFile(blocks_dir);
                 try {
-                    all_blocks_list = getGson().fromJson(FileUtil.readFile(blocks_dir), Helper.TYPE_MAP_LIST);
-
-                    if (all_blocks_list != null) {
-                        return;
-                    }
-                    // fall-through to shared handler
+                    // Parsing the expected model also validates its JSON shape. Keep the
+                    // current model for empty/null files and publish only a complete parse.
+                    ArrayList<HashMap<String, Object>> loaded = getGson().fromJson(json, Helper.TYPE_MAP_LIST);
+                    if (loaded != null) all_blocks_list = loaded;
                 } catch (JsonParseException e) {
-                    // fall-through to shared handler
+                    SketchwareUtil.showFailedToParseJsonDialog(this, new File(blocks_dir), Helper.getResString(R.string.blocks_custom_blocks), v -> readSettings());
                 }
-
-                SketchwareUtil.showFailedToParseJsonDialog(this, new File(blocks_dir), Helper.getResString(R.string.blocks_custom_blocks), v -> readSettings());
             }
         } finally {
             // Also rebuild when a failed/missing read keeps the previous model or loads null.
             refreshBlockCounts();
-        }
-    }
-
-    private Boolean isValidJson(String json) {
-        try {
-            JsonElement element = JsonParser.parseString(json);
-            return element.isJsonObject() || element.isJsonArray();
-        } catch (JsonSyntaxException e) {
-            return false;
         }
     }
 
