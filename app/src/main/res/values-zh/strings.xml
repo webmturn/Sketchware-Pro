@@ -2946,4 +2946,6 @@
     Пример предложения для предварительного просмотра
 </string>
 
+    <string name="blocks_editor_conflict">积木库发生了变化，已停止保存。当前输入仍保留在本页，请先复制需要的修改，再关闭并重新打开编辑页。</string>
+    <string name="blocks_editor_load_failed">无法读取积木库，请检查文件及读取权限后重试。</string>
 </resources>

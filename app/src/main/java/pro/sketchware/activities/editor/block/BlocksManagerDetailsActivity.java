@@ -120,11 +120,28 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
                 intent.putExtra("color", (String) paletteColor);
                 intent.putExtra("path", blocks_path);
                 intent.putExtra("pallet", String.valueOf(palette));
+                if (!editorAnchors(intent, -1)) return;
                 startActivity(intent);
             } else {
                 SketchwareUtil.toastError(String.format(Helper.getResString(R.string.blocks_error_invalid_color), palette - 9));
             }
         });
+    }
+
+    private boolean editorAnchors(Intent intent, int blockPosition) {
+        try {
+            if (blockPosition >= 0) {
+                var block = all_blocks_list.get(blockPosition);
+                intent.putExtra("block_editor_anchor", BlockEditorMutation.recordDigest(block));
+                if (block.get("name") instanceof String name) intent.putExtra("block_editor_anchor_name", name);
+            }
+            intent.putExtra("block_editor_palette_path", pallet_path);
+            intent.putExtra("block_editor_palette_anchor", BlockEditorMutation.recordDigest(pallet_list.get(palette - 9)));
+            return true;
+        } catch (RuntimeException invalidRecord) {
+            SketchwareUtil.toastError(Helper.getResString(R.string.blocks_error_invalid_json));
+            return false;
+        }
     }
 
     public void openFileExplorerImport() {
@@ -376,6 +393,11 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
 
     void onBlockSaveCompleted(BlocksManager.OrderSave save) {
         if (saveDialog != null) { saveDialog.pauseAnimation(); saveDialog.hide(); }
+        if (save.abandoned) {
+            if (saveErrorDialog != null) { saveErrorDialog.dismiss(); saveErrorDialog = null; }
+            if (getLifecycle().getCurrentState().isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED)) _refreshLists();
+            return;
+        }
         if (save.failure != null) {
             if (!getLifecycle().getCurrentState().isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED)) return;
             if (saveErrorDialog == null) {
@@ -464,6 +486,7 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
                         intent.putExtra("path", blocks_path);
                         intent.putExtra("color", (String) paletteColor);
                         intent.putExtra("pos", String.valueOf(position));
+                        if (!editorAnchors(intent, position)) break;
                         startActivity(intent);
                     } else {
                         SketchwareUtil.toastError(String.format(Helper.getResString(R.string.blocks_error_invalid_color), palette - 9));
@@ -794,6 +817,7 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
                             intent.putExtra("color", (String) paletteColor);
                             intent.putExtra("path", blocks_path);
                             intent.putExtra("pos", String.valueOf(reference_list.get(position)));
+                            if (!editorAnchors(intent, reference_list.get(position))) return;
                             startActivity(intent);
                         }
                     }

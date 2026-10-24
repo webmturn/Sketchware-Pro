@@ -1,7 +1,5 @@
 package pro.sketchware.activities.editor.block;
 
-import static pro.sketchware.util.GsonUtils.getGson;
-
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -16,6 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import androidx.activity.OnBackPressedCallback;
+import androidx.appcompat.app.AlertDialog;
+import pro.sketchware.widgets.LoadingDialog;
+import pro.sketchware.core.async.BackgroundTasks;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.WindowInsetsCompat;
@@ -24,13 +26,16 @@ import pro.sketchware.activities.base.BaseAppCompatActivity;
 import pro.sketchware.widgets.ColorPickerDialog;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.gson.JsonParseException;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import pro.sketchware.core.block.BlockSpecParser;
@@ -44,7 +49,6 @@ import pro.sketchware.R;
 import pro.sketchware.databinding.ActivityBlocksManagerCreatorBinding;
 import pro.sketchware.util.BaseTextWatcher;
 import pro.sketchware.lib.highlighter.SimpleHighlighter;
-import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.PropertiesUtil;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.UI;
@@ -65,11 +69,44 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
     private String palletColour = "";
     private String path = "";
     private String selectedBlockType = " ";
+    private static final ExecutorService LOADER = BackgroundTasks.createSingleThreadExecutor("Sketchware-BlockEditorLoad");
+    private Future<?> loadTask;
+    private long loadGeneration;
+    private boolean loaded;
+    private boolean conflicted;
+    private boolean restoring;
+    private boolean formInitialized;
+    private String ownerToken;
+    private byte[] loadedDigest;
+    private byte[] anchorDigest;
+    private String anchorName;
+    private LoadingDialog workDialog;
+    private AlertDialog saveErrorDialog;
+    private BlockEditorSaveState saveState;
+    private String palettePath;
+    private byte[] paletteAnchor;
+    private byte[] loadedPaletteDigest;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         enableEdgeToEdgeNoContrast();
         super.onCreate(savedInstanceState);
+        saveState = new androidx.lifecycle.ViewModelProvider(this).get(BlockEditorSaveState.class);
+        if (saveState.saved) { setResult(RESULT_OK); finish(); return; }
+        conflicted = saveState.conflicted;
+        restoring = savedInstanceState != null && savedInstanceState.getBoolean("block_editor_form_ready", true);
+        anchorDigest = getIntent().getByteArrayExtra("block_editor_anchor");
+        anchorName = getIntent().getStringExtra("block_editor_anchor_name");
+        palettePath = getIntent().getStringExtra("block_editor_palette_path");
+        paletteAnchor = getIntent().getByteArrayExtra("block_editor_palette_anchor");
+        if (savedInstanceState != null) {
+            selectedBlockType = savedInstanceState.getString("selected_block_type", " ");
+            byte[] savedAnchor = savedInstanceState.getByteArray("block_editor_anchor");
+            if (savedAnchor != null) anchorDigest = savedAnchor;
+            anchorName = savedInstanceState.getString("block_editor_anchor_name");
+        }
+        ownerToken = getIntent().getStringExtra("block_editor_owner");
+        if (ownerToken == null) { ownerToken = UUID.randomUUID().toString(); getIntent().putExtra("block_editor_owner", ownerToken); }
         binding = ActivityBlocksManagerCreatorBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         initialize();
@@ -78,8 +115,35 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
 
     @Override
     public void onDestroy() {
+        loadGeneration++;
+        if (loadTask != null) loadTask.cancel(true);
+        if (workDialog != null) { workDialog.cancelAnimation(); workDialog.dismiss(); }
+        if (saveErrorDialog != null) saveErrorDialog.dismiss();
         super.onDestroy();
         binding = null;
+    }
+
+    @Override public void onSaveInstanceState(Bundle state) {
+        state.putString("selected_block_type", selectedBlockType);
+        state.putBoolean("block_editor_form_ready", formInitialized || restoring);
+        state.putByteArray("block_editor_anchor", anchorDigest);
+        state.putString("block_editor_anchor_name", anchorName);
+        super.onSaveInstanceState(state);
+    }
+
+    @Override public void onResume() {
+        super.onResume();
+        if (BlocksManager.pendingOrderSave != null) observeSave();
+    }
+
+    @Override public boolean dispatchTouchEvent(MotionEvent event) {
+        if (BlocksManager.pendingOrderSave != null) { observeSave(); return true; }
+        if (!loaded && binding != null) {
+            android.graphics.Rect toolbar = new android.graphics.Rect();
+            binding.appBarLayout.getGlobalVisibleRect(toolbar);
+            if (!toolbar.contains((int) event.getRawX(), (int) event.getRawY())) return true;
+        }
+        return super.dispatchTouchEvent(event);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -93,24 +157,18 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
         binding.name.addTextChangedListener(new BaseTextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!loaded || conflicted || BlocksManager.pendingOrderSave != null) { binding.save.setEnabled(false); return; }
                 String string = s.toString();
-                if (!id_detector.contains(string)) {
+                boolean currentName = "edit".equals(mode) && blockPosition >= 0 && blockPosition < blocksList.size()
+                        && blocksList.get(blockPosition) != null && string.equals(blocksList.get(blockPosition).get("name"));
+                if (!id_detector.contains(string) || currentName) {
                     binding.nameLayout.setError(null);
                     binding.nameLayout.setErrorEnabled(false);
                     binding.save.setEnabled(true);
-                } else if (!mode.equals("edit")) {
+                } else {
                     binding.nameLayout.setError(Helper.getResString(R.string.error_block_name_in_use));
                     binding.nameLayout.setErrorEnabled(true);
                     binding.save.setEnabled(false);
-                } else {
-                    HashMap<String, Object> savedBlocksListBlock = blocksList.get(blockPosition);
-                    Object blockNameObject = savedBlocksListBlock.get("name");
-
-                    if (!string.equals(blockNameObject)) {
-                        binding.nameLayout.setError(Helper.getResString(R.string.error_block_name_in_use));
-                        binding.nameLayout.setErrorEnabled(true);
-                        binding.save.setEnabled(false);
-                    }
                 }
             }
         });
@@ -169,6 +227,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
 
         binding.cancel.setOnClickListener(Helper.getBackPressedClickListener(this));
         binding.save.setOnClickListener(v -> {
+            if (!loaded || conflicted || waitForSave()) return;
             if (!PropertiesUtil.isHexColor(Helper.getText(binding.colour))) {
                 SketchwareUtil.showMessage(getApplicationContext(), Helper.getResString(R.string.error_invalid_hex_color_toast));
                 return;
@@ -205,6 +264,12 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
     }
 
     private void initializeLogic() {
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override public void handleOnBackPressed() {
+                if (waitForSave()) return;
+                setEnabled(false); getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
         inputProperties();
         addParameters();
         receiveIntents();
@@ -307,11 +372,11 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
         mode = getIntent().getStringExtra("mode");
         path = getIntent().getStringExtra("path");
         palletColour = getIntent().getStringExtra("color");
-        getBlockList();
         if (mode.equals("add")) {
             blockPosition = Integer.parseInt(getIntent().getStringExtra("pallet"));
             binding.colour.setText(palletColour);
             getSupportActionBar().setTitle(R.string.blocks_add_title);
+            getBlockList();
             return;
         }
         blockPosition = Integer.parseInt(getIntent().getStringExtra("pos"));
@@ -319,8 +384,8 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
         getSupportActionBar().setTitle(R.string.blocks_insert_title);
         if (mode.equals("edit")) {
             getSupportActionBar().setTitle(R.string.blocks_edit_title);
-            fillUpInputs(blockPosition);
         }
+        getBlockList();
     }
 
     private void fillUpInputs(int position) {
@@ -401,27 +466,159 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
     }
 
     private void getBlockList() {
-        try {
-            blocksList = getGson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
-
-            if (blocksList != null) {
-                for (int i = 0, blocksListSize = blocksList.size(); i < blocksListSize; i++) {
-                    HashMap<String, Object> block = blocksList.get(i);
-                    Object name = block.get("name");
-
-                    if (name instanceof String) {
-                        id_detector.add((String) name);
-                    } else {
-                        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.blocks_error_invalid_name_in_palette), i));
-                    }
-                }
-                return;
+        if (waitForSave()) return;
+        if (loadTask != null) loadTask.cancel(true);
+        loaded = false;
+        if (!formInitialized) binding.save.setEnabled(false);
+        String filePath = path;
+        String expectedName = anchorName;
+        byte[] expectedAnchor = anchorDigest;
+        int requestedPosition = blockPosition;
+        boolean needsAnchor = !"add".equals(mode);
+        boolean preserveForm = restoring;
+        String paletteFile = palettePath;
+        byte[] expectedPalette = paletteAnchor;
+        long generation = ++loadGeneration;
+        WeakReference<BlocksManagerCreatorActivity> reference = new WeakReference<>(this);
+        loadTask = LOADER.submit(() -> {
+            BlockEditorMutation.Loaded result = null, paletteResult = null; Exception failure = null;
+            int target = requestedPosition, group = 0;
+            byte[] recordIdentity = null;
+            try {
+                result = BlockEditorMutation.read(new File(filePath).toPath(), !needsAnchor);
+                if (paletteFile != null) paletteResult = BlockEditorMutation.read(new File(paletteFile).toPath());
+                if (needsAnchor && expectedAnchor != null) target = BlockEditorMutation.findAnchor(result, expectedAnchor, expectedName, requestedPosition);
+                else if (needsAnchor && preserveForm) target = -1;
+                if (paletteResult != null && expectedPalette != null) group = BlockEditorMutation.findAnchor(paletteResult, expectedPalette, null, requestedPosition - 9);
+                if (needsAnchor && target >= 0 && target < result.blocks().size()) recordIdentity = BlockEditorMutation.recordDigest(result.blocks().get(target));
             }
-        } catch (JsonParseException e) {
-            LogUtil.w("BlocksManagerCreator", "Failed to parse custom blocks JSON", e);
+            catch (Exception e) { failure = e; }
+            if (Thread.currentThread().isInterrupted()) return;
+            BlockEditorMutation.Loaded parsed = result; Exception error = failure;
+            final int resolved = target;
+            final boolean paletteConflict = group < 0;
+            final int selectedGroup = paletteResult != null && expectedPalette != null && !needsAnchor ? group + 9 : resolved;
+            final byte[] paletteDigest = paletteResult == null ? null : paletteResult.digest();
+            byte[] identity = recordIdentity;
+            BackgroundTasks.postMain(() -> {
+                var owner = reference.get();
+                if (owner == null || owner.isDestroyed() || owner.isFinishing() || owner.binding == null
+                        || owner.loadGeneration != generation) return;
+                owner.loadTask = null; owner.hideWork();
+                if (error != null) {
+                    LogUtil.w("BlocksManagerCreator", "Failed to load custom blocks", error);
+                    if (error instanceof java.io.IOException) {
+                        owner.saveErrorDialog = new MaterialAlertDialogBuilder(owner).setMessage(R.string.blocks_editor_load_failed)
+                                .setPositiveButton(R.string.store_retry, (dialog, which) -> { owner.saveErrorDialog = null; owner.getBlockList(); })
+                                .setNegativeButton(R.string.common_word_cancel, (dialog, which) -> owner.saveErrorDialog = null).show();
+                    } else {
+                        SketchwareUtil.showFailedToParseJsonDialog(owner, new File(filePath), Helper.getResString(R.string.blocks_custom_blocks), v -> owner.getBlockList());
+                    }
+                    return;
+                }
+                owner.blocksList = parsed.blocks();
+                owner.loadedDigest = parsed.digest();
+                owner.loadedPaletteDigest = paletteDigest;
+                owner.id_detector.clear(); owner.id_detector.addAll(parsed.names());
+                owner.loaded = true;
+                if (paletteConflict || (needsAnchor && (resolved < 0 || resolved >= owner.blocksList.size() || owner.blocksList.get(resolved) == null))) {
+                    owner.conflicted = true; owner.saveState.conflicted = true; owner.binding.save.setEnabled(false);
+                    owner.saveErrorDialog = new MaterialAlertDialogBuilder(owner).setMessage(R.string.blocks_editor_conflict)
+                            .setPositiveButton(R.string.common_word_ok, (dialog, which) -> owner.saveErrorDialog = null).show();
+                    return;
+                }
+                owner.blockPosition = selectedGroup;
+                owner.anchorDigest = identity;
+                var record = needsAnchor ? owner.blocksList.get(resolved) : null;
+                owner.anchorName = record != null && record.get("name") instanceof String name ? name : null;
+                if (!owner.formInitialized) {
+                    if (!owner.restoring && "edit".equals(owner.mode)) owner.fillUpInputs(owner.blockPosition);
+                    else owner.setSelectedBlockType(owner.selectedBlockType);
+                    owner.formInitialized = true;
+                }
+                owner.restoring = false;
+                owner.binding.save.setEnabled(!owner.conflicted && !owner.binding.nameLayout.isErrorEnabled());
+            });
+        });
+        binding.getRoot().postDelayed(() -> {
+            var owner = reference.get();
+            if (owner != null && !owner.isFinishing() && !owner.isDestroyed() && owner.loadGeneration == generation && owner.loadTask != null) owner.showWork();
+        }, 100);
+    }
+
+    private void showWork() {
+        if (isFinishing() || isDestroyed() || !getLifecycle().getCurrentState().isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED)) return;
+        if (workDialog == null) {
+            workDialog = new LoadingDialog(this);
+            ((TextView) workDialog.findViewById(R.id.tv_progress)).setText(R.string.common_word_please_wait);
         }
-        SketchwareUtil.showFailedToParseJsonDialog(this, new File(path), Helper.getResString(R.string.blocks_custom_blocks), v -> getBlockList());
-        blocksList = new ArrayList<>();
+        workDialog.show(); workDialog.resumeAnimation();
+        workDialog.setCancelable(BlocksManager.pendingOrderSave == null);
+        workDialog.setOnCancelListener(dialog -> {
+            if (BlocksManager.pendingOrderSave == null && loadTask != null) finish();
+        });
+    }
+
+    private void hideWork() {
+        if (workDialog != null) { workDialog.pauseAnimation(); workDialog.hide(); }
+    }
+
+    private boolean waitForSave() {
+        if (BlocksManager.pendingOrderSave == null) return false;
+        observeSave(); return true;
+    }
+
+    void observeSave() {
+        var save = BlocksManager.pendingOrderSave;
+        if (save == null || isFinishing() || isDestroyed()) return;
+        boolean observed = false;
+        for (var observer : save.observers) if (observer.get() == this) observed = true;
+        if (!observed) save.observers.add(new WeakReference<>(this));
+        if (!save.running) { onBlockSaveCompleted(save); return; }
+        if (saveErrorDialog != null) { saveErrorDialog.dismiss(); saveErrorDialog = null; }
+        if (!BlocksManager.delayDetailsIndicator(save, this)) showWork();
+    }
+
+    void onBlockSaveCompleted(BlocksManager.OrderSave save) {
+        hideWork();
+        if (save.failure == null && saveErrorDialog != null) { saveErrorDialog.dismiss(); saveErrorDialog = null; }
+        boolean owned = save.editorMutation != null && ownerToken.equals(save.editorMutation.ownerToken);
+        if (save.abandoned) {
+            if (owned) { conflicted = true; loaded = true; binding.save.setEnabled(false); }
+            else if (!loaded) getBlockList();
+            return;
+        }
+        if (save.failure != null) {
+            if (!getLifecycle().getCurrentState().isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED) || saveErrorDialog != null) return;
+            if (save.failure instanceof BlockEditorMutation.Conflict) {
+                saveErrorDialog = new MaterialAlertDialogBuilder(this).setMessage(R.string.blocks_editor_conflict)
+                        .setPositiveButton(R.string.common_word_ok, (dialog, which) -> {
+                            saveErrorDialog = null; BlocksManager.abandonEditorSave(save);
+                        }).setCancelable(false).show();
+            } else {
+                saveErrorDialog = new MaterialAlertDialogBuilder(this).setMessage(R.string.common_message_save_failed)
+                        .setPositiveButton(R.string.store_retry, (dialog, which) -> {
+                            saveErrorDialog = null;
+                            if (BlocksManager.pendingOrderSave == save && !save.running) BlocksManager.startOrderSave(save);
+                            observeSave();
+                        }).setCancelable(false).show();
+            }
+            return;
+        }
+        if (owned) {
+            setResult(RESULT_OK); SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved)); finish();
+        } else if (!loaded) getBlockList();
+    }
+
+    private void saveMutation(String mutationMode, int position, HashMap<String, Object> values) {
+        if (waitForSave() || !loaded || conflicted) return;
+        var original = "add".equals(mutationMode) ? null : blocksList.get(position);
+        var mutation = new BlockEditorMutation(ownerToken, mutationMode, position, original, values, blocksList, loadedDigest);
+        mutation.receipt = saveState;
+        if (palettePath != null && loadedPaletteDigest != null) mutation.guardPalette(new File(palettePath).toPath(), loadedPaletteDigest);
+        binding.save.setEnabled(false);
+        BlocksManager.saveBlockDetails(path, new ArrayList<>(), 0, mutation);
+        observeSave();
     }
 
     private void setSelectedBlockType(String rawType) {
@@ -477,10 +674,7 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
         }
         tempMap.put("code", Helper.getText(binding.code));
         tempMap.put("palette", String.valueOf(blockPosition));
-        blocksList.add(tempMap);
-        FileUtil.writeFile(path, getGson().toJson(blocksList));
-        SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
-        finish();
+        saveMutation("add", blockPosition, tempMap);
     }
 
     private void insertBlockAt(int position) {
@@ -498,14 +692,11 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
         }
         tempMap.put("code", Helper.getText(binding.code));
         tempMap.put("palette", blocksList.get(position).get("palette"));
-        blocksList.add(position, tempMap);
-        FileUtil.writeFile(path, getGson().toJson(blocksList));
-        SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
-        finish();
+        saveMutation("insert", position, tempMap);
     }
 
     private void editBlock(int position) {
-        HashMap<String, Object> tempMap = blocksList.get(position);
+        HashMap<String, Object> tempMap = new HashMap<>(blocksList.get(position));
         tempMap.put("name", Helper.getText(binding.name));
         tempMap.put("type", selectedBlockType);
         tempMap.put("typeName", Helper.getText(binding.typename));
@@ -516,8 +707,6 @@ public class BlocksManagerCreatorActivity extends BaseAppCompatActivity {
         }
         tempMap.put("imports", Helper.getText(binding.customImport));
         tempMap.put("code", Helper.getText(binding.code));
-        FileUtil.writeFile(path, getGson().toJson(blocksList));
-        SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
-        finish();
+        saveMutation("edit", position, tempMap);
     }
 }

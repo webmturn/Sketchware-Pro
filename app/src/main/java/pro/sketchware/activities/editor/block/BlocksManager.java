@@ -124,7 +124,7 @@ public class BlocksManager extends BaseAppCompatActivity {
     static final class OrderSave {
         final String blocksPath;
         final String palettesPath;
-        final ArrayList<HashMap<String, Object>> blocks;
+        ArrayList<HashMap<String, Object>> blocks;
         final ArrayList<HashMap<String, Object>> palettes;
         final ArrayList<WeakReference<Activity>> observers = new ArrayList<>();
         final ArrayList<WeakReference<Activity>> indicatorRequests = new ArrayList<>();
@@ -133,6 +133,8 @@ public class BlocksManager extends BaseAppCompatActivity {
         boolean running;
         boolean refreshBlockLoader;
         Exception failure;
+        BlockEditorMutation editorMutation;
+        boolean abandoned;
 
         OrderSave(BlocksManager owner) {
             blocksPath = owner.blocks_dir;
@@ -152,8 +154,13 @@ public class BlocksManager extends BaseAppCompatActivity {
     }
 
     static void saveBlockDetails(String path, ArrayList<HashMap<String, Object>> updated, int message) {
+        saveBlockDetails(path, updated, message, null);
+    }
+
+    static void saveBlockDetails(String path, ArrayList<HashMap<String, Object>> updated, int message, BlockEditorMutation mutation) {
         if (pendingOrderSave != null) throw new IllegalStateException("A block save is already pending");
         pendingOrderSave = new OrderSave(path, updated, message);
+        pendingOrderSave.editorMutation = mutation;
         // A manager in another window must reload before it can write its old model.
         for (WeakReference<BlocksManager> reference : MANAGERS) {
             BlocksManager manager = reference.get();
@@ -183,6 +190,7 @@ public class BlocksManager extends BaseAppCompatActivity {
         ORDER_WRITER.execute(() -> {
             Exception failure = null;
             try {
+                if (save.editorMutation != null) save.blocks = save.editorMutation.prepare(new File(save.blocksPath).toPath());
                 if (save.palettes == null) {
                     // Match the former JSON round trip without parsing the whole file again.
                     // Copy nullable records so a failed save cannot alter the displayed model.
@@ -209,20 +217,36 @@ public class BlocksManager extends BaseAppCompatActivity {
                 save.running = false;
                 save.failure = result;
                 if (result == null) {
+                    if (save.editorMutation != null && save.editorMutation.receipt != null) save.editorMutation.receipt.saved = true;
                     ExtraBlockFile.invalidateCache();
                     pendingOrderSave = null;
                 }
-                for (WeakReference<Activity> observer : new ArrayList<>(save.observers)) {
-                    Activity owner = observer.get();
-                    if (owner != null && !owner.isDestroyed() && !owner.isFinishing()) {
-                        if (owner instanceof BlocksManager manager) manager.onOrderSaveCompleted(save);
-                        else if (owner instanceof BlocksManagerDetailsActivity details) details.onBlockSaveCompleted(save);
-                    }
-                }
+                notifyOrderSave(save);
                 // onStop must not reload files while an order save is still writing them.
                 if (result == null && save.refreshBlockLoader) BlockLoader.refreshIfChanged();
             });
         });
+    }
+
+    private static void notifyOrderSave(OrderSave save) {
+        for (WeakReference<Activity> observer : new ArrayList<>(save.observers)) {
+            Activity owner = observer.get();
+            if (owner != null && !owner.isDestroyed() && !owner.isFinishing()) {
+                if (owner instanceof BlocksManager manager) manager.onOrderSaveCompleted(save);
+                else if (owner instanceof BlocksManagerDetailsActivity details) details.onBlockSaveCompleted(save);
+                else if (owner instanceof BlocksManagerCreatorActivity creator) creator.onBlockSaveCompleted(save);
+            }
+        }
+    }
+
+    static void abandonEditorSave(OrderSave save) {
+        if (pendingOrderSave != save || save.running || save.editorMutation == null) return;
+        pendingOrderSave = null;
+        save.abandoned = true;
+        if (save.editorMutation.receipt != null) save.editorMutation.receipt.conflicted = true;
+        save.failure = null;
+        notifyOrderSave(save);
+        if (save.refreshBlockLoader) BlockLoader.refreshIfChanged();
     }
 
     private static void writeOrderFiles(OrderSave save, String blocks, String palettes) throws IOException {
@@ -236,6 +260,7 @@ public class BlocksManager extends BaseAppCompatActivity {
             // see a complete base file and do not need to understand AtomicFile backup names.
             stagedBlocks = stageOrderFile(blocksPath, blocks);
             if (palettesPath != null) stagedPalettes = stageOrderFile(palettesPath, palettes);
+            if (save.editorMutation != null) save.editorMutation.verifyUnchanged(blocksPath);
             Files.move(stagedBlocks, blocksPath, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
             stagedBlocks = null;
             if (palettesPath != null) {
@@ -308,6 +333,7 @@ public class BlocksManager extends BaseAppCompatActivity {
                     && !lifecycleOwner.getLifecycle().getCurrentState().isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED)) return;
             if (activity instanceof BlocksManager manager) manager.observeOrderSave();
             else if (activity instanceof BlocksManagerDetailsActivity details) details.observeSave();
+            else if (activity instanceof BlocksManagerCreatorActivity creator) creator.observeSave();
         }, remaining);
         return true;
     }
