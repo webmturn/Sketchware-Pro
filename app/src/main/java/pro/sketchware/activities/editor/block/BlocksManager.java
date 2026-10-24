@@ -654,21 +654,38 @@ public class BlocksManager extends BaseAppCompatActivity {
         dialog.setTitle(R.string.block_move_to_bin);
         dialog.setMessage(R.string.common_message_confirm);
         dialog.setPositiveButton(R.string.common_word_yes, (v, which) -> {
-            if (waitForOrderSave()) return;
-            if (position < 0 || position >= pallet_listmap.size()) {
-                SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
-                return;
-            }
-            pallet_listmap.remove(position);
-            draggedView = null;
-            moveRelatedBlocksToRecycleBin(position + 9);
-            removeRelatedBlocks(position + 9);
-            FileUtil.writeFile(pallet_dir, getGson().toJson(pallet_listmap));
-            refreshList();
+            movePaletteToRecycleBin(position);
             v.dismiss();
         });
         dialog.setNegativeButton(R.string.common_word_cancel, null);
         dialog.show();
+    }
+
+    private void movePaletteToRecycleBin(int position) {
+        if (waitForOrderSave()) return;
+        if (position < 0 || position >= pallet_listmap.size()) {
+            SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+            return;
+        }
+        cancelPaletteSearch();
+        boolean copy = MODEL_READERS.get() != 0;
+        double removedPalette = position + 9;
+        for (int i = 0; i < all_blocks_list.size(); i++) {
+            HashMap<String, Object> block = all_blocks_list.get(i);
+            double value = getPaletteValue(block);
+            if (value == removedPalette || value > removedPalette) {
+                HashMap<String, Object> changed = editableBlock(block, copy);
+                changed.put("palette", value == removedPalette ? "-1" : String.valueOf((long) (value - 1)));
+                all_blocks_list.set(i, changed);
+            }
+        }
+        pallet_listmap.remove(position);
+        draggedView = null;
+        refreshBlockCounts();
+        refreshPaletteViews();
+        // Reuse the snapshot writer's navigation, recreation and failed-save guards.
+        paletteOrderChanged = true;
+        savePaletteOrder();
     }
 
     private void readSettings() {
@@ -718,6 +735,10 @@ public class BlocksManager extends BaseAppCompatActivity {
             pallet_listmap = new ArrayList<>();
         }
 
+        refreshPaletteViews();
+    }
+
+    private void refreshPaletteViews() {
         filtered_pallet_list.clear();
         filtered_palette_indices.clear();
         if (hasActiveSearchQuery()) {
