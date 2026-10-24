@@ -28,12 +28,15 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -47,6 +50,8 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 import pro.sketchware.core.codegen.ComponentCodeGenerator;
+import pro.sketchware.core.async.BackgroundTasks;
+import io.github.rosemoe.sora.text.Content;
 import pro.sketchware.core.project.SketchwarePaths;
 import io.github.rosemoe.sora.langs.java.JavaLanguage;
 import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
@@ -78,6 +83,49 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
     private boolean fromAndroidManifest;
     private String scId;
     private String activityName;
+    private static final ExecutorService XML_FORMATTER = BackgroundTasks.createSingleThreadExecutor("Sketchware-XmlFormat");
+    private Future<?> xmlFormatTask;
+    private long xmlFormatGeneration;
+
+    private record XmlFormatRequest(WeakReference<SrcCodeEditor> owner, WeakReference<Content> document,
+                                    long version, long generation) { }
+
+    private void formatXmlAsync() {
+        if (xmlFormatTask != null) xmlFormatTask.cancel(true);
+        Content document = binding.editor.getText();
+        String source = document.toString();
+        XmlFormatRequest request = new XmlFormatRequest(new WeakReference<>(this), new WeakReference<>(document),
+                document.getDocumentVersion(), ++xmlFormatGeneration);
+        boolean omitHeader = getIntent().hasExtra("disableHeader");
+        binding.toolbar.getMenu().findItem(MENU_PRETTY_PRINT).setEnabled(false);
+        xmlFormatTask = XML_FORMATTER.submit(() -> computeXmlFormat(request, source, omitHeader));
+    }
+
+    private static void computeXmlFormat(XmlFormatRequest request, String source, boolean omitHeader) {
+        Intent options = omitHeader ? new Intent().putExtra("disableHeader", true) : null;
+        String result = prettifyXml(source, 4, options);
+        if (Thread.currentThread().isInterrupted()) return;
+        BackgroundTasks.postMain(() -> {
+            SrcCodeEditor owner = request.owner().get();
+            if (owner == null || owner.isFinishing() || owner.isDestroyed() || owner.binding == null
+                    || owner.xmlFormatGeneration != request.generation()) return;
+            owner.xmlFormatTask = null;
+            owner.binding.toolbar.getMenu().findItem(MENU_PRETTY_PRINT).setEnabled(true);
+            Content current = owner.binding.editor.getText();
+            // setText can replace the Content object with an equal version number.
+            if (current != request.document().get() || current.getDocumentVersion() != request.version()) return;
+            if (result != null) owner.binding.editor.setText(result);
+            else SketchwareUtil.toastError(Helper.getResString(R.string.error_format_xml_failed), Toast.LENGTH_LONG);
+        });
+    }
+
+    @Override public void onDestroy() {
+        xmlFormatGeneration++;
+        if (xmlFormatTask != null) xmlFormatTask.cancel(true);
+        xmlFormatTask = null;
+        binding = null;
+        super.onDestroy();
+    }
 
     public static void selectTheme(CodeEditor ed, int which) {
         CodeEditorPreferences.applyTheme(ed, which);
@@ -434,13 +482,7 @@ public class SrcCodeEditor extends BaseAppCompatActivity {
                             if (!err) binding.editor.setText(ss);
 
                         } else if (getIntent().hasExtra("xml")) {
-                            String format = prettifyXml(binding.editor.getText().toString(), 4, getIntent());
-
-                            if (format != null) {
-                                binding.editor.setText(format);
-                            } else {
-                                SketchwareUtil.toastError(Helper.getResString(R.string.error_format_xml_failed), Toast.LENGTH_LONG);
-                            }
+                            formatXmlAsync();
                         } else {
                             SketchwareUtil.toast(Helper.getResString(R.string.toast_only_java_xml_format));
                         }
