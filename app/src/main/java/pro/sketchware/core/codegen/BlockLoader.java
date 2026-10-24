@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -35,6 +36,8 @@ public class BlockLoader {
     private static ArrayList<ExtraBlockInfo> blocks;
     /** Fast name to ExtraBlockInfo lookup, built alongside {@link #blocks}. */
     private static HashMap<String, ExtraBlockInfo> blocksByName;
+    private static long loadedRevision = -1;
+    private static Integer loadedPrimaryColor;
 
     /** Per-project custom block cache: sc_id to (block_name to ExtraBlockInfo). */
     private static String cachedProjectId;
@@ -112,8 +115,10 @@ public class BlockLoader {
             }
         }
 
-        blocks = new ArrayList<>();
-        blocksByName = new HashMap<>();
+        ArrayList<ExtraBlockInfo> loaded = new ArrayList<>();
+        HashMap<String, ExtraBlockInfo> byName = new HashMap<>();
+        HashMap<Integer, Integer> harmonizedColors = new HashMap<>();
+        ValidationCache validation = new ValidationCache();
 
         ArrayList<HashMap<String, Object>> arrList = ExtraBlockFile.getExtraBlockData();
         Context colorContext = null;
@@ -181,7 +186,12 @@ public class BlockLoader {
                             primaryColor = MaterialColors.getColor(colorContext, R.attr.colorPrimary,
                                     MaterialColors.class.getCanonicalName());
                         }
-                        info.setColor(MaterialColors.harmonize(parsedColor, primaryColor));
+                        Integer harmonized = harmonizedColors.get(parsedColor);
+                        if (harmonized == null) {
+                            harmonized = MaterialColors.harmonize(parsedColor, primaryColor);
+                            if (harmonizedColors.size() < 256) harmonizedColors.put(parsedColor, harmonized);
+                        }
+                        info.setColor(harmonized);
                     } catch (IllegalArgumentException e) {
                         SketchwareUtil.toastError(String.format(Helper.getResString(R.string.block_error_invalid_color), i + 1));
                         continue;
@@ -208,9 +218,54 @@ public class BlockLoader {
                 }
             }
 
-            validateBlock(info, "global extra blocks");
-            blocks.add(info);
-            blocksByName.put(info.getName(), info);
+            validation.validate(info, "global extra blocks");
+            loaded.add(info);
+            byName.put(info.getName(), info);
+        }
+        blocks = loaded;
+        blocksByName = byName;
+        loadedRevision = ExtraBlockFile.revision();
+        loadedPrimaryColor = primaryColor;
+    }
+
+    /** Reuse the published objects only after checking both source files and the theme. */
+    public static void refreshIfChanged() {
+        try {
+            ExtraBlockFile.refreshChangedFiles();
+        } catch (IOException failure) {
+            LogUtil.w("BlockLoader", "Could not verify custom block sources", failure);
+            refresh();
+            return;
+        }
+        boolean sameTheme = loadedPrimaryColor == null || loadedPrimaryColor == MaterialColors.getColor(
+                new ContextThemeWrapper(SketchApplication.getContext(), R.style.Theme_SketchwarePro),
+                R.attr.colorPrimary, MaterialColors.class.getCanonicalName());
+        if (blocksByName == null || loadedRevision != ExtraBlockFile.revision() || !sameTheme) loadCustomBlocks();
+        // Project definitions have separate writers; preserve the existing refresh contract.
+        invalidateProjectCache();
+    }
+
+    private record ValidationKey(String code, int available) { }
+
+    /** Bounded memoization within one load; every distinct definition is still validated. */
+    private static final class ValidationCache {
+        final HashMap<String, Integer> counts = new HashMap<>();
+        final HashMap<ValidationKey, CodeTemplateValidator.Problem> problems = new HashMap<>();
+
+        void validate(ExtraBlockInfo info, String source) {
+            Integer count = counts.get(info.getSpec());
+            if (count == null) {
+                count = countSpecParams(info.getSpec());
+                if (counts.size() < 256) counts.put(info.getSpec(), count);
+            }
+            ValidationKey key = new ValidationKey(info.getCode(), count + 2);
+            CodeTemplateValidator.Problem problem;
+            if (problems.containsKey(key)) problem = problems.get(key);
+            else {
+                problem = CodeTemplateValidator.findProblem(key.code(), key.available());
+                if (problems.size() < 256) problems.put(key, problem);
+            }
+            logProblem(info, source, problem);
         }
     }
 
@@ -254,6 +309,10 @@ public class BlockLoader {
         // getCodeExtraBlock always adds subStack1 + subStack2 to params
         int availableParams = specParams + 2;
         CodeTemplateValidator.Problem problem = CodeTemplateValidator.findProblem(info.getCode(), availableParams);
+        logProblem(info, source, problem);
+    }
+
+    private static void logProblem(ExtraBlockInfo info, String source, CodeTemplateValidator.Problem problem) {
         if (problem != null) {
             LogUtil.w("BlockLoader", String.format("Block '%s' (%s): %s String.format will fail at runtime.",
                     info.getName(), source, problem.describe()));

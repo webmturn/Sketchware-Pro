@@ -216,8 +216,9 @@ public class CustomBlockBackupTest {
 
         @SuppressWarnings("unchecked") Scope() throws Exception {
             BlockLoader.getBlockInfo("BackupRt.initialize." + token);
-            for (String name : List.of("blocks", "blocksByName", "cachedProjectId", "projectBlockCache")) {
-                Field field = field(BlockLoader.class, name); loaderState.put(field, field.get(null));
+            for (Field field : BlockLoader.class.getDeclaredFields()) {
+                if (!java.lang.reflect.Modifier.isStatic(field.getModifiers()) || field.isSynthetic()) continue;
+                field.setAccessible(true); loaderState.put(field, field.get(null));
             }
             extraData = (ArrayList<HashMap<String, Object>>) field(ExtraBlockFile.class, "cachedExtraBlocks").get(null);
             originalExtraData = new ArrayList<>(extraData);

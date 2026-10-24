@@ -220,7 +220,7 @@ public class BlocksManager extends BaseAppCompatActivity {
                     }
                 }
                 // onStop must not reload files while an order save is still writing them.
-                if (result == null && save.refreshBlockLoader) BlockLoader.refresh();
+                if (result == null && save.refreshBlockLoader) BlockLoader.refreshIfChanged();
             });
         });
     }
@@ -391,7 +391,7 @@ public class BlocksManager extends BaseAppCompatActivity {
     public void onStop() {
         super.onStop();
         if (pendingOrderSave != null) pendingOrderSave.refreshBlockLoader = true;
-        else BlockLoader.refresh();
+        else BlockLoader.refreshIfChanged();
     }
 
     @Override
