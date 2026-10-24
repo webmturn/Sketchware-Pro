@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
@@ -31,6 +33,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.JsonParseException;
 
 import java.io.File;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,6 +44,7 @@ import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
 import pro.sketchware.core.block.BlockTypeUtils;
+import pro.sketchware.widgets.LoadingDialog;
 import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.core.project.SketchwarePaths;
@@ -59,6 +64,8 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
     private String pallet_path = "";
     private int palette = 0;
     private Parcelable listViewSavedState;
+    private LoadingDialog saveDialog;
+    private AlertDialog saveErrorDialog;
 
     private Toolbar toolbar;
     private ListView block_list;
@@ -71,6 +78,7 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
+                if (waitForSave()) return;
                 if (mode.equals("editor")) {
                     mode = "normal";
                     Parcelable savedState = block_list.onSaveInstanceState();
@@ -104,6 +112,7 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
         background.addView(toolbar, 0);
 
         fab_button.setOnClickListener(v -> {
+            if (waitForSave()) return;
             Object paletteColor = pallet_list.get(palette - 9).get("color");
             if (paletteColor instanceof String) {
                 Intent intent = new Intent(getApplicationContext(), BlocksManagerCreatorActivity.class);
@@ -119,6 +128,7 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
     }
 
     public void openFileExplorerImport() {
+        if (waitForSave()) return;
         FilePickerOptions options = new FilePickerOptions();
         options.setExtensions(new String[]{"json"});
         options.setTitle(Helper.getResString(R.string.file_picker_select_json));
@@ -126,6 +136,7 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
         FilePickerCallback callback = new FilePickerCallback() {
             @Override
             public void onFileSelected(File file) {
+                if (waitForSave()) return;
                 if (FileUtil.readFile(file.getAbsolutePath()).isEmpty()) {
                     SketchwareUtil.toastError(Helper.getResString(R.string.error_file_empty));
                 } else if (FileUtil.readFile(file.getAbsolutePath()).equals("[]")) {
@@ -161,6 +172,11 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
         }
     }
 
+    @Override public void onResume() {
+        super.onResume();
+        if (BlocksManager.pendingOrderSave != null) observeSave();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.clear();
@@ -178,6 +194,7 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem menuItem) {
+        if (waitForSave()) return true;
         switch (menuItem.getItemId()) {
             case MENU_SWAP:
                 if (mode.equals("normal")) {
@@ -220,10 +237,14 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
         pallet_path = getIntent().getStringExtra("dirP");
         blocks_path = getIntent().getStringExtra("dirB");
         _refreshLists();
+    }
+
+    private void updatePaletteTitle() {
         if (palette == -1) {
             getSupportActionBar().setTitle(R.string.blocks_recycle_bin);
             fab_button.setVisibility(View.GONE);
         } else {
+            if (palette < 9 || palette - 9 >= pallet_list.size()) return;
             Object paletteName = pallet_list.get(palette - 9).get("name");
 
             if (paletteName instanceof String) {
@@ -234,15 +255,18 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
     }
 
     private void _refreshLists() {
-        filtered_list.clear();
-        reference_list.clear();
+        refreshLists(null);
+    }
+
+    private void refreshLists(ArrayList<HashMap<String, Object>> savedBlocks) {
+        if (waitForSave()) return;
         String paletteFileContent = FileUtil.readFile(pallet_path);
-        String blocksFileContent = FileUtil.readFile(blocks_path);
+        String blocksFileContent = savedBlocks == null ? FileUtil.readFile(blocks_path) : null;
         if (paletteFileContent.isEmpty()) {
             FileUtil.writeFile(pallet_path, "[]");
             paletteFileContent = "[]";
         }
-        if (blocksFileContent.isEmpty()) {
+        if (savedBlocks == null && blocksFileContent.isEmpty()) {
             FileUtil.writeFile(blocks_path, "[]");
             blocksFileContent = "[]";
         }
@@ -264,8 +288,8 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
             pallet_list = new ArrayList<>();
         }
 
-        parseBlocks:
-        {
+        if (savedBlocks != null) all_blocks_list = savedBlocks;
+        else parseBlocks: {
             try {
                 all_blocks_list = getGson().fromJson(blocksFileContent, Helper.TYPE_MAP_LIST);
 
@@ -281,6 +305,13 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
             all_blocks_list = new ArrayList<>();
         }
 
+        refreshFilteredBlocks();
+        updatePaletteTitle();
+    }
+
+    private void refreshFilteredBlocks() {
+        filtered_list.clear();
+        reference_list.clear();
         for (int i = 0; i < all_blocks_list.size(); i++) {
             HashMap<String, Object> block = all_blocks_list.get(i);
             if (block == null) continue;
@@ -304,9 +335,80 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
     }
 
     private void _swapitems(int sourcePosition, int targetPosition) {
-        Collections.swap(all_blocks_list, sourcePosition, targetPosition);
-        FileUtil.writeFile(blocks_path, getGson().toJson(all_blocks_list));
+        ArrayList<HashMap<String, Object>> updated = new ArrayList<>(all_blocks_list);
+        Collections.swap(updated, sourcePosition, targetPosition);
+        saveBlocks(updated);
+    }
+
+    private boolean saveBlocks(ArrayList<HashMap<String, Object>> updated) {
+        return saveBlocks(updated, 0);
+    }
+
+    private boolean saveBlocks(ArrayList<HashMap<String, Object>> updated, int message) {
+        if (waitForSave()) return false;
+        BlocksManager.saveBlockDetails(blocks_path, updated, message);
+        observeSave();
+        return true;
+    }
+
+    private boolean waitForSave() {
+        if (BlocksManager.pendingOrderSave == null) return false;
+        observeSave();
+        return true;
+    }
+
+    void observeSave() {
+        BlocksManager.OrderSave save = BlocksManager.pendingOrderSave;
+        if (save == null || isDestroyed() || isFinishing()) return;
+        boolean observed = false;
+        for (var observer : save.observers) if (observer.get() == this) observed = true;
+        if (!observed) save.observers.add(new WeakReference<>(this));
+        if (!save.running) { onBlockSaveCompleted(save); return; }
+        if (saveErrorDialog != null) { saveErrorDialog.dismiss(); saveErrorDialog = null; }
+        if (BlocksManager.delayDetailsIndicator(save, this)) return;
+        if (saveDialog == null) {
+            saveDialog = new LoadingDialog(this);
+            ((TextView) saveDialog.findViewById(R.id.tv_progress)).setText(R.string.common_word_please_wait);
+        }
+        saveDialog.show();
+        saveDialog.resumeAnimation();
+    }
+
+    void onBlockSaveCompleted(BlocksManager.OrderSave save) {
+        if (saveDialog != null) { saveDialog.pauseAnimation(); saveDialog.hide(); }
+        if (save.failure != null) {
+            if (!getLifecycle().getCurrentState().isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED)) return;
+            if (saveErrorDialog == null) {
+                saveErrorDialog = new MaterialAlertDialogBuilder(this)
+                        .setMessage(R.string.common_message_save_failed)
+                        .setPositiveButton(R.string.store_retry, (dialog, which) -> {
+                            saveErrorDialog = null;
+                            if (BlocksManager.pendingOrderSave == save && !save.running) BlocksManager.startOrderSave(save);
+                            observeSave();
+                        }).setCancelable(false).show();
+            }
+            return;
+        }
+        if (saveErrorDialog != null) { saveErrorDialog.dismiss(); saveErrorDialog = null; }
+        try {
+            if (new File(blocks_path).getCanonicalFile().equals(new File(save.blocksPath).getCanonicalFile())) {
+                refreshLists(new ArrayList<>(save.blocks));
+                if (save.successMessage != 0) SketchwareUtil.toast(Helper.getResString(save.successMessage));
+                return;
+            }
+        } catch (IOException ignored) { /* Fall back to the normal file load. */ }
         _refreshLists();
+    }
+
+    @Override public boolean dispatchTouchEvent(MotionEvent event) {
+        if (BlocksManager.pendingOrderSave != null) { observeSave(); return true; }
+        return super.dispatchTouchEvent(event);
+    }
+
+    @Override public void onDestroy() {
+        if (saveDialog != null) { saveDialog.cancelAnimation(); saveDialog.dismiss(); }
+        if (saveErrorDialog != null) saveErrorDialog.dismiss();
+        super.onDestroy();
     }
 
     private static final int MENU_SWAP = 0;
@@ -318,6 +420,7 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
     private static final int MENU_MOVE_TO_PALETTE = 6;
 
     private void _showItemPopup(View view, int position) {
+        if (waitForSave()) return;
         if (palette == -1) {
             PopupMenu popupMenu = new PopupMenu(this, view);
             Menu menu = popupMenu.getMenu();
@@ -400,9 +503,9 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
                 block.put("name", blockName + "_copy" + SketchwareUtil.getRandom(11, 99));
             }
         }
-        all_blocks_list.add(position + 1, block);
-        FileUtil.writeFile(blocks_path, getGson().toJson(all_blocks_list));
-        _refreshLists();
+        ArrayList<HashMap<String, Object>> updated = new ArrayList<>(all_blocks_list);
+        updated.add(position + 1, block);
+        saveBlocks(updated);
     }
 
     private void _deleteBlock(int position) {
@@ -410,9 +513,9 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
             SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
             return;
         }
-        all_blocks_list.remove(position);
-        FileUtil.writeFile(blocks_path, getGson().toJson(all_blocks_list));
-        _refreshLists();
+        ArrayList<HashMap<String, Object>> updated = new ArrayList<>(all_blocks_list);
+        updated.remove(position);
+        saveBlocks(updated);
     }
 
     private void _moveToRecycleBin(int position) {
@@ -420,9 +523,16 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
             SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
             return;
         }
-        all_blocks_list.get(position).put("palette", "-1");
-        FileUtil.writeFile(blocks_path, getGson().toJson(all_blocks_list));
-        _refreshLists();
+        moveBlockToPalette(position, -1);
+    }
+
+    private void moveBlockToPalette(int position, int targetPalette) {
+        ArrayList<HashMap<String, Object>> updated = new ArrayList<>(all_blocks_list);
+        HashMap<String, Object> changed = new HashMap<>(updated.get(position));
+        changed.put("palette", String.valueOf(targetPalette));
+        updated.set(position, changed);
+        if (targetPalette != -1) Collections.swap(updated, position, updated.size() - 1);
+        saveBlocks(updated);
     }
 
     private void _changePallette(int position) {
@@ -446,10 +556,7 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
                     .setSingleChoiceItems(paletteNames.toArray(new String[0]), -1, (dialog, which) -> restoreToChoice.set(which))
                     .setPositiveButton(R.string.button_restore, (dialog, which) -> {
                         if (restoreToChoice.get() != -1) {
-                            all_blocks_list.get(position).put("palette", String.valueOf(restoreToChoice.get() + 9));
-                            Collections.swap(all_blocks_list, position, all_blocks_list.size() - 1);
-                            FileUtil.writeFile(blocks_path, getGson().toJson(all_blocks_list));
-                            _refreshLists();
+                            moveBlockToPalette(position, restoreToChoice.get() + 9);
                         }
                     });
         } else {
@@ -457,16 +564,14 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
             builder.setTitle(R.string.blocks_move_title)
                     .setSingleChoiceItems(paletteNames.toArray(new String[0]), palette - 9, (dialog, which) -> moveToChoice.set(which))
                     .setPositiveButton(R.string.button_move, (dialog, which) -> {
-                        all_blocks_list.get(position).put("palette", String.valueOf(moveToChoice.get() + 9));
-                        Collections.swap(all_blocks_list, position, all_blocks_list.size() - 1);
-                        FileUtil.writeFile(blocks_path, getGson().toJson(all_blocks_list));
-                        _refreshLists();
+                        moveBlockToPalette(position, moveToChoice.get() + 9);
                     });
         }
         builder.show();
     }
 
     private void _importBlocks(ArrayList<HashMap<String, Object>> blocks) {
+        if (waitForSave()) return;
         try {
             ArrayList<String> names = new ArrayList<>();
             ArrayList<Integer> toAdd = new ArrayList<>();
@@ -489,38 +594,35 @@ public class BlocksManagerDetailsActivity extends BaseAppCompatActivity {
                         }
                     })
                     .setPositiveButton(R.string.common_word_import, (dialog, which) -> {
+                        ArrayList<HashMap<String, Object>> updated = new ArrayList<>(all_blocks_list);
                         for (int i = 0; i < blocks.size(); i++) {
                             if (toAdd.contains(i)) {
-                                HashMap<String, Object> map = blocks.get(i);
+                                HashMap<String, Object> map = new HashMap<>(blocks.get(i));
                                 map.put("palette", String.valueOf(palette));
-                                all_blocks_list.add(map);
+                                updated.add(map);
                             }
                         }
-                        FileUtil.writeFile(blocks_path, getGson().toJson(all_blocks_list));
-                        _refreshLists();
-                        SketchwareUtil.toast(Helper.getResString(R.string.blocks_toast_imported));
+                        saveBlocks(updated, R.string.blocks_toast_imported);
                     })
                     .setNegativeButton(R.string.blocks_import_reverse, (dialog, which) -> {
+                        ArrayList<HashMap<String, Object>> updated = new ArrayList<>(all_blocks_list);
                         for (int i = 0; i < blocks.size(); i++) {
                             if (!toAdd.contains(i)) {
-                                HashMap<String, Object> map = blocks.get(i);
+                                HashMap<String, Object> map = new HashMap<>(blocks.get(i));
                                 map.put("palette", String.valueOf(palette));
-                                all_blocks_list.add(map);
+                                updated.add(map);
                             }
                         }
-                        FileUtil.writeFile(blocks_path, getGson().toJson(all_blocks_list));
-                        _refreshLists();
-                        SketchwareUtil.toast(Helper.getResString(R.string.blocks_toast_imported));
+                        saveBlocks(updated, R.string.blocks_toast_imported);
                     })
                     .setNeutralButton(R.string.common_word_all, (dialog, which) -> {
+                        ArrayList<HashMap<String, Object>> updated = new ArrayList<>(all_blocks_list);
                         for (int i = 0; i < blocks.size(); i++) {
-                            HashMap<String, Object> map = blocks.get(i);
+                            HashMap<String, Object> map = new HashMap<>(blocks.get(i));
                             map.put("palette", String.valueOf(palette));
-                            all_blocks_list.add(map);
+                            updated.add(map);
                         }
-                        FileUtil.writeFile(blocks_path, getGson().toJson(all_blocks_list));
-                        _refreshLists();
-                        SketchwareUtil.toast(Helper.getResString(R.string.blocks_toast_imported));
+                        saveBlocks(updated, R.string.blocks_toast_imported);
                     })
                     .show();
         } catch (Exception e) {

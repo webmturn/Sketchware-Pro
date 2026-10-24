@@ -169,6 +169,7 @@ public class CustomBlockPaletteIntegrityTest {
     @Test public void searchDeleteUsesOriginalPalettePosition() throws Exception {
         try (var fixture = managerFixture(); var manager = ActivityScenario.launch(BlocksManager.class)) {
             search(manager, "needle"); menu(manager, 0, 1); click(android.R.id.button1);
+            PaletteOrderSaveTest.awaitSave();
             assertEquals(2, maps(fixture.palettes).size()); assertNull(maps(fixture.palettes).get(0));
             List<HashMap<String, Object>> blocks = maps(fixture.blocks); assertEquals(5, blocks.size()); assertNull(blocks.get(0));
             assertEquals("9", blocks.get(1).get("palette")); assertEquals("10", blocks.get(2).get("palette"));
@@ -178,6 +179,7 @@ public class CustomBlockPaletteIntegrityTest {
     @Test public void explicitNullSlotDeletionShiftsIds() throws Exception {
         try (var fixture = managerFixture(); var manager = ActivityScenario.launch(BlocksManager.class)) {
             menu(manager, 0, 1); click(android.R.id.button1);
+            PaletteOrderSaveTest.awaitSave();
             assertEquals("A", maps(fixture.palettes).get(0).get("name")); assertEquals("B", maps(fixture.palettes).get(1).get("name"));
             List<HashMap<String, Object>> blocks = maps(fixture.blocks); assertEquals(5, blocks.size()); assertNull(blocks.get(0));
             assertEquals("9", blocks.get(1).get("palette")); assertEquals("10", blocks.get(2).get("palette"));
@@ -193,6 +195,7 @@ public class CustomBlockPaletteIntegrityTest {
                 RecyclerView.ViewHolder from = recycler.findViewHolderForAdapterPosition(1), to = recycler.findViewHolderForAdapterPosition(0);
                 assertNotNull(from); assertNotNull(to); assertTrue(callback.onMove(recycler, from, to)); callback.clearView(recycler, from);
             });
+            PaletteOrderSaveTest.awaitSave();
             assertEquals("A", maps(fixture.palettes).get(0).get("name")); assertNull(maps(fixture.palettes).get(1));
             assertBlockIds(fixture.blocks, "10", "9", "11", "-1");
         }

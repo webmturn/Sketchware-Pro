@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.os.Vibrator;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -99,6 +100,7 @@ public class BlocksManager extends BaseAppCompatActivity {
     private static final ExecutorService SEARCH_EXECUTOR = Executors.newSingleThreadExecutor();
     private static final Handler MAIN = new Handler(Looper.getMainLooper());
     private static final AtomicInteger MODEL_READERS = new AtomicInteger();
+    private static final ArrayList<WeakReference<BlocksManager>> MANAGERS = new ArrayList<>();
     private SearchCancellation searchTask;
     private long searchGeneration;
     private boolean searchInProgress;
@@ -113,18 +115,21 @@ public class BlocksManager extends BaseAppCompatActivity {
 
     private static final ExecutorService ORDER_WRITER = Executors.newSingleThreadExecutor();
     // Main-thread state: at most one save can own the global palette files at a time.
-    private static OrderSave pendingOrderSave;
+    static OrderSave pendingOrderSave;
     private boolean paletteOrderChanged;
     private boolean reloadAfterOrderSave;
     private LoadingDialog orderSaveDialog;
     private AlertDialog orderSaveErrorDialog;
 
-    private static final class OrderSave {
+    static final class OrderSave {
         final String blocksPath;
         final String palettesPath;
         final ArrayList<HashMap<String, Object>> blocks;
         final ArrayList<HashMap<String, Object>> palettes;
-        final ArrayList<WeakReference<BlocksManager>> observers = new ArrayList<>();
+        final ArrayList<WeakReference<Activity>> observers = new ArrayList<>();
+        final ArrayList<WeakReference<Activity>> indicatorRequests = new ArrayList<>();
+        final int successMessage;
+        long startedAt;
         boolean running;
         boolean refreshBlockLoader;
         Exception failure;
@@ -134,7 +139,30 @@ public class BlocksManager extends BaseAppCompatActivity {
             palettesPath = owner.pallet_dir;
             blocks = new ArrayList<>(owner.all_blocks_list);
             palettes = new ArrayList<>(owner.pallet_listmap);
+            successMessage = 0;
         }
+
+        OrderSave(String path, ArrayList<HashMap<String, Object>> updated, int successMessage) {
+            blocksPath = path;
+            palettesPath = null;
+            blocks = new ArrayList<>(updated);
+            palettes = null;
+            this.successMessage = successMessage;
+        }
+    }
+
+    static void saveBlockDetails(String path, ArrayList<HashMap<String, Object>> updated, int message) {
+        if (pendingOrderSave != null) throw new IllegalStateException("A block save is already pending");
+        pendingOrderSave = new OrderSave(path, updated, message);
+        // A manager in another window must reload before it can write its old model.
+        for (WeakReference<BlocksManager> reference : MANAGERS) {
+            BlocksManager manager = reference.get();
+            if (manager != null && !manager.isDestroyed() && !manager.isFinishing()) {
+                manager.reloadAfterOrderSave = true;
+                pendingOrderSave.observers.add(new WeakReference<>(manager));
+            }
+        }
+        startOrderSave(pendingOrderSave);
     }
 
     private void savePaletteOrder() {
@@ -146,16 +174,30 @@ public class BlocksManager extends BaseAppCompatActivity {
         observeOrderSave();
     }
 
-    private static void startOrderSave(OrderSave save) {
+    static void startOrderSave(OrderSave save) {
         save.running = true;
         save.failure = null;
+        save.startedAt = SystemClock.uptimeMillis();
+        save.indicatorRequests.clear();
         MODEL_READERS.incrementAndGet();
         ORDER_WRITER.execute(() -> {
             Exception failure = null;
             try {
+                if (save.palettes == null) {
+                    // Match the former JSON round trip without parsing the whole file again.
+                    // Copy nullable records so a failed save cannot alter the displayed model.
+                    for (int i = 0; i < save.blocks.size(); i++) {
+                        HashMap<String, Object> block = save.blocks.get(i);
+                        if (block != null && block.containsValue(null)) {
+                            HashMap<String, Object> normalized = new HashMap<>(block);
+                            normalized.values().removeIf(Objects::isNull);
+                            save.blocks.set(i, normalized);
+                        }
+                    }
+                }
                 // Serialize both snapshots before changing either file; the JSON format stays unchanged.
                 String blocks = getGson().toJson(save.blocks);
-                String palettes = getGson().toJson(save.palettes);
+                String palettes = save.palettes == null ? null : getGson().toJson(save.palettes);
                 writeOrderFiles(save, blocks, palettes);
             } catch (Exception e) {
                 failure = e;
@@ -170,10 +212,11 @@ public class BlocksManager extends BaseAppCompatActivity {
                     ExtraBlockFile.invalidateCache();
                     pendingOrderSave = null;
                 }
-                for (WeakReference<BlocksManager> observer : new ArrayList<>(save.observers)) {
-                    BlocksManager owner = observer.get();
+                for (WeakReference<Activity> observer : new ArrayList<>(save.observers)) {
+                    Activity owner = observer.get();
                     if (owner != null && !owner.isDestroyed() && !owner.isFinishing()) {
-                        owner.onOrderSaveCompleted(save);
+                        if (owner instanceof BlocksManager manager) manager.onOrderSaveCompleted(save);
+                        else if (owner instanceof BlocksManagerDetailsActivity details) details.onBlockSaveCompleted(save);
                     }
                 }
                 // onStop must not reload files while an order save is still writing them.
@@ -184,7 +227,7 @@ public class BlocksManager extends BaseAppCompatActivity {
 
     private static void writeOrderFiles(OrderSave save, String blocks, String palettes) throws IOException {
         Path blocksPath = new File(save.blocksPath).getCanonicalFile().toPath();
-        Path palettesPath = new File(save.palettesPath).getCanonicalFile().toPath();
+        Path palettesPath = save.palettesPath == null ? null : new File(save.palettesPath).getCanonicalFile().toPath();
         if (blocksPath.equals(palettesPath)) throw new IOException("Blocks and palettes share a file");
         Path stagedBlocks = null;
         Path stagedPalettes = null;
@@ -192,11 +235,13 @@ public class BlocksManager extends BaseAppCompatActivity {
             // Finish both temporary files before replacing either original. Legacy readers always
             // see a complete base file and do not need to understand AtomicFile backup names.
             stagedBlocks = stageOrderFile(blocksPath, blocks);
-            stagedPalettes = stageOrderFile(palettesPath, palettes);
+            if (palettesPath != null) stagedPalettes = stageOrderFile(palettesPath, palettes);
             Files.move(stagedBlocks, blocksPath, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
             stagedBlocks = null;
-            Files.move(stagedPalettes, palettesPath, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
-            stagedPalettes = null;
+            if (palettesPath != null) {
+                Files.move(stagedPalettes, palettesPath, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+                stagedPalettes = null;
+            }
         } finally {
             try {
                 if (stagedBlocks != null) Files.deleteIfExists(stagedBlocks);
@@ -227,7 +272,7 @@ public class BlocksManager extends BaseAppCompatActivity {
         OrderSave save = pendingOrderSave;
         if (save == null || isFinishing() || isDestroyed()) return;
         boolean observed = false;
-        for (WeakReference<BlocksManager> observer : save.observers) {
+        for (WeakReference<Activity> observer : save.observers) {
             if (observer.get() == this) observed = true;
         }
         if (!observed) save.observers.add(new WeakReference<>(this));
@@ -239,6 +284,7 @@ public class BlocksManager extends BaseAppCompatActivity {
             orderSaveErrorDialog.dismiss();
             orderSaveErrorDialog = null;
         }
+        if (delayDetailsIndicator(save, this)) return;
         if (orderSaveDialog == null) {
             orderSaveDialog = new LoadingDialog(this);
             ((TextView) orderSaveDialog.findViewById(R.id.tv_progress)).setText(R.string.common_word_please_wait);
@@ -247,12 +293,33 @@ public class BlocksManager extends BaseAppCompatActivity {
         orderSaveDialog.resumeAnimation();
     }
 
+    static boolean delayDetailsIndicator(OrderSave save, Activity owner) {
+        if (save.palettes != null) return false;
+        long remaining = 100 - (SystemClock.uptimeMillis() - save.startedAt);
+        if (remaining <= 0) return false;
+        for (var reference : save.indicatorRequests) if (reference.get() == owner) return true;
+        WeakReference<Activity> reference = new WeakReference<>(owner);
+        save.indicatorRequests.add(reference);
+        MAIN.postDelayed(() -> {
+            Activity activity = reference.get();
+            if (pendingOrderSave != save || !save.running || activity == null
+                    || activity.isDestroyed() || activity.isFinishing()) return;
+            if (activity instanceof androidx.lifecycle.LifecycleOwner lifecycleOwner
+                    && !lifecycleOwner.getLifecycle().getCurrentState().isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED)) return;
+            if (activity instanceof BlocksManager manager) manager.observeOrderSave();
+            else if (activity instanceof BlocksManagerDetailsActivity details) details.observeSave();
+        }, remaining);
+        return true;
+    }
+
     private void onOrderSaveCompleted(OrderSave save) {
         if (orderSaveDialog != null) {
             orderSaveDialog.pauseAnimation();
             orderSaveDialog.hide();
         }
         if (save.failure != null) {
+            if (save.palettes == null && !getLifecycle().getCurrentState()
+                    .isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED)) return;
             // Keep the snapshot and guard until both files are saved; never silently navigate away.
             if (orderSaveErrorDialog == null) {
                 orderSaveErrorDialog = new MaterialAlertDialogBuilder(this)
@@ -269,6 +336,10 @@ public class BlocksManager extends BaseAppCompatActivity {
                 orderSaveErrorDialog = null;
             }
             if (reloadAfterOrderSave) {
+                // A stopped parent will reload in onResume; do not parse a large
+                // library behind the details page as part of its save completion.
+                if (save.palettes == null && !getLifecycle().getCurrentState()
+                        .isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED)) return;
                 reloadAfterOrderSave = false;
                 readSettings();
                 refreshList();
@@ -292,6 +363,7 @@ public class BlocksManager extends BaseAppCompatActivity {
 
     @Override
     public void onDestroy() {
+        MANAGERS.removeIf(reference -> reference.get() == null || reference.get() == this);
         cancelPaletteSearch();
         if (orderSaveDialog != null) {
             orderSaveDialog.cancelAnimation();
@@ -304,6 +376,7 @@ public class BlocksManager extends BaseAppCompatActivity {
     @Override
     public void onCreate(Bundle _savedInstanceState) {
         super.onCreate(_savedInstanceState);
+        MANAGERS.add(new WeakReference<>(this));
         binding = ActivityBlocksManagerBinding.inflate(getLayoutInflater());
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -603,6 +676,7 @@ public class BlocksManager extends BaseAppCompatActivity {
     public void onResume() {
         super.onResume();
         if (waitForOrderSave()) return;
+        reloadAfterOrderSave = false;
         readSettings();
         refreshList();
         refreshCount();

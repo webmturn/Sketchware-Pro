@@ -241,6 +241,7 @@ public class CustomBlockPaletteConfigurationTest {
         }
         @SuppressWarnings({"rawtypes","unchecked"}) @Override public void close() throws Exception {
             try {
+                PaletteOrderSaveTest.awaitSave();
                 onMain(() -> {View root=dialogRoot();if(root!=null && root.findViewById(android.R.id.button2)!=null)root.findViewById(android.R.id.button2).performClick();});
                 host.close(); project.close();
             } finally {
