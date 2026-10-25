@@ -77,8 +77,22 @@ android {
     }
 }
 
+// The bundled apksigner is a fat JAR containing desktop Conscrypt classes. Use the Android
+// provider (with its native libraries) for both signing and wireless ADB, without changing
+// the checked-out input JAR or packaging duplicate org.conscrypt classes.
+def androidApkSignerJar = tasks.register("prepareAndroidApkSignerJar", Jar) {
+    from(zipTree(file("libs/build-tools_apksigner_32.0.0.jar"))) {
+        exclude "org/conscrypt/**"
+    }
+    archiveFileName = "apksigner-android.jar"
+    destinationDirectory = layout.buildDirectory.dir("generated/apksigner")
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"])
+    implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"], exclude: ["build-tools_apksigner_32.0.0.jar"])
+    implementation files(androidApkSignerJar)
 
     testImplementation libs.junit
     androidTestImplementation libs.androidx.test.runner
@@ -119,6 +133,8 @@ dependencies {
     implementation libs.filepicker
 
     implementation libs.libsu
+    implementation libs.libadb
+    implementation libs.conscrypt
     implementation libs.insetter
 
     implementation(libs.javaparser.symbol.solver) {

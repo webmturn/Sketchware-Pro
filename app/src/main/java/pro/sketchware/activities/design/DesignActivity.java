@@ -71,6 +71,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import pro.sketchware.core.async.BackgroundTasks;
+import pro.sketchware.activities.debug.RemoteDebugActivity;
+import pro.sketchware.core.debug.RemoteDebugManager;
+import pro.sketchware.core.debug.RemoteDebugSettings;
+import pro.sketchware.core.debug.RemoteDeviceTarget;
 import pro.sketchware.util.io.SharedPrefsHelper;
 import pro.sketchware.util.DeviceUtil;
 import pro.sketchware.core.codegen.LayoutGenerator;
@@ -340,6 +344,26 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
      * Opens the debug APK to install.
      */
     void installBuiltApk() {
+        RemoteDebugSettings settings = new RemoteDebugSettings(this);
+        if (settings.isRemote(sc_id)) {
+            try {
+                installBuiltApk(settings.getTarget());
+            } catch (IllegalArgumentException error) {
+                SketchwareUtil.toast(getString(R.string.remote_debug_configure));
+                toRemoteDebug();
+            }
+        } else installBuiltApk(null);
+    }
+
+    void installBuiltApk(RemoteDeviceTarget runTarget) {
+        if (runTarget != null) {
+            if (!RemoteDebugManager.get(this).deploy(runTarget,
+                    new File(projectFilePaths.finalToInstallApkPath), projectFilePaths.packageName)) {
+                SketchwareUtil.toast(getString(R.string.remote_debug_busy));
+            }
+            toRemoteDebug();
+            return;
+        }
         TaskHost taskHost = TaskHost.of(this);
         taskHost.postToUi(() -> {
             if (!ApplicationSettings.isSettingEnabled(ApplicationSettings.SETTING_ROOT_AUTO_INSTALL_PROJECTS)) {
@@ -510,7 +534,22 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQUEST_NOTIFICATION_PERMISSION);
             }
 
-            DesignBuildController buildController = new DesignBuildController(this, sc_id);
+            RemoteDeviceTarget runTarget = null;
+            RemoteDebugSettings remoteSettings = new RemoteDebugSettings(this);
+            if (remoteSettings.isRemote(sc_id)) {
+                if (RemoteDebugManager.get(this).isBusy()) {
+                    SketchwareUtil.toast(getString(R.string.remote_debug_busy));
+                    return;
+                }
+                try {
+                    runTarget = remoteSettings.getTarget();
+                } catch (IllegalArgumentException error) {
+                    SketchwareUtil.toast(getString(R.string.remote_debug_configure));
+                    toRemoteDebug();
+                    return;
+                }
+            }
+            DesignBuildController buildController = new DesignBuildController(this, sc_id, runTarget);
             currentBuildController = buildController;
             buildController.execute();
         });
@@ -520,6 +559,10 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
 
         bottomPopupMenu = new PopupMenu(this, btnOptions);
         bottomMenu = bottomPopupMenu.getMenu();
+        bottomMenu.add(Menu.NONE, 9, Menu.NONE, getString(R.string.remote_debug_title)).setOnMenuItemClickListener(item -> {
+            toRemoteDebug();
+            return true;
+        });
         bottomMenu.add(Menu.NONE, 1, Menu.NONE, Helper.getResString(R.string.design_menu_build_settings)).setOnMenuItemClickListener(item -> {
             BuildSettingsBottomSheet sheet = BuildSettingsBottomSheet.newInstance(sc_id);
             sheet.show(getSupportFragmentManager(), BuildSettingsBottomSheet.TAG);
@@ -970,8 +1013,17 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
      */
     void toLogReader() {
         Intent intent = new Intent(getApplicationContext(), LogReaderActivity.class);
+        intent.putExtra(LogReaderActivity.EXTRA_REMOTE, new RemoteDebugSettings(this).isRemote(sc_id));
+        intent.putExtra("package_name", projectFilePaths.packageName);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("sc_id", sc_id);
+        startActivity(intent);
+    }
+
+    void toRemoteDebug() {
+        Intent intent = new Intent(this, RemoteDebugActivity.class);
+        intent.putExtra("sc_id", sc_id);
+        intent.putExtra("package_name", projectFilePaths.packageName);
         startActivity(intent);
     }
 

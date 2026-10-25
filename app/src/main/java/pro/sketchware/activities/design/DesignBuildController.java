@@ -29,6 +29,7 @@ import java.util.concurrent.ExecutorService;
 import pro.sketchware.R;
 import pro.sketchware.core.async.BackgroundTasks;
 import pro.sketchware.core.async.TaskHost;
+import pro.sketchware.core.debug.RemoteDeviceTarget;
 import pro.sketchware.core.build.BuildProgressReceiver;
 import pro.sketchware.core.build.BuildStage;
 import pro.sketchware.core.build.ProjectBuilder;
@@ -62,6 +63,7 @@ final class DesignBuildController implements BuildProgressReceiver {
     public static final String ACTION_CANCEL_BUILD = "pro.sketchware.activities.design.ACTION_CANCEL_BUILD";
     private final WeakReference<DesignActivity> activityRef;
     private final String projectId;
+    private final RemoteDeviceTarget runTarget;
     private static final String CHANNEL_ID = "build_notification_channel";
     private final ExecutorService executorService = BackgroundTasks.createSingleThreadExecutor("DesignBuild");
     private final NotificationManager notificationManager;
@@ -72,8 +74,13 @@ final class DesignBuildController implements BuildProgressReceiver {
     private long buildStartTime;
 
     DesignBuildController(DesignActivity activity, String projectId) {
+        this(activity, projectId, null);
+    }
+
+    DesignBuildController(DesignActivity activity, String projectId, RemoteDeviceTarget runTarget) {
         activityRef = new WeakReference<>(activity);
         this.projectId = projectId;
+        this.runTarget = runTarget;
         notificationManager = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
@@ -279,7 +286,7 @@ final class DesignBuildController implements BuildProgressReceiver {
                 return;
             }
 
-            postToUi(activity, activity::installBuiltApk);
+            postToUi(activity, () -> activity.installBuiltApk(runTarget));
         } catch (MissingFileException e) {
             postToUi(activity, () -> {
                 boolean isMissingDirectory = e.isMissingDirectory();
