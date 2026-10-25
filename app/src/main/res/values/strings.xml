@@ -1332,6 +1332,7 @@ Please make room and try again"</string>
     <string name="common_message_no_item_delete">There are no items to delete</string>
     <string name="common_message_permission_denied">Permission denied</string>
     <string name="common_message_permission_need_load_project">We need your permission to Storage to save and load projects</string>
+    <string name="main_storage_permission_grant">Grant access</string>
     <string name="common_message_permission_storage">To access photos, media, and files, please give Sketchware permission in the next step</string>
     <string name="common_message_permission_storage1">"Permission Denied.
 Please click on Settings to allow permission for Storage. Without this permission, some features may not function properly"</string>

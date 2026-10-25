@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.SystemClock;
 import android.view.View;
 import android.view.inspector.WindowInspector;
+import android.widget.TextView;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -24,6 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BooleanSupplier;
 
 import pro.sketchware.core.settings.ApplicationSettings;
+import pro.sketchware.R;
 import pro.sketchware.util.ThrottleTimer;
 import pro.sketchware.widgets.MessageBottomSheetDialog;
 
@@ -97,6 +99,54 @@ public class StartupPromptTest {
             assertEquals(1, dialogCount(activity));
             assertTrue((boolean) field(activity, "startupStorageChecked"));
         }));
+    }
+
+    @Test(timeout = 20000) public void projectRefreshDoesNotShowAPermissionNoticeBehindTheFirstPrompt() throws Exception {
+        withStartup(true, scenario -> scenario.onActivity(activity -> {
+            activity.refreshProjects();
+            activity.showStoragePermissionRequiredSnackbar();
+            assertNotNull(current(activity));
+            assertFalse("Do not report denial, or show a second prompt, before a choice", noticeShown(activity));
+        }));
+    }
+
+    @Test(timeout = 20000) public void dismissedExplanationShowsNeutralAccessMessageAndHidesDuringRequest() throws Exception {
+        withStartup(true, scenario -> {
+            scenario.onActivity(activity -> current(activity).cancel());
+            waitFor(() -> hasNotice(scenario));
+            scenario.onActivity(activity -> {
+                TextView text = activity.findViewById(com.google.android.material.R.id.snackbar_text);
+                assertEquals(activity.getString(R.string.common_message_permission_need_load_project), text.getText().toString());
+                TextView action = activity.findViewById(com.google.android.material.R.id.snackbar_action);
+                assertEquals(activity.getString(R.string.main_storage_permission_grant), action.getText().toString());
+                set(activity, "waitingForStoragePermission", true);
+                activity.showStoragePermissionRequiredSnackbar();
+            });
+            waitFor(() -> !hasNotice(scenario));
+        });
+    }
+
+    @Test(timeout = 20000) public void grantingAccessClearsTheMissingPermissionNotice() throws Exception {
+        withStartup(true, scenario -> {
+            scenario.onActivity(activity -> current(activity).cancel());
+            waitFor(() -> hasNotice(scenario));
+            scenario.onActivity(activity -> {
+                activity.storageGranted = true;
+                activity.onStoragePermissionGranted(9501);
+            });
+            waitFor(() -> !hasNotice(scenario));
+        });
+    }
+
+    private static boolean hasNotice(ActivityScenario<StartupPromptTestActivity> scenario) {
+        AtomicBoolean showing = new AtomicBoolean();
+        scenario.onActivity(activity -> showing.set(noticeShown(activity)));
+        return showing.get();
+    }
+
+    private static boolean noticeShown(MainActivity activity) {
+        View notice = activity.findViewById(com.google.android.material.R.id.snackbar_text);
+        return notice != null && notice.isShown();
     }
 
     private static boolean isUpdateShowing(ActivityScenario<StartupPromptTestActivity> scenario) {

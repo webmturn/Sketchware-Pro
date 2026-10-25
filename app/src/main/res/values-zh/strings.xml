@@ -131,6 +131,7 @@
     <string name="common_message_no_item_delete">没有可删除的项目</string>
     <string name="common_message_permission_denied">权限被拒绝</string>
     <string name="common_message_permission_need_load_project">我们需要存储权限来保存和加载项目</string>
+    <string name="main_storage_permission_grant">授予权限</string>
     <string name="common_message_permission_storage">要访问照片、媒体和文件，请在下一步授予 Sketchware 权限</string>
     <string name="common_message_permission_title_storage">需要权限</string>
     <string name="common_message_progress">处理中</string>

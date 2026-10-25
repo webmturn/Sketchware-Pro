@@ -9,7 +9,6 @@ import android.content.Intent;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -76,7 +75,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
     private static final String PROJECTS_STORE_FRAGMENT_TAG = "projects_store_fragment";
     private ActionBarDrawerToggle drawerToggle;
     private SharedPrefsHelper sharedPrefs;
-    private Snackbar storageAccessDenied;
+    private Snackbar storagePermissionNotice;
     private MainBinding binding;
     private Dialog startupDialog;
     private CountDownTimer changelogTimer;
@@ -115,6 +114,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
     public void onStoragePermissionGranted(int requestCode) {
         if (requestCode == REQUEST_STORAGE_PERMISSIONS) {
             waitingForStoragePermission = false;
+            dismissStoragePermissionNotice();
             showNextStartupDialog();
 
             if (activeFragment instanceof ProjectsFragment) {
@@ -134,7 +134,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
     @Override
     public void onPermissionCancelled() {
         waitingForStoragePermission = false;
-        showNextStartupDialog();
+        binding.getRoot().post(this::showNextStartupDialog);
     }
 
     @Override
@@ -454,6 +454,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
                 return;
             }
         }
+        showStoragePermissionRequiredSnackbar();
     }
 
     private void showChangelogNotice() {
@@ -473,6 +474,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
     }
 
     private void showStartupDialog(Dialog dialog) {
+        dismissStoragePermissionNotice();
         startupDialog = dialog;
         dialog.setOnDismissListener(dismissed -> {
             if (startupDialog != dialog) return;
@@ -529,8 +531,8 @@ public class MainActivity extends BasePermissionAppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if (isStoragePermissionGranted() && storageAccessDenied != null && storageAccessDenied.isShown()) {
-            storageAccessDenied.dismiss();
+        if (isStoragePermissionGranted()) {
+            dismissStoragePermissionNotice();
         }
         if (isFirebaseInitialized(this)) {
             if (mAnalytics == null) {
@@ -599,19 +601,31 @@ public class MainActivity extends BasePermissionAppCompatActivity {
         showStartupDialog(dialog.create());
     }
 
-    public void showStorageAccessDeniedSnackbar() {
-        if (storageAccessDenied == null || !storageAccessDenied.isShown()) {
-            storageAccessDenied = Snackbar.make(binding.layoutCoordinator, Helper.getResString(R.string.common_message_permission_denied), Snackbar.LENGTH_INDEFINITE);
-            storageAccessDenied.setAction(Helper.getResString(R.string.common_word_settings), v -> {
-                storageAccessDenied.dismiss();
+    public void showStoragePermissionRequiredSnackbar() {
+        // Missing access is not a denial result. Project refreshes also run before the first request.
+        if (isStoragePermissionGranted() || !startupDialogsReady || !startupStorageChecked
+                || !startupChangelogChecked || startupDialog != null || waitingForStoragePermission
+                || waitingForPermissionSettings || waitingForStartupActivity
+                || !getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+            dismissStoragePermissionNotice();
+            return;
+        }
+        if (storagePermissionNotice == null || !storagePermissionNotice.isShownOrQueued()) {
+            storagePermissionNotice = Snackbar.make(binding.layoutCoordinator,
+                    Helper.getResString(R.string.common_message_permission_need_load_project), Snackbar.LENGTH_INDEFINITE);
+            storagePermissionNotice.setAction(R.string.main_storage_permission_grant, v -> {
+                dismissStoragePermissionNotice();
                 waitingForStoragePermission = true;
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
                         REQUEST_STORAGE_PERMISSIONS);
             });
-            storageAccessDenied.setActionTextColor(Color.YELLOW);
-            storageAccessDenied.show();
+            storagePermissionNotice.show();
         }
+    }
+
+    private void dismissStoragePermissionNotice() {
+        if (storagePermissionNotice != null) storagePermissionNotice.dismiss();
     }
 
     public void launchProgramInfo(Intent intent) {
