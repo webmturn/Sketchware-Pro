@@ -201,7 +201,7 @@ public class ComponentBean extends CollapsibleBean implements Parcelable {
             case COMPONENT_TYPE_TIME_PICKER_DIALOG -> Helper.getResString(R.string.logic_editor_category_time_picker_dialog);
             case COMPONENT_TYPE_NOTIFICATION -> Helper.getResString(R.string.logic_editor_category_notification);
             case COMPONENT_TYPE_SQLITE -> Helper.getResString(R.string.logic_editor_category_sqlite);
-            case COMPONENT_TYPE_FRAGMENT_ADAPTER -> "FragmentAdapter";
+            case COMPONENT_TYPE_FRAGMENT_ADAPTER -> Helper.getResString(R.string.logic_editor_category_fragment_adapter);
             case COMPONENT_TYPE_FIREBASE_AUTH_PHONE -> Helper.getResString(R.string.logic_editor_category_phone_auth);
             case COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE -> Helper.getResString(R.string.logic_editor_category_cloud_message);
             case COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN -> Helper.getResString(R.string.logic_editor_category_google_sign_in);

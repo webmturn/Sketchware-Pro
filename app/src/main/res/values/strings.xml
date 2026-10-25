@@ -2330,6 +2330,7 @@ Do you want to continue?"</string>
     <string name="logic_editor_category_notification">Notification</string>
     <string name="logic_editor_category_sqlite">SQLiteDatabase</string>
     <string name="logic_editor_category_progress_dialog">ProgressDialog</string>
+    <string name="logic_editor_category_fragment_adapter">FragmentAdapter</string>
     <string name="logic_editor_category_command_blocks">Command Blocks</string>
     <string name="logic_editor_category_permission_command_blocks">Permission Command Blocks</string>
     <string name="logic_editor_category_other_command_blocks">Other Command Blocks</string>
