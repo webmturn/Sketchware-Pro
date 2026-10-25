@@ -17,6 +17,7 @@ import pro.sketchware.activities.projects.MyProjectSettingActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -277,6 +278,9 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
         BottomSheetDialog projectOptionsBSD = new BottomSheetDialog(activity);
         BottomSheetProjectOptionsBinding binding = BottomSheetProjectOptionsBinding.inflate(LayoutInflater.from(activity));
         projectOptionsBSD.setContentView(binding.getRoot());
+        // Auto peek height can show only the header in wide landscape windows.
+        projectOptionsBSD.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
+        projectOptionsBSD.getBehavior().setSkipCollapsed(true);
 
         binding.title.setText(MapValueHelper.getString(projectMap, "my_ws_name"));
         binding.tvProjectId.setText(MapValueHelper.getString(projectMap, "sc_id"));
