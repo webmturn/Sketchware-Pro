@@ -7,6 +7,7 @@ import android.widget.Button;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import pro.sketchware.R;
 import pro.sketchware.databinding.ViewBottomSheetDialogBinding;
@@ -23,6 +24,9 @@ public class MessageBottomSheetDialog extends BottomSheetDialog {
     @Override
     public void show() {
         super.show();
+        getBehavior().setSkipCollapsed(true);
+        getBehavior().setDraggable(false);
+        getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
         if (getWindow() != null) {
             getWindow().findViewById(R.id.design_bottom_sheet).setBackgroundResource(android.R.color.transparent);
         }

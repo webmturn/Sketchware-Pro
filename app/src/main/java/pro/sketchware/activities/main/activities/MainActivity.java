@@ -3,6 +3,7 @@ package pro.sketchware.activities.main.activities;
 import pro.sketchware.core.settings.ApplicationSettings;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import androidx.activity.result.ActivityResultLauncher;
@@ -30,6 +31,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Lifecycle;
 
 import pro.sketchware.activities.base.BasePermissionAppCompatActivity;
 import pro.sketchware.activities.tools.CollectErrorActivity;
@@ -76,6 +78,17 @@ public class MainActivity extends BasePermissionAppCompatActivity {
     private SharedPrefsHelper sharedPrefs;
     private Snackbar storageAccessDenied;
     private MainBinding binding;
+    private Dialog startupDialog;
+    private CountDownTimer changelogTimer;
+    private boolean startupDialogsReady;
+    private boolean startupCrashChecked;
+    private boolean startupStorageChecked;
+    private boolean startupAllFilesChecked;
+    private boolean startupSpaceChecked;
+    private boolean startupChangelogChecked;
+    private boolean waitingForStoragePermission;
+    private boolean waitingForPermissionSettings;
+    private boolean waitingForStartupActivity;
     private final OnBackPressedCallback closeDrawer = new OnBackPressedCallback(true) {
         @Override
         public void handleOnBackPressed() {
@@ -101,7 +114,8 @@ public class MainActivity extends BasePermissionAppCompatActivity {
     // onRequestPermissionsResult but for Storage access only, and only when granted
     public void onStoragePermissionGranted(int requestCode) {
         if (requestCode == REQUEST_STORAGE_PERMISSIONS) {
-            allFilesAccessCheck();
+            waitingForStoragePermission = false;
+            showNextStartupDialog();
 
             if (activeFragment instanceof ProjectsFragment) {
                 projectsFragment.refreshProjectsList();
@@ -111,6 +125,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
 
     @Override
     public void onOpenSettings(int requestCode) {
+        waitingForPermissionSettings = true;
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         intent.setData(Uri.parse("package:" + getApplicationContext().getPackageName()));
         startActivity(intent);
@@ -118,10 +133,24 @@ public class MainActivity extends BasePermissionAppCompatActivity {
 
     @Override
     public void onPermissionCancelled() {
+        waitingForStoragePermission = false;
+        showNextStartupDialog();
     }
 
     @Override
     public void onPermissionDeniedCancelled() {
+        waitingForStoragePermission = false;
+        // The permission dialog dismisses after this callback returns.
+        binding.getRoot().post(this::showNextStartupDialog);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_STORAGE_PERMISSIONS && permissions.length == 0) {
+            waitingForStoragePermission = false;
+            showNextStartupDialog();
+        }
     }
 
     public void refreshProjects() {
@@ -166,28 +195,31 @@ public class MainActivity extends BasePermissionAppCompatActivity {
      * Checks if the app crashed in a previous session and offers to show the crash log.
      * This catches cases where CollectErrorActivity failed to launch during the crash.
      */
-    private void checkPreviousCrash() {
+    private boolean checkPreviousCrash() {
         try {
             File latestCrash = CrashLogManager.getLatestCrashLog();
-            if (latestCrash == null) return;
+            if (latestCrash == null) return false;
 
             // Only show if the crash happened within the last 5 minutes
             // (older crashes were likely already shown by CollectErrorActivity)
             long ageMs = System.currentTimeMillis() - latestCrash.lastModified();
-            if (ageMs > CRASH_REPORT_MAX_AGE_MS) return;
+            if (ageMs > CRASH_REPORT_MAX_AGE_MS) return false;
 
-            new MaterialAlertDialogBuilder(this)
+            showStartupDialog(new MaterialAlertDialogBuilder(this)
                     .setTitle(R.string.common_error_an_error_occurred)
                     .setMessage(R.string.error_crash_previous_session)
                     .setPositiveButton(R.string.error_crash_show_error, (d, w) -> {
+                        waitingForStartupActivity = true;
                         Intent intent = new Intent(this, CollectErrorActivity.class);
                         intent.putExtra("crash_file", latestCrash.getAbsolutePath());
                         startActivity(intent);
                     })
                     .setNegativeButton(R.string.common_word_cancel, null)
-                    .show();
+                    .create());
+            return true;
         } catch (Exception e) {
             Log.e("MainActivity", "Failed to check previous crash", e);
+            return false;
         }
     }
 
@@ -206,7 +238,6 @@ public class MainActivity extends BasePermissionAppCompatActivity {
                     }
                 });
         enableEdgeToEdgeNoContrast();
-        checkPreviousCrash();
 
         binding = MainBinding.inflate(getLayoutInflater());
 
@@ -251,14 +282,6 @@ public class MainActivity extends BasePermissionAppCompatActivity {
             }
         });
 
-        boolean hasStorageAccess = isStoragePermissionGranted();
-        if (!hasStorageAccess) {
-            showNoticeNeedStorageAccess();
-        }
-        if (hasStorageAccess) {
-            allFilesAccessCheck();
-        }
-
         if (Intent.ACTION_VIEW.equals(getIntent().getAction())) {
             Uri data = getIntent().getData();
             if (data != null) {
@@ -286,25 +309,6 @@ public class MainActivity extends BasePermissionAppCompatActivity {
                     }
                 }).copyFile(data);
             }
-        } else if (!ApplicationSettings.isSettingEnabled(ApplicationSettings.SETTING_CRITICAL_UPDATE_REMINDER)) {
-            MessageBottomSheetDialog bottomSheetDialog = getMessageBottomSheetDialog();
-            bottomSheetDialog.getPositiveButton().setEnabled(false);
-
-            CountDownTimer countDownTimer = new CountDownTimer(CHANGELOG_BUTTON_DELAY_MS, MILLIS_PER_SECOND) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    bottomSheetDialog.setPositiveButtonText(millisUntilFinished / MILLIS_PER_SECOND + "");
-                }
-
-                @Override
-                public void onFinish() {
-                    bottomSheetDialog.setPositiveButtonText(Helper.getResString(R.string.update_view_changes));
-                    bottomSheetDialog.getPositiveButton().setEnabled(true);
-                }
-            };
-            countDownTimer.start();
-
-            if (!isFinishing()) bottomSheetDialog.show();
         }
 
         binding.bottomNav.setOnItemSelectedListener(item -> {
@@ -319,6 +323,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
             return false;
         });
 
+        startupDialogsReady = true;
         if (savedInstanceState != null) {
             projectsFragment = (ProjectsFragment) getSupportFragmentManager().findFragmentByTag(PROJECTS_FRAGMENT_TAG);
             projectsStoreFragment = (ProjectsStoreFragment) getSupportFragmentManager().findFragmentByTag(PROJECTS_STORE_FRAGMENT_TAG);
@@ -403,12 +408,104 @@ public class MainActivity extends BasePermissionAppCompatActivity {
 
         bottomSheetDialog.setPositiveButton(Helper.getResString(R.string.common_word_view_changes), (dialog, which) -> {
             ApplicationSettings.setSetting(ApplicationSettings.SETTING_CRITICAL_UPDATE_REMINDER, true);
+            waitingForStartupActivity = true;
             Intent launcher = new Intent(this, AboutActivity.class);
             launcher.putExtra("select", "changelog");
             startActivity(launcher);
         });
         bottomSheetDialog.setCancelable(false);
         return bottomSheetDialog;
+    }
+
+    /** Display one startup prompt at a time, including asynchronous permission/settings flows. */
+    private void showNextStartupDialog() {
+        if (!startupDialogsReady || isFinishing() || isDestroyed() || startupDialog != null
+                || waitingForStoragePermission || waitingForStartupActivity || waitingForPermissionSettings
+                || !getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) return;
+
+        if (!startupCrashChecked) {
+            startupCrashChecked = true;
+            if (checkPreviousCrash()) return;
+        }
+        if (!startupChangelogChecked) {
+            startupChangelogChecked = true;
+            if (!Intent.ACTION_VIEW.equals(getIntent().getAction())
+                    && !ApplicationSettings.isSettingEnabled(ApplicationSettings.SETTING_CRITICAL_UPDATE_REMINDER)) {
+                showChangelogNotice();
+                return;
+            }
+        }
+        if (!startupStorageChecked) {
+            startupStorageChecked = true;
+            if (!isStoragePermissionGranted()) {
+                showNoticeNeedStorageAccess();
+                return;
+            }
+        }
+        if (!startupAllFilesChecked && isStoragePermissionGranted()) {
+            startupAllFilesChecked = true;
+            if (allFilesAccessCheck()) return;
+        }
+        if (!startupSpaceChecked) {
+            startupSpaceChecked = true;
+            long freeMegabytes = DeviceUtil.getFreeStorageMB();
+            if (freeMegabytes < 100 && freeMegabytes > 0) {
+                showNoticeNotEnoughFreeStorageSpace();
+                return;
+            }
+        }
+    }
+
+    private void showChangelogNotice() {
+        MessageBottomSheetDialog dialog = getMessageBottomSheetDialog();
+        dialog.getPositiveButton().setEnabled(false);
+        showStartupDialog(dialog);
+        changelogTimer = new CountDownTimer(CHANGELOG_BUTTON_DELAY_MS, MILLIS_PER_SECOND) {
+            @Override public void onTick(long remaining) {
+                dialog.setPositiveButtonText(Helper.getResString(R.string.update_view_changes)
+                        + " (" + (remaining + MILLIS_PER_SECOND - 1) / MILLIS_PER_SECOND + ")");
+            }
+            @Override public void onFinish() {
+                dialog.setPositiveButtonText(Helper.getResString(R.string.update_view_changes));
+                dialog.getPositiveButton().setEnabled(true);
+            }
+        }.start();
+    }
+
+    private void showStartupDialog(Dialog dialog) {
+        startupDialog = dialog;
+        dialog.setOnDismissListener(dismissed -> {
+            if (startupDialog != dialog) return;
+            startupDialog = null;
+            if (dialog instanceof MessageBottomSheetDialog && changelogTimer != null) {
+                changelogTimer.cancel();
+                changelogTimer = null;
+            }
+            binding.getRoot().post(this::showNextStartupDialog);
+        });
+        dialog.show();
+    }
+
+    @Override protected void onPostResume() {
+        super.onPostResume();
+        waitingForStartupActivity = false;
+        if (waitingForPermissionSettings) {
+            waitingForPermissionSettings = false;
+            waitingForStoragePermission = false;
+        }
+        // Lifecycle's RESUMED event is dispatched after this callback on newer Android versions.
+        binding.getRoot().post(this::showNextStartupDialog);
+    }
+
+    @Override public void onDestroy() {
+        startupDialogsReady = false;
+        if (changelogTimer != null) changelogTimer.cancel();
+        if (startupDialog != null) {
+            startupDialog.setOnDismissListener(null);
+            startupDialog.dismiss();
+            startupDialog = null;
+        }
+        super.onDestroy();
     }
 
     @Override
@@ -432,11 +529,6 @@ public class MainActivity extends BasePermissionAppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        /* Check if the device is running low on storage space */
-        long freeMegabytes = DeviceUtil.getFreeStorageMB();
-        if (freeMegabytes < 100 && freeMegabytes > 0) {
-            showNoticeNotEnoughFreeStorageSpace();
-        }
         if (isStoragePermissionGranted() && storageAccessDenied != null && storageAccessDenied.isShown()) {
             storageAccessDenied.dismiss();
         }
@@ -451,7 +543,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
         }
     }
 
-    private void allFilesAccessCheck() {
+    private boolean allFilesAccessCheck() {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
             File optOutFile = new File(getFilesDir(), ".skip_all_files_access_notice");
             boolean granted = Environment.isExternalStorageManager();
@@ -462,6 +554,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
                 dialog.setTitle(R.string.main_storage_access_title);
                 dialog.setMessage(Helper.getResString(R.string.main_storage_access_message));
                 dialog.setPositiveButton(Helper.getResString(R.string.common_word_settings), (v, which) -> {
+                    waitingForPermissionSettings = true;
                     FileUtil.requestAllFilesAccessPermission(this);
                     v.dismiss();
                 });
@@ -475,9 +568,11 @@ public class MainActivity extends BasePermissionAppCompatActivity {
                     }
                     v.dismiss();
                 });
-                dialog.show();
+                showStartupDialog(dialog.create());
+                return true;
             }
         }
+        return false;
     }
 
     private void showNoticeNeedStorageAccess() {
@@ -486,12 +581,13 @@ public class MainActivity extends BasePermissionAppCompatActivity {
         dialog.setIcon(R.drawable.color_about_96);
         dialog.setMessage(Helper.getResString(R.string.common_message_permission_need_load_project));
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_ok), (v, which) -> {
+            waitingForStoragePermission = true;
             v.dismiss();
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
                     REQUEST_STORAGE_PERMISSIONS);
         });
-        dialog.show();
+        showStartupDialog(dialog.create());
     }
 
     private void showNoticeNotEnoughFreeStorageSpace() {
@@ -500,7 +596,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
         dialog.setIcon(R.drawable.high_priority_96_red);
         dialog.setMessage(Helper.getResString(R.string.common_message_insufficient_storage_space));
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_ok), null);
-        dialog.show();
+        showStartupDialog(dialog.create());
     }
 
     public void showStorageAccessDeniedSnackbar() {
@@ -508,6 +604,7 @@ public class MainActivity extends BasePermissionAppCompatActivity {
             storageAccessDenied = Snackbar.make(binding.layoutCoordinator, Helper.getResString(R.string.common_message_permission_denied), Snackbar.LENGTH_INDEFINITE);
             storageAccessDenied.setAction(Helper.getResString(R.string.common_word_settings), v -> {
                 storageAccessDenied.dismiss();
+                waitingForStoragePermission = true;
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
                         REQUEST_STORAGE_PERMISSIONS);

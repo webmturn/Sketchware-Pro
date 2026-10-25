@@ -4,6 +4,10 @@
 
     <application>
         <activity
+            android:name="pro.sketchware.activities.main.activities.StartupPromptTestActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SketchwarePro" />
+        <activity
             android:name="pro.sketchware.activities.base.PermissionResultTestActivity"
             android:exported="false"
             android:theme="@style/Theme.SketchwarePro" />
