@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import pro.sketchware.databinding.FragmentStringfogManagerBinding;
 
@@ -20,6 +22,15 @@ public class ManageStringFogFragment extends BottomSheetDialogFragment {
 
     private FragmentStringfogManagerBinding binding;
     private StringfogHandler stringfogHandler;
+
+    @NonNull
+    @Override
+    public BottomSheetDialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
+        dialog.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
+        dialog.getBehavior().setSkipCollapsed(true);
+        return dialog;
+    }
 
     @NonNull
     @Override

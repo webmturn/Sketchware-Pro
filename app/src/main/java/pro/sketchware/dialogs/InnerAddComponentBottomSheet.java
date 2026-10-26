@@ -14,6 +14,8 @@ import androidx.annotation.Nullable;
 import pro.sketchware.beans.ComponentBean;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ProjectLibraryBean;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -76,6 +78,15 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
             dismissAllowingStateLoss();
             return;
         }
+    }
+
+    @NonNull
+    @Override
+    public BottomSheetDialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
+        dialog.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
+        dialog.getBehavior().setSkipCollapsed(true);
+        return dialog;
     }
 
     @Override

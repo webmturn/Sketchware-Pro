@@ -70,12 +70,13 @@ public class CustomBlocksDialog {
 
         dialogBinding = ViewUsedCustomBlocksBinding.inflate(context.getLayoutInflater());
 
+        // Show with the loaded content so the window does not resize and recenter.
         var dialog = new MaterialAlertDialogBuilder(context)
                 .setTitle(Helper.getResString(R.string.used_custom_blocks))
                 .setPositiveButton(Helper.getResString(R.string.common_word_import), null)
                 .setNegativeButton(Helper.getResString(R.string.common_word_dismiss), (dialogInterface, which) -> dialogInterface.dismiss())
                 .setView(dialogBinding.getRoot())
-                .show();
+                .create();
 
         BackgroundTasks.callIoIfAlive(TaskHost.of(context), "CustomBlocksDialog", () -> {
             CustomBlocksManager loadedManager = new CustomBlocksManager(context, sc_id);
@@ -89,6 +90,7 @@ public class CustomBlocksDialog {
             if (customBlocks.isEmpty()) {
                 dialogBinding.subtitle.setText(Helper.getResString(R.string.custom_blocks_none_used));
                 dialogBinding.progressIndicator.setVisibility(View.GONE);
+                dialog.show();
                 return;
             }
 
@@ -103,6 +105,7 @@ public class CustomBlocksDialog {
             dialogBinding.subtitle.setText(subtitle);
             dialogBinding.recyclerView.setAdapter(new BlocksAdapter(customBlocks, new HashMap<>()));
             dialogBinding.progressIndicator.setVisibility(View.GONE);
+            dialog.show();
 
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
                 ArrayList<BlockBean> selectedBeans = new ArrayList<>();
@@ -124,6 +127,7 @@ public class CustomBlocksDialog {
         }, error -> {
             dialogBinding.subtitle.setText(Helper.getResString(R.string.common_error_an_error_occurred));
             dialogBinding.progressIndicator.setVisibility(View.GONE);
+            dialog.show();
         });
     }
 

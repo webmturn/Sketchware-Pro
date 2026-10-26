@@ -3,7 +3,10 @@ package pro.sketchware.activities.design;
 import static org.junit.Assert.*;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -17,6 +20,9 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,6 +52,89 @@ public class ComponentCreationLifecycleTest {
             host.save(NAME);
             host.assertCreatedAndClosed();
         }
+    }
+
+    @Test(timeout = 30000)
+    public void listSwipesStayInTheSelectorAndHandleStillDismisses() throws Exception {
+        try (Host host = new Host(false)) {
+            host.openSelector();
+            Rect[] listBounds = {null};
+            host.onActivity(activity -> listBounds[0] = screenBounds(find(activity, AddComponentBottomSheet.class)
+                    .requireView().findViewById(R.id.component_list)));
+            Rect area = listBounds[0];
+            float upper = area.top + area.height() * 0.25f;
+            float lower = area.top + area.height() * 0.75f;
+
+            // Starting at the top must not turn a list swipe into a sheet dismissal.
+            swipe(area.centerX(), upper, lower);
+            assertSelectorExpanded(host);
+            for (int i = 0; i < 3; i++) {
+                swipe(area.centerX(), lower, upper);
+                assertSelectorExpanded(host);
+                host.onActivity(activity -> {
+                    RecyclerView list = find(activity, AddComponentBottomSheet.class).requireView()
+                            .findViewById(R.id.component_list);
+                    var first = list.findViewHolderForAdapterPosition(0);
+                    assertTrue("Swipe up must move the first row above the viewport",
+                            first == null || first.itemView.getTop() < list.getPaddingTop());
+                });
+                swipe(area.centerX(), upper, lower);
+                assertSelectorExpanded(host);
+                host.onActivity(activity -> {
+                    RecyclerView list = find(activity, AddComponentBottomSheet.class).requireView()
+                            .findViewById(R.id.component_list);
+                    var first = list.findViewHolderForAdapterPosition(0);
+                    assertNotNull("Swipe down must return to the first row", first);
+                    assertEquals(list.getPaddingTop(), first.itemView.getTop());
+                });
+            }
+
+            Rect[] handle = {null};
+            host.onActivity(activity -> {
+                AddComponentBottomSheet sheet = find(activity, AddComponentBottomSheet.class);
+                assertTrue("Ending a list swipe must restore handle dragging",
+                        ((BottomSheetDialog) sheet.requireDialog()).getBehavior().isDraggable());
+                handle[0] = screenBounds(((android.view.ViewGroup) sheet.requireView()).getChildAt(0));
+            });
+            swipe(handle[0].centerX(), handle[0].centerY(), area.bottom - 40);
+            ProjectEditorPersistenceTest.waitUntil(() -> {
+                boolean[] dismissed = {false};
+                host.onActivity(activity -> dismissed[0] = find(activity, AddComponentBottomSheet.class) == null);
+                return dismissed[0];
+            });
+        }
+    }
+
+    private static void assertSelectorExpanded(Host host) {
+        host.onActivity(activity -> {
+            AddComponentBottomSheet sheet = find(activity, AddComponentBottomSheet.class);
+            assertNotNull("Scrolling the list must keep the selector open", sheet);
+            BottomSheetDialog dialog = (BottomSheetDialog) sheet.requireDialog();
+            assertEquals(BottomSheetBehavior.STATE_EXPANDED, dialog.getBehavior().getState());
+        });
+    }
+
+    private static Rect screenBounds(View view) {
+        int[] position = new int[2];
+        view.getLocationOnScreen(position);
+        return new Rect(position[0], position[1], position[0] + view.getWidth(), position[1] + view.getHeight());
+    }
+
+    private static void swipe(float x, float fromY, float toY) {
+        long downTime = SystemClock.uptimeMillis();
+        for (int step = 0; step <= 24; step++) {
+            int action = step == 0 ? MotionEvent.ACTION_DOWN : step == 24 ? MotionEvent.ACTION_UP : MotionEvent.ACTION_MOVE;
+            MotionEvent event = MotionEvent.obtain(downTime, SystemClock.uptimeMillis(), action,
+                    x, fromY + (toY - fromY) * step / 24, 0);
+            try {
+                InstrumentationRegistry.getInstrumentation().sendPointerSync(event);
+            } finally {
+                event.recycle();
+            }
+            SystemClock.sleep(16);
+        }
+        SystemClock.sleep(400);
+        idle();
     }
 
     @Test(timeout = 30000)

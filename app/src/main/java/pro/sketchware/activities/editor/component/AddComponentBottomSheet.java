@@ -2,6 +2,7 @@ package pro.sketchware.activities.editor.component;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -18,6 +19,8 @@ import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
@@ -83,6 +86,15 @@ public class AddComponentBottomSheet extends BottomSheetDialogFragment {
         initializeComponentBeans();
     }
 
+    @NonNull
+    @Override
+    public BottomSheetDialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
+        dialog.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
+        dialog.getBehavior().setSkipCollapsed(true);
+        return dialog;
+    }
+
     private void initializeComponentBeans() {
         componentList = new ArrayList<>();
         componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_INTENT));
@@ -144,6 +156,17 @@ public class AddComponentBottomSheet extends BottomSheetDialogFragment {
         binding.componentList.setHasFixedSize(true);
         binding.componentList.setAdapter(new ComponentsAdapter());
         binding.componentList.setLayoutManager(flexboxLayoutManager);
+
+        // Keep list gestures in the list, even after scrolling to an edge.
+        BottomSheetBehavior<?> behavior = ((BottomSheetDialog) requireDialog()).getBehavior();
+        binding.componentList.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent event) {
+                int action = event.getActionMasked();
+                behavior.setDraggable(action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL);
+                return false;
+            }
+        });
 
         binding.componentList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
