@@ -80,6 +80,14 @@ docs/docs.zip
 # Test scripts and project data
 scripts/
 
+# Local Markdown docs reader (generator + verification scripts + built HTML).
+# Local reading tooling only, not part of the shipped app or upstream contributions.
+tools/docs-reader/
+
+# Local dev environment helper (sets GRADLE_USER_HOME for this repo).
+# Machine-specific convenience script, not part of upstream contributions.
+/dev.ps1
+
 # Gradle user home (custom GRADLE_USER_HOME inside project)
 .gradle-user-home/
 
