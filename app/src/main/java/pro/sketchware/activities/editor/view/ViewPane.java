@@ -236,7 +236,7 @@ public class ViewPane extends RelativeLayout {
         viewBean.preIndex = -1;
         viewBean.preParent = "";
         viewBean.preParentType = -1;
-        findViewWithTag.setVisibility(VISIBLE);
+        updateVisibility(findViewWithTag, new InjectAttributeHandler(viewBean));
         return (ItemView) findViewWithTag;
     }
 
@@ -376,6 +376,7 @@ public class ViewPane extends RelativeLayout {
         ImageBean imageBean;
         String resName;
         var injectHandler = new InjectAttributeHandler(viewBean);
+        updateVisibility(view, injectHandler);
         if (viewBean.id != null && !viewBean.id.isEmpty() && viewBean.id.charAt(0) == '_') {
             LayoutParams layoutParams = new LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -463,7 +464,6 @@ public class ViewPane extends RelativeLayout {
             view.setScaleX(viewBean.scaleX);
             view.setScaleY(viewBean.scaleY);
             applyElevation(view, resolvePreviewElevation(injectHandler, viewBean.layout.elevation));
-            view.setVisibility(View.VISIBLE);
             return;
         }
         updateLayout(view, viewBean);
@@ -656,7 +656,6 @@ public class ViewPane extends RelativeLayout {
             applyElevation(view, resolvePreviewElevation(injectHandler, viewBean.layout.elevation));
         }
         PreviewPadding.apply(view, viewBean);
-        view.setVisibility(VISIBLE);
         if (view instanceof EditorListItem listItem) {
             String listitem = injectHandler.getAttributeValueOf("listitem");
             String itemCount = injectHandler.getAttributeValueOf("itemCount");
@@ -673,6 +672,20 @@ public class ViewPane extends RelativeLayout {
                     }
                 }
             }
+        }
+    }
+
+    private void updateVisibility(View view, InjectAttributeHandler injectHandler) {
+        String visibility = injectHandler.getNamespacedAttributes().get("android:visibility");
+        if (TextUtils.isEmpty(visibility)) {
+            visibility = injectHandler.getBean().parentAttributes.get("android:visibility");
+        }
+        if ("invisible".equals(visibility)) {
+            view.setVisibility(INVISIBLE);
+        } else if ("gone".equals(visibility)) {
+            view.setVisibility(GONE);
+        } else {
+            view.setVisibility(VISIBLE);
         }
     }
 
