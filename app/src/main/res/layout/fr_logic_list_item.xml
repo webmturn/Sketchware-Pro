@@ -65,17 +65,11 @@
                     android:textAppearance="?attr/textAppearanceBodyMedium"
                     tools:text="button1" />
 
-                <TextView
-                    android:id="@+id/tv_event_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
-                    android:visibility="gone" />
-
                 <LinearLayout
                     android:id="@+id/ll_preview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -87,13 +81,20 @@
                         tools:src="@drawable/event_on_click_48dp" />
 
                     <TextView
-                        android:id="@+id/tv_event_text"
+                        android:id="@+id/tv_event_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:textAppearance="?attr/textAppearanceBodySmall"
                         tools:text="@string/event_onclick" />
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_event_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <ImageView

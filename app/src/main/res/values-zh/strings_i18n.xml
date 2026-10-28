@@ -1192,4 +1192,16 @@
     <string name="array_type_string">字符串</string>
     <string name="array_type_integer">整数</string>
     <string name="array_type_object">通用数组</string>
+    <string name="event_category_view">控件事件</string>
+    <string name="event_category_component">组件事件</string>
+    <string name="event_category_activity">界面事件</string>
+    <string name="event_category_drawer_view">侧滑栏控件事件</string>
+    <string name="event_category_more_block">自定义积木</string>
+    <string name="event_onnothingselected">未选中项目时</string>
+    <string name="event_beforetextchanged">文本改变前</string>
+    <string name="event_aftertextchanged">文本改变后</string>
+    <string name="event_onanimationrepeat">动画重复时</string>
+    <string name="event_onchildmoved">子项移动时</string>
+    <string name="event_onaccuracychanged">精度改变时</string>
+    <string name="event_ontouched">触摸时</string>
 </resources>

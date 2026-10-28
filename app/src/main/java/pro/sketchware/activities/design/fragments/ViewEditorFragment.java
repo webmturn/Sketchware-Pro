@@ -117,7 +117,7 @@ public class ViewEditorFragment extends DesignProjectFragment implements MenuPro
             }
             SketchwareUtil.toast(Helper.getResString(R.string.common_word_deleted));
         });
-        viewProperty.setOnEventClickListener(eventBean -> toLogicEditorActivity(eventBean.targetId, eventBean.eventName, eventBean.eventName));
+        viewProperty.setOnEventClickListener(eventBean -> toLogicEditorActivity(eventBean.targetId, eventBean.eventName));
         viewProperty.setOnPropertyTargetChangeListener(viewEditor::updateSelection);
         viewEditor.setOnWidgetSelectedListener(new BuildCallback() {
             @Override
@@ -196,14 +196,13 @@ public class ViewEditorFragment extends DesignProjectFragment implements MenuPro
         viewProperty.refreshPropertyGroups();
     }
 
-    private void toLogicEditorActivity(String eventId, String eventName, String eventName2) {
+    private void toLogicEditorActivity(String eventId, String eventName) {
         Intent intent = new Intent(requireContext(), LogicEditorActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("sc_id", sc_id);
         intent.putExtra("id", eventId);
         intent.putExtra("event", eventName);
         intent.putExtra("project_file", projectFileBean);
-        intent.putExtra("event_text", eventName2);
         requireContext().startActivity(intent);
     }
 

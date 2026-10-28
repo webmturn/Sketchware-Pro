@@ -290,7 +290,14 @@ public class EventsHandler {
                     Helper.getResString(R.string.event_desc_post_execute);
             default -> {
                 EventMatch match = findCustomEventByName(name);
-                yield match != null ? match.event.getDescription() : "No_Description";
+                if (match == null) {
+                    yield name;
+                }
+                String description = match.event.getDescription();
+                if (name.equals("OnTouched") && description.equals("OnLinearLayoutTouched")) {
+                    yield Helper.getResString(R.string.event_ontouched);
+                }
+                yield description;
             }
         };
     }

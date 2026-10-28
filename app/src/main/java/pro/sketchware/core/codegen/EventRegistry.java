@@ -100,22 +100,28 @@ public class EventRegistry {
             case "onClick" -> Helper.getResString(R.string.event_onclick);
             case "onCheckedChange" -> Helper.getResString(R.string.event_oncheckchanged);
             case "onItemSelected" -> Helper.getResString(R.string.event_onitemselected);
+            case "onNothingSelected" -> Helper.getResString(R.string.event_onnothingselected);
             case "onItemClicked" -> Helper.getResString(R.string.event_onitemclicked);
             case "onItemLongClicked" -> Helper.getResString(R.string.event_onitemlongclicked);
             case "onTextChanged" -> Helper.getResString(R.string.event_ontextchanged);
+            case "beforeTextChanged" -> Helper.getResString(R.string.event_beforetextchanged);
+            case "afterTextChanged" -> Helper.getResString(R.string.event_aftertextchanged);
             case "onProgressChanged" -> Helper.getResString(R.string.event_onprogresschanged);
             case "onStartTrackingTouch" -> Helper.getResString(R.string.event_onstarttrackingtouch);
             case "onStopTrackingTouch" -> Helper.getResString(R.string.event_onstoptrackingtouch);
             case "onAnimationStart" -> Helper.getResString(R.string.event_onanimationstart);
             case "onAnimationEnd" -> Helper.getResString(R.string.event_onanimationend);
             case "onAnimationCancel" -> Helper.getResString(R.string.event_onanimationcancel);
+            case "onAnimationRepeat" -> Helper.getResString(R.string.event_onanimationrepeat);
             case "onBindCustomView" -> Helper.getResString(R.string.event_onbindcustomview);
             case "onDateChange" -> Helper.getResString(R.string.event_ondatechange);
             case "onChildAdded" -> Helper.getResString(R.string.event_onchildadded);
             case "onChildChanged" -> Helper.getResString(R.string.event_onchildchanged);
+            case "onChildMoved" -> Helper.getResString(R.string.event_onchildmoved);
             case "onChildRemoved" -> Helper.getResString(R.string.event_onchildremoved);
             case "onCancelled" -> Helper.getResString(R.string.event_oncancelled);
             case "onSensorChanged" -> Helper.getResString(R.string.event_onsensorchanged);
+            case "onAccuracyChanged" -> Helper.getResString(R.string.event_onaccuracychanged);
             case "onCreateUserComplete" -> Helper.getResString(R.string.event_oncreateusercomplete);
             case "onSignInUserComplete" -> Helper.getResString(R.string.event_onsigninusercomplete);
             case "onResetPasswordEmailSent" ->

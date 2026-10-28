@@ -617,4 +617,16 @@
     <string name="array_type_string">STRING</string>
     <string name="array_type_integer">INTEGER</string>
     <string name="array_type_object">OBJECT</string>
+    <string name="event_category_view">View event</string>
+    <string name="event_category_component">Component event</string>
+    <string name="event_category_activity">Activity event</string>
+    <string name="event_category_drawer_view">Drawer view event</string>
+    <string name="event_category_more_block">More block</string>
+    <string name="event_onnothingselected">onNothingSelected</string>
+    <string name="event_beforetextchanged">beforeTextChanged</string>
+    <string name="event_aftertextchanged">afterTextChanged</string>
+    <string name="event_onanimationrepeat">onAnimationRepeat</string>
+    <string name="event_onchildmoved">onChildMoved</string>
+    <string name="event_onaccuracychanged">onAccuracyChanged</string>
+    <string name="event_ontouched">OnLinearLayoutTouched</string>
 </resources>

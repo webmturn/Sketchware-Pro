@@ -352,28 +352,23 @@ public class ManageEvent {
      */
     public static String getEventDescription(String eventName) {
         return switch (eventName) {
-            case "onScrolled", "onRecyclerScrolled" -> "onScroll";
-            case "onFailureLink" -> "onFailure";
+            case "onScrolled", "onRecyclerScrolled", "onFailureLink" -> BuiltinEventLocalization.getName(eventName);
             case "onSaveInstanceState" -> Helper.getResString(R.string.event_onsaveinstancestate);
             case "onCreateOptionsMenu" -> Helper.getResString(R.string.event_oncreateoptionsmenu);
-            case "onVerificationCompleted" -> "onVerificationCompleted";
-            case "onRecyclerScrollChanged", "onScrollChanged" -> "onScrollStateChanged";
+            case "onVerificationCompleted", "onRecyclerScrollChanged", "onScrollChanged" -> BuiltinEventLocalization.getName(eventName);
             case "onCreateContextMenu" -> Helper.getResString(R.string.event_oncreatecontextmenu);
             case "onRestoreInstanceState" -> Helper.getResString(R.string.event_onrestoreinstancestate);
             case "onContextItemSelected" -> Helper.getResString(R.string.event_oncontextitemselected);
-            case "onSuccessLink" -> "onSuccess";
-            case "onAccountPickerCancelled" -> "onAccountCancelled";
+            case "onSuccessLink", "onAccountPickerCancelled" -> BuiltinEventLocalization.getName(eventName);
             case "onFragmentAdded" -> Helper.getResString(R.string.event_onfragmentadded);
-            case "onPageChanged" -> "onPageScrollStateChanged";
+            case "onPageChanged" -> BuiltinEventLocalization.getName("onPageScrollStateChanged");
             case "onOptionsItemSelected" -> Helper.getResString(R.string.event_onoptionsitemselected);
-            case "onBannerAdClicked" -> "onAdClicked";
-            case "onBannerAdLoaded" -> "onAdLoaded";
+            case "onBannerAdClicked" -> BuiltinEventLocalization.getName("onAdClicked");
+            case "onBannerAdLoaded" -> BuiltinEventLocalization.getName("onAdLoaded");
             case "onTabAdded" -> Helper.getResString(R.string.event_ontabadded);
-            case "onCompleteRegister" -> "onComplete";
-            case "onBannerAdFailedToLoad", "onInterstitialAdFailedToLoad" -> "onAdFailedToLoad";
-            case "onBannerAdClosed" -> "onAdClosed";
-            case "onRewardAdLoaded" -> "onRewardedAdLoaded";
-            case "onRewardAdFailedToLoad" -> "onRewardedAdFailedToLoad";
+            case "onCompleteRegister", "onBannerAdFailedToLoad", "onInterstitialAdFailedToLoad",
+                 "onRewardAdLoaded", "onRewardAdFailedToLoad" -> BuiltinEventLocalization.getName(eventName);
+            case "onBannerAdClosed" -> BuiltinEventLocalization.getName("onAdClosed");
             case "onUpdateProfileComplete", "onEmailVerificationSent", "onDateChanged",
                  "onDeleteUserComplete", "onNavigationItemSelected", "onDateSet", "onCompletion",
                  "onPatternLockCleared", "onQueryTextChanged", "onUpdateEmailComplete", "onError",
@@ -383,7 +378,9 @@ public class ManageEvent {
                  "onTabUnselected", "onPageSelected", "onPrepared", "onQueryTextSubmit",
                  "onCodeSent", "onTimeChanged", "onUpdatePasswordComplete",
                  "onAdDismissedFullScreenContent", "onAdFailedToShowFullScreenContent",
-                 "onAdShowedFullScreenContent", "onUserEarnedReward", "onSQLiteError" -> eventName;
+                 "onAdShowedFullScreenContent", "onUserEarnedReward", "onSQLiteError",
+                 "onPatternLockStarted", "onPatternLockComplete", "onPageScrollStateChanged",
+                 "onAdLoaded", "onAdOpened", "onAdClicked", "onAdClosed" -> BuiltinEventLocalization.getName(eventName);
             default -> EventsHandler.getDesc(eventName);
         };
     }

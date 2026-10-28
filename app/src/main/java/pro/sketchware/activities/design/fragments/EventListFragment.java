@@ -427,14 +427,13 @@ public class EventListFragment extends DesignProjectFragment implements View.OnC
         }
     }
 
-    private void openEvent(String targetId, String eventId, String description) {
+    private void openEvent(String targetId, String eventId) {
         Intent intent = new Intent(requireActivity(), LogicEditorActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("sc_id", sc_id);
         intent.putExtra("id", targetId);
         intent.putExtra("event", eventId);
         intent.putExtra("project_file", currentActivity);
-        intent.putExtra("event_text", description);
         openEvent.launch(intent);
     }
 
@@ -516,7 +515,9 @@ public class EventListFragment extends DesignProjectFragment implements View.OnC
             holder.cancelCollapseAnimation();
             EventBean eventBean = getActiveList().get(position);
             holder.targetType.setVisibility(View.VISIBLE);
+            holder.targetId.setVisibility(View.VISIBLE);
             holder.previewContainer.setVisibility(View.VISIBLE);
+            holder.description.setVisibility(eventBean.eventType == EventBean.EVENT_TYPE_ETC ? View.VISIBLE : View.GONE);
             holder.preview.setVisibility(View.VISIBLE);
             holder.preview.setImageResource(EventRegistry.getEventIconResource(eventBean.eventName));
             holder.optionsLayout.showDelete();
@@ -530,9 +531,9 @@ public class EventListFragment extends DesignProjectFragment implements View.OnC
                     holder.optionsLayout.hideDelete();
                 }
                 holder.targetId.setText(eventBean.targetId);
+                holder.type.setText(EventBean.getEventTypeName(eventBean.eventType));
                 holder.type.setBackgroundResource(EventRegistry.getEventIconResource(eventBean.eventName));
-                holder.name.setText(eventBean.eventName);
-                holder.description.setText(EventRegistry.getEventName(eventBean.eventName));
+                holder.name.setText(EventRegistry.getEventName(eventBean.eventName));
                 holder.icon.setImageResource(R.drawable.ic_mtrl_code);
                 holder.preview.setVisibility(View.GONE);
                 holder.targetType.setVisibility(View.GONE);
@@ -556,8 +557,7 @@ public class EventListFragment extends DesignProjectFragment implements View.OnC
                 }
                 holder.type.setText(EventBean.getEventTypeName(eventBean.eventType));
                 holder.type.setBackgroundResource(EventBean.getEventTypeBgRes(eventBean.eventType));
-                holder.name.setText(eventBean.eventName);
-                holder.description.setText(EventRegistry.getEventName(eventBean.eventName));
+                holder.name.setText(EventRegistry.getEventName(eventBean.eventName));
                 if (eventBean.eventType == EventBean.EVENT_TYPE_ETC) {
                     holder.description.setText(ReturnMoreblockManager.getMbTypeList(eventBean.targetId));
                 }
@@ -631,7 +631,8 @@ public class EventListFragment extends DesignProjectFragment implements View.OnC
                 for (EventBean event : currentCategoryEvents) {
                     String eventName = event.eventName.toLowerCase();
                     String targetId = event.targetId.toLowerCase();
-                    if (eventName.contains(searchQuery) || targetId.contains(searchQuery)) {
+                    String displayName = EventRegistry.getEventName(event.eventName).toLowerCase();
+                    if (eventName.contains(searchQuery) || targetId.contains(searchQuery) || displayName.contains(searchQuery)) {
                         filteredEvents.add(event);
                     }
                 }
@@ -745,7 +746,7 @@ public class EventListFragment extends DesignProjectFragment implements View.OnC
                         int pos = getLayoutPosition();
                         if (pos == RecyclerView.NO_POSITION) return;
                         EventBean eventBean = getActiveList().get(pos);
-                        openEvent(eventBean.targetId, eventBean.eventName, Helper.getText(description));
+                        openEvent(eventBean.targetId, eventBean.eventName);
                     }
                 });
             }

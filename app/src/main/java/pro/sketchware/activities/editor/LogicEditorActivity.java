@@ -119,6 +119,7 @@ import pro.sketchware.core.project.SketchwareConstants;
 import pro.sketchware.core.project.BlockConstants;
 import pro.sketchware.util.ViewUtil;
 import pro.sketchware.core.codegen.StringResource;
+import pro.sketchware.core.codegen.EventRegistry;
 import pro.sketchware.core.build.ProjectFilePaths;
 import pro.sketchware.activities.editor.logic.ExtraPaletteBlock;
 import pro.sketchware.graphics.VectorDrawableLoader;
@@ -2127,9 +2128,10 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         isVibrationEnabled = new SharedPrefsHelper(getContext(), "P12").getBoolean("P12I0", true);
         minDist = ViewConfiguration.get(getContext()).getScaledTouchSlop();
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        String eventText = getIntent().getStringExtra("event_text");
         toolbar.setTitle(id.equals("_fab") ? "fab" : ReturnMoreblockManager.getMbName(id));
-        toolbar.setSubtitle(eventText);
+        toolbar.setSubtitle(eventName.equals("moreBlock")
+                ? ReturnMoreblockManager.getMbTypeList(id)
+                : EventRegistry.getEventName(eventName));
         paletteSelector = findViewById(R.id.palette_selector);
         paletteSelector.setOnBlockCategorySelectListener(this);
         paletteSelector.post(() -> paletteBlocksInitialized = true);
@@ -3066,7 +3068,6 @@ public class LogicEditorActivity extends BaseAppCompatActivity implements View.O
         intent.putExtra("id", targetId);
         intent.putExtra("event", targetEventName);
         intent.putExtra("project_file", projectFile);
-        intent.putExtra("event_text", targetId + " : " + targetEventName);
         if (blockId != null) {
             intent.putExtra("scroll_to_block_id", blockId);
         }

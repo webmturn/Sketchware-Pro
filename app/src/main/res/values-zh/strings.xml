@@ -1589,7 +1589,7 @@
     <string name="event_context_menu_title_delete_event">删除事件</string>
     <string name="event_context_menu_title_delete_more_block">删除 MoreBlock</string>
     <string name="event_context_menu_title_initialize_logic">初始化逻辑</string>
-    <string name="event_definefunc">MoreBlock</string>
+    <string name="event_definefunc">自定义积木</string>
     <string name="event_desc_add_custom_imports">添加自定义导入</string>
     <string name="event_desc_do_in_background">此方法包含需要在后台执行的代码。</string>
     <string name="event_desc_post_execute">此方法在 doInBackground 方法完成处理后调用。</string>

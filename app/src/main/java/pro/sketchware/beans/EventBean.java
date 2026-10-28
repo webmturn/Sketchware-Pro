@@ -8,6 +8,7 @@ import com.google.gson.annotations.Expose;
 import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.R;
+import pro.sketchware.util.Helper;
 
 /**
  * Represents an event handler attached to a view or component in the logic editor.
@@ -117,11 +118,11 @@ public class EventBean extends CollapsibleBean implements Parcelable {
 
     public static String getEventTypeName(int eventType) {
         return switch (eventType) {
-            case EVENT_TYPE_VIEW -> "view event";
-            case EVENT_TYPE_COMPONENT -> "component event";
-            case EVENT_TYPE_ACTIVITY -> "activity event";
-            case EVENT_TYPE_DRAWER_VIEW -> "drawer view event";
-            case EVENT_TYPE_ETC -> "more block";
+            case EVENT_TYPE_VIEW -> Helper.getResString(R.string.event_category_view);
+            case EVENT_TYPE_COMPONENT -> Helper.getResString(R.string.event_category_component);
+            case EVENT_TYPE_ACTIVITY -> Helper.getResString(R.string.event_category_activity);
+            case EVENT_TYPE_DRAWER_VIEW -> Helper.getResString(R.string.event_category_drawer_view);
+            case EVENT_TYPE_ETC -> Helper.getResString(R.string.event_category_more_block);
             default -> "";
         };
     }

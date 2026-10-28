@@ -132,7 +132,7 @@ public class ViewEvents extends LinearLayout {
                     createEvent(pos);
                 });
                 binding.imgIcon.setImageResource(EventRegistry.getEventIconResource(event.eventName));
-                binding.tvTitle.setText(event.eventName);
+                binding.tvTitle.setText(EventRegistry.getEventName(event.eventName));
                 binding.tvTitle.setTextColor(MaterialColors.getColor(binding.tvTitle, event.isSelected ? com.google.android.material.R.attr.colorOnSurface : com.google.android.material.R.attr.colorOutline));
                 binding.imgIcon.setColorFilter(MaterialColors.getColor(binding.tvTitle, event.isSelected ? com.google.android.material.R.attr.colorOnSurface : com.google.android.material.R.attr.colorOutline));
                 binding.imgUsedEvent.setVisibility(event.isSelected ? View.GONE : View.VISIBLE);

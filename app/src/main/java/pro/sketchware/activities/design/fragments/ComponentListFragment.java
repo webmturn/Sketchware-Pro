@@ -126,14 +126,13 @@ public class ComponentListFragment extends DesignProjectFragment implements View
         projectFile = projectFileBean;
     }
 
-    private void openEvent(String targetId, String eventName, String eventText) {
+    private void openEvent(String targetId, String eventName) {
         Intent intent = new Intent(requireActivity().getApplicationContext(), LogicEditorActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("sc_id", sc_id);
         intent.putExtra("id", targetId);
         intent.putExtra("event", eventName);
         intent.putExtra("project_file", projectFile);
-        intent.putExtra("event_text", eventText);
         startActivity(intent);
     }
 
@@ -229,7 +228,7 @@ public class ComponentListFragment extends DesignProjectFragment implements View
                     var newAvailableEvents = new ArrayList<>(availableEventsAdapter.getCurrentList());
                     newAvailableEvents.remove(event.eventName);
                     availableEventsAdapter.submitList(newAvailableEvents);
-                    openEvent(event.targetId, event.eventName, event.eventName);
+                    openEvent(event.targetId, event.eventName);
                 });
                 ConcatAdapter componentEventsAdapter = new ConcatAdapter(
                         EVENTS_ADAPTER_CONFIG, addedEventsAdapter, availableEventsAdapter);
@@ -417,11 +416,11 @@ public class ComponentListFragment extends DesignProjectFragment implements View
                 public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
                     var event = getItem(position);
                     holder.button.onEventAdded();
-                    holder.button.getName().setText(event.eventName);
+                    holder.button.getName().setText(EventRegistry.getEventName(event.eventName));
                     holder.button.getIcon().setImageResource(EventRegistry.getEventIconResource(event.eventName));
                     holder.button.setClickListener(v -> {
                         if (!UIHelper.isClickThrottled()) {
-                            openEvent(event.targetId, event.eventName, event.eventName);
+                            openEvent(event.targetId, event.eventName);
                         }
                     });
                 }
@@ -460,7 +459,7 @@ public class ComponentListFragment extends DesignProjectFragment implements View
                 public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
                     var eventName = getItem(position);
                     holder.button.onEventAvailableToAdd();
-                    holder.button.getName().setText(eventName);
+                    holder.button.getName().setText(EventRegistry.getEventName(eventName));
                     holder.button.getIcon().setImageResource(EventRegistry.getEventIconResource(eventName));
                     holder.button.setClickListener(v -> {
                         if (!UIHelper.isClickThrottled()) {
