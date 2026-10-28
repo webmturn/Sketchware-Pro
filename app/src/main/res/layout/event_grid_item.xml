@@ -11,7 +11,7 @@
 
     <LinearLayout
         android:layout_width="96dp"
-        android:layout_height="74dp"
+        android:layout_height="80dp"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -44,7 +44,7 @@
             android:maxLines="2"
             android:paddingHorizontal="4dp"
             android:textColor="?attr/colorOnSurface"
-            android:textSize="11sp"
+            android:textAppearance="?attr/textAppearanceBodySmall"
             tools:text="onClick" />
     </LinearLayout>
 

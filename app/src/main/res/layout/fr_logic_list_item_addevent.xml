@@ -25,18 +25,20 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="56dp"
         android:layout_marginLeft="56dp"
-        android:layout_marginTop="16dp"
-        android:textSize="13sp"
+        android:layout_alignBaseline="@id/tv_target_id"
+        android:textAppearance="?attr/textAppearanceBodySmall"
+        android:textColor="?attr/colorOnSurfaceVariant"
         tools:text="Activity" />
 
     <TextView
         android:id="@+id/tv_sep"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_alignBaseline="@id/tv_target_id"
         android:layout_toRightOf="@+id/tv_target_type"
         android:text=": "
-        android:textSize="13sp" />
+        android:textAppearance="?attr/textAppearanceBodySmall"
+        android:textColor="?attr/colorOnSurfaceVariant" />
 
     <TextView
         android:id="@+id/tv_target_id"
@@ -50,8 +52,7 @@
         android:layout_toStartOf="@+id/checkbox"
         android:ellipsize="end"
         android:maxLines="2"
-        android:textSize="14sp"
-        android:textStyle="bold"
+        android:textAppearance="?attr/textAppearanceBodyMedium"
         tools:text="initializeLogic" />
 
     <LinearLayout
@@ -80,7 +81,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:textSize="11sp"
+            android:textAppearance="?attr/textAppearanceBodySmall"
             tools:text="On activity create" />
     </LinearLayout>
 
