@@ -351,7 +351,7 @@
     <string name="block_phone_auth_send_code_body_1">发送验证码到</string>
     <string name="block_phone_auth_resend_code_body_1">重新发送验证码到</string>
     <string name="block_phone_auth_sign_in_body_1">使用电话凭据登录，验证 ID</string>
-    <string name="block_phone_auth_sign_in_body_2">代码</string>
+    <string name="block_phone_auth_sign_in_body_2">验证码</string>
     <string name="block_fcm_get_token_tail">获取令牌</string>
     <string name="block_fcm_subscribe_topic_body_1">订阅主题</string>
     <string name="block_fcm_unsubscribe_topic_body_1">取消订阅主题</string>
@@ -527,13 +527,13 @@
     <string name="root_spec_on_delete_success_head">删除成功时</string>
     <string name="root_spec_on_destroy_head">Activity 销毁时</string>
     <string name="root_spec_on_download_success_head">下载成功时</string>
-    <string name="root_spec_on_error_response_head">收到错误响应时</string>
+    <string name="root_spec_on_error_response_head">请求失败时</string>
     <string name="root_spec_on_failure_head">失败时</string>
     <string name="root_spec_on_files_picked_cancel_head">取消文件选择时</string>
     <string name="root_spec_on_files_picked_head">文件选择完成时</string>
-    <string name="root_spec_on_item_clicked_head">项目被点击</string>
-    <string name="root_spec_on_item_long_clicked_head">项目被长按</string>
-    <string name="root_spec_on_item_selected_head">项目被选中</string>
+    <string name="root_spec_on_item_clicked_head">列表项被点击</string>
+    <string name="root_spec_on_item_long_clicked_head">列表项被长按</string>
+    <string name="root_spec_on_item_selected_head">列表项被选中</string>
     <string name="root_spec_on_location_changed_head">位置改变时</string>
     <string name="root_spec_on_map_ready_head">地图准备完成时</string>
     <string name="root_spec_on_marker_clicked_head">标记被点击时</string>
@@ -550,7 +550,7 @@
     <string name="root_spec_on_sensor_changed_head">传感器数据改变时</string>
     <string name="root_spec_on_sign_in_user_complete_head">用户登录完成时</string>
     <string name="root_spec_on_speech_error_head">语音识别出错时</string>
-    <string name="root_spec_on_speech_result_head">获得语音识别结果时</string>
+    <string name="root_spec_on_speech_result_head">语音识别结果返回时</string>
     <string name="root_spec_on_start_head">Activity 变为可见时</string>
     <string name="root_spec_on_start_tracking_touch_head">开始拖动时</string>
     <string name="root_spec_on_stop_head">Activity 不再可见时</string>
@@ -631,10 +631,10 @@
     <string name="builtin_block_getlastvisibleposition" formatted="false">%m.listview 获取最后一个可见项的位置</string>
     <string name="builtin_block_listscrollparam" formatted="false">%m.listscrollparam</string>
     <string name="builtin_block_menuinflater" formatted="false">菜单：从文件加载 %m.menu</string>
-    <string name="builtin_block_menuadditem" formatted="false">菜单：添加项目，ID %d 标题 %s</string>
-    <string name="builtin_block_menuaddmenuitem" formatted="false">%m.menuitem 添加项目，ID %d 标题 %s 图标 %m.resource 显示方式 %m.menuaction</string>
+    <string name="builtin_block_menuadditem" formatted="false">菜单：添加菜单项，ID %d 标题 %s</string>
+    <string name="builtin_block_menuaddmenuitem" formatted="false">%m.menuitem 添加菜单项，ID %d 标题 %s 图标 %m.resource 显示方式 %m.menuaction</string>
     <string name="builtin_block_menuaddsubmenu" formatted="false">菜单：添加子菜单 %m.submenu 标题 %s;</string>
-    <string name="builtin_block_submenuadditem" formatted="false">%m.submenu 添加项目，ID %d 标题 %s</string>
+    <string name="builtin_block_submenuadditem" formatted="false">%m.submenu 添加菜单项，ID %d 标题 %s</string>
     <string name="builtin_block_getassetfile" formatted="false">%m.inputstream 获取 assets 文件，路径 %s</string>
     <string name="builtin_block_renamefile" formatted="false">重命名文件，路径 %s 改为 %s</string>
     <string name="builtin_block_copyassetfile" formatted="false">%m.inputstream 转为字符串</string>
@@ -706,7 +706,7 @@
     <string name="builtin_block_setselectedtabindicatorheight" formatted="false">%m.tablayout 设置选中标签指示器高度 %d</string>
     <string name="builtin_block_returntitle" formatted="false">返回标题 %s</string>
     <string name="builtin_block_returnfragment" formatted="false">返回 Fragment %m.activity</string>
-    <string name="builtin_block_bottommenuadditem" formatted="false">%m.bottomnavigation 添加项目，ID %d 标题 %s 图标 %m.resource</string>
+    <string name="builtin_block_bottommenuadditem" formatted="false">%m.bottomnavigation 添加导航项，ID %d 标题 %s 图标 %m.resource</string>
     <string name="builtin_block_codeviewsetcode" formatted="false">%m.codeview 设置代码 %s</string>
     <string name="builtin_block_codeviewsettheme" formatted="false">%m.codeview 设置主题 %m.cv_theme</string>
     <string name="builtin_block_codeviewsetlanguage" formatted="false">%m.codeview 设置语言 %m.cv_language</string>
@@ -736,15 +736,15 @@
     <string name="builtin_block_pagerscrollparam" formatted="false">%m.pagerscrollparam</string>
     <string name="builtin_block_pagersetcustomviewdata" formatted="false">%m.viewpager 设置分页自定义视图数据 %m.listMap</string>
     <string name="builtin_block_pagersetfragmentadapter" formatted="false">%m.viewpager 设置 Fragment 适配器 %m.fragmentAdapter 标签数量 %d</string>
-    <string name="builtin_block_pagergetoffscreenpagelimit" formatted="false">%m.viewpager 获取屏幕外页面缓存数量</string>
-    <string name="builtin_block_pagersetoffscreenpagelimit" formatted="false">%m.viewpager 设置屏幕外页面缓存数量 %d</string>
-    <string name="builtin_block_pagergetcurrentitem" formatted="false">%m.viewpager 获取当前页面</string>
-    <string name="builtin_block_pagersetcurrentitem" formatted="false">%m.viewpager 设置当前页面 %d</string>
+    <string name="builtin_block_pagergetoffscreenpagelimit" formatted="false">%m.viewpager 获取每侧屏幕外保留页数</string>
+    <string name="builtin_block_pagersetoffscreenpagelimit" formatted="false">%m.viewpager 设置每侧屏幕外保留页数 %d</string>
+    <string name="builtin_block_pagergetcurrentitem" formatted="false">%m.viewpager 获取当前页索引</string>
+    <string name="builtin_block_pagersetcurrentitem" formatted="false">%m.viewpager 设置当前页索引 %d</string>
     <string name="builtin_block_onswiperefreshlayout" formatted="false">当 %m.swiperefreshlayout 刷新时</string>
     <string name="builtin_block_setrefreshing" formatted="false">%m.swiperefreshlayout 设置刷新状态 %b</string>
     <string name="builtin_block_viewonlongclick" formatted="false">当 %m.view 被长按时</string>
     <string name="builtin_block_viewontouch" formatted="false">当 %m.view 被触摸时</string>
-    <string name="builtin_block_checkboxonchecked" formatted="false">当 %m.checkbox 被选中时</string>
+    <string name="builtin_block_checkboxonchecked" formatted="false">当 %m.checkbox 选中状态改变时</string>
     <string name="builtin_block_checkboxischecked" formatted="false">是否已选中</string>
     <string name="builtin_block_getbadgecount" formatted="false">%m.badgeview 获取徽标数量</string>
     <string name="builtin_block_setbadgenumber" formatted="false">%m.badgeview 设置徽标数值 %d</string>
@@ -763,7 +763,7 @@
     <string name="builtin_block_patterntostring" formatted="false">%m.patternview 获取图案，从 %m.listStr 转为字符串</string>
     <string name="builtin_block_patterntomd5" formatted="false">%m.patternview 获取图案，从 %m.listStr 转为 MD5</string>
     <string name="builtin_block_patterntosha1" formatted="false">%m.patternview 获取图案，从 %m.listStr 转为 SHA1</string>
-    <string name="builtin_block_patternsetdotcount" formatted="false">%m.patternview 设置圆点数量 %d</string>
+    <string name="builtin_block_patternsetdotcount" formatted="false">%m.patternview 设置每行圆点数 %d</string>
     <string name="builtin_block_patternsetnormalstatecolor" formatted="false">%m.patternview 设置默认状态颜色 %m.color</string>
     <string name="builtin_block_patternsetcorrectstatecolor" formatted="false">%m.patternview 设置正确状态颜色 %m.color</string>
     <string name="builtin_block_patternsetwrongstatecolor" formatted="false">%m.patternview 设置错误状态颜色 %m.color</string>
@@ -844,8 +844,8 @@
     <string name="builtin_block_interstitialadregisterfullscreencontentcallback" formatted="false">%m.interstitialad 注册全屏内容回调（此积木已不再需要，请移除）</string>
     <string name="builtin_block_rewardedadregisterfullscreencontentcallback" formatted="false">%m.videoad 注册全屏内容回调（此积木已不再需要，请移除）</string>
     <string name="builtin_block_getresstring" formatted="false">从资源获取字符串 %m.ResString</string>
-    <string name="builtin_block_casestrand" formatted="false">分支 %s 且</string>
-    <string name="builtin_block_casenumand" formatted="false">分支 %d 且</string>
+    <string name="builtin_block_casestrand" formatted="false">分支 %s 或</string>
+    <string name="builtin_block_casenumand" formatted="false">分支 %d 或</string>
     <string name="builtin_block_continue" formatted="false">跳过本次循环</string>
     <string name="builtin_block_isempty" formatted="false">%s 是否为空</string>
     <string name="builtin_block_fileutilcopydir" formatted="false">复制目录，路径 %s 到路径 %s</string>
@@ -861,7 +861,7 @@
     <string name="builtin_block_webviewgetprogress" formatted="false">%m.webview 获取进度</string>
     <string name="builtin_block_menuitemsetvisible" formatted="false">%m.MenuItem 设置可见性 %b</string>
     <string name="builtin_block_menuitemsetenabled" formatted="false">%m.MenuItem 设置启用状态 %b</string>
-    <string name="builtin_block_menufinditem" formatted="false">菜单查找项目 %s.inputOnly</string>
+    <string name="builtin_block_menufinditem" formatted="false">菜单查找菜单项 %s.inputOnly</string>
     <string name="builtin_block_listaddall" formatted="false">%m.listStr 添加全部项，来源 %m.list</string>
     <string name="builtin_block_filecanexecute" formatted="false">%m.File 是否可执行</string>
     <string name="builtin_block_filecanread" formatted="false">%m.File 是否可读</string>
@@ -1024,13 +1024,13 @@
     <string name="display_name_random_theme">随机主题</string>
     <string name="display_name_default">默认</string>
     <string name="display_name_select_typeview">选择视图类型：</string>
-    <string name="event_display_onupdateprofilecomplete" formatted="false">用户资料更新完成</string>
-    <string name="event_display_onemailverificationsent" formatted="false">验证邮件已发送</string>
-    <string name="event_display_ondeleteusercomplete" formatted="false">用户删除完成</string>
-    <string name="event_display_onupdateemailcomplete" formatted="false">邮箱更新完成</string>
-    <string name="event_display_ongooglesignin" formatted="false">Google 登录完成</string>
-    <string name="event_display_onupdatepasswordcomplete" formatted="false">密码更新完成</string>
-    <string name="event_display_signinwithphoneauthcomplete" formatted="false">手机号码认证完成</string>
+    <string name="event_display_onupdateprofilecomplete" formatted="false">用户资料更新完成时</string>
+    <string name="event_display_onemailverificationsent" formatted="false">验证邮件发送完成时</string>
+    <string name="event_display_ondeleteusercomplete" formatted="false">用户删除完成时</string>
+    <string name="event_display_onupdateemailcomplete" formatted="false">邮箱更新完成时</string>
+    <string name="event_display_ongooglesignin" formatted="false">Google 登录完成时</string>
+    <string name="event_display_onupdatepasswordcomplete" formatted="false">密码更新完成时</string>
+    <string name="event_display_signinwithphoneauthcomplete" formatted="false">手机号码认证完成时</string>
     <string name="event_display_onscrolled" formatted="false">滚动</string>
     <string name="event_display_ondatechanged" formatted="false">日期改变</string>
     <string name="event_display_ondateset" formatted="false">日期设置完成</string>
@@ -1075,10 +1075,10 @@
     <string name="event_display_onrewardadfailedtoload" formatted="false">激励广告加载失败</string>
     <string name="event_display_onadfailedtoshowfullscreencontent" formatted="false">全屏广告显示失败</string>
     <string name="event_display_onuserearnedreward" formatted="false">用户获得奖励</string>
-    <string name="event_display_onadloaded" formatted="false">广告加载完成</string>
+    <string name="event_display_onadloaded" formatted="false">广告加载完成时</string>
     <string name="event_display_onaddismissedfullscreencontent" formatted="false">全屏广告关闭</string>
     <string name="event_display_onadshowedfullscreencontent" formatted="false">全屏广告显示</string>
-    <string name="event_display_onrewardadloaded" formatted="false">激励广告加载完成</string>
+    <string name="event_display_onrewardadloaded" formatted="false">激励广告加载完成时</string>
     <string name="event_display_onadopened" formatted="false">广告打开</string>
     <string name="event_display_onadclicked" formatted="false">广告点击</string>
     <string name="event_display_onadclosed" formatted="false">广告关闭</string>
@@ -1197,7 +1197,7 @@
     <string name="event_category_activity">界面事件</string>
     <string name="event_category_drawer_view">侧滑栏控件事件</string>
     <string name="event_category_more_block">自定义积木</string>
-    <string name="event_onnothingselected">未选中项目时</string>
+    <string name="event_onnothingselected">未选中列表项时</string>
     <string name="event_beforetextchanged">文本改变前</string>
     <string name="event_aftertextchanged">文本改变后</string>
     <string name="event_onanimationrepeat">动画重复时</string>

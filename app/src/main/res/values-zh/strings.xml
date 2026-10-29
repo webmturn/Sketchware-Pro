@@ -64,7 +64,7 @@
     <string name="common_word_information">信息</string>
     <string name="common_word_locale">语言区域</string>
     <string name="common_word_modify">修改</string>
-    <string name="common_word_moreblock">更多积木块</string>
+    <string name="common_word_moreblock">自定义积木</string>
     <string name="common_word_new">新建</string>
     <string name="common_word_next">下一步</string>
     <string name="common_word_no">否</string>
@@ -128,7 +128,7 @@
     <string name="common_message_insufficient_storage_space_title">存储空间不足</string>
     <string name="common_message_loading">正在加载</string>
     <string name="common_message_name_unavailable">当前名称不可用</string>
-    <string name="common_message_no_item_delete">没有可删除的项目</string>
+    <string name="common_message_no_item_delete">没有可删除的条目</string>
     <string name="common_message_permission_denied">权限被拒绝</string>
     <string name="common_message_permission_need_load_project">我们需要存储权限来保存和加载项目</string>
     <string name="main_storage_permission_grant">授予权限</string>
@@ -219,7 +219,7 @@
     <string name="design_manager_sound_title_apply_same_naming">对其他可用音效应用相同命名样式</string>
     <string name="design_manager_view_description_guide_create_activity">要创建新 Activity，请在此添加</string>
     <string name="design_manager_view_description_guide_create_custom_view">在此创建新的自定义视图</string>
-    <string name="design_manager_view_description_guide_use_custom_view">自定义视图可用于更改 ListView 或 Spinner 中项目的显示方式</string>
+    <string name="design_manager_view_description_guide_use_custom_view">自定义视图可用于更改 ListView 或 Spinner 中列表项的显示方式</string>
     <string name="design_manager_view_message_slow_down">包含抽屉或 FAB 可能会减慢某些设备的编译速度。</string>
     <string name="design_library_settings_title_enabled">已启用</string>
     <string name="design_library_title_appcompat">AppCompat</string>
@@ -360,7 +360,7 @@
     <string name="error_invalid_color_data">无效的颜色数据</string>
     <string name="error_invalid_value">无效的值</string>
     <string name="error_invalid_format">格式无效</string>
-    <string name="error_item_already_exists">该项目已存在</string>
+    <string name="error_item_already_exists">已存在同名条目</string>
     <string name="error_extra_spaces_not_allowed">不允许多余的空格</string>
     <string name="error_extra_spaces_words_not_allowed">不允许单词间有多余的空格</string>
     <string name="error_type_must_start_letter">类型名必须以字母开头</string>
@@ -886,37 +886,37 @@
     <string name="text_title_menu_resource_editor">资源编辑器</string>
 
     <!-- ========== 组件 ========== -->
-    <string name="component_description_bluetooth_connect">蓝牙连接用于通过蓝牙连接到另一台设备。</string>
-    <string name="component_description_calendar">日历用于计算时间和日期</string>
-    <string name="component_description_camera">相机用于拍照。</string>
-    <string name="component_description_date_picker_dialog">日期选择对话框</string>
-    <string name="component_description_dialog">对话框用于创建弹出窗口</string>
-    <string name="component_description_file">文件用于在本地保存数据</string>
-    <string name="component_description_file_picker">FilePicker 用于选择原始文件和媒体文件，如图片、音效和文本。</string>
-    <string name="component_description_firebase_auth">Firebase Auth 允许在线用户身份验证</string>
-    <string name="component_description_firebase_storage">Firebase Storage 专为需要存储和提供用户生成内容的应用开发者设计。</string>
-    <string name="component_description_gyrosope">陀螺仪测量设备绕 x、y 和 z 轴的旋转速率（rad/s）。</string>
-    <string name="component_description_intent">Intent 用于启动新的 Activity</string>
-    <string name="component_description_interstitial_ad">插屏广告允许你添加全屏广告。</string>
-    <string name="component_description_location_manager">LocationManager 用于加载当前位置数据</string>
-    <string name="component_description_mediaplayer">MediaPlayer 用于播放大型音频文件</string>
-    <string name="component_description_notification">创建通知</string>
-    <string name="component_description_sqlite">SQLiteDatabase 用于本地结构化数据存储和查询</string>
-    <string name="component_description_async_task">AsyncTask 用于在后台线程处理任务并在主线程更新 UI</string>
-    <string name="component_description_objectanimator">ObjectAnimator 用于为视图的某些属性添加动画</string>
-    <string name="component_description_progress_dialog">创建弹出对话框式进度条</string>
-    <string name="component_description_request_network">RequestNetwork 用于进行 Web API 调用</string>
-    <string name="component_description_soundpool">SoundPool 用于播放短音效</string>
-    <string name="component_description_speech_to_text">SpeechToText 用于将语音转换为文本</string>
-    <string name="component_description_text_to_speech">TextToSpeech 用于将文本转换为语音</string>
-    <string name="component_description_time_picker_dialog">时间选择对话框</string>
-    <string name="component_description_timer">Timer 用于延迟某些操作</string>
-    <string name="component_description_vibrator">Vibrator 用于使设备振动</string>
-    <string name="component_description_video_ad">视频广告允许你添加视频广告</string>
-    <string name="component_description_fragment_adapter">FragmentStatePagerAdapter 与 TabLayout 和 ViewPager 配合使用来管理每个页面。</string>
-    <string name="component_description_fb_fcm">Firebase Cloud Messaging 用于发送和接收推送通知</string>
-    <string name="component_description_fb_google">Firebase Google Sign 与 Firebase Auth 配合使用，以 Google 账号登录你的应用</string>
-    <string name="component_description_fb_phone_auth">Firebase Phone 与 Firebase Auth 配合使用，以手机号登录你的应用</string>
+    <string name="component_description_bluetooth_connect">Bluetooth 用于连接其他蓝牙设备并收发数据。</string>
+    <string name="component_description_calendar">Calendar 用于计算日期和时间。</string>
+    <string name="component_description_camera">Camera 用于拍照。</string>
+    <string name="component_description_date_picker_dialog">DatePickerDialog 用于选择日期。</string>
+    <string name="component_description_dialog">Dialog 用于创建带有标题、消息和按钮的对话框。</string>
+    <string name="component_description_file">SharedPreferences 用于在本地保存和读取键值数据。</string>
+    <string name="component_description_file_picker">FilePicker 用于选择图片、音频和文本等文件。</string>
+    <string name="component_description_firebase_auth">FirebaseAuth 用于进行用户身份验证。</string>
+    <string name="component_description_firebase_storage">Firebase Storage 用于上传、下载和删除云端文件。</string>
+    <string name="component_description_gyrosope">Gyroscope 用于获取设备的三个姿态角（单位：度）。</string>
+    <string name="component_description_intent">Intent 用于启动 Activity 并传递数据。</string>
+    <string name="component_description_interstitial_ad">AdMob Interstitial 用于显示全屏插屏广告。</string>
+    <string name="component_description_location_manager">LocationManager 用于获取设备位置信息。</string>
+    <string name="component_description_mediaplayer">MediaPlayer 用于播放音频。</string>
+    <string name="component_description_notification">Notification 用于创建和显示通知。</string>
+    <string name="component_description_sqlite">SQLiteDatabase 用于在本地存储和查询结构化数据。</string>
+    <string name="component_description_async_task">AsyncTask 用于在后台执行任务，并在主线程更新 UI。</string>
+    <string name="component_description_objectanimator">ObjectAnimator 用于为视图属性添加动画。</string>
+    <string name="component_description_progress_dialog">ProgressDialog 用于在对话框中显示进度。</string>
+    <string name="component_description_request_network">RequestNetwork 用于发送 HTTP 请求。</string>
+    <string name="component_description_soundpool">SoundPool 用于播放短音效。</string>
+    <string name="component_description_speech_to_text">SpeechToText 用于将语音转换为文本。</string>
+    <string name="component_description_text_to_speech">TextToSpeech 用于将文本转换为语音。</string>
+    <string name="component_description_time_picker_dialog">TimePickerDialog 用于选择时间。</string>
+    <string name="component_description_timer">Timer 用于延迟执行或定期重复执行操作。</string>
+    <string name="component_description_vibrator">Vibrator 用于使设备振动。</string>
+    <string name="component_description_video_ad">RewardedVideoAd 用于显示激励广告。</string>
+    <string name="component_description_fragment_adapter">FragmentAdapter 用于管理 ViewPager 中的 Fragment 页面。</string>
+    <string name="component_description_fb_fcm">Cloud Message 用于获取 Firebase 推送令牌和管理主题订阅。</string>
+    <string name="component_description_fb_google">Google Sign-In 用于配合 Firebase Auth 进行 Google 账号登录。</string>
+    <string name="component_description_fb_phone_auth">Phone Auth 用于配合 Firebase Auth 进行手机号登录。</string>
     <string name="component_description_fb_dynamic">Firebase Dynamic Links 是智能 URL，允许你将现有和潜在用户引导到应用中的任何位置</string>
     <string name="component_description_fb_admin">OneSignal 是客户参与度的市场领导者</string>
     <string name="component_description_fb_ads_banner">Facebook Ads Banner 用于显示 Facebook 广告横幅</string>
@@ -1040,7 +1040,7 @@
     <string name="component_error_null">位置 %d 处的自定义组件无效 (null)</string>
     <string name="component_helper_add_var">允许向类中添加多个字段。\n使用 \'###\' 作为组件名称的占位符。</string>
     <string name="component_helper_def_add_var">用于初始化额外添加的变量。\n使用 \'###\' 作为组件名称的占位符。</string>
-    <string name="component_helper_var_name">在类字段中使用的实际变量名（例: \'private VariableName name\'）。\n保持与组件名称一致以正确使用 \'附加变量\' 功能。</string>
+    <string name="component_helper_var_name">用于识别组件类型的名称。组件实例名在项目中添加组件时填写。\n保持与组件名称一致，以便使用“附加变量”功能。</string>
 
     <!-- ========== 样式/主题编辑器 ========== -->
     <string name="style_no_parent">无父项</string>
@@ -1054,7 +1054,7 @@
     <string name="design_actionbar_title_manager_collection">收藏管理器</string>
     <string name="design_actionbar_title_manager_font">字体管理器</string>
     <string name="design_actionbar_title_manager_image">图片管理器</string>
-    <string name="design_actionbar_title_manager_resources">资源管理器</string>
+    <string name="design_actionbar_title_manager_resources">资源编辑器</string>
     <string name="design_actionbar_title_manager_sound">音效管理器</string>
     <string name="design_actionbar_title_manager_view">视图管理器</string>
     <string name="design_actionbar_title_show_source_code">显示源代码</string>
@@ -1155,7 +1155,7 @@
     <string name="design_library_firebase_button_goto_firebase_database">前往 Firebase 数据库</string>
     <string name="design_library_firebase_button_goto_firebase_storage">前往 Firebase 存储</string>
     <string name="design_library_firebase_description">启用后，你可以使用 Firebase DB、Auth 和 Storage 组件。</string>
-    <string name="design_library_firebase_description_about_firebase">Firebase 实时数据库是 Google 的云端 NoSQL 数据库，你可以实时保存和同步数据。</string>
+    <string name="design_library_firebase_description_about_firebase">Firebase 用于读写 Firebase 实时数据库中的数据。</string>
     <string name="design_library_firebase_description_settings">项目 ID、应用 ID 和 API 密钥必须与 Firebase 控制台中的值匹配。</string>
     <string name="design_library_firebase_description_storage">Storage Bucket URL 必须与 Firebase Storage 中的值匹配才能正常工作。</string>
     <string name="design_library_firebase_dialog_description_confirm_uncheck_firebase">如果取消勾选 Firebase DB，现有的 Firebase 组件将被删除。是否继续？</string>
@@ -1462,7 +1462,7 @@
     <string name="dialog_rebuild_indices_done">已为 %d 个库重建导入索引。</string>
     <string name="dialog_orphan_libs_title">孤立库</string>
     <string name="dialog_orphan_libs_none">未找到孤立库。</string>
-    <string name="dialog_orphan_libs_body">以下库未被任何根库引用，可以安全删除：</string>
+    <string name="dialog_orphan_libs_body">以下库未被任何根库引用，可考虑删除：</string>
     <string name="sub_dependencies_subtitle">子依赖</string>
     <string name="sub_dependencies_empty">无子依赖</string>
     <string name="sub_dependencies_disable_required_message">%1$s 仍被这些已启用的根库依赖：\n\n%2$s\n\n请先禁用这些根库。</string>
@@ -1559,7 +1559,7 @@
     <string name="create_view_unspecified">未指定</string>
     <string name="create_view_visible">可见</string>
     <string name="custom_activity_hint_name">Activity 名称</string>
-    <string name="custom_view_desc">自定义视图可用于更改 ListView 或 Spinner 中项目的显示方式</string>
+    <string name="custom_view_desc">自定义视图可用于更改 ListView 或 Spinner 中列表项的显示方式</string>
 
     <!-- ========== 视图面板 ========== -->
     <string name="edit_view_properties_title">编辑属性</string>
@@ -1596,7 +1596,7 @@
     <string name="event_desc_pre_execute">此方法包含在后台处理开始前执行的代码。</string>
     <string name="event_desc_progress_update">此方法从 doInBackground 方法接收进度更新。</string>
     <string name="event_desc_swipe_refresh">SwipeRefreshLayout 滑动时</string>
-    <string name="event_desc_tab_new_tab">返回当前标签页的名称</string>
+    <string name="event_desc_tab_new_tab">返回指定位置标签页的标题</string>
     <string name="event_dialog_confirm_delete_component">确定要删除所选组件吗？</string>
     <string name="event_dialog_confirm_delete_logic">所选事件的所有逻辑数据将丢失\n是否继续？</string>
     <string name="event_dialog_confirm_delete_moreblock">确定要删除此 MoreBlock 吗？</string>
@@ -1764,22 +1764,22 @@
     <string name="language_settings_help">导出 XML 文件、编辑译文后，再从这里导入。自定义翻译优先于所选应用语言。</string>
 
     <!-- ========== 事件 - 补充 ========== -->
-    <string name="event_on_connected">连接时</string>
+    <string name="event_on_connected">连接成功时</string>
     <string name="event_on_connection_error">连接错误时</string>
     <string name="event_on_connection_stopped">连接停止时</string>
     <string name="event_on_data_received">收到数据时</string>
-    <string name="event_on_data_sent">发送数据时</string>
-    <string name="event_on_error_response">错误响应时</string>
+    <string name="event_on_data_sent">数据发送完成时</string>
+    <string name="event_on_error_response">请求失败时</string>
     <string name="event_on_location_changed">位置变化时</string>
     <string name="event_on_sqlite_error">SQLite 错误时</string>
     <string name="event_on_map_ready">地图就绪时</string>
     <string name="event_on_marker_clicked">标记点击时</string>
-    <string name="event_on_response">响应时</string>
-    <string name="event_on_speech_error">语音错误时</string>
-    <string name="event_on_speech_result">语音结果时</string>
+    <string name="event_on_response">收到响应时</string>
+    <string name="event_on_speech_error">语音识别出错时</string>
+    <string name="event_on_speech_result">语音识别结果返回时</string>
     <string name="event_onadclosed">广告关闭时</string>
     <string name="event_onadfailedtoload">广告加载失败时</string>
-    <string name="event_onadloaded">广告加载时</string>
+    <string name="event_onadloaded">广告加载完成时</string>
     <string name="event_onadopened">广告打开时</string>
     <string name="event_onanimationcancel">动画取消时</string>
     <string name="event_onanimationend">动画结束时</string>
@@ -1794,18 +1794,18 @@
     <string name="event_ondownloadprogress">下载进度时</string>
     <string name="event_ondownloadsuccess">下载成功时</string>
     <string name="event_onfailure">失败时</string>
-    <string name="event_onfilespicked">文件选择时</string>
+    <string name="event_onfilespicked">文件选择完成时</string>
     <string name="event_onfilespickedcancel">文件选择取消时</string>
-    <string name="event_onitemclicked">项目点击时</string>
-    <string name="event_onitemlongclicked">项目长按时</string>
-    <string name="event_onitemselected">项目选中时</string>
+    <string name="event_onitemclicked">列表项点击时</string>
+    <string name="event_onitemlongclicked">列表项长按时</string>
+    <string name="event_onitemselected">列表项选中时</string>
     <string name="event_onpagefinished">页面加载完成时</string>
     <string name="event_onpagestarted">页面开始加载时</string>
     <string name="event_onpicturetaken">拍照完成时</string>
     <string name="event_onpicturetakencancel">拍照取消时</string>
     <string name="event_onresume">Activity 恢复时</string>
-    <string name="event_onsensorchanged">传感器变化时</string>
-    <string name="event_onstop">Activity 停止时</string>
+    <string name="event_onsensorchanged">传感器数据改变时</string>
+    <string name="event_onstop">Activity 不再可见时</string>
     <string name="event_ontextchanged">文本改变时</string>
     <string name="event_onuploadsuccess">上传成功时</string>
     <string name="event_onuploadprogress">上传进度时</string>
@@ -2002,8 +2002,8 @@
     <string name="src_code_editor_unsaved_changes_dialog_warning_message">你有未保存的更改。确定要退出吗？</string>
 
     <!-- ========== 字符串编辑器 ========== -->
-    <string name="string_editor_hint_header">字符串 header 值（可选）</string>
-    <string name="string_editor_hint_key">字符串键</string>
+    <string name="string_editor_hint_header">注释（可选）</string>
+    <string name="string_editor_hint_key">字符串名称</string>
     <string name="string_editor_hint_value">字符串值</string>
     <string name="string_title_create">创建新字符串</string>
     <string name="strings_edit_title">编辑字符串</string>
@@ -2012,7 +2012,7 @@
     <!-- ========== 样式编辑器 ========== -->
     <string name="style_attr_hint_name">输入属性名称</string>
     <string name="style_attr_hint_value">输入属性值</string>
-    <string name="style_hint_header">样式 header 值（可选）</string>
+    <string name="style_hint_header">注释（可选）</string>
     <string name="style_hint_name">样式名称</string>
     <string name="style_hint_parent">样式父级</string>
     <string name="style_title_create">创建新样式</string>
@@ -2165,7 +2165,7 @@
     <string name="theme_title_edit">编辑主题</string>
     <string name="color_title_create">创建新颜色</string>
     <string name="color_title_edit">编辑颜色</string>
-    <string name="dimen_title_create">添加尺寸</string>
+    <string name="dimen_title_create">创建新尺寸</string>
     <string name="dimen_title_edit">编辑尺寸</string>
     <string name="dimen_editor_hint_name">尺寸名称</string>
     <string name="dimen_editor_hint_value">尺寸值（如 16dp、14sp）</string>
@@ -2255,20 +2255,20 @@
     <string name="theme_system_default_desc">跟随系统主题设置</string>
 
     <!-- ========== 数组编辑器 ========== -->
-    <string name="array_attr_hint_name">输入项目名称</string>
-    <string name="array_attr_hint_value">输入项目值</string>
-    <string name="array_hint_header">数组 header 值（可选）</string>
+    <string name="array_attr_hint_name">输入数组项名称</string>
+    <string name="array_attr_hint_value">输入数组项的值</string>
+    <string name="array_hint_header">注释（可选）</string>
     <string name="array_hint_name">数组名称</string>
     <string name="array_hint_type">数组类型</string>
-    <string name="array_item_title_create">创建新项目</string>
-    <string name="array_item_title_edit">编辑项目</string>
+    <string name="array_item_title_create">创建新数组项</string>
+    <string name="array_item_title_edit">编辑数组项</string>
     <string name="array_select_type">选择数组类型</string>
     <string name="array_title_create">创建新数组</string>
     <string name="array_title_edit">编辑数组</string>
 
     <!-- ========== 颜色编辑器 - 补充 ========== -->
     <string name="color_editor_delete_color">删除颜色</string>
-    <string name="color_editor_hint_header">字符串 header 值（可选）</string>
+    <string name="color_editor_hint_header">注释（可选）</string>
     <string name="color_editor_hint_name">颜色名称</string>
     <string name="color_editor_hint_value">颜色值</string>
     <string name="color_picker_custom_attr_hint">输入自定义属性</string>
@@ -2469,9 +2469,9 @@
     <!-- ========== 事件 - 精确补充 ========== -->
     <string name="event_onpostcreated">创建完成后</string>
     <string name="event_onprogresschanged">进度改变时</string>
-    <string name="event_onresetpasswordemailsent">重置密码邮件已发送</string>
+    <string name="event_onresetpasswordemailsent">重置密码邮件发送完成时</string>
     <string name="event_onsigninusercomplete">用户登录完成时</string>
-    <string name="event_onstart">Activity 开始时</string>
+    <string name="event_onstart">Activity 变为可见时</string>
     <string name="event_onstarttrackingtouch">开始触摸追踪时</string>
     <string name="event_onstoptrackingtouch">停止触摸追踪时</string>
     <string name="event_onsaveinstancestate">Activity 保存实例状态</string>
@@ -2511,7 +2511,7 @@
     <string name="manifest_attrs_application">应用属性</string>
     <string name="manifest_attrs_permissions">权限</string>
     <string name="manifest_components_title_format">%s 组件</string>
-    <string name="manifest_delete_attr_msg">确定要删除此属性吗？</string>
+    <string name="manifest_delete_attr_msg">此操作不可撤销。</string>
     <string name="manifest_delete_attr_title">删除属性</string>
     <string name="manifest_edit_value">编辑值</string>
     <string name="manifest_error_invalid_name">第 %d 个属性中的 AndroidManifest 属性注入名称无效</string>

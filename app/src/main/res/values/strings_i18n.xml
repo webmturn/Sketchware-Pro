@@ -169,7 +169,7 @@
     <string name="builtin_block_setrefreshing" formatted="false">%m.swiperefreshlayout setRefreshing %b</string>
     <string name="builtin_block_viewonlongclick" formatted="false">When %m.view long clicked</string>
     <string name="builtin_block_viewontouch" formatted="false">When %m.view touched</string>
-    <string name="builtin_block_checkboxonchecked" formatted="false">When %m.checkbox checked</string>
+    <string name="builtin_block_checkboxonchecked" formatted="false">When the checked state of %m.checkbox changes</string>
     <string name="builtin_block_checkboxischecked" formatted="false">isChecked</string>
     <string name="builtin_block_getbadgecount" formatted="false">%m.badgeview getBadgeCount</string>
     <string name="builtin_block_setbadgenumber" formatted="false">%m.badgeview setBadgeNumber %d</string>
@@ -269,8 +269,8 @@
     <string name="builtin_block_interstitialadregisterfullscreencontentcallback" formatted="false">%m.interstitialad register fullscreen content callbacks (This Block isn\'t needed anymore, please remove it)</string>
     <string name="builtin_block_rewardedadregisterfullscreencontentcallback" formatted="false">%m.videoad register fullscreen content callbacks (This Block isn\'t needed anymore, please remove it)</string>
     <string name="builtin_block_getresstring" formatted="false">get String from %m.ResString</string>
-    <string name="builtin_block_casestrand" formatted="false">case %s and</string>
-    <string name="builtin_block_casenumand" formatted="false">case %d and</string>
+    <string name="builtin_block_casestrand" formatted="false">case %s or</string>
+    <string name="builtin_block_casenumand" formatted="false">case %d or</string>
     <string name="builtin_block_continue" formatted="false">continue</string>
     <string name="builtin_block_isempty" formatted="false">%s isEmpty</string>
     <string name="builtin_block_fileutilcopydir" formatted="false">copy dir path %s to path %s</string>
@@ -450,7 +450,7 @@
     <string name="display_name_default">Default</string>
     <string name="display_name_select_typeview">Select typeview:</string>
     <string name="event_display_onupdateprofilecomplete" formatted="false">onUpdateProfileComplete</string>
-    <string name="event_display_onemailverificationsent" formatted="false">onEmailVerificationSent</string>
+    <string name="event_display_onemailverificationsent" formatted="false">onSendEmailVerificationComplete</string>
     <string name="event_display_ondeleteusercomplete" formatted="false">onDeleteUserComplete</string>
     <string name="event_display_onupdateemailcomplete" formatted="false">onUpdateEmailComplete</string>
     <string name="event_display_ongooglesignin" formatted="false">onGoogleSignIn</string>
