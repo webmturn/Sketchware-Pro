@@ -19,6 +19,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import pro.sketchware.core.async.BackgroundTasks;
@@ -163,7 +164,7 @@ public class ManageImageActivity extends BaseAppCompatActivity implements ViewPa
             ImageCollectionManager.getInstance().clearCollections();
         }
 
-        private void doWork() {
+        private void doWork() throws IOException {
             var activity = this.activity.get();
             if (activity == null) return;
             activity.projectImagesFragment.saveImages();

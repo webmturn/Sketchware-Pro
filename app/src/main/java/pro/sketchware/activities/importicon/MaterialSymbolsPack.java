@@ -32,7 +32,7 @@ public final class MaterialSymbolsPack {
     private MaterialSymbolsPack(Context context, String style, Map<String, String> icons) {
         this.style = style;
         this.icons = icons;
-        exportRoot = new File(context.getCacheDir(), "icon_import/symbols");
+        exportRoot = new File(context.getFilesDir(), "icon_import/symbols");
     }
 
     public static MaterialSymbolsPack load(Context context, String style) throws IOException {

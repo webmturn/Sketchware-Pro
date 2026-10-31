@@ -49,6 +49,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -162,8 +163,6 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
 
     private void initialize() {
         sc_id = requireActivity().getIntent().getStringExtra("sc_id");
-        svgUtils = new SvgUtils(requireContext());
-        svgUtils.initImageLoader();
         if (sc_id == null || sc_id.isEmpty()) {
             return;
         }
@@ -198,21 +197,22 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
         adapter.notifyDataSetChanged();
     }
 
-    public void saveImages() {
+    public void saveImages() throws IOException {
+        for (ProjectResourceBean image : images) {
+            File source = new File(image.savedPos == 0 ? getImagePath(image) : image.resFullName);
+            if (!source.isFile() || !source.canRead()) {
+                throw new IOException("Image source is unavailable: " + source);
+            }
+        }
         // Backup images before any file writes, so discard can restore pristine state
-        ProjectDataManager.getResourceManager(sc_id).backupImages();
+        ResourceManager resources = ProjectDataManager.getResourceManager(sc_id);
+        resources.backupImages();
 
         Path svgDir = Paths.get(SketchwarePaths.getProjectConvertedVectorsPath(sc_id));
-        try {
-            if (!Files.exists(svgDir)) {
-                Files.createDirectories(svgDir);
-            }
-        } catch (IOException error) {
-            Log.d("pu.java", "Failed to create directory for saving svgs at: " + SketchwarePaths.getProjectResourcePath(sc_id));
-        }
+        Files.createDirectories(svgDir);
         int index = 0;
         for (ProjectResourceBean image : images) {
-            try {
+            if (image.isNew || image.isEdited || image.savedPos != 0) {
                 String sourcePath;
                 if (image.savedPos == 0) {
                     sourcePath = getImagePath(image);
@@ -231,38 +231,51 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
                     Object colorHexValue = colorInfo != null ? colorInfo.get("colorHex") : null;
                     String colorHex = colorHexValue != null ? colorHexValue.toString() : "#FFFFFF";
                     svgUtils.convert(svgPath, projectImagesDirectory, colorHex);
+                } else if (image.resFullName.endsWith(".xml")) {
+                    Path target = Paths.get(imageBasePath + ".xml");
+                    if (!Paths.get(sourcePath).equals(target)) {
+                        Files.copy(Paths.get(sourcePath), target, StandardCopyOption.REPLACE_EXISTING);
+                    }
                 } else {
                     BitmapUtil.processAndSaveBitmap(sourcePath, image.isNinePatch() ? imageBasePath + ".9.png" : imageBasePath + ".png", image.rotate, image.flipHorizontal, image.flipVertical);
                 }
-            } catch (Exception e) {
-                Log.e("ImageListFragment", e.getMessage(), e);
             }
             index++;
         }
+        ArrayList<ProjectResourceBean> savedImages = new ArrayList<>(images.size());
         for (int i = 0; i < images.size(); i++) {
             ProjectResourceBean image = images.get(i);
-            if (image.isNew || image.isEdited) {
+            if (image.isNew || image.isEdited || image.savedPos != 0) {
 
                 // Determine the correct file extension based on image type
                 String fileExtension;
                 if (image.isNinePatch()) {
                     fileExtension = ".9.png";
-                } else if (image.isSvg()) {
+                } else if (image.isSvg() || image.resFullName.endsWith(".xml")) {
                     fileExtension = ".xml";
                 } else {
                     fileExtension = ".png";
                 }
 
                 // Set the new ProjectResourceBean with the correct file extension
-                images.set(i, new ProjectResourceBean(
+                ProjectResourceBean saved = new ProjectResourceBean(
                         ProjectResourceBean.PROJECT_RES_TYPE_FILE,
                         image.resName,
                         image.resName + fileExtension
-                ));
+                );
+                saved.savedPos = 0;
+                savedImages.add(saved);
+            } else {
+                savedImages.add(image);
             }
         }
-        ProjectDataManager.getResourceManager(sc_id).setImages(images);
-        ProjectDataManager.getResourceManager(sc_id).saveToBackup();
+        ArrayList<ProjectResourceBean> previousImages = resources.images;
+        resources.setImages(savedImages);
+        if (!resources.saveToBackup()) {
+            resources.images = previousImages;
+            throw new IOException("Failed to save image resource list");
+        }
+        images = savedImages;
 
         // This method is replaces not exist images to default_image, I removed it because it changes vector images to default_images
         // ProjectDataManager.getProjectDataManager(sc_id).b(ProjectDataManager.getResourceManager(sc_id));
@@ -298,14 +311,18 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        svgUtils = new SvgUtils(requireContext());
         if (savedInstanceState == null) {
             initialize();
         } else {
             sc_id = savedInstanceState.getString("sc_id");
             projectImagesDirectory = savedInstanceState.getString("dir_path");
             images = savedInstanceState.getParcelableArrayList("images");
+            var savedColors = (HashMap<Integer, Map<String, Object>>) savedInstanceState.getSerializable("image_colors");
+            if (savedColors != null) colorMap = savedColors;
         }
         if (images == null) {
             images = new ArrayList<>();
@@ -390,6 +407,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
         outState.putString("sc_id", sc_id);
         outState.putString("dir_path", projectImagesDirectory);
         outState.putParcelableArrayList("images", images);
+        outState.putSerializable("image_colors", new HashMap<>(colorMap));
         super.onSaveInstanceState(outState);
     }
 

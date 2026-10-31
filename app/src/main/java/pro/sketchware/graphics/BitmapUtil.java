@@ -71,11 +71,10 @@ public class BitmapUtil {
     return BitmapFactory.decodeFile(filePath, options);
   }
   
-  public static void processAndSaveBitmap(String sourcePath, String destinationPath, int rotationDegrees, int scaleX, int scaleY) {
+  public static void processAndSaveBitmap(String sourcePath, String destinationPath, int rotationDegrees, int scaleX, int scaleY) throws IOException {
     Bitmap bitmap = decodeSampledBitmap(sourcePath, 512, 512);
     if (bitmap == null) {
-      Log.w("BitmapUtil", "Failed to decode bitmap: " + sourcePath);
-      return;
+      throw new IOException("Failed to decode bitmap: " + sourcePath);
     }
     int rotation = 0;
     try {
@@ -89,11 +88,12 @@ public class BitmapUtil {
     }
     Bitmap result = scaleAndRotateBitmap(rotated, rotationDegrees, scaleX, scaleY);
     try (FileOutputStream fos = new FileOutputStream(new File(destinationPath))) {
-      result.compress(Bitmap.CompressFormat.PNG, 100, fos);
+      if (!result.compress(Bitmap.CompressFormat.PNG, 100, fos)) {
+        throw new IOException("Failed to encode bitmap: " + destinationPath);
+      }
       fos.flush();
+    } finally {
       result.recycle();
-    } catch (Exception e) {
-      Log.w("BitmapUtil", "Failed to save bitmap: " + destinationPath, e);
     }
   }
 }

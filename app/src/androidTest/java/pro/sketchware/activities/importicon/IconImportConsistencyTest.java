@@ -140,7 +140,7 @@ public class IconImportConsistencyTest {
         Path root = Files.createTempDirectory(context().getCacheDir().toPath(), "symbol_export_");
         try {
             MaterialSymbolsPack pack = MaterialSymbolsPack.load(new ContextWrapper(context()) {
-                @Override public File getCacheDir() { return root.toFile(); }
+                @Override public File getFilesDir() { return root.toFile(); }
             }, "sharp");
             assertFalse(Files.exists(root.resolve("icon_import")));
             Path source = pack.exportIcon("database").toPath();
