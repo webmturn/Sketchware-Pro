@@ -5,8 +5,10 @@ plugins {
 
 // Switching Symbols styles keeps the current list, so every style must contain the same names.
 def symbolsPacks = ["outline", "round", "sharp"].collect { file("src/main/assets/icons/material_symbols_${it}.zip") }
+def symbolsVerificationMarker = layout.buildDirectory.file("intermediates/material_symbols/verified.txt")
 def verifyMaterialSymbols = tasks.register("verifyMaterialSymbols") {
     inputs.files(symbolsPacks)
+    outputs.file(symbolsVerificationMarker)
     doLast {
         Set expectedNames = null
         symbolsPacks.each { pack ->
@@ -25,6 +27,9 @@ def verifyMaterialSymbols = tasks.register("verifyMaterialSymbols") {
                 expectedNames = names
             }
         }
+        def marker = symbolsVerificationMarker.get().asFile
+        marker.parentFile.mkdirs()
+        marker.text = "Material Symbols catalogs and metadata verified.\n"
     }
 }
 tasks.named("preBuild").configure { dependsOn(verifyMaterialSymbols) }
