@@ -11,6 +11,36 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="4dp"
         android:layout_marginTop="18dp"
+        android:text="@string/filter_icons_family"
+        android:textAppearance="@style/TextAppearance.Material3.BodySmall" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroupFamily"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="2dp"
+        android:layout_marginTop="4dp"
+        app:selectionRequired="true"
+        app:singleSelection="true">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_material_icons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/filter_icons_material_icons" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_material_symbols"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/filter_icons_material_symbols" />
+    </com.google.android.material.chip.ChipGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="4dp"
+        android:layout_marginTop="18dp"
         android:text="@string/filter_icons_style"
         android:textAppearance="@style/TextAppearance.Material3.BodySmall" />
 

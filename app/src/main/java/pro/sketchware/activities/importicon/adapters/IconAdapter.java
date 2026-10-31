@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.io.File;
 import java.util.List;
 
+import pro.sketchware.activities.importicon.MaterialSymbolsPack;
 import pro.sketchware.databinding.ImportIconListItemBinding;
 import pro.sketchware.graphics.SvgUtils;
 
@@ -36,6 +37,7 @@ public class IconAdapter extends ListAdapter<Pair<String, String>, IconAdapter.V
     private static final Object COLOR_PAYLOAD = new Object();
     private String selected_icon_type;
     private int selected_color;
+    private MaterialSymbolsPack symbolsPack;
 
     public IconAdapter(Context context, String selected_icon_type, int selected_color, OnIconSelectedListener listener) {
         super(DIFF_CALLBACK);
@@ -49,6 +51,10 @@ public class IconAdapter extends ListAdapter<Pair<String, String>, IconAdapter.V
         if (this.selected_icon_type.equals(selected_icon_type)) return;
         this.selected_icon_type = selected_icon_type;
         notifyItemRangeChanged(0, getItemCount());
+    }
+
+    public void setSymbolsPack(MaterialSymbolsPack symbolsPack) {
+        this.symbolsPack = symbolsPack;
     }
 
     public void setSelectedColor(int selected_color) {
@@ -69,7 +75,12 @@ public class IconAdapter extends ListAdapter<Pair<String, String>, IconAdapter.V
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String filePath = getItem(position).second + File.separator + selected_icon_type + ".svg";
-        svgUtils.loadImage(holder.itemBinding.img, filePath);
+        if (symbolsPack == null) {
+            svgUtils.loadImage(holder.itemBinding.img, filePath);
+        } else {
+            String name = getItem(position).first;
+            svgUtils.loadImage(holder.itemBinding.img, symbolsPack.getSvg(name), symbolsPack.getCacheKey(name));
+        }
         holder.itemBinding.img.setColorFilter(selected_color, PorterDuff.Mode.SRC_IN);
         holder.itemBinding.title.setText(getItem(position).first);
     }

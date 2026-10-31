@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.Menu;
@@ -27,8 +26,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import pro.sketchware.activities.base.BaseAppCompatActivity;
-import pro.sketchware.widgets.ColorPickerDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
@@ -43,27 +40,30 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import pro.sketchware.util.io.ZipUtil;
+import pro.sketchware.R;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
+import pro.sketchware.activities.importicon.adapters.IconAdapter;
 import pro.sketchware.core.async.BackgroundTasks;
-import pro.sketchware.core.validation.ResourceNameValidator;
-import pro.sketchware.util.SketchToast;
 import pro.sketchware.core.async.TaskHost;
-import pro.sketchware.util.UIHelper;
-import pro.sketchware.util.io.EncryptedFileUtil;
 import pro.sketchware.core.project.BlockConstants;
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.util.Helper;
-import pro.sketchware.R;
-import pro.sketchware.activities.importicon.adapters.IconAdapter;
 import pro.sketchware.core.resources.ColorResourceResolver;
+import pro.sketchware.core.validation.ResourceNameValidator;
 import pro.sketchware.databinding.DialogFilterIconsLayoutBinding;
 import pro.sketchware.databinding.DialogSaveIconBinding;
 import pro.sketchware.databinding.ImportIconBinding;
-import pro.sketchware.util.PropertiesUtil;
 import pro.sketchware.graphics.SvgUtils;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.PropertiesUtil;
+import pro.sketchware.util.SketchToast;
+import pro.sketchware.util.UIHelper;
+import pro.sketchware.util.io.ZipUtil;
+import pro.sketchware.widgets.ColorPickerDialog;
 
 public class ImportIconActivity extends BaseAppCompatActivity implements IconAdapter.OnIconSelectedListener {
 
+    private static final String ICON_FAMILY_MATERIAL = "svg";
+    private static final String ICON_FAMILY_SYMBOLS = "symbols";
     private static final String ICON_TYPE_OUTLINE = "outline";
     private static final String ICON_TYPE_SHARP = "sharp";
     private static final String ICON_TYPE_TWO_TONE = "twotone";
@@ -90,6 +90,8 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
     private IconAdapter adapter = null;
     private ArrayList<String> alreadyAddedImageNames;
     private SvgUtils svgUtils;
+    private MaterialSymbolsPack symbolsPack;
+    private String selected_icon_family = ICON_FAMILY_MATERIAL;
     private String selected_icon_type = ICON_TYPE_ROUND;
     private int selected_color = Color.parseColor("#9E9E9E");
     private String selected_color_hex = "#9E9E9E";
@@ -106,7 +108,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
     }
 
     private boolean doExtractedIconsExist() {
-        return new EncryptedFileUtil().exists(SketchwarePaths.getExtractedIconPackStoreLocation());
+        return new File(SketchwarePaths.getExtractedIconPackStoreLocation(), ICON_FAMILY_MATERIAL).isDirectory();
     }
 
     private void extractIcons() {
@@ -144,6 +146,12 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
 
         sc_id = getIntent().getStringExtra("sc_id");
         alreadyAddedImageNames = getIntent().getStringArrayListExtra("imageNames");
+
+        var preferences = getSharedPreferences("icon_pack", MODE_PRIVATE);
+        selected_icon_family = preferences.getString("selected_family", ICON_FAMILY_MATERIAL);
+        selected_icon_type = preferences.getString("selected_style", ICON_TYPE_ROUND);
+        BackgroundTasks.runIoIfAlive(TaskHost.of(this), "ImportIconActivity$LegacySymbolsCleanup",
+                MaterialSymbolsPack::removeLegacyFiles, null, null);
 
         binding.imageList.setLayoutManager(new GridLayoutManager(getBaseContext(), getGridLayoutColumnCount()));
         adapter = new IconAdapter(this, selected_icon_type, selected_color, this);
@@ -184,7 +192,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         getMenuInflater().inflate(R.menu.menu_import_icon, menu);
         search = menu.findItem(R.id.menu_find);
         searchView = (SearchView) search.getActionView();
-        searchView.setQueryHint("Search");
+        searchView.setQueryHint(getString(R.string.common_word_search));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -210,29 +218,25 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         return super.onOptionsItemSelected(item);
     }
 
-    private void setIconColor() {
-        new IconColorChangedIconLoader(this).execute();
+    private void reloadIcons() {
+        new IconLoader(this).execute();
     }
 
-    private void listIcons() {
+    private List<Pair<String, String>> loadIconPaths(String family) throws IOException {
         List<Pair<String, String>> loadedIcons = new ArrayList<>();
-
-        String iconPackStoreLocation = SketchwarePaths.getExtractedIconPackStoreLocation() + File.separator + "svg/";
+        String iconPackStoreLocation = SketchwarePaths.getExtractedIconPackStoreLocation() + File.separator + family;
         try (Stream<Path> iconFiles = Files.list(Paths.get(iconPackStoreLocation))) {
-            iconFiles.map(Path::getFileName)
+            iconFiles.filter(Files::isDirectory)
+                    .map(Path::getFileName)
                     .map(Path::toString)
+                    .sorted()
                     .forEach(folderName -> loadedIcons.add(new Pair<>(
                             folderName,
                             Paths.get(iconPackStoreLocation, folderName).toString()
                     )));
-        } catch (IOException e) {
-            Log.e("ImportIconActivity", e.getMessage(), e);
         }
 
-        TaskHost.of(this).postToUi(() -> {
-            allIconPaths = loadedIcons;
-            filterIcons(currentQuery);
-        });
+        return loadedIcons;
     }
 
     private void loadMoreItems() {
@@ -335,27 +339,24 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
             case ICON_TYPE_TWO_TONE -> dialogBinding.chipGroupStyle.check(R.id.chip_twotone);
             case ICON_TYPE_ROUND -> dialogBinding.chipGroupStyle.check(R.id.chip_round);
         }
+        dialogBinding.chipGroupFamily.check(ICON_FAMILY_SYMBOLS.equals(selected_icon_family)
+                ? R.id.chip_material_symbols : R.id.chip_material_icons);
+        updateFilterStyles(dialogBinding);
+        dialogBinding.chipGroupFamily.setOnCheckedStateChangeListener((group, checkedIds) -> updateFilterStyles(dialogBinding));
 
         dialog.setOnShowListener(dialogInterface -> {
 
             Button positiveButton = ((AlertDialog) dialogInterface).getButton(DialogInterface.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(view -> {
-                int checkedChipId = dialogBinding.chipGroupStyle.getCheckedChipId();
-                if (checkedChipId == R.id.chip_outline && !selected_icon_type.equals(ICON_TYPE_OUTLINE)) {
-                    updateIcons(ICON_TYPE_OUTLINE);
-                }
-                if (checkedChipId == R.id.chip_twotone && !selected_icon_type.equals(ICON_TYPE_TWO_TONE)) {
-                    updateIcons(ICON_TYPE_TWO_TONE);
-                }
-                if (checkedChipId == R.id.chip_baseline && !selected_icon_type.equals(ICON_TYPE_BASELINE)) {
-                    updateIcons(ICON_TYPE_BASELINE);
-                }
-                if (checkedChipId == R.id.chip_sharp && !selected_icon_type.equals(ICON_TYPE_SHARP)) {
-                    updateIcons(ICON_TYPE_SHARP);
-                }
-                if (checkedChipId == R.id.chip_round && !selected_icon_type.equals(ICON_TYPE_ROUND)) {
-                    updateIcons(ICON_TYPE_ROUND);
-                }
+                String family = dialogBinding.chipGroupFamily.getCheckedChipId() == R.id.chip_material_symbols
+                        ? ICON_FAMILY_SYMBOLS : ICON_FAMILY_MATERIAL;
+                int style = dialogBinding.chipGroupStyle.getCheckedChipId();
+                String type = ICON_TYPE_ROUND;
+                if (style == R.id.chip_outline) type = ICON_TYPE_OUTLINE;
+                else if (style == R.id.chip_twotone) type = ICON_TYPE_TWO_TONE;
+                else if (style == R.id.chip_baseline) type = ICON_TYPE_BASELINE;
+                else if (style == R.id.chip_sharp) type = ICON_TYPE_SHARP;
+                applyIconFilter(family, type);
                 dialogInterface.dismiss();
 
             });
@@ -365,9 +366,31 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
 
     }
 
+    private void updateFilterStyles(DialogFilterIconsLayoutBinding dialogBinding) {
+        boolean symbols = dialogBinding.chipGroupFamily.getCheckedChipId() == R.id.chip_material_symbols;
+        dialogBinding.chipBaseline.setVisibility(symbols ? View.GONE : View.VISIBLE);
+        dialogBinding.chipTwotone.setVisibility(symbols ? View.GONE : View.VISIBLE);
+        int style = dialogBinding.chipGroupStyle.getCheckedChipId();
+        if (symbols && (style == R.id.chip_baseline || style == R.id.chip_twotone)) {
+            dialogBinding.chipGroupStyle.check(R.id.chip_outline);
+        }
+    }
+
+    private void applyIconFilter(String family, String type) {
+        boolean familyChanged = !selected_icon_family.equals(family);
+        boolean symbolsStyleChanged = ICON_FAMILY_SYMBOLS.equals(family) && !type.equals(selected_icon_type);
+        if (familyChanged || symbolsStyleChanged) {
+            new IconLoader(this, family, type, familyChanged).execute();
+        } else {
+            updateIcons(type);
+        }
+    }
+
     private void updateIcons(String type) {
         selected_icon_type = type;
         adapter.setSelectedIconType(selected_icon_type);
+        getSharedPreferences("icon_pack", MODE_PRIVATE).edit()
+                .putString("selected_family", selected_icon_family).putString("selected_style", type).apply();
     }
 
     private void showSaveDialog(Pair<String, String> icon) {
@@ -375,6 +398,7 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         int color = selected_color;
         String colorHex = selected_color_hex;
         String iconPath = icon.second + File.separator + type + ".svg";
+        MaterialSymbolsPack selectedSymbols = symbolsPack;
         String iconName = "icon_" + icon.first + "_" + type;
         DialogSaveIconBinding dialogBinding = DialogSaveIconBinding.inflate(getLayoutInflater());
         ResourceNameValidator iconNameValidator = new ResourceNameValidator(getApplicationContext(), dialogBinding.textInputLayout,
@@ -392,13 +416,21 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
             positiveButton.setOnClickListener(view -> {
                 if (iconNameValidator.isValid()) {
                     File source = new File(iconPath);
+                    if (selectedSymbols != null) {
+                        try {
+                            source = selectedSymbols.exportIcon(icon.first);
+                        } catch (IOException e) {
+                            dialogBinding.sourceError.setVisibility(View.VISIBLE);
+                            return;
+                        }
+                    }
                     if (!source.isFile() || !source.canRead() || source.length() == 0) {
                         dialogBinding.sourceError.setVisibility(View.VISIBLE);
                         return;
                     }
                     Intent intent = new Intent();
                     intent.putExtra("iconName", Helper.getText(dialogBinding.inputText));
-                    intent.putExtra("iconPath", iconPath);
+                    intent.putExtra("iconPath", source.getAbsolutePath());
 
                     intent.putExtra("iconColor", color);
                     intent.putExtra("iconColorHex", colorHex);
@@ -411,7 +443,11 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
             });
         });
 
-        svgUtils.loadImage(dialogBinding.icon, iconPath);
+        if (selectedSymbols == null) {
+            svgUtils.loadImage(dialogBinding.icon, iconPath);
+        } else {
+            svgUtils.loadImage(dialogBinding.icon, selectedSymbols.getSvg(icon.first), selectedSymbols.getCacheKey(icon.first));
+        }
         dialogBinding.icon.setColorFilter(color, PorterDuff.Mode.SRC_IN);
         dialogBinding.licenceInfo.setOnClickListener(v -> {
             Uri webpage = Uri.parse("https://www.apache.org/licenses/LICENSE-2.0.txt");
@@ -451,13 +487,13 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
             var activity = this.activity.get();
             if (activity == null) return;
             activity.dismissLoadingDialog();
-            activity.setIconColor();
+            activity.reloadIcons();
         }
 
         private void doWork() {
             var activity = this.activity.get();
             if (activity == null) return;
-            if (!activity.doExtractedIconsExist()) {
+            if (ICON_FAMILY_MATERIAL.equals(activity.selected_icon_family) && !activity.doExtractedIconsExist()) {
                 activity.extractIcons();
             }
         }
@@ -479,31 +515,62 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
 
     }
 
-    private static class IconColorChangedIconLoader {
+    private static class IconLoader {
         private final WeakReference<ImportIconActivity> activity;
+        private final String family;
+        private final String type;
+        private final boolean reloadCatalog;
+        private List<Pair<String, String>> loadedIcons;
+        private MaterialSymbolsPack loadedSymbols;
 
-        public IconColorChangedIconLoader(ImportIconActivity activity) {
+        public IconLoader(ImportIconActivity activity) {
+            this(activity, activity.selected_icon_family, activity.selected_icon_type, true);
+        }
+
+        public IconLoader(ImportIconActivity activity, String family, String type, boolean reloadCatalog) {
             this.activity = new WeakReference<>(activity);
+            this.family = family;
+            this.type = type;
+            this.reloadCatalog = reloadCatalog;
         }
 
         public void execute() {
             var activity = this.activity.get();
             if (activity == null) return;
             activity.showLoadingDialog();
-            BackgroundTasks.runSerialIfAlive(TaskHost.of(activity), "ImportIconActivity$IconColorChangedIconLoader",
+            BackgroundTasks.runSerialIfAlive(TaskHost.of(activity), "ImportIconActivity$IconLoader",
                     this::doWork, this::onSuccess, this::onError);
         }
 
         private void onSuccess() {
             var activity = this.activity.get();
             if (activity == null) return;
+            if (!family.equals(activity.selected_icon_family)) {
+                activity.adapter.submitList(null);
+            }
+            activity.selected_icon_family = family;
+            activity.symbolsPack = loadedSymbols;
+            activity.adapter.setSymbolsPack(loadedSymbols);
+            activity.updateIcons(type);
+            if (reloadCatalog) {
+                activity.allIconPaths = loadedIcons;
+                activity.filterIcons(activity.currentQuery);
+            }
             activity.dismissLoadingDialog();
         }
 
-        private void doWork() {
+        private void doWork() throws IOException {
             var activity = this.activity.get();
             if (activity == null) return;
-            activity.listIcons();
+            if (ICON_FAMILY_SYMBOLS.equals(family)) {
+                loadedSymbols = MaterialSymbolsPack.load(activity, type);
+            } else if (ICON_FAMILY_MATERIAL.equals(family) && !activity.doExtractedIconsExist()) {
+                activity.extractIcons();
+            }
+            if (reloadCatalog) {
+                // The build verifies that all three bundled styles have the same icon names.
+                loadedIcons = loadedSymbols != null ? loadedSymbols.getIconPaths() : activity.loadIconPaths(family);
+            }
         }
 
         private void onError(Throwable error) {

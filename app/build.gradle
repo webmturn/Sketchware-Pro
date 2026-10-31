@@ -3,6 +3,32 @@ plugins {
     id "org.jetbrains.kotlin.android"
 }
 
+// Switching Symbols styles keeps the current list, so every style must contain the same names.
+def symbolsPacks = ["outline", "round", "sharp"].collect { file("src/main/assets/icons/material_symbols_${it}.zip") }
+def verifyMaterialSymbols = tasks.register("verifyMaterialSymbols") {
+    inputs.files(symbolsPacks)
+    doLast {
+        Set expectedNames = null
+        symbolsPacks.each { pack ->
+            new java.util.zip.ZipFile(pack).withCloseable { zip ->
+                def catalogEntry = zip.getEntry("symbols.json")
+                if (catalogEntry == null || zip.getEntry("LICENSE") == null || zip.getEntry("SOURCES.json") == null) {
+                    throw new GradleException("Missing catalog or source/license metadata in ${pack.name}")
+                }
+                def catalog = zip.getInputStream(catalogEntry).withCloseable {
+                    new groovy.json.JsonSlurper().parse(it, "UTF-8")
+                }
+                Set names = catalog.keySet()
+                if (names.isEmpty() || (expectedNames != null && names != expectedNames)) {
+                    throw new GradleException("Material Symbols styles must contain the same non-empty icon names: ${pack.name}")
+                }
+                expectedNames = names
+            }
+        }
+    }
+}
+tasks.named("preBuild").configure { dependsOn(verifyMaterialSymbols) }
+
 android {
     compileSdk = 36
 

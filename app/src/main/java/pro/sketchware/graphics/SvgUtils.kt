@@ -16,6 +16,7 @@ import org.xmlpull.v1.XmlSerializer
 import java.io.File
 import java.io.StringReader
 import java.io.StringWriter
+import java.nio.ByteBuffer
 import java.nio.file.Files
 import java.nio.file.Paths
 import kotlin.math.roundToInt
@@ -56,6 +57,14 @@ class SvgUtils(private val context: Context) {
 
             imageLoader!!.enqueue(request)
         }
+    }
+
+    fun loadImage(imageView: ImageView, svg: ByteArray, cacheKey: String) {
+        imageLoader!!.enqueue(ImageRequest.Builder(context)
+            .data(ByteBuffer.wrap(svg))
+            .memoryCacheKey(cacheKey)
+            .target(imageView)
+            .build())
     }
 
     fun loadImage(imageView: ImageView, filePath: String, width: Int, height: Int) {

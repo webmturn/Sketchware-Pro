@@ -3695,6 +3695,9 @@ Please try again later"</string>
     <string name="filter_icons_selected_color">Selected color</string>
     <string name="filter_icons_sharp">Sharp</string>
     <string name="filter_icons_style">Style</string>
+    <string name="filter_icons_family">Icon set</string>
+    <string name="filter_icons_material_icons" translatable="false">Material Icons</string>
+    <string name="filter_icons_material_symbols" translatable="false">Material Symbols</string>
     <string name="filter_icons_two_tone">Two Tone</string>
     <string name="icon_creator_adaptive_icon">Adaptive Icon</string>
     <string name="icon_creator_badge">badge</string>
