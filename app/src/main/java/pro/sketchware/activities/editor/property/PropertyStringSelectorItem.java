@@ -2,7 +2,6 @@ package pro.sketchware.activities.editor.property;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -166,7 +165,6 @@ public class PropertyStringSelectorItem extends RelativeLayout implements View.O
 
     private RadioButton getOption(String optionText) {
         RadioButton radioButton = new RadioButton(getContext());
-        radioButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12.0f);
         radioButton.setText(PropertyDisplayNames.get(getContext(), key, optionText));
         radioButton.setTag(optionText);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
