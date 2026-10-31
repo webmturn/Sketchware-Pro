@@ -52,9 +52,15 @@ public class ImageSaveConsistencyTest {
     @Test public void missingSourceStopsBeforeWritesAndKeepsTheResourceList() throws Exception {
         try (Fixture fixture = new Fixture()) {
             fixture.add("valid", fixture.svg("valid"));
-            ProjectResourceBean missing = fixture.add("missing", fixture.root.resolve("missing.svg"));
+            ProjectResourceBean missing = fixture.add("missing_icon", fixture.root.resolve("missing.svg"));
             ArrayList<ProjectResourceBean> original = fixture.resources.images;
-            expectFailure(fixture.fragment);
+            try {
+                fixture.fragment.saveImages();
+                fail("Image save must report the missing source");
+            } catch (IOException expected) {
+                assertTrue(expected.getMessage().contains(missing.resName));
+                assertTrue(expected.getMessage().contains(missing.resFullName));
+            }
             assertSame(original, fixture.resources.images);
             assertTrue(original.isEmpty());
             assertTrue(missing.resFullName.endsWith("missing.svg"));

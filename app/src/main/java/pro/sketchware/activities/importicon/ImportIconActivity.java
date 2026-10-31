@@ -158,9 +158,11 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         boolean supportedStyle = ICON_TYPE_OUTLINE.equals(selected_icon_type)
                 || ICON_TYPE_ROUND.equals(selected_icon_type) || ICON_TYPE_SHARP.equals(selected_icon_type)
                 || (material && (ICON_TYPE_BASELINE.equals(selected_icon_type) || ICON_TYPE_TWO_TONE.equals(selected_icon_type)));
-        if ((!material && !symbols) || !supportedStyle) {
+        if (!material && !symbols) {
             selected_icon_family = ICON_FAMILY_MATERIAL;
             selected_icon_type = ICON_TYPE_ROUND;
+        } else if (!supportedStyle) {
+            selected_icon_type = symbols ? ICON_TYPE_OUTLINE : ICON_TYPE_ROUND;
         }
         BackgroundTasks.runIoIfAlive(TaskHost.of(this), "ImportIconActivity$LegacySymbolsCleanup",
                 MaterialSymbolsPack::removeLegacyFiles, null, null);

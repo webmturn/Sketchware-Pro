@@ -201,7 +201,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
         for (ProjectResourceBean image : images) {
             File source = new File(image.savedPos == 0 ? getImagePath(image) : image.resFullName);
             if (!source.isFile() || !source.canRead()) {
-                throw new IOException("Image source is unavailable: " + source);
+                throw new IOException("Image source is unavailable: " + image.resName + " (" + source + ")");
             }
         }
         // Backup images before any file writes, so discard can restore pristine state
@@ -272,6 +272,7 @@ public class ImageListFragment extends BaseFragment implements MenuProvider {
         ArrayList<ProjectResourceBean> previousImages = resources.images;
         resources.setImages(savedImages);
         if (!resources.saveToBackup()) {
+            // setImages() only backs up and assigns; restore the old reference without another backup.
             resources.images = previousImages;
             throw new IOException("Failed to save image resource list");
         }

@@ -605,14 +605,20 @@ public class IconImportConsistencyTest {
         }
     }
 
-    @Test public void invalidSavedSelectionFallsBackToMaterialIcons() throws Exception {
+    @Test public void invalidSavedSelectionKeepsSupportedFamilies() throws Exception {
         try (Fixture fixture = new Fixture()) {
-            for (Pair<String, String> selection : List.of(Pair.create("symbols", "baseline"), Pair.create("unknown", "round"), Pair.create("svg", "unknown"))) {
+            String[][] selections = {
+                    {"symbols", "baseline", "symbols", "outline"},
+                    {"symbols", "unknown", "symbols", "outline"},
+                    {"unknown", "round", "svg", "round"},
+                    {"svg", "unknown", "svg", "round"}
+            };
+            for (String[] selection : selections) {
                 context().getSharedPreferences("icon_pack", Context.MODE_PRIVATE).edit()
-                        .putString("selected_family", selection.first).putString("selected_style", selection.second).commit();
+                        .putString("selected_family", selection[0]).putString("selected_style", selection[1]).commit();
                 fixture.scenario.recreate();
                 fixture.on(activity -> fixture.activity = activity);
-                awaitFilter(fixture, "svg", "round");
+                awaitFilter(fixture, selection[2], selection[3]);
                 fixture.awaitCount(40);
             }
         }
