@@ -180,6 +180,20 @@ public class IconImportConsistencyTest {
             fixture.awaitCount(0);
             changeFilter(fixture, "symbols", "outline");
             fixture.awaitCount(1);
+            MaterialSymbolsPack replacement = MaterialSymbolsPack.load(context(), "outline");
+            AtomicInteger changes = new AtomicInteger();
+            RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
+                @Override public void onItemRangeChanged(int start, int count, Object payload) { changes.addAndGet(count); }
+            };
+            fixture.on(activity -> {
+                fixture.adapter().registerAdapterDataObserver(observer);
+                try {
+                    fixture.adapter().setSource(replacement, "outline");
+                    assertTrue("Changing only the source must rebind existing icons", changes.get() > 0);
+                } finally {
+                    fixture.adapter().unregisterAdapterDataObserver(observer);
+                }
+            });
             await(() -> {
                 AtomicReference<Boolean> ready = new AtomicReference<>(false);
                 fixture.on(activity -> {
@@ -583,11 +597,24 @@ public class IconImportConsistencyTest {
             fixture.on(activity -> {
                 assertTrue("A changed SVG path must rebind its row", changes.get() > 0);
                 fixture.adapter().setSelectedColor(0xff123456);
-                fixture.adapter().setSelectedIconType("outline");
+                fixture.adapter().setSource(null, "outline");
                 assertTrue("Color changes should use a content payload", colorPayloads.get() > 0);
                 assertEquals(0, fullRefreshes.get());
                 fixture.adapter().unregisterAdapterDataObserver(observer);
             });
+        }
+    }
+
+    @Test public void invalidSavedSelectionFallsBackToMaterialIcons() throws Exception {
+        try (Fixture fixture = new Fixture()) {
+            for (Pair<String, String> selection : List.of(Pair.create("symbols", "baseline"), Pair.create("unknown", "round"), Pair.create("svg", "unknown"))) {
+                context().getSharedPreferences("icon_pack", Context.MODE_PRIVATE).edit()
+                        .putString("selected_family", selection.first).putString("selected_style", selection.second).commit();
+                fixture.scenario.recreate();
+                fixture.on(activity -> fixture.activity = activity);
+                awaitFilter(fixture, "svg", "round");
+                fixture.awaitCount(40);
+            }
         }
     }
 

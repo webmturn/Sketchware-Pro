@@ -62,6 +62,9 @@ import pro.sketchware.widgets.ColorPickerDialog;
 
 public class ImportIconActivity extends BaseAppCompatActivity implements IconAdapter.OnIconSelectedListener {
 
+    private static final String PREFS_ICON_PACK = "icon_pack";
+    private static final String KEY_SELECTED_FAMILY = "selected_family";
+    private static final String KEY_SELECTED_STYLE = "selected_style";
     private static final String ICON_FAMILY_MATERIAL = "svg";
     private static final String ICON_FAMILY_SYMBOLS = "symbols";
     private static final String ICON_TYPE_OUTLINE = "outline";
@@ -147,9 +150,18 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         sc_id = getIntent().getStringExtra("sc_id");
         alreadyAddedImageNames = getIntent().getStringArrayListExtra("imageNames");
 
-        var preferences = getSharedPreferences("icon_pack", MODE_PRIVATE);
-        selected_icon_family = preferences.getString("selected_family", ICON_FAMILY_MATERIAL);
-        selected_icon_type = preferences.getString("selected_style", ICON_TYPE_ROUND);
+        var preferences = getSharedPreferences(PREFS_ICON_PACK, MODE_PRIVATE);
+        selected_icon_family = preferences.getString(KEY_SELECTED_FAMILY, ICON_FAMILY_MATERIAL);
+        selected_icon_type = preferences.getString(KEY_SELECTED_STYLE, ICON_TYPE_ROUND);
+        boolean material = ICON_FAMILY_MATERIAL.equals(selected_icon_family);
+        boolean symbols = ICON_FAMILY_SYMBOLS.equals(selected_icon_family);
+        boolean supportedStyle = ICON_TYPE_OUTLINE.equals(selected_icon_type)
+                || ICON_TYPE_ROUND.equals(selected_icon_type) || ICON_TYPE_SHARP.equals(selected_icon_type)
+                || (material && (ICON_TYPE_BASELINE.equals(selected_icon_type) || ICON_TYPE_TWO_TONE.equals(selected_icon_type)));
+        if ((!material && !symbols) || !supportedStyle) {
+            selected_icon_family = ICON_FAMILY_MATERIAL;
+            selected_icon_type = ICON_TYPE_ROUND;
+        }
         BackgroundTasks.runIoIfAlive(TaskHost.of(this), "ImportIconActivity$LegacySymbolsCleanup",
                 MaterialSymbolsPack::removeLegacyFiles, null, null);
 
@@ -388,9 +400,9 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
 
     private void updateIcons(String type) {
         selected_icon_type = type;
-        adapter.setSelectedIconType(selected_icon_type);
-        getSharedPreferences("icon_pack", MODE_PRIVATE).edit()
-                .putString("selected_family", selected_icon_family).putString("selected_style", type).apply();
+        adapter.setSource(symbolsPack, selected_icon_type);
+        getSharedPreferences(PREFS_ICON_PACK, MODE_PRIVATE).edit()
+                .putString(KEY_SELECTED_FAMILY, selected_icon_family).putString(KEY_SELECTED_STYLE, type).apply();
     }
 
     private void showSaveDialog(Pair<String, String> icon) {
@@ -486,7 +498,6 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
         private void onSuccess() {
             var activity = this.activity.get();
             if (activity == null) return;
-            activity.dismissLoadingDialog();
             activity.reloadIcons();
         }
 
@@ -550,7 +561,6 @@ public class ImportIconActivity extends BaseAppCompatActivity implements IconAda
             }
             activity.selected_icon_family = family;
             activity.symbolsPack = loadedSymbols;
-            activity.adapter.setSymbolsPack(loadedSymbols);
             activity.updateIcons(type);
             if (reloadCatalog) {
                 activity.allIconPaths = loadedIcons;

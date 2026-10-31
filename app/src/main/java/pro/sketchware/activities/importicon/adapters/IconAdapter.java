@@ -47,14 +47,11 @@ public class IconAdapter extends ListAdapter<Pair<String, String>, IconAdapter.V
         this.listener = listener;
     }
 
-    public void setSelectedIconType(String selected_icon_type) {
-        if (this.selected_icon_type.equals(selected_icon_type)) return;
+    public void setSource(MaterialSymbolsPack symbolsPack, String selected_icon_type) {
+        if (this.symbolsPack == symbolsPack && this.selected_icon_type.equals(selected_icon_type)) return;
+        this.symbolsPack = symbolsPack;
         this.selected_icon_type = selected_icon_type;
         notifyItemRangeChanged(0, getItemCount());
-    }
-
-    public void setSymbolsPack(MaterialSymbolsPack symbolsPack) {
-        this.symbolsPack = symbolsPack;
     }
 
     public void setSelectedColor(int selected_color) {
