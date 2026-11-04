@@ -1113,6 +1113,8 @@
     <string name="root_spec_on_delete_success_tail" />
     <string name="root_spec_on_destroy_head">On activity destroyed</string>
     <string name="root_spec_on_destroy_tail" />
+    <string name="root_spec_on_download_progress_head">onDownloadProgress</string>
+    <string name="root_spec_on_download_progress_tail" />
     <string name="root_spec_on_download_success_head">onDownloadSuccess</string>
     <string name="root_spec_on_download_success_tail" />
     <string name="root_spec_on_error_response_head">onErrorResponse</string>

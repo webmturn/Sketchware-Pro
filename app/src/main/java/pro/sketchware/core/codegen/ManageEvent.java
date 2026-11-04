@@ -960,7 +960,7 @@ public class ManageEvent {
             case "onRatingChanged" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %d.value";
             case "onPatternLockProgress", "onPatternLockComplete" ->
                     Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %m.listStr.pattern";
-            case "onOptionsItemSelected" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " %d.id %s.title";
+            case "onOptionsItemSelected" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + Helper.getResString(R.string.event_onoptionsitemselected) + " %d.id %s.title";
             case "onTabSelected", "onTabUnselected", "onTabReselected", "onPageSelected" ->
                     targetId + ": " + BuiltinEventLocalization.getName(eventName) + " %d.position";
             case "onLetterSelected" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %s.index";

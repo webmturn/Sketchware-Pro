@@ -109,7 +109,7 @@
     <string name="block_fileutil_write_body_1">到文件路径</string>
     <string name="block_fileutil_write_head">写入字符串</string>
     <string name="block_finish_activity_head">结束</string>
-    <string name="block_finish_activity_tail">Activity</string>
+    <string name="block_finish_activity_tail">活动</string>
     <string name="block_firebase_add_body_1">添加键</string>
     <string name="block_firebase_add_body_2">值</string>
     <string name="block_firebase_delete_body_1">删除键</string>
@@ -185,13 +185,13 @@
     <string name="block_insert_map_to_list_body_1">位置</string>
     <string name="block_insert_map_to_list_body_2">到</string>
     <string name="block_insert_map_to_list_head">插入</string>
-    <string name="block_intent_get_string_head">获取 Activity 附加数据，键</string>
+    <string name="block_intent_get_string_head">获取活动附加数据，键</string>
     <string name="block_intent_put_extra_body_1">设置附加数据，键</string>
     <string name="block_intent_put_extra_body_2">值</string>
     <string name="block_intent_set_action_body_1">设置动作</string>
     <string name="block_intent_set_data_body_1">设置数据</string>
     <string name="block_intent_set_flags_body_1">设置标志</string>
-    <string name="block_intent_set_screen_body_1">设置目标 Activity</string>
+    <string name="block_intent_set_screen_body_1">设置目标活动</string>
     <string name="block_interstitialad_create_tail">创建</string>
     <string name="block_interstitialad_load_ad_tail">加载</string>
     <string name="block_interstitialad_show_tail">显示</string>
@@ -410,7 +410,7 @@
     <string name="block_set_text_body_1">设置文本</string>
     <string name="block_set_text_color_body_1">设置文本颜色</string>
     <string name="block_set_thumb_resource_body_1">设置滑块资源</string>
-    <string name="block_set_title_head">设置 Activity 标题</string>
+    <string name="block_set_title_head">设置活动标题</string>
     <string name="block_set_track_resource_body_1">设置轨道资源</string>
     <string name="block_set_translation_x_body_1">设置 X 轴平移量</string>
     <string name="block_set_translation_y_body_1">设置 Y 轴平移量</string>
@@ -441,7 +441,7 @@
     <string name="block_spn_refresh_tail">刷新数据</string>
     <string name="block_spn_set_data_body_1">设置下拉列表数据</string>
     <string name="block_spn_set_selection_body_1">设置选中项位置</string>
-    <string name="block_start_activity_head">启动 Activity</string>
+    <string name="block_start_activity_head">启动活动</string>
     <string name="block_str_to_list_map_body_1">到</string>
     <string name="block_str_to_list_map_head">JSON</string>
     <string name="block_str_to_map_body_1">到</string>
@@ -505,7 +505,7 @@
     <string name="block_webview_zoom_out_tail">缩小</string>
     <string name="root_spec_common_define">定义</string>
     <string name="root_spec_common_when">当</string>
-    <string name="root_spec_initialize_head">Activity 创建时</string>
+    <string name="root_spec_initialize_head">活动创建时</string>
     <string name="root_spec_on_ad_closed_head">广告关闭时</string>
     <string name="root_spec_on_ad_failed_to_load_head">广告加载失败时</string>
     <string name="root_spec_on_ad_loaded_head">广告加载完成时</string>
@@ -513,54 +513,55 @@
     <string name="root_spec_on_animation_cancel_head">动画取消时</string>
     <string name="root_spec_on_animation_end_head">动画结束时</string>
     <string name="root_spec_on_animation_start_head">动画开始时</string>
-    <string name="root_spec_on_back_pressed_head">按下返回键时</string>
+    <string name="root_spec_on_back_pressed_head">触发返回操作时</string>
     <string name="root_spec_on_bind_custom_view_head">绑定自定义视图时</string>
-    <string name="root_spec_on_cancelled_head">取消时</string>
-    <string name="root_spec_on_check_changed_head">选中状态改变</string>
-    <string name="root_spec_on_child_added_head">添加子项时</string>
-    <string name="root_spec_on_child_changed_head">子项改变时</string>
-    <string name="root_spec_on_child_removed_head">移除子项时</string>
-    <string name="root_spec_on_clicked_head">被点击</string>
+    <string name="root_spec_on_cancelled_head">数据监听失败时</string>
+    <string name="root_spec_on_check_changed_head">选中状态变化时</string>
+    <string name="root_spec_on_child_added_head">子项添加时</string>
+    <string name="root_spec_on_child_changed_head">子项数据变化时</string>
+    <string name="root_spec_on_child_removed_head">子项移除时</string>
+    <string name="root_spec_on_clicked_head">被点击时</string>
     <string name="root_spec_on_connected_head">连接成功时</string>
     <string name="root_spec_on_connection_error_head">连接出错时</string>
     <string name="root_spec_on_connection_stopped_head">连接停止时</string>
     <string name="root_spec_on_create_user_complete_head">创建用户完成时</string>
     <string name="root_spec_on_data_received_head">收到数据时</string>
     <string name="root_spec_on_data_sent_head">数据发送完成时</string>
-    <string name="root_spec_on_date_change_head">日期改变时</string>
+    <string name="root_spec_on_date_change_head">日期变化时</string>
     <string name="root_spec_on_delete_success_head">删除成功时</string>
-    <string name="root_spec_on_destroy_head">Activity 销毁时</string>
+    <string name="root_spec_on_destroy_head">活动销毁时</string>
+    <string name="root_spec_on_download_progress_head">下载进度更新时</string>
     <string name="root_spec_on_download_success_head">下载成功时</string>
     <string name="root_spec_on_error_response_head">请求失败时</string>
     <string name="root_spec_on_failure_head">失败时</string>
-    <string name="root_spec_on_files_picked_cancel_head">取消文件选择时</string>
+    <string name="root_spec_on_files_picked_cancel_head">文件选择取消或失败时</string>
     <string name="root_spec_on_files_picked_head">文件选择完成时</string>
-    <string name="root_spec_on_item_clicked_head">列表项被点击</string>
-    <string name="root_spec_on_item_long_clicked_head">列表项被长按</string>
-    <string name="root_spec_on_item_selected_head">列表项被选中</string>
-    <string name="root_spec_on_location_changed_head">位置改变时</string>
-    <string name="root_spec_on_map_ready_head">地图准备完成时</string>
+    <string name="root_spec_on_item_clicked_head">列表项被点击时</string>
+    <string name="root_spec_on_item_long_clicked_head">列表项被长按时</string>
+    <string name="root_spec_on_item_selected_head">列表项被选中时</string>
+    <string name="root_spec_on_location_changed_head">位置变化时</string>
+    <string name="root_spec_on_map_ready_head">地图就绪时</string>
     <string name="root_spec_on_marker_clicked_head">标记被点击时</string>
     <string name="root_spec_on_page_finished_head">页面加载完成时</string>
     <string name="root_spec_on_page_started_head">页面开始加载时</string>
-    <string name="root_spec_on_pause_head">Activity 暂停时</string>
-    <string name="root_spec_on_picture_taken_cancel_head">取消拍照时</string>
+    <string name="root_spec_on_pause_head">活动暂停交互时</string>
+    <string name="root_spec_on_picture_taken_cancel_head">拍照取消或失败时</string>
     <string name="root_spec_on_picture_taken_head">拍照完成时</string>
-    <string name="root_spec_on_post_created_head">Activity 启动完成时</string>
-    <string name="root_spec_on_progress_changed_head">进度改变时</string>
+    <string name="root_spec_on_post_created_head">活动启动完成时</string>
+    <string name="root_spec_on_progress_changed_head">进度变化时</string>
     <string name="root_spec_on_reset_password_email_sent_head">重置密码邮件发送完成时</string>
     <string name="root_spec_on_response_head">收到响应时</string>
-    <string name="root_spec_on_resume_head">Activity 恢复时</string>
-    <string name="root_spec_on_sensor_changed_head">传感器数据改变时</string>
+    <string name="root_spec_on_resume_head">活动开始交互时</string>
+    <string name="root_spec_on_sensor_changed_head">传感器数据更新时</string>
     <string name="root_spec_on_sign_in_user_complete_head">用户登录完成时</string>
     <string name="root_spec_on_speech_error_head">语音识别出错时</string>
-    <string name="root_spec_on_speech_result_head">语音识别结果返回时</string>
-    <string name="root_spec_on_start_head">Activity 变为可见时</string>
-    <string name="root_spec_on_start_tracking_touch_head">开始拖动时</string>
-    <string name="root_spec_on_stop_head">Activity 不再可见时</string>
-    <string name="root_spec_on_stop_tracking_touch_head">结束拖动时</string>
-    <string name="root_spec_on_text_changed_head">文本改变时</string>
-    <string name="root_spec_on_upload_progress_head">上传进度改变时</string>
+    <string name="root_spec_on_speech_result_head">收到语音识别结果时</string>
+    <string name="root_spec_on_start_head">活动变为可见时</string>
+    <string name="root_spec_on_start_tracking_touch_head">开始触摸滑块时</string>
+    <string name="root_spec_on_stop_head">活动不再可见时</string>
+    <string name="root_spec_on_stop_tracking_touch_head">结束触摸滑块时</string>
+    <string name="root_spec_on_text_changed_head">文本变化时</string>
+    <string name="root_spec_on_upload_progress_head">上传进度更新时</string>
     <string name="root_spec_on_upload_success_head">上传成功时</string>
     <string name="common_message_save_failed">保存失败！请检查存储空间后重试。</string>
     <string name="s1">保存图片</string>
@@ -626,8 +627,8 @@
     <string name="builtin_block_startservice" formatted="false">启动服务 %m.activity</string>
     <string name="builtin_block_stopservice" formatted="false">停止服务 %m.activity</string>
     <string name="builtin_block_sendbroadcast" formatted="false">发送广播 %s</string>
-    <string name="builtin_block_startactivitywithchooser" formatted="false">启动 Activity %m.intent 使用选择器 %s</string>
-    <string name="builtin_block_finishaffinity" formatted="false">结束当前任务中的 Activity</string>
+    <string name="builtin_block_startactivitywithchooser" formatted="false">启动活动 %m.intent 使用选择器 %s</string>
+    <string name="builtin_block_finishaffinity" formatted="false">结束当前任务中的活动</string>
     <string name="builtin_block_ternarystring" formatted="false">%b ? %s : %s</string>
     <string name="builtin_block_ternarynumber" formatted="false">%b ? %d : %d</string>
     <string name="builtin_block_forloopincrease" formatted="false">循环 %m.varInt = %d; %b; %m.varInt++</string>
@@ -855,7 +856,7 @@
     <string name="builtin_block_fileutilcopydir" formatted="false">复制目录，路径 %s 到路径 %s</string>
     <string name="builtin_block_instanceofoperator" formatted="false">%s 是否为类型 %s 的实例</string>
     <string name="builtin_block_checkviewvisibility" formatted="false">视图可见性 %m.view 等于 %m.visible</string>
-    <string name="builtin_block_intenthasextra" formatted="false">Activity 是否包含附加数据，键 %s</string>
+    <string name="builtin_block_intenthasextra" formatted="false">活动是否包含附加数据，键 %s</string>
     <string name="builtin_block_intentsettype" formatted="false">%m.intent 设置类型 %s</string>
     <string name="builtin_block_intentremoveextra" formatted="false">%m.intent 移除附加数据，键 %s</string>
     <string name="builtin_block_filecontainsdata" formatted="false">%m.file 是否包含数据 %s</string>
@@ -939,7 +940,7 @@
     <string name="block_parameter_listnumber">数值列表</string>
     <string name="block_parameter_intent">Intent</string>
     <string name="block_parameter_color">颜色</string>
-    <string name="block_parameter_activity">Activity</string>
+    <string name="block_parameter_activity">活动</string>
     <string name="block_parameter_resource">资源</string>
     <string name="block_parameter_custom_views">自定义视图</string>
     <string name="block_parameter_layout">布局</string>
@@ -1009,10 +1010,10 @@
     <string name="display_name_color">颜色</string>
     <string name="display_name_image">图片</string>
     <string name="display_name_customview">自定义视图</string>
-    <string name="display_name_basic_activity">基础 Activity</string>
+    <string name="display_name_basic_activity">基础活动</string>
     <string name="display_name_basic_list_item">基础列表项</string>
     <string name="display_name_basic_drawer">基础抽屉</string>
-    <string name="display_name_empty_activity">空 Activity</string>
+    <string name="display_name_empty_activity">空白活动</string>
     <string name="display_name_material_purple">Material 紫色</string>
     <string name="display_name_material_blue">Material 蓝色</string>
     <string name="display_name_material_green">Material 绿色</string>
@@ -1034,75 +1035,75 @@
     <string name="event_display_onupdateemailcomplete" formatted="false">邮箱更新完成时</string>
     <string name="event_display_ongooglesignin" formatted="false">Google 登录完成时</string>
     <string name="event_display_onupdatepasswordcomplete" formatted="false">密码更新完成时</string>
-    <string name="event_display_signinwithphoneauthcomplete" formatted="false">手机号码认证完成时</string>
-    <string name="event_display_onscrolled" formatted="false">滚动</string>
-    <string name="event_display_ondatechanged" formatted="false">日期改变</string>
-    <string name="event_display_ondateset" formatted="false">日期设置完成</string>
-    <string name="event_display_onfailurelink" formatted="false">链接获取失败</string>
-    <string name="event_display_onnavigationitemselected" formatted="false">导航项选中</string>
-    <string name="event_display_onprepared" formatted="false">准备完成</string>
-    <string name="event_display_oncompletion" formatted="false">播放完成</string>
-    <string name="event_display_onpatternlockcleared" formatted="false">图案锁已清除</string>
-    <string name="event_display_onaccountpickercancelled" formatted="false">账号选择取消</string>
-    <string name="event_display_onpatternlockstarted" formatted="false">开始绘制图案锁</string>
-    <string name="event_display_onsaveinstancestate" formatted="false">保存实例状态</string>
-    <string name="event_display_oncreateoptionsmenu" formatted="false">创建选项菜单</string>
-    <string name="event_display_oncreatecontextmenu" formatted="false">创建上下文菜单</string>
-    <string name="event_display_onrestoreinstancestate" formatted="false">恢复实例状态</string>
-    <string name="event_display_oncontextitemselected" formatted="false">上下文菜单项选中</string>
-    <string name="event_display_onquerytextchanged" formatted="false">搜索文本改变</string>
-    <string name="event_display_onquerytextsubmit" formatted="false">提交搜索文本</string>
-    <string name="event_display_onerror" formatted="false">发生错误</string>
-    <string name="event_display_onverificationcompleted" formatted="false">验证完成</string>
-    <string name="event_display_onrecyclerscrollchanged" formatted="false">列表滚动状态改变</string>
-    <string name="event_display_onrecyclerscrolled" formatted="false">列表滚动</string>
-    <string name="event_display_onsuccesslink" formatted="false">链接获取成功</string>
-    <string name="event_display_onpagescrolled" formatted="false">页面滚动</string>
-    <string name="event_display_onverificationfailed" formatted="false">验证失败</string>
-    <string name="event_display_onaccountpicker" formatted="false">选择账号</string>
-    <string name="event_display_ontimeset" formatted="false">时间设置完成</string>
-    <string name="event_display_onpagescrollstatechanged" formatted="false">页面滚动状态改变</string>
-    <string name="event_display_onratingchanged" formatted="false">评分改变</string>
-    <string name="event_display_onpatternlockprogress" formatted="false">图案锁绘制中</string>
-    <string name="event_display_onpatternlockcomplete" formatted="false">图案锁绘制完成</string>
-    <string name="event_display_ontabselected" formatted="false">标签选中</string>
-    <string name="event_display_ontabunselected" formatted="false">标签取消选中</string>
-    <string name="event_display_ontabreselected" formatted="false">标签再次选中</string>
-    <string name="event_display_onpageselected" formatted="false">页面选中</string>
-    <string name="event_display_onletterselected" formatted="false">字母选中</string>
-    <string name="event_display_oncompleteregister" formatted="false">云消息注册完成</string>
-    <string name="event_display_oncodesent" formatted="false">验证码已发送</string>
-    <string name="event_display_ontimechanged" formatted="false">时间改变</string>
-    <string name="event_display_onscrollchanged" formatted="false">滚动状态改变</string>
-    <string name="event_display_onbanneradfailedtoload" formatted="false">横幅广告加载失败</string>
-    <string name="event_display_oninterstitialadfailedtoload" formatted="false">插页广告加载失败</string>
-    <string name="event_display_onrewardadfailedtoload" formatted="false">激励广告加载失败</string>
-    <string name="event_display_onadfailedtoshowfullscreencontent" formatted="false">全屏广告显示失败</string>
-    <string name="event_display_onuserearnedreward" formatted="false">用户获得奖励</string>
+    <string name="event_display_signinwithphoneauthcomplete" formatted="false">手机号码登录完成时</string>
+    <string name="event_display_onscrolled" formatted="false">列表滚动时</string>
+    <string name="event_display_ondatechanged" formatted="false">日期变化时</string>
+    <string name="event_display_ondateset" formatted="false">日期设置完成时</string>
+    <string name="event_display_onfailurelink" formatted="false">链接获取失败时</string>
+    <string name="event_display_onnavigationitemselected" formatted="false">导航项被选中时</string>
+    <string name="event_display_onprepared" formatted="false">媒体准备完成时</string>
+    <string name="event_display_oncompletion" formatted="false">播放完成时</string>
+    <string name="event_display_onpatternlockcleared" formatted="false">图案锁清除时</string>
+    <string name="event_display_onaccountpickercancelled" formatted="false">账号选择取消或失败时</string>
+    <string name="event_display_onpatternlockstarted" formatted="false">图案锁开始绘制时</string>
+    <string name="event_display_onsaveinstancestate" formatted="false">保存活动实例状态时</string>
+    <string name="event_display_oncreateoptionsmenu" formatted="false">创建选项菜单时</string>
+    <string name="event_display_oncreatecontextmenu" formatted="false">创建上下文菜单时</string>
+    <string name="event_display_onrestoreinstancestate" formatted="false">恢复活动实例状态时</string>
+    <string name="event_display_oncontextitemselected" formatted="false">上下文菜单项被选中时</string>
+    <string name="event_display_onquerytextchanged" formatted="false">搜索文本变化时</string>
+    <string name="event_display_onquerytextsubmit" formatted="false">提交搜索文本时</string>
+    <string name="event_display_onerror" formatted="false">发生错误时</string>
+    <string name="event_display_onverificationcompleted" formatted="false">手机号码自动验证成功时</string>
+    <string name="event_display_onrecyclerscrollchanged" formatted="false">列表滚动状态变化时</string>
+    <string name="event_display_onrecyclerscrolled" formatted="false">列表滚动时</string>
+    <string name="event_display_onsuccesslink" formatted="false">链接获取成功时</string>
+    <string name="event_display_onpagescrolled" formatted="false">页面滚动时</string>
+    <string name="event_display_onverificationfailed" formatted="false">手机号码验证请求失败时</string>
+    <string name="event_display_onaccountpicker" formatted="false">账号选择完成时</string>
+    <string name="event_display_ontimeset" formatted="false">时间设置完成时</string>
+    <string name="event_display_onpagescrollstatechanged" formatted="false">页面滚动状态变化时</string>
+    <string name="event_display_onratingchanged" formatted="false">评分变化时</string>
+    <string name="event_display_onpatternlockprogress" formatted="false">图案锁绘制进度更新时</string>
+    <string name="event_display_onpatternlockcomplete" formatted="false">图案锁绘制完成时</string>
+    <string name="event_display_ontabselected" formatted="false">标签页被选中时</string>
+    <string name="event_display_ontabunselected" formatted="false">标签页取消选中时</string>
+    <string name="event_display_ontabreselected" formatted="false">当前标签页被再次选中时</string>
+    <string name="event_display_onpageselected" formatted="false">页面被选中时</string>
+    <string name="event_display_onletterselected" formatted="false">字母被选中时</string>
+    <string name="event_display_oncompleteregister" formatted="false">获取推送令牌完成时</string>
+    <string name="event_display_oncodesent" formatted="false">验证码发出时</string>
+    <string name="event_display_ontimechanged" formatted="false">时间变化时</string>
+    <string name="event_display_onscrollchanged" formatted="false">滚动状态变化时</string>
+    <string name="event_display_onbanneradfailedtoload" formatted="false">横幅广告加载失败时</string>
+    <string name="event_display_oninterstitialadfailedtoload" formatted="false">插屏广告加载失败时</string>
+    <string name="event_display_onrewardadfailedtoload" formatted="false">激励广告加载失败时</string>
+    <string name="event_display_onadfailedtoshowfullscreencontent" formatted="false">全屏广告显示失败时</string>
+    <string name="event_display_onuserearnedreward" formatted="false">用户获得奖励时</string>
     <string name="event_display_onadloaded" formatted="false">广告加载完成时</string>
-    <string name="event_display_onaddismissedfullscreencontent" formatted="false">全屏广告关闭</string>
-    <string name="event_display_onadshowedfullscreencontent" formatted="false">全屏广告显示</string>
+    <string name="event_display_onaddismissedfullscreencontent" formatted="false">全屏广告关闭时</string>
+    <string name="event_display_onadshowedfullscreencontent" formatted="false">全屏广告显示时</string>
     <string name="event_display_onrewardadloaded" formatted="false">激励广告加载完成时</string>
-    <string name="event_display_onadopened" formatted="false">广告打开</string>
-    <string name="event_display_onadclicked" formatted="false">广告点击</string>
-    <string name="event_display_onadclosed" formatted="false">广告关闭</string>
-    <string name="event_display_onsqliteerror" formatted="false">SQLite 发生错误</string>
-    <string name="event_fragment_get_item" formatted="false">获取位置 %d.position 的 Fragment</string>
-    <string name="event_get_page_title" formatted="false">获取位置 %d.position 的页面标题</string>
-    <string name="event_create_import" formatted="false">创建导入</string>
-    <string name="event_activity_result" formatted="false">Activity 返回结果 %d.requestCode %d.resultCode %m.intent.data</string>
+    <string name="event_display_onadopened" formatted="false">广告打开时</string>
+    <string name="event_display_onadclicked" formatted="false">广告被点击时</string>
+    <string name="event_display_onadclosed" formatted="false">广告关闭时</string>
+    <string name="event_display_onsqliteerror" formatted="false">SQLite 出错时</string>
+    <string name="event_fragment_get_item" formatted="false">提供位置 %d.position 的 Fragment</string>
+    <string name="event_get_page_title" formatted="false">提供位置 %d.position 的页面标题</string>
+    <string name="event_create_import" formatted="false">添加自定义导入语句</string>
+    <string name="event_activity_result" formatted="false">收到活动结果时 %d.requestCode %d.resultCode %m.intent.data</string>
     <string name="event_when_prefix" formatted="false">"当 "</string>
-    <string name="event_refresh_suffix" formatted="false">" 刷新"</string>
+    <string name="event_refresh_suffix" formatted="false">" 下拉刷新时"</string>
     <string name="event_long_click_suffix" formatted="false">" 长按"</string>
-    <string name="event_tab_title_suffix" formatted="false">" 返回标签标题 %d.position"</string>
-    <string name="event_pre_execute_suffix" formatted="false">" 开始执行前 "</string>
-    <string name="event_background_suffix" formatted="false">" 在后台执行 %s.param"</string>
-    <string name="event_progress_suffix" formatted="false">" 更新进度 %d.value"</string>
-    <string name="event_post_execute_suffix" formatted="false">" 执行完成，结果 %s.result"</string>
+    <string name="event_tab_title_suffix" formatted="false">" 提供位置 %d.position 的标签页标题"</string>
+    <string name="event_pre_execute_suffix" formatted="false">" 后台任务执行前 "</string>
+    <string name="event_background_suffix" formatted="false">" 执行后台任务 %s.param"</string>
+    <string name="event_progress_suffix" formatted="false">" 收到进度更新时 %d.value"</string>
+    <string name="event_post_execute_suffix" formatted="false">" 后台任务执行完成时，结果 %s.result"</string>
     <string name="event_no_spec" formatted="false">无说明</string>
     <string name="crash_no_data" formatted="false">（没有可用的崩溃数据）</string>
     <string name="crash_clipboard_truncated">\n\n[崩溃报告复制到剪贴板时已截断，原始长度：%1$d 个字符]\n\n</string>
-    <string name="display_name_text_activity">文本 Activity</string>
+    <string name="display_name_text_activity">文本活动</string>
     <string name="manifest_source_generation_failed">生成源代码失败。</string>
     <string name="build_invalid_min_sdk">项目设置中的 minSdkVersion 无效：</string>
     <string name="build_bundle_failed_prefix">构建应用包失败：</string>
@@ -1198,14 +1199,14 @@
     <string name="array_type_object">通用数组</string>
     <string name="event_category_view">控件事件</string>
     <string name="event_category_component">组件事件</string>
-    <string name="event_category_activity">界面事件</string>
+    <string name="event_category_activity">活动事件</string>
     <string name="event_category_drawer_view">侧滑栏控件事件</string>
     <string name="event_category_more_block">自定义积木</string>
     <string name="event_onnothingselected">未选中列表项时</string>
-    <string name="event_beforetextchanged">文本改变前</string>
-    <string name="event_aftertextchanged">文本改变后</string>
+    <string name="event_beforetextchanged">文本变化前</string>
+    <string name="event_aftertextchanged">文本变化后</string>
     <string name="event_onanimationrepeat">动画重复时</string>
-    <string name="event_onchildmoved">子项移动时</string>
-    <string name="event_onaccuracychanged">精度改变时</string>
+    <string name="event_onchildmoved">子项顺序变化时</string>
+    <string name="event_onaccuracychanged">传感器精度变化时</string>
     <string name="event_ontouched">触摸时</string>
 </resources>

@@ -103,7 +103,7 @@ public class BuiltinBlockLocalizationTest {
         String canonical = BlockColorMapper.getListTypeName(2);
         assertEquals("List String", canonical);
         assertEquals("字符串列表", LocalizedDisplayNames.get(chinese, canonical));
-        assertEquals("基础 Activity", LocalizedDisplayNames.get(chinese, "Basic Activity"));
+        assertEquals("基础活动", LocalizedDisplayNames.get(chinese, "Basic Activity"));
         assertEquals("My custom preset", LocalizedDisplayNames.get(chinese, "My custom preset"));
         assertEquals(canonical, BlockColorMapper.getListTypeName(2));
     }
@@ -161,11 +161,15 @@ public class BuiltinBlockLocalizationTest {
         HashMap<String, String> fixture = new HashMap<>();
         fixture.put("__locale_test__", "");
         overrides.set(translations, fixture);
-        String before = translations.getEventTranslation(english, "onClick");
-        String after = translations.getEventTranslation(chinese, "onClick");
-        assertNotEquals(before, after);
-        assertEquals(before, translations.getEventTranslation(english, "onClick"));
-        assertEquals(chinese.getString(R.string.root_spec_on_clicked_head), after);
+        for (String event : new String[]{"onClick", "onDownloadProgress"}) {
+            String before = translations.getEventTranslation(english, event);
+            String after = translations.getEventTranslation(chinese, event);
+            assertNotEquals(event, before, after);
+            assertEquals(BlockSpecParser.parseParameters(before), BlockSpecParser.parseParameters(after));
+            assertEquals(before, translations.getEventTranslation(english, event));
+        }
+        assertEquals(chinese.getString(R.string.root_spec_on_clicked_head),
+                translations.getEventTranslation(chinese, "onClick"));
     }
 
     @Test public void translatedFormatMessagesKeepArgumentTypesAndLiteralPercent() {

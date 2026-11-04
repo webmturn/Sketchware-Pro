@@ -5,8 +5,8 @@
     <!-- ========== 通用词汇 (Common Words) ========== -->
     <string name="common_word_accept">保存</string>
     <string name="common_word_actions">操作</string>
-    <string name="common_word_activity">Activity</string>
-    <string name="common_word_add_activtiy">添加 Activity</string>
+    <string name="common_word_activity">活动</string>
+    <string name="common_word_add_activtiy">添加活动</string>
     <string name="common_word_add">添加</string>
     <string name="common_word_agree">同意</string>
     <string name="common_word_all">全部</string>
@@ -115,7 +115,7 @@
     <string name="common_word_yes">是</string>
 
     <!-- ========== 通用消息 (Common Messages) ========== -->
-    <string name="common_error_activity_not_found">未找到 Activity</string>
+    <string name="common_error_activity_not_found">未找到活动</string>
     <string name="common_error_an_error_occurred">发生错误！</string>
     <string name="common_error_failed_to_connect_server">无法连接到服务器</string>
     <string name="common_error_failed_to_save">保存失败</string>
@@ -192,14 +192,14 @@
     <string name="design_manager_sound_title_edit_sound_name">编辑音效名称</string>
     <string name="design_manager_view_hint_enter_view_name">输入视图名称</string>
     <string name="design_manager_view_message_no_view">没有可显示的视图</string>
-    <string name="design_manager_view_title_activity_name">Activity 名称:</string>
-    <string name="design_manager_view_title_activity_preset">Activity 预设</string>
-    <string name="design_manager_view_title_add_activity">新建 Activity</string>
+    <string name="design_manager_view_title_activity_name">活动名称:</string>
+    <string name="design_manager_view_title_activity_preset">活动预设</string>
+    <string name="design_manager_view_title_add_activity">新建活动</string>
     <string name="design_manager_view_title_add_custom_view">新建自定义视图</string>
     <string name="design_manager_view_title_add_view">新建视图</string>
-    <string name="design_manager_view_title_edit_activity">编辑 Activity</string>
+    <string name="design_manager_view_title_edit_activity">编辑活动</string>
     <string name="design_manager_view_title_edit_view">编辑视图</string>
-    <string name="design_manager_view_title_empty_activity">空白 Activity</string>
+    <string name="design_manager_view_title_empty_activity">空白活动</string>
     <string name="design_manager_view_title_keyboad_settings">键盘设置</string>
     <string name="design_manager_view_title_screen_orientation">屏幕方向</string>
     <string name="design_manager_view_title_view_name">视图名称:</string>
@@ -217,7 +217,7 @@
     <string name="design_manager_image_import_icon_button_white">白色</string>
     <string name="design_manager_image_title_apply_same_naming">对其他可用图片应用相同命名样式</string>
     <string name="design_manager_sound_title_apply_same_naming">对其他可用音效应用相同命名样式</string>
-    <string name="design_manager_view_description_guide_create_activity">要创建新 Activity，请在此添加</string>
+    <string name="design_manager_view_description_guide_create_activity">要创建新活动，请在此添加</string>
     <string name="design_manager_view_description_guide_create_custom_view">在此创建新的自定义视图</string>
     <string name="design_manager_view_description_guide_use_custom_view">自定义视图可用于更改 ListView 或 Spinner 中列表项的显示方式</string>
     <string name="design_manager_view_message_slow_down">包含抽屉或 FAB 可能会减慢某些设备的编译速度。</string>
@@ -392,7 +392,7 @@
     <string name="error_dexing_failed_format">DEX 转换失败: %s</string>
     <string name="error_downloading_unavailable">当前无法下载项目！</string>
     <string name="error_enable_material3">请先在库管理器中启用 Material3</string>
-    <string name="error_enter_activity_name">请输入 Activity 名称</string>
+    <string name="error_enter_activity_name">请输入活动名称</string>
     <string name="error_enter_dependency">请输入依赖项</string>
     <string name="error_failed_prefix">失败: %s</string>
     <string name="error_file_exists">文件已存在</string>
@@ -432,7 +432,7 @@
     <string name="error_load_palette">加载自定义积木块调色板时出错: %s</string>
     <string name="error_load_sound">加载音效时出错: %s</string>
     <string name="error_loading_widgets">加载控件时出错: %s</string>
-    <string name="error_main_activity_cannot_delete">主 Activity 无法删除</string>
+    <string name="error_main_activity_cannot_delete">主活动无法删除</string>
     <string name="error_missing_widget_keys">控件缺少必要的键: %s</string>
     <string name="error_name_cannot_be_empty">名称不能为空</string>
     <string name="error_name_empty">名称不能为空</string>
@@ -635,7 +635,7 @@
     <string name="create_file_kotlin_class">Kotlin 类</string>
     <string name="delete_confirm_format">确定要删除此 %1$s 吗？%2$s此操作不可撤销。</string>
     <string name="delete_custom_activity_dialog_message">与 %1$s 相关的所有功能将被移除。确定吗？</string>
-    <string name="delete_custom_activity_dialog_title">删除 Activity</string>
+    <string name="delete_custom_activity_dialog_title">删除活动</string>
     <string name="delete_project_dialog_message">确定要删除名为 %1$s 的项目吗？</string>
     <string name="delete_project_dialog_title">删除项目</string>
     <string name="dialog_msg_delete_attr">确定要删除 %s 吗？</string>
@@ -892,7 +892,7 @@
     <string name="component_description_firebase_auth">FirebaseAuth 用于进行用户身份验证。</string>
     <string name="component_description_firebase_storage">Firebase Storage 用于上传、下载和删除云端文件。</string>
     <string name="component_description_gyrosope">Gyroscope 用于获取设备的三个姿态角（单位：度）。</string>
-    <string name="component_description_intent">Intent 用于启动 Activity 并传递数据。</string>
+    <string name="component_description_intent">Intent 用于启动活动并传递数据。</string>
     <string name="component_description_interstitial_ad">AdMob Interstitial 用于显示全屏插屏广告。</string>
     <string name="component_description_location_manager">LocationManager 用于获取设备位置信息。</string>
     <string name="component_description_mediaplayer">MediaPlayer 用于播放音频。</string>
@@ -968,10 +968,10 @@
     <string name="version_hint_name_extra">版本名后缀</string>
 
     <!-- ========== 事件 (Events) ========== -->
-    <string name="events_activity_event">Activity 事件</string>
+    <string name="events_activity_event">活动事件</string>
 
     <!-- ========== 逻辑编辑器 - 补充 ========== -->
-    <string name="logic_custom_activities">自定义 Activities</string>
+    <string name="logic_custom_activities">自定义活动</string>
 
     <!-- ========== 属性编辑器 - 补充 ========== -->
     <string name="property_alpha">不透明度</string>
@@ -1060,7 +1060,7 @@
     <string name="design_cancel_build_desc">正在构建中，是否取消？</string>
     <string name="design_cancel_build_title">取消构建</string>
     <string name="design_drawer_menu_androidmanifest">AndroidManifest</string>
-    <string name="design_drawer_menu_androidmanifest_subtitle">添加 Activity、权限等</string>
+    <string name="design_drawer_menu_androidmanifest_subtitle">添加活动、权限等</string>
     <string name="design_drawer_menu_bottom_title">工具</string>
     <string name="design_drawer_menu_customblocks">自定义积木块</string>
     <string name="design_drawer_menu_customblocks_subtitle">查看此项目中使用的自定义积木块</string>
@@ -1071,7 +1071,7 @@
     <string name="design_drawer_menu_description_sound">从收藏或设备添加音效</string>
     <string name="design_drawer_menu_description_source_code">查看项目源代码</string>
     <string name="design_drawer_menu_description_theme">更改应用主题</string>
-    <string name="design_drawer_menu_description_view">管理 Activity 和自定义视图</string>
+    <string name="design_drawer_menu_description_view">管理活动和自定义视图</string>
     <string name="design_drawer_menu_description_xml_command">编辑 XML 命令</string>
     <string name="design_drawer_menu_injection">AppCompat 管理器</string>
     <string name="design_drawer_menu_injection_subtitle">修改 AppCompat 布局属性</string>
@@ -1135,7 +1135,7 @@
     <string name="design_library_admob_title_banner">横幅广告</string>
     <string name="design_library_admob_title_interstitial">插屏广告</string>
     <string name="design_library_admob_widget_setup_first">要使用此控件，需先在库管理器中设置。</string>
-    <string name="design_library_appcompat_description">启用 AppCompat 库可以在 Activity 中添加抽屉布局和悬浮操作按钮。</string>
+    <string name="design_library_appcompat_description">启用 AppCompat 库可以在活动中添加抽屉布局和悬浮操作按钮。</string>
     <string name="design_library_appcompat_need_firebase_disable">使用 Firebase 时无法禁用 AppCompat 库。</string>
     <string name="design_library_appcompat_need_m3_disable">使用 Material3 时无法禁用 AppCompat 库。</string>
     <string name="design_library_button_import_from_other_project">从其他项目导入</string>
@@ -1239,7 +1239,7 @@
     <string name="logic_editor_title_remove_xml_strings">移除字符串</string>
     <string name="logic_editor_title_request_network_method">选择方法</string>
     <string name="logic_editor_title_request_network_request_type">选择请求类型</string>
-    <string name="logic_editor_title_select_activity">选择 Activity</string>
+    <string name="logic_editor_title_select_activity">选择活动</string>
     <string name="logic_editor_title_select_animator_interpolator">选择插值器</string>
     <string name="logic_editor_title_select_animator_repeat_mode">选择重复模式</string>
     <string name="logic_editor_title_select_animator_target_property">选择目标属性</string>
@@ -1414,7 +1414,7 @@
     <string name="settings_backup_filename_title">备份文件名格式</string>
     <string name="settings_block_selector">选择器菜单</string>
     <string name="settings_events_manager">事件管理器</string>
-    <string name="settings_events_manager_activity_events">Activity 事件</string>
+    <string name="settings_events_manager_activity_events">活动事件</string>
     <string name="settings_events_manager_details">事件管理器详情</string>
     <string name="settings_events_manager_listeners">监听器</string>
     <string name="settings_title">应用设置</string>
@@ -1426,10 +1426,10 @@
     <string name="pref_backup_filename_summary">默认是 \"$projectName v$versionName ($pkgName, $versionCode) $time(yyyy-MM-dd\'T\'HHmmss)\"</string>
 
     <!-- ========== Toast ========== -->
-    <string name="toast_activity_not_in_manifest">Activity 未在 AndroidManifest 中定义。</string>
-    <string name="toast_activity_removed">Activity 已移除</string>
+    <string name="toast_activity_not_in_manifest">活动未在 AndroidManifest 中定义。</string>
+    <string name="toast_activity_removed">活动已移除</string>
     <string name="toast_added">已添加</string>
-    <string name="toast_added_activity_manifest">已成功将 %s 添加为 AndroidManifest 中的 Activity</string>
+    <string name="toast_added_activity_manifest">已成功将 %s 添加为 AndroidManifest 中的活动</string>
     <string name="toast_added_service_manifest">已成功将 %s 添加为 AndroidManifest 中的 Service</string>
     <string name="toast_block_image_saved">图片已保存到 /Internal storage/sketchware/saved_block/%s.png!</string>
     <string name="toast_compile_logs_cleared">编译日志已清除。</string>
@@ -1470,14 +1470,14 @@
     <string name="toast_imported">已导入！</string>
     <string name="toast_library_downloaded">库下载成功</string>
     <string name="toast_logcat_exported">日志导出成功: %s</string>
-    <string name="toast_new_activity_added">新 Activity 已添加</string>
+    <string name="toast_new_activity_added">新活动已添加</string>
     <string name="toast_no_changes">没有需要保存的更改</string>
     <string name="toast_no_compile_logs">未找到编译日志。</string>
     <string name="toast_no_http_legacy_warning">注意此选项在使用 RequestNetwork 组件时可能会导致问题</string>
     <string name="toast_only_java_xml_format">只有 Java 和 XML 文件可以格式化</string>
     <string name="toast_only_xml_editable">只有 XML 文件可以编辑</string>
-    <string name="toast_removed_activity_from_manifest">已成功从 AndroidManifest 移除 Activity %s</string>
-    <string name="toast_removed_activity_manifest">注意: 已从 Manifest 移除 Activity</string>
+    <string name="toast_removed_activity_from_manifest">已成功从 AndroidManifest 移除活动 %s</string>
+    <string name="toast_removed_activity_manifest">注意: 已从 Manifest 移除活动</string>
     <string name="toast_removed_service_from_manifest">已成功从 AndroidManifest 移除 Service %s</string>
     <string name="toast_renamed_successfully">重命名成功</string>
     <string name="toast_save_completed">保存完成</string>
@@ -1554,7 +1554,7 @@
     <string name="create_view_type">类型</string>
     <string name="create_view_unspecified">未指定</string>
     <string name="create_view_visible">可见</string>
-    <string name="custom_activity_hint_name">Activity 名称</string>
+    <string name="custom_activity_hint_name">活动名称</string>
     <string name="custom_view_desc">自定义视图可用于更改 ListView 或 Spinner 中列表项的显示方式</string>
 
     <!-- ========== 视图面板 ========== -->
@@ -1586,13 +1586,13 @@
     <string name="event_context_menu_title_delete_more_block">删除 MoreBlock</string>
     <string name="event_context_menu_title_initialize_logic">初始化逻辑</string>
     <string name="event_definefunc">自定义积木</string>
-    <string name="event_desc_add_custom_imports">添加自定义导入</string>
-    <string name="event_desc_do_in_background">此方法包含需要在后台执行的代码。</string>
-    <string name="event_desc_post_execute">此方法在 doInBackground 方法完成处理后调用。</string>
-    <string name="event_desc_pre_execute">此方法包含在后台处理开始前执行的代码。</string>
-    <string name="event_desc_progress_update">此方法从 doInBackground 方法接收进度更新。</string>
-    <string name="event_desc_swipe_refresh">SwipeRefreshLayout 滑动时</string>
-    <string name="event_desc_tab_new_tab">返回指定位置标签页的标题</string>
+    <string name="event_desc_add_custom_imports">添加自定义导入语句</string>
+    <string name="event_desc_do_in_background">执行后台任务</string>
+    <string name="event_desc_post_execute">后台任务执行完成时</string>
+    <string name="event_desc_pre_execute">后台任务执行前</string>
+    <string name="event_desc_progress_update">收到后台任务进度更新时</string>
+    <string name="event_desc_swipe_refresh">下拉刷新时</string>
+    <string name="event_desc_tab_new_tab">提供指定位置的标签页标题</string>
     <string name="event_dialog_confirm_delete_component">确定要删除所选组件吗？</string>
     <string name="event_dialog_confirm_delete_logic">所选事件的所有逻辑数据将丢失\n是否继续？</string>
     <string name="event_dialog_confirm_delete_moreblock">确定要删除此 MoreBlock 吗？</string>
@@ -1607,17 +1607,17 @@
     <string name="event_error_invalid_parameters">自定义事件 #%d 中发现无效的参数数据类型</string>
     <string name="event_error_invalid_var">自定义事件 #%d 中发现无效的变量数据类型</string>
     <string name="event_error_null">位置 %d 处发现无效的 (null) 自定义事件</string>
-    <string name="event_initialize">Activity 创建时</string>
+    <string name="event_initialize">活动创建时</string>
     <string name="event_message_new_event">新事件已添加</string>
     <string name="event_message_new_events">新事件已添加</string>
     <string name="event_message_no_avail_events">没有可添加的事件</string>
     <string name="event_message_no_events">没有可显示的事件</string>
-    <string name="event_onbackpressed">返回键按下时</string>
+    <string name="event_onbackpressed">触发返回操作时</string>
     <string name="event_onbindcustomview">绑定自定义视图时</string>
-    <string name="event_oncancelled">取消时</string>
+    <string name="event_oncancelled">数据监听失败时</string>
     <string name="event_onclick">点击时</string>
-    <string name="event_ondestroy">Activity 销毁时</string>
-    <string name="event_onpause">Activity 暂停时</string>
+    <string name="event_ondestroy">活动销毁时</string>
+    <string name="event_onpause">活动暂停交互时</string>
 
     <!-- ========== 项目管理 - 完整 ========== -->
 
@@ -1761,18 +1761,18 @@
 
     <!-- ========== 事件 - 补充 ========== -->
     <string name="event_on_connected">连接成功时</string>
-    <string name="event_on_connection_error">连接错误时</string>
+    <string name="event_on_connection_error">连接出错时</string>
     <string name="event_on_connection_stopped">连接停止时</string>
     <string name="event_on_data_received">收到数据时</string>
     <string name="event_on_data_sent">数据发送完成时</string>
     <string name="event_on_error_response">请求失败时</string>
     <string name="event_on_location_changed">位置变化时</string>
-    <string name="event_on_sqlite_error">SQLite 错误时</string>
+    <string name="event_on_sqlite_error">SQLite 出错时</string>
     <string name="event_on_map_ready">地图就绪时</string>
-    <string name="event_on_marker_clicked">标记点击时</string>
+    <string name="event_on_marker_clicked">标记被点击时</string>
     <string name="event_on_response">收到响应时</string>
     <string name="event_on_speech_error">语音识别出错时</string>
-    <string name="event_on_speech_result">语音识别结果返回时</string>
+    <string name="event_on_speech_result">收到语音识别结果时</string>
     <string name="event_onadclosed">广告关闭时</string>
     <string name="event_onadfailedtoload">广告加载失败时</string>
     <string name="event_onadloaded">广告加载完成时</string>
@@ -1780,31 +1780,31 @@
     <string name="event_onanimationcancel">动画取消时</string>
     <string name="event_onanimationend">动画结束时</string>
     <string name="event_onanimationstart">动画开始时</string>
-    <string name="event_oncheckchanged">选中状态改变时</string>
+    <string name="event_oncheckchanged">选中状态变化时</string>
     <string name="event_onchildadded">子项添加时</string>
-    <string name="event_onchildchanged">子项变化时</string>
+    <string name="event_onchildchanged">子项数据变化时</string>
     <string name="event_onchildremoved">子项移除时</string>
     <string name="event_oncreateusercomplete">创建用户完成时</string>
     <string name="event_ondatechange">日期变化时</string>
     <string name="event_ondeletesuccess">删除成功时</string>
-    <string name="event_ondownloadprogress">下载进度时</string>
+    <string name="event_ondownloadprogress">下载进度更新时</string>
     <string name="event_ondownloadsuccess">下载成功时</string>
     <string name="event_onfailure">失败时</string>
     <string name="event_onfilespicked">文件选择完成时</string>
-    <string name="event_onfilespickedcancel">文件选择取消时</string>
-    <string name="event_onitemclicked">列表项点击时</string>
-    <string name="event_onitemlongclicked">列表项长按时</string>
-    <string name="event_onitemselected">列表项选中时</string>
+    <string name="event_onfilespickedcancel">文件选择取消或失败时</string>
+    <string name="event_onitemclicked">列表项被点击时</string>
+    <string name="event_onitemlongclicked">列表项被长按时</string>
+    <string name="event_onitemselected">列表项被选中时</string>
     <string name="event_onpagefinished">页面加载完成时</string>
     <string name="event_onpagestarted">页面开始加载时</string>
     <string name="event_onpicturetaken">拍照完成时</string>
-    <string name="event_onpicturetakencancel">拍照取消时</string>
-    <string name="event_onresume">Activity 恢复时</string>
-    <string name="event_onsensorchanged">传感器数据改变时</string>
-    <string name="event_onstop">Activity 不再可见时</string>
-    <string name="event_ontextchanged">文本改变时</string>
+    <string name="event_onpicturetakencancel">拍照取消或失败时</string>
+    <string name="event_onresume">活动开始交互时</string>
+    <string name="event_onsensorchanged">传感器数据更新时</string>
+    <string name="event_onstop">活动不再可见时</string>
+    <string name="event_ontextchanged">文本变化时</string>
     <string name="event_onuploadsuccess">上传成功时</string>
-    <string name="event_onuploadprogress">上传进度时</string>
+    <string name="event_onuploadprogress">上传进度更新时</string>
 
     <!-- ========== 事件管理 ========== -->
     <string name="events_creator_listener_props">监听器属性:</string>
@@ -1813,7 +1813,7 @@
     <string name="events_delete_listener_title">删除监听器</string>
     <string name="events_details_title">事件详情</string>
     <string name="events_edit_listener">编辑监听器</string>
-    <string name="events_new_activity_title">新 Activity 事件</string>
+    <string name="events_new_activity_title">新活动事件</string>
     <string name="events_new_event">新事件</string>
     <string name="events_new_event_title">新事件</string>
     <string name="events_new_listener">新监听器</string>
@@ -2041,9 +2041,9 @@
     <string name="appcompat_disabled_title">AppCompat 已禁用。</string>
     <string name="appcompat_edit_attr">编辑属性</string>
     <string name="appcompat_manager_title">AppCompat 管理器</string>
-    <string name="appcompat_no_options_msg">此 Activity 中当前没有可用的 AppCompat 选项。</string>
+    <string name="appcompat_no_options_msg">此活动中当前没有可用的 AppCompat 选项。</string>
     <string name="appcompat_no_options_title">未找到选项。</string>
-    <string name="appcompat_not_available_msg">你当前不在 Activity 布局中。</string>
+    <string name="appcompat_not_available_msg">你当前不在活动布局中。</string>
     <string name="appcompat_not_available_title">不可用。</string>
     <string name="appcompat_reset_confirm_msg">确定要重置 %s 的 AppCompat 属性吗？</string>
 
@@ -2312,7 +2312,7 @@
     <string name="change_firebase_config_title">更改 Firebase 配置</string>
     <string name="review_firebase_config_title">审查</string>
     <string name="googlemap_settings_title">GoogleMap 设置</string>
-    <string name="change_launcher_activity_dialog_title">启动 Activity</string>
+    <string name="change_launcher_activity_dialog_title">启动活动</string>
     <string name="permission_hint_search">搜索权限</string>
     <string name="permission_manager_title">权限管理器</string>
     <string name="permission_reset_message">确定要重置所有权限吗？</string>
@@ -2367,11 +2367,11 @@
 
     <!-- ========== Java 管理 ========== -->
     <string name="java_delete_manifest_warning">这也会将其从 AndroidManifest 中移除。</string>
-    <string name="java_menu_add_activity">作为 Activity 添加到 Manifest</string>
+    <string name="java_menu_add_activity">作为活动添加到 Manifest</string>
     <string name="java_menu_add_service">作为 Service 添加到 Manifest</string>
     <string name="java_menu_edit">编辑</string>
     <string name="java_menu_edit_with">使用…编辑</string>
-    <string name="java_menu_remove_activity">从 Manifest 移除 Activity</string>
+    <string name="java_menu_remove_activity">从 Manifest 移除活动</string>
     <string name="java_menu_remove_service">从 Manifest 移除 Service</string>
     <string name="java_menu_rename">重命名</string>
     <string name="java_rename_occurrences_format">重命名文件中 \"%s\" 的引用</string>
@@ -2464,25 +2464,25 @@
     <string name="message_license_expired">许可证已过期。\n%s</string>
 
     <!-- ========== 事件 - 精确补充 ========== -->
-    <string name="event_onpostcreated">创建完成后</string>
-    <string name="event_onprogresschanged">进度改变时</string>
+    <string name="event_onpostcreated">活动启动完成时</string>
+    <string name="event_onprogresschanged">进度变化时</string>
     <string name="event_onresetpasswordemailsent">重置密码邮件发送完成时</string>
     <string name="event_onsigninusercomplete">用户登录完成时</string>
-    <string name="event_onstart">Activity 变为可见时</string>
-    <string name="event_onstarttrackingtouch">开始触摸追踪时</string>
-    <string name="event_onstoptrackingtouch">停止触摸追踪时</string>
-    <string name="event_onsaveinstancestate">Activity 保存实例状态</string>
-    <string name="event_onrestoreinstancestate">Activity 恢复实例状态</string>
-    <string name="event_oncreateoptionsmenu">创建选项菜单</string>
-    <string name="event_onoptionsitemselected">选项菜单项被选中</string>
-    <string name="event_oncreatecontextmenu">创建上下文菜单</string>
-    <string name="event_oncontextitemselected">上下文菜单项被选中</string>
-    <string name="event_onfragmentadded">返回 Fragment</string>
-    <string name="event_ontabadded">返回标题</string>
+    <string name="event_onstart">活动变为可见时</string>
+    <string name="event_onstarttrackingtouch">开始触摸滑块时</string>
+    <string name="event_onstoptrackingtouch">结束触摸滑块时</string>
+    <string name="event_onsaveinstancestate">保存活动实例状态时</string>
+    <string name="event_onrestoreinstancestate">恢复活动实例状态时</string>
+    <string name="event_oncreateoptionsmenu">创建选项菜单时</string>
+    <string name="event_onoptionsitemselected">选项菜单项被选中时</string>
+    <string name="event_oncreatecontextmenu">创建上下文菜单时</string>
+    <string name="event_oncontextitemselected">上下文菜单项被选中时</string>
+    <string name="event_onfragmentadded">提供页面 Fragment</string>
+    <string name="event_ontabadded">提供页面标题</string>
     <string name="event_title_add_new_component">添加新组件</string>
     <string name="event_title_add_new_event">添加新事件</string>
     <string name="event_title_edit_component">编辑组件</string>
-    <string name="event_type_activity">Activity</string>
+    <string name="event_type_activity">活动</string>
 
     <!-- ========== 事件管理 - 精确补充 ========== -->
     <string name="events_creator_hint_code">代码</string>
@@ -2503,8 +2503,8 @@
     <string name="menu_select_variable_format">选择 %s</string>
 
     <!-- ========== Manifest - 精确补充 ========== -->
-    <string name="manifest_activities">Activity 列表</string>
-    <string name="manifest_attrs_all_activities">全部 Activity</string>
+    <string name="manifest_activities">活动列表</string>
+    <string name="manifest_attrs_all_activities">全部活动</string>
     <string name="manifest_attrs_application">应用属性</string>
     <string name="manifest_attrs_permissions">权限</string>
     <string name="manifest_components_title_format">%s 组件</string>
@@ -2515,14 +2515,14 @@
     <string name="manifest_error_invalid_value">第 %d 个属性中的 AndroidManifest 属性注入值无效</string>
     <string name="manifest_error_parse_failed">解析 AndroidManifest 属性注入失败；原因: %s</string>
     <string name="manifest_hint_attr_value">属性值</string>
-    <string name="manifest_option_all_activities">所有 Activities</string>
-    <string name="manifest_option_all_activities_desc">为所有 Activities 设置属性</string>
+    <string name="manifest_option_all_activities">所有活动</string>
+    <string name="manifest_option_all_activities_desc">为所有活动设置属性</string>
     <string name="manifest_option_app_components">应用组件</string>
     <string name="manifest_option_app_components_desc">管理应用组件</string>
     <string name="manifest_option_application">应用</string>
     <string name="manifest_option_application_desc">设置 Application 属性</string>
-    <string name="manifest_option_launcher_activity">启动 Activity</string>
-    <string name="manifest_option_launcher_activity_desc">设置启动 Activity 属性</string>
+    <string name="manifest_option_launcher_activity">启动活动</string>
+    <string name="manifest_option_launcher_activity_desc">设置启动活动属性</string>
     <string name="manifest_option_permissions">权限</string>
     <string name="manifest_option_permissions_desc">管理应用权限</string>
     <string name="manifest_title">AndroidManifest 管理器</string>
@@ -2849,7 +2849,7 @@
     <string name="common_word_config">配置</string>
     <string name="manifest_show_source">显示清单源码</string>
     <string name="menu_save_image">保存图片</string>
-    <string name="event_onactivityresult">Activity 返回结果</string>
+    <string name="event_onactivityresult">收到活动结果时</string>
     <string name="event_initializelogic">初始化逻辑</string>
     <string name="event_onlongclick">长按时</string>
 
