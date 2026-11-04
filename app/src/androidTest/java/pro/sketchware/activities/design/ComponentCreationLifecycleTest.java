@@ -3,10 +3,12 @@ package pro.sketchware.activities.design;
 import static org.junit.Assert.*;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.os.SystemClock;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -27,6 +29,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.function.Consumer;
 
@@ -52,6 +55,57 @@ public class ComponentCreationLifecycleTest {
             host.openInput();
             host.save(NAME);
             host.assertCreatedAndClosed();
+        }
+    }
+
+    @Test(timeout = 30000)
+    public void landscapeSelectorOpensExpandedAndCanAddAfterRecreation() throws Exception {
+        try (Host host = new Host(false)) {
+            host.rotate(Configuration.ORIENTATION_LANDSCAPE);
+            host.openSelector();
+            assertSelectorExpanded(host);
+            assertSelectorContentVisible(host);
+            host.recreate();
+            assertSelectorExpanded(host);
+            assertSelectorContentVisible(host);
+            host.rotate(Configuration.ORIENTATION_PORTRAIT);
+            assertSelectorCollapsed(host);
+            assertSelectorContentVisible(host);
+            host.rotate(Configuration.ORIENTATION_LANDSCAPE);
+            assertSelectorExpanded(host);
+            assertSelectorContentVisible(host);
+            host.openInput();
+            host.save(NAME);
+            host.assertCreatedAndClosed();
+        }
+    }
+
+    @Test(timeout = 30000)
+    public void logicSelectorFollowsRotationAndKeepsListGestures() throws Exception {
+        try (Host host = new Host(true)) {
+            host.openSelector();
+            assertSelectorCollapsed(host);
+            host.rotate(Configuration.ORIENTATION_LANDSCAPE);
+            assertSelectorExpanded(host);
+            assertSelectorContentVisible(host);
+            Rect[] listBounds = {null};
+            host.onActivity(activity -> {
+                listBounds[0] = screenBounds(find(activity, AddComponentBottomSheet.class)
+                        .requireView().findViewById(R.id.component_list));
+                Rect available = new Rect();
+                activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(available);
+                assertTrue(listBounds[0].intersect(available));
+            });
+            Rect area = listBounds[0];
+            float upper = area.top + area.height() * 0.25f;
+            float lower = area.top + area.height() * 0.75f;
+            swipe(area.centerX(), upper, lower);
+            assertSelectorExpanded(host);
+            swipe(area.centerX(), lower, upper);
+            assertSelectorExpanded(host);
+            host.rotate(Configuration.ORIENTATION_PORTRAIT);
+            assertSelectorCollapsed(host);
+            assertSelectorContentVisible(host);
         }
     }
 
@@ -85,9 +139,30 @@ public class ComponentCreationLifecycleTest {
     public void listSwipesStayInTheSelectorAndHandleStillDismisses() throws Exception {
         try (Host host = new Host(false)) {
             host.openSelector();
+            InstrumentationRegistry.getInstrumentation().getUiAutomation().waitForIdle(500, 5000);
+            assertSelectorCollapsed(host);
+            Rect[] dragHandle = {null};
+            int[] expandTo = {0};
+            host.onActivity(activity -> {
+                dragHandle[0] = screenBounds(((android.view.ViewGroup)
+                        find(activity, AddComponentBottomSheet.class).requireView()).getChildAt(0));
+                Rect available = new Rect();
+                activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(available);
+                expandTo[0] = available.top + dragHandle[0].height();
+            });
+            swipe(dragHandle[0].centerX(), dragHandle[0].centerY(), expandTo[0]);
+            assertSelectorExpanded(host);
             Rect[] listBounds = {null};
-            host.onActivity(activity -> listBounds[0] = screenBounds(find(activity, AddComponentBottomSheet.class)
-                    .requireView().findViewById(R.id.component_list)));
+            boolean[] scrollable = {false};
+            host.onActivity(activity -> {
+                RecyclerView list = find(activity, AddComponentBottomSheet.class)
+                        .requireView().findViewById(R.id.component_list);
+                listBounds[0] = screenBounds(list);
+                scrollable[0] = list.canScrollVertically(1);
+                Rect available = new Rect();
+                activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(available);
+                assertTrue(listBounds[0].intersect(available));
+            });
             Rect area = listBounds[0];
             float upper = area.top + area.height() * 0.25f;
             float lower = area.top + area.height() * 0.75f;
@@ -98,12 +173,16 @@ public class ComponentCreationLifecycleTest {
             for (int i = 0; i < 3; i++) {
                 swipe(area.centerX(), lower, upper);
                 assertSelectorExpanded(host);
+                int[] offsetBeforeDown = {0};
                 host.onActivity(activity -> {
                     RecyclerView list = find(activity, AddComponentBottomSheet.class).requireView()
                             .findViewById(R.id.component_list);
                     var first = list.findViewHolderForAdapterPosition(0);
-                    assertTrue("Swipe up must move the first row above the viewport",
-                            first == null || first.itemView.getTop() < list.getPaddingTop());
+                    if (scrollable[0]) {
+                        assertTrue("Swipe up must move the first row above the viewport",
+                                first == null || first.itemView.getTop() < list.getPaddingTop());
+                    }
+                    offsetBeforeDown[0] = list.computeVerticalScrollOffset();
                 });
                 swipe(area.centerX(), upper, lower);
                 assertSelectorExpanded(host);
@@ -112,7 +191,12 @@ public class ComponentCreationLifecycleTest {
                             .findViewById(R.id.component_list);
                     var first = list.findViewHolderForAdapterPosition(0);
                     assertNotNull("Swipe down must return to the first row", first);
-                    assertEquals(list.getPaddingTop(), first.itemView.getTop());
+                    if (scrollable[0]) {
+                        assertTrue("Swipe down must move the list towards the top",
+                                list.computeVerticalScrollOffset() < offsetBeforeDown[0]);
+                    } else {
+                        assertEquals("A list that fits must remain at the top", 0, list.computeVerticalScrollOffset());
+                    }
                 });
             }
 
@@ -132,12 +216,59 @@ public class ComponentCreationLifecycleTest {
         }
     }
 
-    private static void assertSelectorExpanded(Host host) {
+    private static void awaitSelectorSettled(Host host) throws Exception {
+        ProjectEditorPersistenceTest.waitUntil(() -> {
+            boolean[] settled = {false};
+            host.onActivity(activity -> {
+                AddComponentBottomSheet sheet = find(activity, AddComponentBottomSheet.class);
+                if (sheet == null) {
+                    settled[0] = true;
+                    return;
+                }
+                int state = ((BottomSheetDialog) sheet.requireDialog()).getBehavior().getState();
+                RecyclerView list = sheet.requireView().findViewById(R.id.component_list);
+                settled[0] = state != BottomSheetBehavior.STATE_SETTLING && state != BottomSheetBehavior.STATE_DRAGGING
+                        && list.getScrollState() == RecyclerView.SCROLL_STATE_IDLE;
+            });
+            return settled[0];
+        });
+    }
+
+    private static void assertSelectorExpanded(Host host) throws Exception {
+        awaitSelectorSettled(host);
         host.onActivity(activity -> {
             AddComponentBottomSheet sheet = find(activity, AddComponentBottomSheet.class);
             assertNotNull("Scrolling the list must keep the selector open", sheet);
             BottomSheetDialog dialog = (BottomSheetDialog) sheet.requireDialog();
             assertEquals(BottomSheetBehavior.STATE_EXPANDED, dialog.getBehavior().getState());
+        });
+    }
+
+    private static void assertSelectorCollapsed(Host host) throws Exception {
+        awaitSelectorSettled(host);
+        host.onActivity(activity -> {
+            AddComponentBottomSheet sheet = find(activity, AddComponentBottomSheet.class);
+            assertNotNull(sheet);
+            BottomSheetDialog dialog = (BottomSheetDialog) sheet.requireDialog();
+            assertEquals(BottomSheetBehavior.STATE_COLLAPSED, dialog.getBehavior().getState());
+            Rect available = new Rect();
+            activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(available);
+            Rect bounds = screenBounds(dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet));
+            assertTrue("The selector must leave space above it", bounds.top > available.top);
+        });
+    }
+
+    private static void assertSelectorContentVisible(Host host) {
+        host.onActivity(activity -> {
+            AddComponentBottomSheet sheet = find(activity, AddComponentBottomSheet.class);
+            View title = sheet.requireView().findViewById(R.id.title);
+            Rect visible = new Rect();
+            assertTrue("The selector title must be visible", title.getGlobalVisibleRect(visible));
+            assertEquals("The selector title must not be clipped", title.getHeight(), visible.height());
+            RecyclerView list = sheet.requireView().findViewById(R.id.component_list);
+            assertTrue("The component list must be visible", list.getGlobalVisibleRect(visible));
+            assertTrue(list.getChildCount() > 0);
+            assertTrue("The list must show at least one full row", visible.height() >= list.getChildAt(0).getHeight());
         });
     }
 
@@ -147,18 +278,13 @@ public class ComponentCreationLifecycleTest {
         return new Rect(position[0], position[1], position[0] + view.getWidth(), position[1] + view.getHeight());
     }
 
-    private static void swipe(float x, float fromY, float toY) {
-        long downTime = SystemClock.uptimeMillis();
-        for (int step = 0; step <= 24; step++) {
-            int action = step == 0 ? MotionEvent.ACTION_DOWN : step == 24 ? MotionEvent.ACTION_UP : MotionEvent.ACTION_MOVE;
-            MotionEvent event = MotionEvent.obtain(downTime, SystemClock.uptimeMillis(), action,
-                    x, fromY + (toY - fromY) * step / 24, 0);
-            try {
-                InstrumentationRegistry.getInstrumentation().sendPointerSync(event);
-            } finally {
-                event.recycle();
-            }
-            SystemClock.sleep(16);
+    private static void swipe(float x, float fromY, float toY) throws IOException {
+        // Avoid the extra window-transaction waits around sendPointerSync on some devices.
+        String command = "input touchscreen swipe " + Math.round(x) + " " + Math.round(fromY)
+                + " " + Math.round(x) + " " + Math.round(toY) + " 400";
+        try (var output = new ParcelFileDescriptor.AutoCloseInputStream(
+                InstrumentationRegistry.getInstrumentation().getUiAutomation().executeShellCommand(command))) {
+            assertEquals("The input command must finish without errors", -1, output.read());
         }
         SystemClock.sleep(400);
         idle();
@@ -186,6 +312,7 @@ public class ComponentCreationLifecycleTest {
     public void selectorViewCanBeDestroyedAndRecreatedBeforeAdding() throws Exception {
         try (Host host = new Host(false)) {
             host.openSelector();
+            assertSelectorCollapsed(host);
             host.onActivity(activity -> {
                 AddComponentBottomSheet selector = find(activity, AddComponentBottomSheet.class);
                 FragmentManager manager = activity.getSupportFragmentManager();
@@ -193,6 +320,7 @@ public class ComponentCreationLifecycleTest {
                 manager.beginTransaction().attach(selector).commitNow();
             });
             idle();
+            assertSelectorCollapsed(host);
             host.openInput();
             host.save(NAME);
             host.assertCreatedAndClosed();
@@ -341,6 +469,7 @@ public class ComponentCreationLifecycleTest {
                     designer.onActivity(activity -> ((ViewPager) activity.findViewById(R.id.viewpager)).setCurrentItem(2, false));
                 }
                 idle();
+                rotate(Configuration.ORIENTATION_PORTRAIT);
             } catch (Exception | AssertionError e) {
                 close();
                 throw e;
@@ -349,6 +478,22 @@ public class ComponentCreationLifecycleTest {
 
         void onActivity(Consumer<FragmentActivity> action) {
             if (designer != null) designer.onActivity(action::accept); else logic.onActivity(action::accept);
+        }
+
+        void rotate(int orientation) throws Exception {
+            onActivity(activity -> activity.setRequestedOrientation(orientation == Configuration.ORIENTATION_LANDSCAPE
+                    ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT));
+            ProjectEditorPersistenceTest.waitUntil(() -> {
+                boolean[] ready = {false};
+                onActivity(activity -> {
+                    View decor = activity.getWindow().getDecorView();
+                    ready[0] = activity.getResources().getConfiguration().orientation == orientation
+                            && (orientation == Configuration.ORIENTATION_LANDSCAPE
+                            ? decor.getWidth() > decor.getHeight() : decor.getHeight() > decor.getWidth());
+                });
+                return ready[0];
+            });
+            idle();
         }
 
         void keepScreenOn() {

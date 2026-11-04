@@ -1,5 +1,6 @@
 package pro.sketchware.activities.editor.component;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -39,6 +40,7 @@ public class AddComponentBottomSheet extends BottomSheetDialogFragment {
 
     private ArrayList<ComponentBean> componentList;
     private LogicAddComponentBinding binding;
+    private int sheetOrientation;
 
     public static AddComponentBottomSheet newInstance(String scId, ProjectFileBean projectFileBean) {
         AddComponentBottomSheet addComponentBottomSheet = new AddComponentBottomSheet();
@@ -86,13 +88,25 @@ public class AddComponentBottomSheet extends BottomSheetDialogFragment {
         initializeComponentBeans();
     }
 
-    @NonNull
     @Override
-    public BottomSheetDialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
-        dialog.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
-        dialog.getBehavior().setSkipCollapsed(true);
-        return dialog;
+    public void onStart() {
+        super.onStart();
+        sheetOrientation = getResources().getConfiguration().orientation;
+        if (sheetOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+            ((BottomSheetDialog) requireDialog()).getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (sheetOrientation != newConfig.orientation) {
+            sheetOrientation = newConfig.orientation;
+            if (getDialog() instanceof BottomSheetDialog dialog) {
+                dialog.getBehavior().setState(sheetOrientation == Configuration.ORIENTATION_LANDSCAPE
+                        ? BottomSheetBehavior.STATE_EXPANDED : BottomSheetBehavior.STATE_COLLAPSED);
+            }
+        }
     }
 
     private void initializeComponentBeans() {
