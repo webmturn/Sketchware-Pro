@@ -253,6 +253,16 @@ public class InnerAddComponentBottomSheet extends BottomSheetDialogFragment {
                 }
                 break;
 
+            case ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_PHONE:
+            case ComponentBean.COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE:
+            case ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN:
+                if (ProjectDataManager.getLibraryManager(scId).getFirebaseDB().useYn.equals(ProjectLibraryBean.LIB_USE_N)) {
+                    SketchToast.warning(getContext(), Helper.getResString(R.string.design_library_guide_setup_first), SketchToast.TOAST_WARNING).show();
+                    return false;
+                }
+                ProjectDataManager.getProjectDataManager(scId).addComponent(projectFileBean.getJavaName(), componentType, componentId);
+                break;
+
             case ComponentBean.COMPONENT_TYPE_FRAGMENT_ADAPTER:
                 if (ProjectDataManager.getLibraryManager(scId).getCompat().useYn.equals(ProjectLibraryBean.LIB_USE_N)) {
                     SketchToast.warning(getContext(), Helper.getResString(R.string.design_library_guide_setup_first), SketchToast.TOAST_WARNING).show();

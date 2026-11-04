@@ -879,8 +879,8 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                 }
                 if (hasLibraryBackup) {
                     ProjectDataManager.getFileManager(sc_id).syncWithLibrary(ProjectDataManager.getLibraryManager(sc_id));
-                    ProjectDataManager.getProjectDataManager(sc_id).removeAdmobComponents(ProjectDataManager.getLibraryManager(sc_id).getFirebaseDB());
-                    ProjectDataManager.getProjectDataManager(sc_id).removeFirebaseViews(ProjectDataManager.getLibraryManager(sc_id).getAdmob(), ProjectDataManager.getFileManager(sc_id));
+                    ProjectDataManager.getProjectDataManager(sc_id).removeFirebaseComponents(ProjectDataManager.getLibraryManager(sc_id).getFirebaseDB());
+                    ProjectDataManager.getProjectDataManager(sc_id).removeAdmobViewsAndComponents(ProjectDataManager.getLibraryManager(sc_id).getAdmob(), ProjectDataManager.getFileManager(sc_id));
                     ProjectDataManager.getProjectDataManager(sc_id).removeMapViews(ProjectDataManager.getLibraryManager(sc_id).getGoogleMap(), ProjectDataManager.getFileManager(sc_id));
                 }
                 if (hasFileBackup || hasLibraryBackup) {

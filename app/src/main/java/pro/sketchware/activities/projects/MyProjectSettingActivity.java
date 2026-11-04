@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -45,6 +44,8 @@ import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.validation.VariableNameValidator;
 import pro.sketchware.core.validation.ProjectVersionCode;
 import pro.sketchware.core.project.ProjectListManager;
+import pro.sketchware.core.project.ProjectDataManager;
+import pro.sketchware.beans.ProjectLibraryBean;
 import pro.sketchware.util.UIHelper;
 import pro.sketchware.util.format.DateTimeUtil;
 import pro.sketchware.util.io.EncryptedFileUtil;
@@ -139,11 +140,10 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
         projectAppNameValidator = new AppNameValidator(getApplicationContext(), binding.tilAppName);
         projectPackageNameValidator = new PackageNameValidator(getApplicationContext(), binding.tilPackageName);
         projectNameValidator = new VariableNameValidator(getApplicationContext(), binding.tilProjectName);
-        binding.tilPackageName.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) {
-                if (!shownPackageNameChangeWarning && !Helper.getText((EditText) v).trim().contains("com.my.newproject")) {
-                    showPackageNameChangeWarning();
-                }
+        binding.etPackageName.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus && !shownPackageNameChangeWarning
+                    && !Helper.getText(binding.etPackageName).trim().equals("com.my.newproject")) {
+                showPackageNameChangeWarning();
             }
         });
 
@@ -434,10 +434,15 @@ public class MyProjectSettingActivity extends BaseAppCompatActivity implements V
 
     private void showPackageNameChangeWarning() {
         shownPackageNameChangeWarning = true;
+        String message = Helper.getResString(R.string.myprojects_settings_message_package_rename);
+        if (updatingExistingProject && ProjectLibraryBean.LIB_USE_Y.equals(
+                ProjectDataManager.getLibraryManager(sc_id).getFirebaseDB().useYn)) {
+            message += "\n\n" + Helper.getResString(R.string.myprojects_settings_message_package_rename_firebase);
+        }
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setTitle(Helper.getResString(R.string.common_word_warning));
         dialog.setIcon(R.drawable.break_warning_96_red);
-        dialog.setMessage(Helper.getResString(R.string.myprojects_settings_message_package_rename));
+        dialog.setMessage(message);
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_ok), null);
         dialog.show();
     }

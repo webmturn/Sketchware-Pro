@@ -433,17 +433,20 @@ public class ProjectDataStore {
     } 
   }
   
-  public void removeAdmobComponents(ProjectLibraryBean libraryBean) {
+  public void removeFirebaseComponents(ProjectLibraryBean libraryBean) {
     if (libraryBean.useYn.equals("Y"))
       return; 
     for (String key : new ArrayList<>(componentMap.keySet())) {
       removeComponentsByType(key, ComponentBean.COMPONENT_TYPE_FIREBASE);
       removeComponentsByType(key, ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH);
       removeComponentsByType(key, ComponentBean.COMPONENT_TYPE_FIREBASE_STORAGE);
+      removeComponentsByType(key, ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_PHONE);
+      removeComponentsByType(key, ComponentBean.COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE);
+      removeComponentsByType(key, ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN);
     } 
   }
   
-  public void removeFirebaseViews(ProjectLibraryBean libraryBean, ProjectFileManager fileManager) {
+  public void removeAdmobViewsAndComponents(ProjectLibraryBean libraryBean, ProjectFileManager fileManager) {
     if (libraryBean.useYn.equals("Y"))
       return; 
     for (ProjectFileBean projectFileBean : fileManager.getActivities()) {
@@ -464,8 +467,10 @@ public class ProjectDataStore {
       for (ViewBean viewBean : toRemove)
         removeView(projectFileBean, viewBean); 
     } 
-    for (String key : new ArrayList<>(componentMap.keySet()))
+    for (String key : new ArrayList<>(componentMap.keySet())) {
       removeComponentsByType(key, ComponentBean.COMPONENT_TYPE_INTERSTITIAL_AD);
+      removeComponentsByType(key, ComponentBean.COMPONENT_TYPE_REWARDED_VIDEO_AD);
+    }
   }
   
   /**

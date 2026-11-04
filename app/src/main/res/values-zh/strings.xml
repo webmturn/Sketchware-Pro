@@ -256,11 +256,11 @@
     <string name="block_category_file">文件</string>
     <string name="block_category_view_func">视图函数</string>
     <string name="block_category_component_func">组件函数</string>
-    <string name="block_category_moreblock">更多积木块</string>
+    <string name="block_category_moreblock">自定义积木</string>
 
     <!-- ========== 导出APK (Export APK) ========== -->
     <string name="export_apk_sign_dialog_title">签名 APK</string>
-    <string name="export_apk_sign_dialog_desc">请输入密钥库信息</string>
+    <string name="export_apk_sign_dialog_desc">填写密钥库信息以签名 APK。如果没有密钥库，可以使用测试密钥。</string>
 
     <!-- ========== 项目 (Projects) ========== -->
     <string name="myprojects_list_menu_title_backup">备份</string>
@@ -310,7 +310,7 @@
     <string name="invalid_value_rule_2">只能包含字母、数字和点号</string>
     <string name="invalid_value_rule_3">只能包含字母、数字和下划线</string>
     <string name="invalid_value_rule_4">只能包含小写字母、数字和下划线</string>
-    <string name="invalid_value_rule_5">不能包含特殊字符</string>
+    <string name="invalid_value_rule_5">不能包含 &amp;、&lt;、&gt;、\" 或 \'</string>
 
     <!-- ========== 收藏/资源管理 (Collection/Resource) ========== -->
     <string name="collection_duplicated_name">名称重复</string>
@@ -337,11 +337,7 @@
     <string name="language_settings_import_confirm_title">确认导入</string>
     <string name="language_settings_import_confirm_msg">即将导入 %d 个字符串覆盖。继续吗？</string>
     <string name="language_settings_import_success_title">导入成功</string>
-    <string name="language_settings_import_success_msg">导入完成。
-
-总字符串数：%1$d
-匹配成功：%2$d
-匹配失败：%3$d</string>
+    <string name="language_settings_import_success_msg">导入完成。\n\n总字符串数：%1$d\n匹配成功：%2$d\n匹配失败：%3$d\n\n翻译已生效。部分界面可能需要重启应用后才能完全更新。</string>
     <string name="language_settings_clear_confirm_title">移除自定义翻译</string>
     <string name="language_settings_clear_confirm_msg">移除所有导入的译文？界面将恢复为你选择的应用语言。</string>
 
@@ -978,7 +974,7 @@
     <string name="logic_custom_activities">自定义 Activities</string>
 
     <!-- ========== 属性编辑器 - 补充 ========== -->
-    <string name="property_alpha">透明度</string>
+    <string name="property_alpha">不透明度</string>
     <string name="property_background_color">背景颜色</string>
     <string name="property_checked">选中</string>
     <string name="property_clickable">可点击</string>
@@ -1077,8 +1073,8 @@
     <string name="design_drawer_menu_description_theme">更改应用主题</string>
     <string name="design_drawer_menu_description_view">管理 Activity 和自定义视图</string>
     <string name="design_drawer_menu_description_xml_command">编辑 XML 命令</string>
-    <string name="design_drawer_menu_injection">代码注入</string>
-    <string name="design_drawer_menu_injection_subtitle">添加代码注入</string>
+    <string name="design_drawer_menu_injection">AppCompat 管理器</string>
+    <string name="design_drawer_menu_injection_subtitle">修改 AppCompat 布局属性</string>
     <string name="design_drawer_menu_nativelibs">原生库</string>
     <string name="design_drawer_menu_nativelibs_subtitle">管理原生库</string>
     <string name="design_drawer_menu_proguard">ProGuard</string>
@@ -1121,7 +1117,7 @@
     <string name="design_library_admob_dialog_confirm_delete_test_device">确定要删除此测试设备吗？</string>
     <string name="design_library_admob_dialog_delete_adunit_title">删除广告单元</string>
     <string name="design_library_admob_dialog_delete_test_device_title">删除测试设备</string>
-    <string name="design_library_admob_dialog_description_confirm_uncheck">如果取消勾选 AdMob，现有的广告组件将被删除。是否继续？</string>
+    <string name="design_library_admob_dialog_description_confirm_uncheck">如果取消勾选 AdMob，现有的 AdMob 控件和组件将被删除。是否继续？</string>
     <string name="design_library_admob_dialog_select_unit_title">选择广告单元</string>
     <string name="design_library_admob_dialog_set_app_id">设置应用 ID</string>
     <string name="design_library_admob_dialog_set_app_id_title">设置 AdMob 应用 ID</string>
@@ -1141,7 +1137,7 @@
     <string name="design_library_admob_widget_setup_first">要使用此控件，需先在库管理器中设置。</string>
     <string name="design_library_appcompat_description">启用 AppCompat 库可以在 Activity 中添加抽屉布局和悬浮操作按钮。</string>
     <string name="design_library_appcompat_need_firebase_disable">使用 Firebase 时无法禁用 AppCompat 库。</string>
-    <string name="design_library_appcompat_need_m3_disable">使用 Material3 和动态颜色时无法禁用 AppCompat 库。</string>
+    <string name="design_library_appcompat_need_m3_disable">使用 Material3 时无法禁用 AppCompat 库。</string>
     <string name="design_library_button_import_from_other_project">从其他项目导入</string>
     <string name="design_library_description_admob">使用 Google AdMob</string>
     <string name="design_library_description_appcompat_and_design">抽屉布局、悬浮操作按钮</string>
@@ -1574,9 +1570,9 @@
     <string name="design_library_admob_setting_message_add_app_id">应用 ID 是必填项</string>
     <string name="design_library_admob_setting_step1_desc">分配给你应用的唯一 ID。你需要在此添加应用 ID。</string>
     <string name="design_library_admob_setting_step1_title">添加应用 ID</string>
-    <string name="design_library_admob_setting_step2_desc">首先你需要在 AdMob 控制台中创建广告单元。手动或通过关联 AdMob 账号添加创建的广告单元。</string>
+    <string name="design_library_admob_setting_step2_desc">先在 AdMob 控制台创建广告单元，再手动添加；也可以从其他项目导入 AdMob 配置。</string>
     <string name="design_library_admob_setting_step2_title">添加广告单元</string>
-    <string name="design_library_admob_setting_step3_desc">将广告单元 ID 分配给横幅和插屏广告。</string>
+    <string name="design_library_admob_setting_step3_desc">将广告单元 ID 分配给横幅、插屏和激励广告。</string>
     <string name="design_library_admob_setting_step3_title">分配广告单元 ID</string>
     <string name="design_library_admob_setting_step4_desc">如果你不添加设备 ID 就测试 AdMob，你的 AdMob 账号可能被封禁。请添加你的设备 ID。</string>
     <string name="design_library_admob_setting_step4_title">配置测试设备</string>
@@ -2402,7 +2398,7 @@
     <string name="export_aab_sign_dialog_desc">填写密钥库详情以签名 AAB。</string>
     <string name="export_aab_sign_dialog_title">签名输出的 AAB</string>
     <string name="export_aab_sign_note">生成的 .aab 文件必须签名。\n将你的密钥库复制到 /Internal storage/sketchware/keystore/release_key.jks 并输入别名密码。</string>
-    <string name="export_apk_sign_note">要签名 APK，你需要密钥库。使用已创建的密钥库，将其复制到 /Internal storage/sketchware/keystore/release_key.jks 并输入别名密码。\n\n注意这只使用签名方案 V1 签名你的 APK，要支持 Android 11+ 等，请使用第三方工具（暂时）。</string>
+    <string name="export_apk_sign_note">可使用测试密钥或自备密钥库签名 APK。使用自备密钥库时，请将文件复制到 /Internal storage/sketchware/keystore/release_key.jks，并填写密钥库密码、密钥别名和密钥密码。\n\n此导出流程使用自备密钥库时仅支持 V1 签名；使用测试密钥时支持最高 V4 签名。</string>
 
     <!-- ========== 排除库 ========== -->
     <string name="exclude_libs_excluded_title">已排除的内置库</string>
@@ -2582,7 +2578,8 @@
     <string name="myprojects_settings_hint_enter_application_name">输入应用名称</string>
     <string name="myprojects_settings_hint_enter_package_name">输入包名</string>
     <string name="myprojects_settings_hint_enter_project_name">输入项目名称</string>
-    <string name="myprojects_settings_message_package_rename">注意：更改包名可能导致应用被视为新应用</string>
+    <string name="myprojects_settings_message_package_rename">更改包名后，系统会将其视为另一个应用。</string>
+    <string name="myprojects_settings_message_package_rename_firebase">此项目已启用 Firebase。更改包名后，可能还需要更新 Firebase 配置，以及依赖包名的 Google 登录、推送等设置。</string>
     <string name="myprojects_settings_title_advanced_settings">高级设置</string>
     <string name="myprojects_settings_version_control_title">版本控制</string>
     <string name="myprojects_settings_version_control_title_code">版本号</string>

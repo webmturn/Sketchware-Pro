@@ -208,8 +208,8 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
         ProjectDataManager.getLibraryManager(sc_id).saveToBackup();
         ProjectDataManager.getFileManager(sc_id).syncWithLibrary(ProjectDataManager.getLibraryManager(sc_id));
         ProjectDataManager.getProjectDataManager(sc_id).syncWithFileManager(ProjectDataManager.getFileManager(sc_id));
-        ProjectDataManager.getProjectDataManager(sc_id).removeFirebaseViews(admobLibraryBean, ProjectDataManager.getFileManager(sc_id));
-        ProjectDataManager.getProjectDataManager(sc_id).removeAdmobComponents(firebaseLibraryBean);
+        ProjectDataManager.getProjectDataManager(sc_id).removeAdmobViewsAndComponents(admobLibraryBean, ProjectDataManager.getFileManager(sc_id));
+        ProjectDataManager.getProjectDataManager(sc_id).removeFirebaseComponents(firebaseLibraryBean);
         ProjectDataManager.getProjectDataManager(sc_id).removeMapViews(googleMapLibraryBean, ProjectDataManager.getFileManager(sc_id));
     }
 

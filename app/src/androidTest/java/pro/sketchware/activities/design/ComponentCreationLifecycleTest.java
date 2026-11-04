@@ -36,6 +36,7 @@ import pro.sketchware.activities.editor.LogicEditorActivity;
 import pro.sketchware.activities.editor.component.AddComponentBottomSheet;
 import pro.sketchware.beans.ComponentBean;
 import pro.sketchware.beans.ProjectFileBean;
+import pro.sketchware.beans.ProjectLibraryBean;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.dialogs.InnerAddComponentBottomSheet;
@@ -51,6 +52,32 @@ public class ComponentCreationLifecycleTest {
             host.openInput();
             host.save(NAME);
             host.assertCreatedAndClosed();
+        }
+    }
+
+    @Test(timeout = 30000)
+    public void additionalFirebaseComponentsRequireTheLibraryAndCanBeRetried() throws Exception {
+        for (int type : new int[]{ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_PHONE,
+                ComponentBean.COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE, ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN}) {
+            try (Host host = new Host(false)) {
+                var firebase = ProjectDataManager.getLibraryManager(host.fixture.id).getFirebaseDB();
+                firebase.useYn = ProjectLibraryBean.LIB_USE_N;
+                host.onActivity(activity -> InnerAddComponentBottomSheet.newInstance(host.fixture.id,
+                        new ProjectFileBean(ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY, "main"), new ComponentBean(type))
+                        .showNow(activity.getSupportFragmentManager(), "firebase-requirement"));
+                idle();
+                host.save(NAME);
+                long rejectedSaveAt = SystemClock.elapsedRealtime();
+                assertTrue("A disabled library must prevent creation of type " + type,
+                        host.store().getComponents(ProjectFileBean.DEFAULT_JAVA_NAME).isEmpty());
+                host.onActivity(activity -> assertNotNull(input(activity)));
+
+                firebase.useYn = ProjectLibraryBean.LIB_USE_Y;
+                ProjectEditorPersistenceTest.waitUntil(() -> SystemClock.elapsedRealtime() - rejectedSaveAt > 100);
+                host.save(NAME);
+                host.assertCreatedAndClosed();
+                assertEquals(type, host.store().getComponents(ProjectFileBean.DEFAULT_JAVA_NAME).get(0).type);
+            }
         }
     }
 

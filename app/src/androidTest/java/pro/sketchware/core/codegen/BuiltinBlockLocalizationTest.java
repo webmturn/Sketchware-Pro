@@ -11,6 +11,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.lang.reflect.Field;
 import org.junit.Test;
@@ -49,7 +50,14 @@ public class BuiltinBlockLocalizationTest {
                 assertEquals(opcode + ": " + field, BlockSpecParser.parseParameters(original),
                         BlockSpecParser.parseParameters(display));
                 assertEquals(original, definition.get(field));
-                assertEquals(original, BuiltinBlockLocalization.getSpec(english, opcode, original, secondary));
+                // Corrected display phrases keep their historical stored specs for compatibility.
+                String expectedEnglish = secondary ? original : switch (opcode) {
+                    case "caseStrAnd" -> "case %s or";
+                    case "caseNumAnd" -> "case %d or";
+                    case "checkboxOnChecked" -> "When the checked state of %m.checkbox changes";
+                    default -> original;
+                };
+                assertEquals(expectedEnglish, BuiltinBlockLocalization.getSpec(english, opcode, original, secondary));
                 if (!display.equals(original)) translated++;
                 checked++;
             }
@@ -170,5 +178,24 @@ public class BuiltinBlockLocalizationTest {
         assertTrue(progress.contains("2"));
         assertEquals("Tab 1", chinese.getString(R.string.editor_preview_tab1));
         assertEquals("Error: ", context(Locale.ENGLISH).getString(R.string.library_download_error_prefix));
+    }
+
+    @Test public void legacyCustomBlockTranslationsKeepTheirEmptyTails() throws Exception {
+        Context chinese = context(Locale.SIMPLIFIED_CHINESE);
+        StringResource translations = new StringResource();
+        HashMap<String, String> legacy = new HashMap<>();
+        String[] prefixes = {"block_math_max", "block_math_min", "block_string_index", "block_string_last_index"};
+        for (String prefix : prefixes) {
+            legacy.put(prefix + "_head", "custom");
+            legacy.put(prefix + "_body_1", "versus");
+            legacy.put(prefix + "_tail", "");
+        }
+        Field overrides = StringResource.class.getDeclaredField("blockTranslations");
+        overrides.setAccessible(true);
+        overrides.set(translations, legacy);
+        for (String prefix : prefixes) {
+            assertEquals("custom A versus B", translations.getBlockTranslation(chinese, prefix,
+                    new ArrayList<>(List.of("A", "B"))));
+        }
     }
 }

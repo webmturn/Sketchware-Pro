@@ -53,7 +53,7 @@
     <string name="block_bluetoothconnect_is_bluetooth_activated_head" />
     <string name="block_bluetoothconnect_is_bluetooth_activated_tail">is bluetooth activated</string>
     <string name="block_bluetoothconnect_is_bluetooth_enabled_head" />
-    <string name="block_bluetoothconnect_is_bluetooth_enabled_tail">is bluetooth enabled</string>
+    <string name="block_bluetoothconnect_is_bluetooth_enabled_tail">is bluetooth available</string>
     <string name="block_bluetoothconnect_ready_connection_body_1">ready connection with tag</string>
     <string name="block_bluetoothconnect_ready_connection_head" />
     <string name="block_bluetoothconnect_ready_connection_tail" />
@@ -1654,13 +1654,13 @@ Please click on Settings to allow permission for Storage. Without this permissio
     <string name="invalid_icon_id">Invalid icon ID</string>
     <string name="invalid_required_fields">Some required fields are empty</string>
     <string name="invalid_value_format">Invalid format</string>
-    <string name="invalid_value_max_lenth">You can use maximum %d letters</string>
-    <string name="invalid_value_min_lenth">Use at least %d letter(s)</string>
+    <string name="invalid_value_max_lenth">Use at most %d characters</string>
+    <string name="invalid_value_min_lenth">Use at least %d characters</string>
     <string name="invalid_value_rule_1">Only use letters(a-z), numbers and Special characters(.),(@)</string>
-    <string name="invalid_value_rule_2">Only use letters(a-z), numbers and Special characters(.)</string>
-    <string name="invalid_value_rule_3">Only use letters(a-z), numbers and Special characters(_)</string>
+    <string name="invalid_value_rule_2">Use only letters (a-z, A-Z), digits, and periods (.).</string>
+    <string name="invalid_value_rule_3">Use only letters (a-z, A-Z), digits, and underscores (_).</string>
     <string name="invalid_value_rule_4">Only use small letters(a-z), numbers and special character(_)</string>
-    <string name="invalid_value_rule_5">"Special letters(&amp;, &lt;, >, \", ') are not allowed"</string>
+    <string name="invalid_value_rule_5">The characters &amp;, &lt;, &gt;, \" and \' are not allowed.</string>
     <string name="invalid_value_rule_6">Spaces aren\'t allowed</string>
     <string name="unknown_attr">Unknown Attribute</string>
     <string name="var_is_required">%s is required</string>
@@ -1901,7 +1901,7 @@ ex)\"*/*\", \"image/*\", \"audio/*\", \"text/*\""</string>
     <string name="design_drawer_menu_description_view">Manage multiple screens</string>
     <string name="design_drawer_menu_description_xml_command">Modify built-in XML files</string>
     <string name="design_drawer_menu_injection">AppCompat Manager</string>
-    <string name="design_drawer_menu_injection_subtitle">Modify AppCompat layouts</string>
+    <string name="design_drawer_menu_injection_subtitle">Modify AppCompat layout attributes</string>
     <string name="design_drawer_menu_nativelibs">Native Library Manager</string>
     <string name="design_drawer_menu_nativelibs_subtitle">Add native libraries (.so)</string>
     <string name="design_drawer_menu_proguard">Code Shrinking Manager</string>
@@ -1957,9 +1957,9 @@ ex)\"*/*\", \"image/*\", \"audio/*\", \"text/*\""</string>
     <string name="design_library_admob_setting_message_add_app_id">App ID is required</string>
     <string name="design_library_admob_setting_step1_desc">The unique ID assigned to your app. You\'ll need to add the app ID here.</string>
     <string name="design_library_admob_setting_step1_title">Add app ID</string>
-    <string name="design_library_admob_setting_step2_desc">First, you need to create Ad Units inside the AdMob console. Add the created ad units manually or by linking your AdMob account.</string>
+    <string name="design_library_admob_setting_step2_desc">First, create ad units in the AdMob console. Then add them manually, or import AdMob settings from another project.</string>
     <string name="design_library_admob_setting_step2_title">Add Ad Units</string>
-    <string name="design_library_admob_setting_step3_desc">Assign Ad Unit IDs to the Banner and Interstitial ads.</string>
+    <string name="design_library_admob_setting_step3_desc">Assign Ad Unit IDs to Banner, Interstitial, and Rewarded ads.</string>
     <string name="design_library_admob_setting_step3_title">Assign Ad Unit IDs</string>
     <string name="design_library_admob_setting_step4_desc">If you test AdMob without adding your device ID, your AdMob account may be banned. Please add your device ID.</string>
     <string name="design_library_admob_setting_step4_title">Configure Test Devices</string>
@@ -1975,7 +1975,7 @@ ex)\"*/*\", \"image/*\", \"audio/*\", \"text/*\""</string>
     <string name="design_library_admob_widget_setup_first">In order to use this widget, you have to setup the settings in the Library Manager first.</string>
     <string name="design_library_appcompat_description">Activating App Compat library will let you add Drawer Layout and Floating Action Button to the Activities.</string>
     <string name="design_library_appcompat_need_firebase_disable">You can not disable the AppCompat Library when Firebase is in use.</string>
-    <string name="design_library_appcompat_need_m3_disable">You can not disable the AppCompat Library when Material3 and Dynamic Colors is in use.</string>
+    <string name="design_library_appcompat_need_m3_disable">You cannot disable the AppCompat library while Material3 is enabled.</string>
     <string name="design_library_button_import_from_other_project">Import from the other project</string>
     <string name="design_library_description_admob">Use Google AdMob</string>
     <string name="design_library_description_appcompat_and_design">Drawer Layout, Floating Action Button</string>
@@ -2645,7 +2645,8 @@ But, components should be added manually for working correctly."</string>
     <string name="myprojects_settings_hint_enter_package_name">Package name</string>
     <string name="myprojects_settings_hint_enter_project_name">Project name</string>
     <string name="myprojects_settings_message_contain_dot">Package name must contain at least one or more Dot(.) character</string>
-    <string name="myprojects_settings_message_package_rename">This project is linked with Firebase. Firebase may not work properly if you change the package name.</string>
+    <string name="myprojects_settings_message_package_rename">Changing the package name makes the system treat this as a different app.</string>
+    <string name="myprojects_settings_message_package_rename_firebase">This project uses Firebase. Changing the package name may also require updating the Firebase configuration and any Google sign-in or messaging settings that depend on it.</string>
     <string name="myprojects_settings_title_advanced_settings">Advanced Settings</string>
     <string name="myprojects_settings_version_control_title">Version Control</string>
     <string name="myprojects_settings_version_control_title_code">Code</string>
@@ -2925,7 +2926,7 @@ Do you want to continue?"</string>
     <string name="export_aab_title">Export AAB (Android App Bundle)</string>
     <string name="export_apk_sign_dialog_desc">Fill in the keystore details to sign the APK. If you don\'t have a keystore, you can use a test key.</string>
     <string name="export_apk_sign_dialog_title">Sign an APK</string>
-    <string name="export_apk_sign_note">To sign an APK, you need a keystore. Use your already created one, and copy it to /Internal storage/sketchware/keystore/release_key.jks and enter the alias\'s password.\n\nNote that this only signs your APK using signing scheme V1, to target Android 11+ for example, use a 3rd-party tool (for now).</string>
+    <string name="export_apk_sign_note">You can sign the APK with a test key or your own keystore. For your own keystore, copy it to /Internal storage/sketchware/keystore/release_key.jks and enter the keystore password, key alias, and key password.\n\nIn this export flow, signing with your own keystore uses APK Signature Scheme v1 only. Signing with the test key supports schemes up to v4.</string>
     <string name="export_btn_understood">Understood</string>
     <string name="export_title_important_note">Important note</string>
     <string name="export_widgets">Export Widgets</string>
