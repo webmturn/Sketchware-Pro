@@ -1,0 +1,7 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@android:color/transparent" />
+    <stroke
+        android:width="@dimen/mtrl_textinput_box_stroke_width_default"
+        android:color="@color/m3_textfield_stroke_color" />
+    <corners android:radius="12dp" />
+</shape>

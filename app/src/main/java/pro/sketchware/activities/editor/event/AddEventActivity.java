@@ -467,6 +467,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             holder.img_icon.setImageResource(EventListFragment.getCategoryIcon(position));
+            holder.container.setContentDescription(EventListFragment.getCategoryName(AddEventActivity.this, position));
             if (lastSelectedCategory == position) {
                 holder.container.setBackgroundResource(R.drawable.border_top_corner_white_no_stroke);
                 holder.img_icon.animate().scaleX(1.0f).scaleY(1.0f).alpha(1.0f).start();

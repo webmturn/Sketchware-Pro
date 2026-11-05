@@ -3195,7 +3195,7 @@ Do you want to continue?"</string>
     <string name="padding_hint_value">Enter padding value</string>
     <string name="parent_attr_title">Parent attributes</string>
     <string name="resource_editor_attributes_title">%s attributes</string>
-    <string name="moreblock_type_instruction">use (moreblockName[type|typeName] or\nmoreblockName[type|typeName|typeCode]) for custom moreblock type(S)</string>
+    <string name="moreblock_type_instruction">Custom type formats:\n<tt>moreblockName[type|typeName]</tt>\n<tt>moreblockName[type|typeName|typeCode]</tt></string>
     <string name="moreblock_type_void">Void</string>
     <string name="moreblock_type_string">String</string>
     <string name="moreblock_type_number">Number</string>

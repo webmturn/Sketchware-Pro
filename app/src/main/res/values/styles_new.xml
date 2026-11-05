@@ -159,4 +159,21 @@
         <item name="android:textSize">13sp</item>
         <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
     </style>
+
+    <style name="Widget.SketchwarePro.MoreBlock.AddButton" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:minWidth">48dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="iconPadding">0dp</item>
+        <item name="iconSize">20dp</item>
+        <item name="icon">@drawable/ic_add_white_24dp</item>
+        <item name="iconGravity">textEnd</item>
+    </style>
 </resources>

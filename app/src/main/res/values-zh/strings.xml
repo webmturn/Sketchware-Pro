@@ -2071,7 +2071,7 @@
     <string name="padding_hint_value">输入内边距值</string>
     <string name="parent_attr_title">父属性</string>
     <string name="resource_editor_attributes_title">%s 属性</string>
-    <string name="moreblock_type_instruction">使用 (moreblockName[type|typeName] 或\nmoreblockName[type|typeName|typeCode]) 来自定义更多块类型</string>
+    <string name="moreblock_type_instruction">自定义类型格式：\n<tt>moreblockName[type|typeName]</tt>\n<tt>moreblockName[type|typeName|typeCode]</tt></string>
     <string name="moreblock_type_void">无返回值 (Void)</string>
     <string name="moreblock_type_string">字符串 (String)</string>
     <string name="moreblock_type_number">数字 (Number)</string>

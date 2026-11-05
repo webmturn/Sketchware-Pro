@@ -179,6 +179,7 @@ public class MoreBlockBuilderView extends LinearLayout {
         BlockUtil.loadPreviewBlockVariables(blockArea, rs, spec);
         rs.layoutChain();
         removeArea.removeAllViews();
+        removeArea.setVisibility(variables.isEmpty() ? View.GONE : View.VISIBLE);
 
         for (int i = 0; i < rs.specViews.size(); ++i) {
             View view = rs.specViews.get(i);
