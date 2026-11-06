@@ -26,7 +26,9 @@ Sketchware Pro 是一个运行在 Android 设备上的可视化 Android 应用�
 | Gradle | 8.13 | `gradle/wrapper/gradle-wrapper.properties` |
 | Android Gradle Plugin | 8.12.0 | `build.gradle`(根) |
 | Kotlin Gradle Plugin | 2.1.21 | `build.gradle`(根) |
-| Java | 17 | `app/build.gradle` `compileOptions` |
+| 构建运行 JDK | 21 | 本地 Gradle JVM / CI `setup-java` |
+| Java / Kotlin 编译目标 | 17 | 各模块 `compileOptions` / `jvmTarget` |
+| Spotless / google-java-format | 8.11.0 / 1.36.1 | 根目录 `build.gradle`, AOSP 风格 |
 | compileSdk | 36 | `app/build.gradle` |
 | minSdk | 26 | `app/build.gradle` |
 | targetSdk | 28 | `app/build.gradle`(项目不上架 Google Play,故保留旧 targetSdk) |
@@ -494,7 +496,19 @@ register("onMyEvent", (id, logic) ->
 - **代码生成优先注册表**:内置积木/事件优先通过 `BlockCodeRegistry` / `EventCodeRegistry` 注册,按功能域放入对应的 `registerXxx()` 分组,保持分组内聚。
 - **数据经由门面访问**:读写项目数据统一通过 `ProjectDataManager` 获取管理器,再操作 `ProjectDataStore` 等,不要绕过门面直接持有实例。
 - **Java 17 / Android**:遵循 `compileOptions` 的 Java 17 语言级别;注意 `minSdk = 26`。
+- **格式**:Java 使用 AOSP 风格(块缩进 4 空格、续行 8 空格),其他文件遵循根目录 `.editorconfig`。
 - **函数式接口**:`BlockCodeHandler`、`EventCodeHandler` 为单方法接口,注册时优先用 lambda。
+
+Java 格式检查覆盖 `app/src/*/java/pro/sketchware/`,排除 `third_party/`。Kotlin 源码和 `vendor-dx` 不参与此检查。以 `origin/main` 为基线,仅检查相对基线有改动的文件;选中的文件会整份格式化。格式化与功能修改分开提交。
+
+换行随文件修改逐步统一。本次引入格式检查不执行全库 `git add --renormalize .`;需要全库换行重排时,单独提交。
+
+```bash
+./gradlew spotlessApply
+./gradlew spotlessCheck checkPackageBoundaries
+```
+
+CI 单独运行 `spotlessCheck`。PR 使用目标分支提交 SHA,push 使用推送前的提交,并取其与 HEAD 的共同祖先。基线为空、全零、不存在或没有共同祖先时,回退到 HEAD 的父提交;首提交没有父提交时,全量检查 Java 源码。手动指定基线使用 `-PspotlessRatchetFrom=<ref>`;传空值表示全量检查。
 
 ---
 

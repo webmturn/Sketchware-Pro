@@ -3,6 +3,9 @@ name: Android CI
 on:
   push:
     paths:
+      - '.editorconfig'
+      - '.gitattributes'
+      - '.gitignore'
       - '.github/workflows/android.yml'
       - 'app/**'
       - 'resolver/**'
@@ -27,15 +30,39 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: 17
+          java-version: 21
           distribution: temurin
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+
+      - name: Compute format baseline
+        id: format-baseline
+        env:
+          FORMAT_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          set -euo pipefail
+          base="${FORMAT_BASE:-}"
+          if [[ -n "$base" && ! "$base" =~ ^0+$ ]] && git cat-file -e "${base}^{commit}" 2>/dev/null; then
+            base="$(git merge-base "$base" HEAD || true)"
+          else
+            base=""
+          fi
+          if [[ -z "$base" ]]; then
+            base="$(git rev-parse --verify HEAD^ 2>/dev/null || true)"
+          fi
+          printf 'base=%s\n' "$base" >> "$GITHUB_OUTPUT"
+
+      - name: Check Java formatting
+        env:
+          ORG_GRADLE_PROJECT_spotlessRatchetFrom: ${{ steps.format-baseline.outputs.base }}
+        run: ./gradlew spotlessCheck
 
       - name: Verify package boundaries
         run: ./gradlew checkPackageBoundaries

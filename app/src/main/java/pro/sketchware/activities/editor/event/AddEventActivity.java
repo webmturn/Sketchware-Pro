@@ -1,8 +1,5 @@
 package pro.sketchware.activities.editor.event;
 
-
-import pro.sketchware.util.Helper;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
@@ -16,39 +13,36 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
-
+import com.google.android.material.color.MaterialColors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import pro.sketchware.R;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
+import pro.sketchware.activities.design.fragments.EventListFragment;
+import pro.sketchware.activities.editor.makeblock.MoreBlockBuilderView;
 import pro.sketchware.beans.ComponentBean;
 import pro.sketchware.beans.EventBean;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ViewBean;
-import pro.sketchware.activities.editor.makeblock.MoreBlockBuilderView;
-import pro.sketchware.activities.base.BaseAppCompatActivity;
-import com.google.android.material.color.MaterialColors;
-
-import java.util.ArrayList;
-import java.util.concurrent.CompletableFuture;
-import java.util.HashSet;
-import java.util.HashMap;
-import java.util.Set;
-
-import pro.sketchware.core.codegen.LayoutGenerator;
-import pro.sketchware.util.SketchToast;
-import pro.sketchware.graphics.AnimationUtil;
-import pro.sketchware.core.project.ProjectDataManager;
-import pro.sketchware.core.project.BuildConfig;
-import pro.sketchware.util.UIHelper;
 import pro.sketchware.core.codegen.EventRegistry;
-import pro.sketchware.activities.design.fragments.EventListFragment;
-import pro.sketchware.util.ViewUtil;
-import pro.sketchware.R;
-import pro.sketchware.util.UI;
+import pro.sketchware.core.codegen.LayoutGenerator;
+import pro.sketchware.core.project.BuildConfig;
+import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.databinding.LogicPopupAddEventBinding;
+import pro.sketchware.graphics.AnimationUtil;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.SketchToast;
+import pro.sketchware.util.UI;
+import pro.sketchware.util.UIHelper;
+import pro.sketchware.util.ViewUtil;
 
 public class AddEventActivity extends BaseAppCompatActivity implements View.OnClickListener {
     private ArrayList<EventBean> addableDrawerViewEvents;
@@ -78,12 +72,15 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
     private void toggleEventsPreview() {
         if (eventsToAdd.isEmpty() && !isPreviewCollapsed) {
             isPreviewCollapsed = true;
-            AnimationUtil.collapseView(binding.eventsPreview, 300, new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    if (isPreviewCollapsed) binding.eventsPreview.setVisibility(View.GONE);
-                }
-            });
+            AnimationUtil.collapseView(
+                    binding.eventsPreview,
+                    300,
+                    new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            if (isPreviewCollapsed) binding.eventsPreview.setVisibility(View.GONE);
+                        }
+                    });
         } else if (!eventsToAdd.isEmpty() && isPreviewCollapsed) {
             isPreviewCollapsed = false;
             AnimationUtil.expandView(binding.eventsPreview, 300, null);
@@ -125,7 +122,9 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
 
         for (var activityEvent : EventRegistry.getAllActivityEvents()) {
             if (!existingActivityEvents.contains(activityEvent)) {
-                addableActivityEvents.add(new EventBean(EventBean.EVENT_TYPE_ACTIVITY, 0, activityEvent, activityEvent));
+                addableActivityEvents.add(
+                        new EventBean(
+                                EventBean.EVENT_TYPE_ACTIVITY, 0, activityEvent, activityEvent));
             }
         }
         ArrayList<ViewBean> views = projectDataManager.getViews(xmlName);
@@ -135,53 +134,77 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
                 Set<String> toNotAdd = layoutGenerator.readAttributesToReplace(view);
                 for (String viewEvent : EventRegistry.getEventsForClass(view.getClassInfo())) {
                     boolean exists;
-                    if (viewEvent.equals("onBindCustomView") && (view.customView.isEmpty()
-                            || view.customView.equals("none"))) {
+                    if (viewEvent.equals("onBindCustomView")
+                            && (view.customView.isEmpty() || view.customView.equals("none"))) {
                         exists = true;
                     } else {
                         exists = existingViewEvents.contains(view.id + "\n" + viewEvent);
                     }
 
                     if (!exists && !toNotAdd.contains("android:id")) {
-                        addableViewEvents.add(new EventBean(EventBean.EVENT_TYPE_VIEW, view.type, view.id, viewEvent));
+                        addableViewEvents.add(
+                                new EventBean(
+                                        EventBean.EVENT_TYPE_VIEW, view.type, view.id, viewEvent));
                     }
                 }
             }
         }
         if (components != null) {
             for (ComponentBean component : components) {
-                for (String componentEvent : EventRegistry.getComponentEventsForClass(component.getClassInfo())) {
-                    boolean exists = existingComponentEvents.contains(component.componentId + "\n" + componentEvent);
+                for (String componentEvent :
+                        EventRegistry.getComponentEventsForClass(component.getClassInfo())) {
+                    boolean exists =
+                            existingComponentEvents.contains(
+                                    component.componentId + "\n" + componentEvent);
                     if (!exists) {
-                        addableComponentEvents.add(new EventBean(EventBean.EVENT_TYPE_COMPONENT, component.type, component.componentId, componentEvent));
+                        addableComponentEvents.add(
+                                new EventBean(
+                                        EventBean.EVENT_TYPE_COMPONENT,
+                                        component.type,
+                                        component.componentId,
+                                        componentEvent));
                     }
                 }
             }
         }
         ViewBean fab;
-        if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB) && (fab = projectDataManager.getFabView(xmlName)) != null) {
+        if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)
+                && (fab = projectDataManager.getFabView(xmlName)) != null) {
             for (String fabEvent : EventRegistry.getEventsForClass(fab.getClassInfo())) {
                 boolean exists = existingViewEvents.contains(fab.id + "\n" + fabEvent);
                 if (!exists) {
-                    addableViewEvents.add(new EventBean(EventBean.EVENT_TYPE_VIEW, fab.type, fab.id, fabEvent));
+                    addableViewEvents.add(
+                            new EventBean(EventBean.EVENT_TYPE_VIEW, fab.type, fab.id, fabEvent));
                 }
             }
         }
         if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
-            ArrayList<ViewBean> drawerViews = projectDataManager.getViews(projectFile.getDrawerXmlName());
+            ArrayList<ViewBean> drawerViews =
+                    projectDataManager.getViews(projectFile.getDrawerXmlName());
             if (drawerViews != null) {
                 for (ViewBean drawerView : drawerViews) {
                     Set<String> toNotAdd = layoutGenerator.readAttributesToReplace(drawerView);
-                    for (String drawerViewEvent : EventRegistry.getEventsForClass(drawerView.getClassInfo())) {
-                        boolean exists = existingDrawerViewEvents.contains(drawerView.id + "\n" + drawerViewEvent);
+                    for (String drawerViewEvent :
+                            EventRegistry.getEventsForClass(drawerView.getClassInfo())) {
+                        boolean exists =
+                                existingDrawerViewEvents.contains(
+                                        drawerView.id + "\n" + drawerViewEvent);
                         if (!exists && !toNotAdd.contains("android:id")) {
-                            addableDrawerViewEvents.add(new EventBean(EventBean.EVENT_TYPE_DRAWER_VIEW, drawerView.type, drawerView.id, drawerViewEvent));
+                            addableDrawerViewEvents.add(
+                                    new EventBean(
+                                            EventBean.EVENT_TYPE_DRAWER_VIEW,
+                                            drawerView.type,
+                                            drawerView.id,
+                                            drawerViewEvent));
                         }
                     }
                 }
             }
         }
-        int selectedCategory = categoryAdapter.lastSelectedCategory == -1 ? categoryIndex : categoryAdapter.lastSelectedCategory;
+        int selectedCategory =
+                categoryAdapter.lastSelectedCategory == -1
+                        ? categoryIndex
+                        : categoryAdapter.lastSelectedCategory;
         selectCategory(selectedCategory);
         if (categoryAdapter != null) {
             categoryAdapter.notifyDataSetChanged();
@@ -191,7 +214,8 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
     private void selectCategory(int category) {
         categoryIndex = category;
         categoryAdapter.lastSelectedCategory = category;
-        binding.tvCategory.setText(EventListFragment.getCategoryName(getApplicationContext(), category));
+        binding.tvCategory.setText(
+                EventListFragment.getCategoryName(getApplicationContext(), category));
         eventAdapter.setEvents(categories.get(category));
         if (category == 4) {
             binding.moreblockLayout.setVisibility(View.VISIBLE);
@@ -217,21 +241,40 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
                             categoryAdapter.notifyDataSetChanged();
                             finished = true;
                         } else {
-                            Pair<String, String> blockInformation = moreBlockView.getBlockInformation();
-                            ProjectDataManager.getProjectDataManager(sc_id).addMoreBlock(projectFile.getJavaName(), blockInformation.first, blockInformation.second);
+                            Pair<String, String> blockInformation =
+                                    moreBlockView.getBlockInformation();
+                            ProjectDataManager.getProjectDataManager(sc_id)
+                                    .addMoreBlock(
+                                            projectFile.getJavaName(),
+                                            blockInformation.first,
+                                            blockInformation.second);
                         }
                     }
                     if (!finished) {
                         for (EventBean eventBean : eventsToAdd) {
-                            ProjectDataManager.getProjectDataManager(sc_id).addEventBean(projectFile.getJavaName(), eventBean);
+                            ProjectDataManager.getProjectDataManager(sc_id)
+                                    .addEventBean(projectFile.getJavaName(), eventBean);
                         }
                         if (eventsToAdd.size() == 1) {
-                            SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.event_message_new_event), SketchToast.TOAST_NORMAL).show();
+                            SketchToast.toast(
+                                            getApplicationContext(),
+                                            Helper.getResString(R.string.event_message_new_event),
+                                            SketchToast.TOAST_NORMAL)
+                                    .show();
                         } else if (eventsToAdd.size() > 1) {
-                            SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.event_message_new_events), SketchToast.TOAST_NORMAL).show();
+                            SketchToast.toast(
+                                            getApplicationContext(),
+                                            Helper.getResString(R.string.event_message_new_events),
+                                            SketchToast.TOAST_NORMAL)
+                                    .show();
                         }
                         var store = ProjectDataManager.getProjectDataManager(sc_id);
-                        CompletableFuture.runAsync(() -> { synchronized (store) { store.saveAllBackup(); } });
+                        CompletableFuture.runAsync(
+                                () -> {
+                                    synchronized (store) {
+                                        store.saveAllBackup();
+                                    }
+                                });
                         setResult(RESULT_OK);
                         finish();
                     }
@@ -250,7 +293,8 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
         binding = LogicPopupAddEventBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        UI.addWindowInsetToMargin(binding.contentRoot, WindowInsetsCompat.Type.ime(), false, false, false, true);
+        UI.addWindowInsetToMargin(
+                binding.contentRoot, WindowInsetsCompat.Type.ime(), false, false, false, true);
 
         Intent intent = getIntent();
         if (savedInstanceState == null) {
@@ -278,15 +322,19 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
         categories.put(2, addableComponentEvents);
         categories.put(3, addableDrawerViewEvents);
         categories.put(4, addableEtcEvents);
-        binding.eventList.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false));
+        binding.eventList.setLayoutManager(
+                new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false));
         eventAdapter = new EventAdapter();
         binding.eventList.setAdapter(eventAdapter);
         categoryAdapter = new CategoryAdapter();
-        binding.categoryList.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.HORIZONTAL, false));
+        binding.categoryList.setLayoutManager(
+                new LinearLayoutManager(getApplicationContext(), RecyclerView.HORIZONTAL, false));
         binding.categoryList.setAdapter(categoryAdapter);
-        ((SimpleItemAnimator) binding.categoryList.getItemAnimator()).setSupportsChangeAnimations(false);
+        ((SimpleItemAnimator) binding.categoryList.getItemAnimator())
+                .setSupportsChangeAnimations(false);
         eventsToAddAdapter = new EventsToAddAdapter();
-        binding.eventsPreview.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.HORIZONTAL, false));
+        binding.eventsPreview.setLayoutManager(
+                new LinearLayoutManager(getApplicationContext(), RecyclerView.HORIZONTAL, false));
         binding.eventsPreview.setItemAnimator(null);
         binding.eventsPreview.setAdapter(eventsToAddAdapter);
         isPreviewCollapsed = true;
@@ -300,7 +348,8 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
     @Override
     public void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        moreBlockView.setFuncNameValidator(ProjectDataManager.getProjectDataManager(sc_id).getAllIdentifiers(projectFile));
+        moreBlockView.setFuncNameValidator(
+                ProjectDataManager.getProjectDataManager(sc_id).getAllIdentifiers(projectFile));
     }
 
     @Override
@@ -325,8 +374,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
         private int lastSelectedEvent = -1;
         private boolean isBindingInProgress;
 
-        public EventAdapter() {
-        }
+        public EventAdapter() {}
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
@@ -335,16 +383,22 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
             holder.events_preview.setVisibility(View.VISIBLE);
             EventBean event = events.get(position);
             ImageView imageView = new ImageView(holder.itemView.getContext());
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams layoutParams =
+                    new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams.setMargins(0, 0, (int) ViewUtil.dpToPx(getApplicationContext(), 2.0f), 0);
             int iconSize = (int) ViewUtil.dpToPx(getApplicationContext(), 16.0f);
             layoutParams.width = iconSize;
             layoutParams.height = iconSize;
             imageView.setLayoutParams(layoutParams);
             imageView.setImageResource(EventRegistry.getEventIconResource(event.eventName));
-            imageView.setColorFilter(MaterialColors.getColor(imageView, com.google.android.material.R.attr.colorOutline));
+            imageView.setColorFilter(
+                    MaterialColors.getColor(
+                            imageView, com.google.android.material.R.attr.colorOutline));
             holder.events_preview.addView(imageView);
-            holder.img_icon.setImageResource(EventBean.getEventIconResource(event.eventType, event.targetType));
+            holder.img_icon.setImageResource(
+                    EventBean.getEventIconResource(event.eventType, event.targetType));
             int eventType = event.eventType;
             if (eventType == EventBean.EVENT_TYPE_ACTIVITY) {
                 holder.tv_target_type.setText(Helper.getResString(R.string.event_type_activity));
@@ -354,7 +408,8 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
             } else if (eventType == EventBean.EVENT_TYPE_DRAWER_VIEW) {
                 holder.tv_target_type.setText(ViewBean.getViewTypeName(event.targetType));
             } else if (eventType == EventBean.EVENT_TYPE_COMPONENT) {
-                holder.tv_target_type.setText(ComponentBean.getComponentName(getApplicationContext(), event.targetType));
+                holder.tv_target_type.setText(
+                        ComponentBean.getComponentName(getApplicationContext(), event.targetType));
             } else if (eventType == EventBean.EVENT_TYPE_ETC) {
                 holder.events_preview.setVisibility(View.GONE);
             }
@@ -371,7 +426,9 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
         @Override
         @NonNull
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.fr_logic_list_item_addevent, parent, false));
+            return new ViewHolder(
+                    LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.fr_logic_list_item_addevent, parent, false));
         }
 
         @Override
@@ -406,54 +463,56 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
                 tv_target_id = itemView.findViewById(R.id.tv_target_id);
                 tv_event_name = itemView.findViewById(R.id.tv_event_name);
                 checkbox = itemView.findViewById(R.id.checkbox);
-                itemView.setOnClickListener(v -> {
-                    if (!UIHelper.isClickThrottled()) {
-                        lastSelectedEvent = getLayoutPosition();
-                        if (lastSelectedEvent == RecyclerView.NO_POSITION) return;
-                        EventBean event = events.get(lastSelectedEvent);
-                        if (event.isSelected) {
-                            event.isSelected = false;
-                            int removedEventIndex = eventsToAdd.indexOf(event);
-                            if (removedEventIndex != -1) {
-                                eventsToAdd.remove(removedEventIndex);
-                                eventsToAddAdapter.notifyItemRemoved(removedEventIndex);
+                itemView.setOnClickListener(
+                        v -> {
+                            if (!UIHelper.isClickThrottled()) {
+                                lastSelectedEvent = getLayoutPosition();
+                                if (lastSelectedEvent == RecyclerView.NO_POSITION) return;
+                                EventBean event = events.get(lastSelectedEvent);
+                                if (event.isSelected) {
+                                    event.isSelected = false;
+                                    int removedEventIndex = eventsToAdd.indexOf(event);
+                                    if (removedEventIndex != -1) {
+                                        eventsToAdd.remove(removedEventIndex);
+                                        eventsToAddAdapter.notifyItemRemoved(removedEventIndex);
+                                    }
+                                    toggleEventsPreview();
+                                } else {
+                                    event.isSelected = true;
+                                    eventsToAdd.add(event);
+                                    int insertedEventIndex = eventsToAdd.size() - 1;
+                                    eventsToAddAdapter.notifyItemInserted(insertedEventIndex);
+                                    toggleEventsPreview();
+                                }
+                                if (!isBindingInProgress) {
+                                    notifyItemChanged(lastSelectedEvent);
+                                }
                             }
-                            toggleEventsPreview();
-                        } else {
-                            event.isSelected = true;
-                            eventsToAdd.add(event);
-                            int insertedEventIndex = eventsToAdd.size() - 1;
-                            eventsToAddAdapter.notifyItemInserted(insertedEventIndex);
-                            toggleEventsPreview();
-                        }
-                        if (!isBindingInProgress) {
-                            notifyItemChanged(lastSelectedEvent);
-                        }
-                    }
-                });
-                checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    lastSelectedEvent = getLayoutPosition();
-                    if (lastSelectedEvent == RecyclerView.NO_POSITION) return;
-                    EventBean event = events.get(lastSelectedEvent);
-                    if (!event.isSelected && isChecked) {
-                        event.isSelected = true;
-                        eventsToAdd.add(event);
-                        int insertedEventIndex = eventsToAdd.size() - 1;
-                        eventsToAddAdapter.notifyItemInserted(insertedEventIndex);
-                        toggleEventsPreview();
-                    } else if (event.isSelected && !isChecked) {
-                        event.isSelected = false;
-                        int removedEventIndex = eventsToAdd.indexOf(event);
-                        if (removedEventIndex != -1) {
-                            eventsToAdd.remove(removedEventIndex);
-                            eventsToAddAdapter.notifyItemRemoved(removedEventIndex);
-                        }
-                        toggleEventsPreview();
-                    }
-                    if (!isBindingInProgress) {
-                        notifyItemChanged(lastSelectedEvent);
-                    }
-                });
+                        });
+                checkbox.setOnCheckedChangeListener(
+                        (buttonView, isChecked) -> {
+                            lastSelectedEvent = getLayoutPosition();
+                            if (lastSelectedEvent == RecyclerView.NO_POSITION) return;
+                            EventBean event = events.get(lastSelectedEvent);
+                            if (!event.isSelected && isChecked) {
+                                event.isSelected = true;
+                                eventsToAdd.add(event);
+                                int insertedEventIndex = eventsToAdd.size() - 1;
+                                eventsToAddAdapter.notifyItemInserted(insertedEventIndex);
+                                toggleEventsPreview();
+                            } else if (event.isSelected && !isChecked) {
+                                event.isSelected = false;
+                                int removedEventIndex = eventsToAdd.indexOf(event);
+                                if (removedEventIndex != -1) {
+                                    eventsToAdd.remove(removedEventIndex);
+                                    eventsToAddAdapter.notifyItemRemoved(removedEventIndex);
+                                }
+                                toggleEventsPreview();
+                            }
+                            if (!isBindingInProgress) {
+                                notifyItemChanged(lastSelectedEvent);
+                            }
+                        });
             }
         }
     }
@@ -461,15 +520,16 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
     private class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
         private int lastSelectedCategory = -1;
 
-        public CategoryAdapter() {
-        }
+        public CategoryAdapter() {}
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             holder.img_icon.setImageResource(EventListFragment.getCategoryIcon(position));
-            holder.container.setContentDescription(EventListFragment.getCategoryName(AddEventActivity.this, position));
+            holder.container.setContentDescription(
+                    EventListFragment.getCategoryName(AddEventActivity.this, position));
             if (lastSelectedCategory == position) {
-                holder.container.setBackgroundResource(R.drawable.border_top_corner_white_no_stroke);
+                holder.container.setBackgroundResource(
+                        R.drawable.border_top_corner_white_no_stroke);
                 holder.img_icon.animate().scaleX(1.0f).scaleY(1.0f).alpha(1.0f).start();
                 holder.container.animate().translationY(0.0f).start();
             } else {
@@ -482,8 +542,13 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
         @Override
         @NonNull
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.fr_logic_list_category_icon_item, parent, false);
-            inflate.setLayoutParams(new RecyclerView.LayoutParams(parent.getMeasuredWidth() / getItemCount(), (int) ViewUtil.dpToPx(getApplicationContext(), 44.0f)));
+            View inflate =
+                    LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.fr_logic_list_category_icon_item, parent, false);
+            inflate.setLayoutParams(
+                    new RecyclerView.LayoutParams(
+                            parent.getMeasuredWidth() / getItemCount(),
+                            (int) ViewUtil.dpToPx(getApplicationContext(), 44.0f)));
             inflate.setTranslationY(ViewUtil.dpToPx(getApplicationContext(), 12.0f));
             inflate.findViewById(R.id.img_icon).setAlpha(0.6f);
             inflate.findViewById(R.id.img_icon).setScaleX(0.8f);
@@ -521,8 +586,7 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
     }
 
     private class EventsToAddAdapter extends RecyclerView.Adapter<EventsToAddAdapter.ViewHolder> {
-        public EventsToAddAdapter() {
-        }
+        public EventsToAddAdapter() {}
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
@@ -534,14 +598,18 @@ public class AddEventActivity extends BaseAppCompatActivity implements View.OnCl
             } else if (eventType == EventBean.EVENT_TYPE_ETC) {
                 holder.ll_img_event.setVisibility(View.GONE);
             }
-            holder.img_icon.setImageResource(EventBean.getEventIconResource(event.eventType, event.targetType));
+            holder.img_icon.setImageResource(
+                    EventBean.getEventIconResource(event.eventType, event.targetType));
             holder.img_event.setImageResource(EventRegistry.getEventIconResource(event.eventName));
         }
 
         @Override
         @NonNull
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.fr_logic_list_preview_with_event_item, parent, false));
+            return new ViewHolder(
+                    LayoutInflater.from(parent.getContext())
+                            .inflate(
+                                    R.layout.fr_logic_list_preview_with_event_item, parent, false));
         }
 
         @Override

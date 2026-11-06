@@ -12,7 +12,24 @@ buildscript {
     }
 }
 
-tasks.register("clean", Delete) {
+plugins {
+    id "com.diffplug.spotless" version "8.11.0"
+}
+
+spotless {
+    def baseline = providers.gradleProperty("spotlessRatchetFrom").getOrElse("origin/main")
+    if (baseline) {
+        ratchetFrom baseline
+    }
+
+    java {
+        target "app/src/*/java/pro/sketchware/**/*.java"
+        targetExclude "app/src/main/java/pro/sketchware/third_party/**"
+        googleJavaFormat("1.36.1").aosp()
+    }
+}
+
+tasks.named("clean", Delete) {
     delete rootProject.layout.buildDirectory
 }
 

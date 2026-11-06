@@ -12,24 +12,20 @@ import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
-
-import pro.sketchware.core.block.view.BlockView;
-import pro.sketchware.core.validation.IdentifierValidator;
-import pro.sketchware.util.SketchToast;
-import pro.sketchware.util.UIHelper;
-import pro.sketchware.core.project.BlockConstants;
-import pro.sketchware.util.ViewUtil;
-import pro.sketchware.activities.editor.makeblock.MoreblockValidator;
-import pro.sketchware.activities.editor.makeblock.ReturnMoreblockManager;
-import pro.sketchware.util.Helper;
-import pro.sketchware.core.block.view.BlockUtil;
 import pro.sketchware.R;
+import pro.sketchware.core.block.view.BlockUtil;
+import pro.sketchware.core.block.view.BlockView;
+import pro.sketchware.core.project.BlockConstants;
+import pro.sketchware.core.validation.IdentifierValidator;
 import pro.sketchware.databinding.MakeBlockLayoutBinding;
 import pro.sketchware.util.BaseTextWatcher;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.SketchToast;
+import pro.sketchware.util.UIHelper;
+import pro.sketchware.util.ViewUtil;
 
 @SuppressLint("ViewConstructor")
 public class MoreBlockBuilderView extends LinearLayout {
@@ -57,93 +53,153 @@ public class MoreBlockBuilderView extends LinearLayout {
         initRefresh();
         addVariable = new VariableItemView(activity);
         binding.varTypeSpinner.addView(addVariable);
-        blockNameValidator = new MoreblockValidator(activity, binding.tiName, BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, new ArrayList<>());
-        labelTextValidator = new IdentifierValidator(activity, binding.tiLabel, BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, new ArrayList<>());
-        variableNameValidator = new IdentifierValidator(activity, binding.tiVariableName, BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, new ArrayList<>());
+        blockNameValidator =
+                new MoreblockValidator(
+                        activity,
+                        binding.tiName,
+                        BlockConstants.RESERVED_KEYWORDS,
+                        BlockConstants.COMPONENT_TYPES,
+                        new ArrayList<>());
+        labelTextValidator =
+                new IdentifierValidator(
+                        activity,
+                        binding.tiLabel,
+                        BlockConstants.RESERVED_KEYWORDS,
+                        BlockConstants.COMPONENT_TYPES,
+                        new ArrayList<>());
+        variableNameValidator =
+                new IdentifierValidator(
+                        activity,
+                        binding.tiVariableName,
+                        BlockConstants.RESERVED_KEYWORDS,
+                        BlockConstants.COMPONENT_TYPES,
+                        new ArrayList<>());
         binding.edName.setPrivateImeOptions("defaultInputmode=english;");
         binding.edLabel.setPrivateImeOptions("defaultInputmode=english;");
         binding.edVariableName.setPrivateImeOptions("defaultInputmode=english;");
-        binding.edName.addTextChangedListener(new BaseTextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s.toString().isEmpty() || blockNameValidator.isValid()) {
-                    updateBlockPreview(binding.blockArea, binding.removeArea, block, s.toString(), variablesSpecAndNamePair);
-                }
-            }
-        });
-
-        binding.addVariable.setOnClickListener(view -> {
-            if (!UIHelper.isClickThrottled()) {
-                if (variableNameValidator.isValid() && blockNameValidator.isValid()) {
-                    Pair<String, String> variableSpec = addVariable.getSelectedItem();
-                    String variableType = variableSpec.first;
-                    String fullSpec = variableType;
-                    if (!variableSpec.second.isEmpty()) {
-                        fullSpec = variableType + "." + variableSpec.second;
-                    }
-
-                    variablesSpecAndNamePair.add(new Pair<>(fullSpec, Helper.getText(binding.edVariableName)));
-                    updateBlockPreview(binding.blockArea, binding.removeArea, block, Helper.getText(binding.edName), variablesSpecAndNamePair);
-
-                    ArrayList<String> reservedVariableNames = new ArrayList<>(Arrays.asList(BlockConstants.COMPONENT_TYPES));
-
-                    for (Pair<String, String> variable : variablesSpecAndNamePair) {
-                        if (!variable.first.equals("t")) {
-                            reservedVariableNames.add(variable.second);
+        binding.edName.addTextChangedListener(
+                new BaseTextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        if (s.toString().isEmpty() || blockNameValidator.isValid()) {
+                            updateBlockPreview(
+                                    binding.blockArea,
+                                    binding.removeArea,
+                                    block,
+                                    s.toString(),
+                                    variablesSpecAndNamePair);
                         }
                     }
+                });
 
-                    variableNameValidator.setReservedNames(reservedVariableNames.toArray(new String[0]));
-                    binding.edVariableName.setText("");
-                }
+        binding.addVariable.setOnClickListener(
+                view -> {
+                    if (!UIHelper.isClickThrottled()) {
+                        if (variableNameValidator.isValid() && blockNameValidator.isValid()) {
+                            Pair<String, String> variableSpec = addVariable.getSelectedItem();
+                            String variableType = variableSpec.first;
+                            String fullSpec = variableType;
+                            if (!variableSpec.second.isEmpty()) {
+                                fullSpec = variableType + "." + variableSpec.second;
+                            }
 
-            }
-        });
-        binding.parameter.addTextChangedListener(new BaseTextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence sequence, int start, int before, int count) {
-                String input = sequence.toString();
+                            variablesSpecAndNamePair.add(
+                                    new Pair<>(fullSpec, Helper.getText(binding.edVariableName)));
+                            updateBlockPreview(
+                                    binding.blockArea,
+                                    binding.removeArea,
+                                    block,
+                                    Helper.getText(binding.edName),
+                                    variablesSpecAndNamePair);
 
-                if (CUSTOM_VARIABLE_PATTERN.matcher(input).matches()) {
-                    customVariableInvalid = false;
-                } else {
-                    customVariableInvalid = !input.isEmpty();
-                }
-                binding.tiParameter.setError(Helper.getResString(R.string.error_invalid_format));
-                binding.tiParameter.setErrorEnabled(customVariableInvalid);
-            }
-        });
+                            ArrayList<String> reservedVariableNames =
+                                    new ArrayList<>(Arrays.asList(BlockConstants.COMPONENT_TYPES));
 
-        binding.add.setOnClickListener(v -> {
-            if (!customVariableInvalid && !Helper.getText(binding.name).isEmpty() && !Helper.getText(binding.parameter).isEmpty()) {
-                variablesSpecAndNamePair.add(new Pair<>(Helper.getText(binding.parameter), Helper.getText(binding.name)));
-                updateBlockPreview(binding.blockArea, binding.removeArea, block, Helper.getText(binding.edName), variablesSpecAndNamePair);
-                binding.parameter.setText("");
-                binding.name.setText("");
+                            for (Pair<String, String> variable : variablesSpecAndNamePair) {
+                                if (!variable.first.equals("t")) {
+                                    reservedVariableNames.add(variable.second);
+                                }
+                            }
 
-                ArrayList<String> prohibitedVariableNames = new ArrayList<>(Arrays.asList(BlockConstants.COMPONENT_TYPES));
-                for (Pair<String, String> variable : variablesSpecAndNamePair) {
-                    if (!(variable.first).equals("t")) {
-                        prohibitedVariableNames.add(variable.second);
+                            variableNameValidator.setReservedNames(
+                                    reservedVariableNames.toArray(new String[0]));
+                            binding.edVariableName.setText("");
+                        }
                     }
-                }
-                variableNameValidator.setReservedNames(prohibitedVariableNames.toArray(new String[0]));
-            }
-        });
-        binding.addLabel.setOnClickListener(v -> {
-            if (!UIHelper.isClickThrottled()) {
-                if (labelTextValidator.isValid() && blockNameValidator.isValid()) {
-                    variablesSpecAndNamePair.add(new Pair<>("t", Helper.getText(binding.edLabel)));
-                    updateBlockPreview(binding.blockArea, binding.removeArea, block, Helper.getText(binding.edName), variablesSpecAndNamePair);
-                    binding.edLabel.setText("");
-                }
-            }
-        });
+                });
+        binding.parameter.addTextChangedListener(
+                new BaseTextWatcher() {
+                    @Override
+                    public void onTextChanged(
+                            CharSequence sequence, int start, int before, int count) {
+                        String input = sequence.toString();
+
+                        if (CUSTOM_VARIABLE_PATTERN.matcher(input).matches()) {
+                            customVariableInvalid = false;
+                        } else {
+                            customVariableInvalid = !input.isEmpty();
+                        }
+                        binding.tiParameter.setError(
+                                Helper.getResString(R.string.error_invalid_format));
+                        binding.tiParameter.setErrorEnabled(customVariableInvalid);
+                    }
+                });
+
+        binding.add.setOnClickListener(
+                v -> {
+                    if (!customVariableInvalid
+                            && !Helper.getText(binding.name).isEmpty()
+                            && !Helper.getText(binding.parameter).isEmpty()) {
+                        variablesSpecAndNamePair.add(
+                                new Pair<>(
+                                        Helper.getText(binding.parameter),
+                                        Helper.getText(binding.name)));
+                        updateBlockPreview(
+                                binding.blockArea,
+                                binding.removeArea,
+                                block,
+                                Helper.getText(binding.edName),
+                                variablesSpecAndNamePair);
+                        binding.parameter.setText("");
+                        binding.name.setText("");
+
+                        ArrayList<String> prohibitedVariableNames =
+                                new ArrayList<>(Arrays.asList(BlockConstants.COMPONENT_TYPES));
+                        for (Pair<String, String> variable : variablesSpecAndNamePair) {
+                            if (!(variable.first).equals("t")) {
+                                prohibitedVariableNames.add(variable.second);
+                            }
+                        }
+                        variableNameValidator.setReservedNames(
+                                prohibitedVariableNames.toArray(new String[0]));
+                    }
+                });
+        binding.addLabel.setOnClickListener(
+                v -> {
+                    if (!UIHelper.isClickThrottled()) {
+                        if (labelTextValidator.isValid() && blockNameValidator.isValid()) {
+                            variablesSpecAndNamePair.add(
+                                    new Pair<>("t", Helper.getText(binding.edLabel)));
+                            updateBlockPreview(
+                                    binding.blockArea,
+                                    binding.removeArea,
+                                    block,
+                                    Helper.getText(binding.edName),
+                                    variablesSpecAndNamePair);
+                            binding.edLabel.setText("");
+                        }
+                    }
+                });
         block = new BlockView(activity, 0, "", " ", "definedFunc");
         binding.blockArea.addView(block);
     }
 
-    private void updateBlockPreview(ViewGroup blockArea, ViewGroup removeArea, BlockView rs, String blockName, ArrayList<Pair<String, String>> variables) {
+    private void updateBlockPreview(
+            ViewGroup blockArea,
+            ViewGroup removeArea,
+            BlockView rs,
+            String blockName,
+            ArrayList<Pair<String, String>> variables) {
         blockArea.removeAllViews();
         blockArea.addView(rs);
 
@@ -167,7 +223,10 @@ public class MoreBlockBuilderView extends LinearLayout {
 
                 default:
                     if (parameterType.length() > 2 && parameterType.contains(".")) {
-                        fullSpec.append(" %").append(parameterType).append(".").append(parameterName);
+                        fullSpec.append(" %")
+                                .append(parameterType)
+                                .append(".")
+                                .append(parameterName);
                     } else {
                         fullSpec.append(" ").append(parameterName);
                     }
@@ -189,7 +248,9 @@ public class MoreBlockBuilderView extends LinearLayout {
                 TextView textView = (TextView) view;
 
                 Rect rect = new Rect();
-                textView.getPaint().getTextBounds(Helper.getText(textView), 0, textView.getText().length(), rect);
+                textView.getPaint()
+                        .getTextBounds(
+                                Helper.getText(textView), 0, textView.getText().length(), rect);
                 width = rect.width();
             } else if (view instanceof BlockView) {
                 width = ((BlockView) view).getWidthSum();
@@ -202,36 +263,43 @@ public class MoreBlockBuilderView extends LinearLayout {
             ImageView removeIcon = new ImageView(activity);
             removeIcon.setImageResource(R.drawable.ic_remove_grey600_24dp);
             removeIcon.setScaleType(ScaleType.CENTER_INSIDE);
-            removeIcon.setPadding(0, (int) ViewUtil.dpToPx(activity, 4.0F), 0, (int) ViewUtil.dpToPx(activity, 4.0F));
-            removeIcon.setLayoutParams(new LayoutParams(width, ViewGroup.LayoutParams.MATCH_PARENT));
+            removeIcon.setPadding(
+                    0,
+                    (int) ViewUtil.dpToPx(activity, 4.0F),
+                    0,
+                    (int) ViewUtil.dpToPx(activity, 4.0F));
+            removeIcon.setLayoutParams(
+                    new LayoutParams(width, ViewGroup.LayoutParams.MATCH_PARENT));
             removeArea.addView(removeIcon);
             if (i == 0 && binding.edName.getText().length() > 0) {
                 removeIcon.setVisibility(View.INVISIBLE);
                 removeIcon.setEnabled(false);
             } else {
-                removeIcon.setOnClickListener(v -> {
-                    int indexOfChild;
-                    if (binding.edName.getText().length() > 0) {
-                        indexOfChild = removeArea.indexOfChild(v) - 1;
-                    } else {
-                        indexOfChild = removeArea.indexOfChild(v);
-                    }
+                removeIcon.setOnClickListener(
+                        v -> {
+                            int indexOfChild;
+                            if (binding.edName.getText().length() > 0) {
+                                indexOfChild = removeArea.indexOfChild(v) - 1;
+                            } else {
+                                indexOfChild = removeArea.indexOfChild(v);
+                            }
 
-                    variables.remove(indexOfChild);
-                    ArrayList<String> reservedVariableNames = new ArrayList<>(Arrays.asList(BlockConstants.COMPONENT_TYPES));
+                            variables.remove(indexOfChild);
+                            ArrayList<String> reservedVariableNames =
+                                    new ArrayList<>(Arrays.asList(BlockConstants.COMPONENT_TYPES));
 
-                    for (Pair<String, String> parameter : variables) {
-                        if (!parameter.first.equals("t")) {
-                            reservedVariableNames.add(parameter.second);
-                        }
-                    }
+                            for (Pair<String, String> parameter : variables) {
+                                if (!parameter.first.equals("t")) {
+                                    reservedVariableNames.add(parameter.second);
+                                }
+                            }
 
-                    variableNameValidator.setReservedNames(reservedVariableNames.toArray(new String[0]));
-                    updateBlockPreview(blockArea, removeArea, rs, blockName, variables);
-                });
+                            variableNameValidator.setReservedNames(
+                                    reservedVariableNames.toArray(new String[0]));
+                            updateBlockPreview(blockArea, removeArea, rs, blockName, variables);
+                        });
             }
         }
-
     }
 
     public boolean isEmpty() {
@@ -242,14 +310,20 @@ public class MoreBlockBuilderView extends LinearLayout {
         if (!Helper.getText(binding.edName).isEmpty() && blockNameValidator.isValid()) {
             return true;
         } else {
-            SketchToast.warning(getContext(), Helper.getResString(R.string.logic_editor_message_name_requied), Toast.LENGTH_SHORT).show();
+            SketchToast.warning(
+                            getContext(),
+                            Helper.getResString(R.string.logic_editor_message_name_requied),
+                            Toast.LENGTH_SHORT)
+                    .show();
             return false;
         }
     }
 
     public Pair<String, String> getBlockInformation() {
         String funcName = Helper.getText(binding.edName).trim();
-        return new Pair<>(ReturnMoreblockManager.injectMbType(funcName, funcName, getType()), ReturnMoreblockManager.injectMbType(block.spec, funcName, getType()));
+        return new Pair<>(
+                ReturnMoreblockManager.injectMbType(funcName, funcName, getType()),
+                ReturnMoreblockManager.injectMbType(block.spec, funcName, getType()));
     }
 
     private String getType() {
@@ -264,11 +338,21 @@ public class MoreBlockBuilderView extends LinearLayout {
         type = ReturnMoreblockManager.getPreviewType(type);
         BlockView blockView = new BlockView(activity, 0, "", type, "definedFunc");
         block = blockView;
-        updateBlockPreview(binding.blockArea, binding.removeArea, blockView, Helper.getText(binding.edName), variablesSpecAndNamePair);
+        updateBlockPreview(
+                binding.blockArea,
+                binding.removeArea,
+                blockView,
+                Helper.getText(binding.edName),
+                variablesSpecAndNamePair);
     }
 
     public void setFuncNameValidator(ArrayList<String> existingNames) {
-        blockNameValidator = new MoreblockValidator(activity, binding.tiName, BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, existingNames);
+        blockNameValidator =
+                new MoreblockValidator(
+                        activity,
+                        binding.tiName,
+                        BlockConstants.RESERVED_KEYWORDS,
+                        BlockConstants.COMPONENT_TYPES,
+                        existingNames);
     }
-
 }
