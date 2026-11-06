@@ -9,9 +9,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.RandomAccessFile;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,6 +30,7 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import pro.sketchware.R;
 import pro.sketchware.activities.design.CustomBlocksManager;
@@ -64,7 +67,7 @@ public class BackupFactory {
     boolean backupLocalLibs;
     boolean backupCustomBlocks;
     String error = "";
-    boolean restoreSuccess = true;
+    boolean restoreSuccess;
 
     /**
      * @param sc_id For backing up, the target project's ID, for restoring, the new project ID
@@ -203,7 +206,7 @@ public class BackupFactory {
         return true;
     }
 
-    public static void zipFolder(File srcFolder, File destZipFile) throws Exception {
+    public static void zipFolder(File srcFolder, File destZipFile) throws IOException {
         try (FileOutputStream fileWriter = new FileOutputStream(destZipFile)) {
             try (ZipOutputStream zip = new ZipOutputStream(fileWriter)) {
                 addFolderToZip(srcFolder, srcFolder, zip);
@@ -213,7 +216,7 @@ public class BackupFactory {
     }
 
     private static void addFileToZip(File rootPath, File srcFile, ZipOutputStream zip)
-            throws Exception {
+            throws IOException {
 
         if (srcFile.isDirectory()) {
             addFolderToZip(rootPath, srcFile, zip);
@@ -232,57 +235,54 @@ public class BackupFactory {
     }
 
     private static void addFolderToZip(File rootPath, File srcFolder, ZipOutputStream zip)
-            throws Exception {
+            throws IOException {
         File[] srcFolderFiles = srcFolder.listFiles();
-        if (srcFolderFiles != null) {
-            for (File fileName : srcFolderFiles) {
-                addFileToZip(rootPath, fileName, zip);
-            }
+        if (srcFolderFiles == null) {
+            throw new IOException("Cannot list backup directory: " + srcFolder);
+        }
+        for (File fileName : srcFolderFiles) {
+            addFileToZip(rootPath, fileName, zip);
         }
     }
 
-    // 6.3.0 fix1
-    public static void createNomediaFileIn(File dir) {
-        FileUtil.writeFile(new File(dir, ".nomedia").getAbsolutePath(), "");
+    public static void createNomediaFileIn(File dir) throws IOException {
+        Files.write(new File(dir, ".nomedia").toPath(), new byte[0]);
     }
 
-    // 6.3.0 fix1
-    public static void copySafe(File source, File destination) {
+    public static void copySafe(File source, File destination) throws IOException {
         if (!source.exists()) {
-            destination.mkdirs();
+            Files.createDirectories(destination.toPath());
             createNomediaFileIn(destination);
         } else {
             copy(source, destination);
         }
     }
 
-    public static void copy(File source, File destination) {
+    public static void copy(File source, File destination) throws IOException {
         if (source.isDirectory()) {
-            if (!destination.exists()) destination.mkdirs();
-
+            Files.createDirectories(destination.toPath());
             String[] files = source.list();
-            if (files != null) {
-
-                for (String file : files) {
-                    File srcFile = new File(source, file);
-                    File destFile = new File(destination, file);
-
-                    copy(srcFile, destFile);
-                }
+            if (files == null) {
+                throw new IOException("Cannot list backup directory: " + source);
+            }
+            for (String file : files) {
+                copy(new File(source, file), new File(destination, file));
             }
         } else {
             // skip .nomedia files
             if (source.getName().equals(".nomedia")) return;
 
-            try (InputStream in = new FileInputStream(source);
-                    OutputStream out = new FileOutputStream(destination)) {
-                byte[] buffer = new byte[1024];
-                int length;
-                while ((length = in.read(buffer)) > 0) {
-                    out.write(buffer, 0, length);
-                }
-            } catch (IOException e) {
-                Log.e("BackupFactory", e.getMessage(), e);
+            Path target = destination.toPath().toAbsolutePath();
+            Path pending = Files.createTempFile(target.getParent(), ".backup-copy-", ".tmp");
+            try {
+                Files.copy(source.toPath(), pending, StandardCopyOption.REPLACE_EXISTING);
+                Files.move(
+                        pending,
+                        target,
+                        StandardCopyOption.ATOMIC_MOVE,
+                        StandardCopyOption.REPLACE_EXISTING);
+            } finally {
+                Files.deleteIfExists(pending);
             }
         }
     }
@@ -299,6 +299,17 @@ public class BackupFactory {
     /************************ BACKUP ************************/
 
     public void backup(Context context, String project_name) {
+        outPath = null;
+        error = "";
+        try {
+            backupProject(context, project_name);
+        } catch (IOException e) {
+            error = Log.getStackTraceString(e);
+            Log.e("BackupFactory", "Failed to back up project " + sc_id, e);
+        }
+    }
+
+    private void backupProject(Context context, String project_name) throws IOException {
         String customFileName = ApplicationSettings.getBackupFileName();
 
         String versionName =
@@ -336,9 +347,6 @@ public class BackupFactory {
         }
         createBackupsFolder();
 
-        // Init temporary backup folder
-        File outFolder = new File(getBackupDir(), project_name + "_temp");
-
         // Init output zip file
         File outZip =
                 new File(
@@ -355,125 +363,115 @@ public class BackupFactory {
 
         // Create a duplicate if already exists (impossible now :3)
         if (outZip.exists()) {
-            backup(context, project_name + "_d");
+            backupProject(context, project_name + "_d");
             return;
         }
-        // delete temp dir if exist
-        if (outFolder.exists()) {
-            FileUtil.deleteFile(outFolder.getAbsolutePath());
-        }
-
-        // Create necessary folders
-        FileUtil.makeDir(outFolder.getAbsolutePath());
-        FileUtil.makeDir(
-                new File(getBackupDir() + File.separator + projectNameOnly).getAbsolutePath());
-
-        // Copy data
-        File dataF = new File(outFolder, "data");
-        FileUtil.makeDir(dataF.getAbsolutePath());
-        // 6.3.0 fix1
-        copySafe(getDataDir(), dataF);
-
-        // Copy res
-        File resF = new File(outFolder, "resources");
-        FileUtil.makeDir(resF.getAbsolutePath());
-
-        for (String subfolder : resSubfolders) {
-            File resSubf = new File(resF, subfolder);
-            FileUtil.makeDir(resSubf.getAbsolutePath());
-
-            // 6.3.0 fix1
-            copySafe(getResDir(subfolder), resSubf);
-
-            // Write an empty file inside each folder (except icons)
-            if (!subfolder.equals("icons")) {
-                // 6.3.0 fix1
-                createNomediaFileIn(resSubf);
-                // FileUtil.writeFile(new File(resSubf, ".nomedia").getAbsolutePath(), "");
-            }
-        }
-
-        // Copy project
-        File projectF = new File(outFolder, "project");
-        copy(getProjectPath(), projectF);
-
-        // Find local libs used and include them in the backup
-        if (backupLocalLibs) {
-            File localLibs = getLocalLibsPath();
-
-            if (localLibs.exists()) {
-                try {
-                    JSONArray ja = new JSONArray(FileUtil.readFile(localLibs.getAbsolutePath()));
-
-                    File libsF = new File(outFolder, "local_libs");
-                    libsF.mkdirs();
-
-                    for (int i = 0; i < ja.length(); i++) {
-                        JSONObject jo = ja.getJSONObject(i);
-                        String libName = jo.optString("name", "");
-                        if (libName.isEmpty()) continue;
-
-                        File libDir = new File(getAllLocalLibsDir(), libName);
-                        if (!libDir.exists()) {
-                            libDir = new File(SketchwarePaths.getLocalLibsFallbackDir(), libName);
-                        }
-                        if (libDir.isDirectory()) {
-                            copy(libDir, new File(libsF, libName));
-                        }
-                    }
-
-                } catch (Exception e) {
-                    Log.e("BackupFactory", "Failed to backup local libraries", e);
-                }
-            }
-        }
-
-        // Find custom blocks used and include them in the backup
-        if (backupCustomBlocks) {
-            CustomBlocksManager cbm = new CustomBlocksManager(context, sc_id);
-
-            Set<ExtraBlockInfo> blocks = new HashSet<>();
-            Set<String> block_names = new HashSet<>();
-            for (BlockBean bean : cbm.getUsedBlocks()) {
-                if (!block_names.contains(bean.opCode)) {
-                    block_names.add(bean.opCode);
-                    // Match BlockInterpreter: global definition first, project definition as
-                    // fallback.
-                    ExtraBlockInfo block = BlockLoader.getBlockInfo(bean.opCode);
-                    if (block.isMissing) {
-                        block = BlockLoader.getBlockFromProject(sc_id, bean.opCode);
-                    }
-                    // A missing placeholder loses its transient flag when serialized.
-                    if (!block.isMissing) {
-                        blocks.add(block);
-                    }
-                }
-            }
-
-            String json = new Gson().toJson(blocks);
-
-            File customBlocksF = new File(dataF, "custom_blocks");
-            FileUtil.writeFile(customBlocksF.getAbsolutePath(), json);
-        }
-
-        // Zip final folder
+        File outFolder =
+                Files.createTempDirectory(new File(getBackupDir()).toPath(), ".backup-").toFile();
+        Path pendingArchive = null;
         try {
-            zipFolder(outFolder, outZip);
-        } catch (Exception e) {
-            error = Log.getStackTraceString(e);
-            outPath = null;
-            FileUtil.deleteFile(outFolder.getAbsolutePath());
-            if (outZip.exists()) {
-                FileUtil.deleteFile(outZip.getAbsolutePath());
+            Files.createDirectories(outZip.toPath().getParent());
+
+            // Copy data
+            File dataF = new File(outFolder, "data");
+            copySafe(getDataDir(), dataF);
+
+            // Copy res
+            File resF = new File(outFolder, "resources");
+            Files.createDirectories(resF.toPath());
+
+            for (String subfolder : resSubfolders) {
+                File resSubf = new File(resF, subfolder);
+                Files.createDirectories(resSubf.toPath());
+
+                // 6.3.0 fix1
+                copySafe(getResDir(subfolder), resSubf);
+
+                // Write an empty file inside each folder (except icons)
+                if (!subfolder.equals("icons")) {
+                    // 6.3.0 fix1
+                    createNomediaFileIn(resSubf);
+                    // FileUtil.writeFile(new File(resSubf, ".nomedia").getAbsolutePath(), "");
+                }
             }
-            return;
+
+            // Copy project
+            File projectF = new File(outFolder, "project");
+            copy(getProjectPath(), projectF);
+
+            // Find local libs used and include them in the backup
+            if (backupLocalLibs) {
+                File localLibs = getLocalLibsPath();
+
+                if (localLibs.exists()) {
+                    try {
+                        JSONArray ja =
+                                new JSONArray(FileUtil.readFile(localLibs.getAbsolutePath()));
+
+                        File libsF = new File(outFolder, "local_libs");
+                        Files.createDirectories(libsF.toPath());
+
+                        for (int i = 0; i < ja.length(); i++) {
+                            JSONObject jo = ja.getJSONObject(i);
+                            String libName = jo.optString("name", "");
+                            if (libName.isEmpty()) continue;
+
+                            File libDir = new File(getAllLocalLibsDir(), libName);
+                            if (!libDir.exists()) {
+                                libDir =
+                                        new File(
+                                                SketchwarePaths.getLocalLibsFallbackDir(), libName);
+                            }
+                            if (libDir.isDirectory()) {
+                                copy(libDir, new File(libsF, libName));
+                            }
+                        }
+
+                    } catch (JSONException e) {
+                        throw new IOException(
+                                "Invalid local library metadata for project " + sc_id, e);
+                    }
+                }
+            }
+
+            // Find custom blocks used and include them in the backup
+            if (backupCustomBlocks) {
+                CustomBlocksManager cbm = new CustomBlocksManager(context, sc_id);
+
+                Set<ExtraBlockInfo> blocks = new HashSet<>();
+                Set<String> block_names = new HashSet<>();
+                for (BlockBean bean : cbm.getUsedBlocks()) {
+                    if (!block_names.contains(bean.opCode)) {
+                        block_names.add(bean.opCode);
+                        // Match BlockInterpreter: global definition first, project definition as
+                        // fallback.
+                        ExtraBlockInfo block = BlockLoader.getBlockInfo(bean.opCode);
+                        if (block.isMissing) {
+                            block = BlockLoader.getBlockFromProject(sc_id, bean.opCode);
+                        }
+                        // A missing placeholder loses its transient flag when serialized.
+                        if (!block.isMissing) {
+                            blocks.add(block);
+                        }
+                    }
+                }
+
+                String json = new Gson().toJson(blocks);
+
+                File customBlocksF = new File(dataF, "custom_blocks");
+                Files.write(customBlocksF.toPath(), json.getBytes(StandardCharsets.UTF_8));
+            }
+
+            pendingArchive = Files.createTempFile(outZip.toPath().getParent(), ".backup-", ".tmp");
+            zipFolder(outFolder, pendingArchive.toFile());
+            Files.move(pendingArchive, outZip.toPath());
+            outPath = outZip;
+        } finally {
+            FileUtil.deleteFile(outFolder.getAbsolutePath());
+            if (pendingArchive != null) {
+                FileUtil.deleteFile(pendingArchive.toString());
+            }
         }
-
-        // Delete the temporary folder
-        FileUtil.deleteFile(outFolder.getAbsolutePath());
-
-        // Put outZip to global variable
-        outPath = outZip;
     }
 
     private String getFormattedDateFrom(String format) {
@@ -496,15 +494,25 @@ public class BackupFactory {
     /************************ RESTORE ************************/
 
     public void restore(File swbPath) {
+        restoreSuccess = false;
+        error = "";
         String name = swbPath.getName();
         if (name.contains(".")) {
             name = name.substring(0, name.lastIndexOf("."));
         }
 
-        restore(swbPath, name);
+        try {
+            if (getProjectPath().exists()) {
+                throw new IOException("Project already exists: " + sc_id);
+            }
+            restore(swbPath, name);
+        } catch (IOException e) {
+            error = Log.getStackTraceString(e);
+            Log.e("BackupFactory", "Failed to restore project " + sc_id, e);
+        }
     }
 
-    private void restore(File swbPath, String name) {
+    private void restore(File swbPath, String name) throws IOException {
 
         createBackupsFolder();
 
@@ -560,12 +568,6 @@ public class BackupFactory {
             copySafe(subf, getResDir(subfolder));
         }
 
-        // Create parent folder
-        getProjectPath().getParentFile().mkdirs();
-
-        // Copy project
-        copy(project, getProjectPath());
-
         // Copy local libs if they do not exist
         if (backupLocalLibs) {
             File local_libs = new File(outFolder, "local_libs");
@@ -584,14 +586,20 @@ public class BackupFactory {
 
                         if (!primaryPath.exists() && !fallbackPath.exists()) {
                             try {
-                                primaryPath.mkdirs();
+                                Files.createDirectories(primaryPath.toPath());
                                 copy(local_lib, primaryPath);
-                            } catch (Exception e) {
+                            } catch (IOException primaryFailure) {
                                 // Primary path blocked by FUSE, clean up empty dir
                                 // and use app-specific fallback
                                 FileUtil.deleteFile(primaryPath.getAbsolutePath());
-                                fallbackPath.mkdirs();
-                                copy(local_lib, fallbackPath);
+                                try {
+                                    Files.createDirectories(fallbackPath.toPath());
+                                    copy(local_lib, fallbackPath);
+                                } catch (IOException fallbackFailure) {
+                                    FileUtil.deleteFile(fallbackPath.getAbsolutePath());
+                                    fallbackFailure.addSuppressed(primaryFailure);
+                                    throw fallbackFailure;
+                                }
                             }
                         }
                     }
@@ -602,13 +610,17 @@ public class BackupFactory {
         // Rebuild local_library paths to use current device's storage layout
         rebuildLocalLibraryPaths();
 
+        // Publish the project only after its data, resources, and libraries are ready.
+        Files.createDirectories(getProjectPath().toPath().getParent());
+        copy(project, getProjectPath());
+
         // Delete temp folder
         FileUtil.deleteFile(outFolder.getAbsolutePath());
 
         restoreSuccess = true;
     }
 
-    private void rebuildLocalLibraryPaths() {
+    private void rebuildLocalLibraryPaths() throws IOException {
         ArrayList<HashMap<String, Object>> libs = LocalLibrariesUtil.getLocalLibraries(sc_id);
         if (libs.isEmpty()) return;
 
@@ -621,7 +633,9 @@ public class BackupFactory {
                     LocalLibrariesUtil.createLibraryMap(
                             name, dependency.isEmpty() ? null : dependency));
         }
-        LocalLibrariesUtil.rewriteLocalLibFile(sc_id, new Gson().toJson(rebuilt));
+        Files.write(
+                LocalLibrariesUtil.getLocalLibFile(sc_id).toPath(),
+                new Gson().toJson(rebuilt).getBytes(StandardCharsets.UTF_8));
     }
 
     public String getError() {
@@ -634,11 +648,11 @@ public class BackupFactory {
 
     /************************ SW METHODS ************************/
 
-    private void createBackupsFolder() {
+    private void createBackupsFolder() throws IOException {
         // Create the backups folder if it doesn't exist
         String backupsPath = getBackupDir();
 
-        FileUtil.makeDir(backupsPath);
+        Files.createDirectories(new File(backupsPath).toPath());
     }
 
     private File getDataDir() {
