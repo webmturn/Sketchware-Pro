@@ -71,7 +71,9 @@ final class BlockEditorMutation {
         try {
             return read(path);
         } catch (NoSuchFileException missing) {
-            if (!allowMissing) throw missing;
+            if (!allowMissing) {
+                throw missing;
+            }
             return parse("[]".getBytes(StandardCharsets.UTF_8));
         }
     }
@@ -84,14 +86,18 @@ final class BlockEditorMutation {
         var blocks = loaded.blocks();
         if (preferred >= 0
                 && preferred < blocks.size()
-                && Arrays.equals(expected, recordDigest(blocks.get(preferred)))) return preferred;
+                && Arrays.equals(expected, recordDigest(blocks.get(preferred)))) {
+            return preferred;
+        }
         int target = -1;
         for (int i = 0; i < blocks.size(); i++) {
             var block = blocks.get(i);
             if (block != null
                     && (name == null || name.equals(block.get("name")))
                     && Arrays.equals(expected, recordDigest(block))) {
-                if (target != -1) return -1;
+                if (target != -1) {
+                    return -1;
+                }
                 target = i;
             }
         }
@@ -104,10 +110,15 @@ final class BlockEditorMutation {
                         .fromJson(
                                 new String(source, StandardCharsets.UTF_8),
                                 new TypeToken<ArrayList<HashMap<String, Object>>>() {}.getType());
-        if (blocks == null) throw new JsonParseException("The block library is empty");
+        if (blocks == null) {
+            throw new JsonParseException("The block library is empty");
+        }
         ArrayList<String> names = new ArrayList<>();
-        for (var block : blocks)
-            if (block != null && block.get("name") instanceof String name) names.add(name);
+        for (var block : blocks) {
+            if (block != null && block.get("name") instanceof String name) {
+                names.add(name);
+            }
+        }
         return new Loaded(blocks, names, digest(source));
     }
 
@@ -118,8 +129,9 @@ final class BlockEditorMutation {
         try {
             source = Files.readAllBytes(path);
         } catch (NoSuchFileException missing) {
-            if (!"add".equals(mode) || baseSnapshot == null || !baseSnapshot.isEmpty())
+            if (!"add".equals(mode) || baseSnapshot == null || !baseSnapshot.isEmpty()) {
                 throw missing;
+            }
             source = "[]".getBytes(StandardCharsets.UTF_8);
             expectedMissing = true;
         }
@@ -134,30 +146,40 @@ final class BlockEditorMutation {
                     || target >= blocks.size()
                     || !Objects.equals(blocks.get(target), original)) {
                 target = -1;
-                for (int i = 0; i < blocks.size(); i++)
+                for (int i = 0; i < blocks.size(); i++) {
                     if (Objects.equals(blocks.get(i), original)) {
-                        if (target != -1) throw new Conflict();
+                        if (target != -1) {
+                            throw new Conflict();
+                        }
                         target = i;
                     }
-                if (target == -1) throw new Conflict();
+                }
+                if (target == -1) {
+                    throw new Conflict();
+                }
             }
         }
         boolean sameName =
                 "edit".equals(mode) && Objects.equals(changes.get("name"), original.get("name"));
-        if (!sameName)
+        if (!sameName) {
             for (int i = 0; i < blocks.size(); i++) {
                 var block = blocks.get(i);
                 if (block != null
                         && !("edit".equals(mode) && i == target)
-                        && Objects.equals(block.get("name"), changes.get("name")))
+                        && Objects.equals(block.get("name"), changes.get("name"))) {
                     throw new Conflict();
+                }
             }
+        }
         if ("edit".equals(mode)) {
             HashMap<String, Object> updated = new HashMap<>(blocks.get(target));
             updated.putAll(changes);
             blocks.set(target, updated);
-        } else if ("insert".equals(mode)) blocks.add(target, new HashMap<>(changes));
-        else blocks.add(new HashMap<>(changes));
+        } else if ("insert".equals(mode)) {
+            blocks.add(target, new HashMap<>(changes));
+        } else {
+            blocks.add(new HashMap<>(changes));
+        }
         expectedDigest = currentDigest;
         return blocks;
     }
@@ -165,10 +187,14 @@ final class BlockEditorMutation {
     void verifyUnchanged(Path path) throws IOException {
         verifyPalette();
         if (expectedMissing) {
-            if (Files.exists(path)) throw new Conflict();
+            if (Files.exists(path)) {
+                throw new Conflict();
+            }
             return;
         }
-        if (!Arrays.equals(expectedDigest, digest(Files.readAllBytes(path)))) throw new Conflict();
+        if (!Arrays.equals(expectedDigest, digest(Files.readAllBytes(path)))) {
+            throw new Conflict();
+        }
     }
 
     void guardPalette(Path path, byte[] digest) {
@@ -178,8 +204,9 @@ final class BlockEditorMutation {
 
     private void verifyPalette() throws IOException {
         if (palettePath != null
-                && !Arrays.equals(paletteDigest, digest(Files.readAllBytes(palettePath))))
+                && !Arrays.equals(paletteDigest, digest(Files.readAllBytes(palettePath)))) {
             throw new Conflict();
+        }
     }
 
     private static byte[] digest(byte[] bytes) {
