@@ -12,9 +12,7 @@ import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
 import android.util.TypedValue;
 import android.widget.Toast;
-
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,30 +25,28 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.Random;
 import java.util.function.Consumer;
-
-import pro.sketchware.core.async.BackgroundTasks;
-import pro.sketchware.util.SketchToast;
-import pro.sketchware.core.async.TaskHost;
-import pro.sketchware.util.Helper;
-import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
+import pro.sketchware.core.async.BackgroundTasks;
+import pro.sketchware.core.async.TaskHost;
 
 public class SketchwareUtil {
 
     public static boolean isConnected() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     public static void showMessage(Context context, String _s) {
-        BackgroundTasks.postMain(() -> {
-            try {
-                Toast.makeText(context, _s, Toast.LENGTH_SHORT).show();
-            } catch (RuntimeException e) {
-                LogUtil.e("SketchwareUtil", "Failed to toast message: \"" + _s + "\"", e);
-            }
-        });
+        BackgroundTasks.postMain(
+                () -> {
+                    try {
+                        Toast.makeText(context, _s, Toast.LENGTH_SHORT).show();
+                    } catch (RuntimeException e) {
+                        LogUtil.e("SketchwareUtil", "Failed to toast message: \"" + _s + "\"", e);
+                    }
+                });
     }
 
     public static int getRandom(int _min, int _max) {
@@ -66,63 +62,65 @@ public class SketchwareUtil {
     }
 
     /**
-     * Show a Toast styled Sketchware-like.
+     * Shows a Sketchware toast on the main thread.
      *
-     * @param message The message to toast
-     * @param length  The toast's length, either {@link Toast#LENGTH_SHORT} or {@link Toast#LENGTH_LONG}
+     * @param length The toast's length, either {@link Toast#LENGTH_SHORT} or {@link
+     *     Toast#LENGTH_LONG}
      */
     public static void toast(String message, int length) {
-        BackgroundTasks.postMain(() -> {
-            try {
-                SketchToast.toast(getContext(), message, length).show();
-            } catch (RuntimeException e) {
-                LogUtil.e("SketchwareUtil", "Failed to toast regular message, " + "Toast's message was: \"" + message + "\"", e);
-            }
-        });
+        BackgroundTasks.postMain(
+                () -> {
+                    try {
+                        SketchToast.toast(getContext(), message, length).show();
+                    } catch (RuntimeException e) {
+                        LogUtil.e(
+                                "SketchwareUtil",
+                                "Failed to toast regular message, "
+                                        + "Toast's message was: \""
+                                        + message
+                                        + "\"",
+                                e);
+                    }
+                });
     }
 
-    /**
-     * Show a Toast styled Sketchware-like and with length {@link Toast#LENGTH_SHORT}.
-     *
-     * @param message The message to toast
-     */
     public static void toast(String message) {
         toast(message, Toast.LENGTH_SHORT);
     }
 
     /**
-     * Show an error Toast styled Sketchware-like and with length {@link Toast#LENGTH_SHORT}.
+     * Shows a Sketchware warning toast on the main thread.
      *
-     * @param message The message to toast
-     * @param length  The toast's length, either {@link Toast#LENGTH_SHORT} or {@link Toast#LENGTH_LONG}
+     * @param length The toast's length, either {@link Toast#LENGTH_SHORT} or {@link
+     *     Toast#LENGTH_LONG}
      */
     public static void toastError(String message, int length) {
-        BackgroundTasks.postMain(() -> {
-            try {
-                SketchToast.warning(getContext(), message, length).show();
-            } catch (RuntimeException e) {
-                LogUtil.e("SketchwareUtil", "Failed to toast regular message, " + "Toast's message was: \"" + message + "\"", e);
-            }
-        });
+        BackgroundTasks.postMain(
+                () -> {
+                    try {
+                        SketchToast.warning(getContext(), message, length).show();
+                    } catch (RuntimeException e) {
+                        LogUtil.e(
+                                "SketchwareUtil",
+                                "Failed to toast regular message, "
+                                        + "Toast's message was: \""
+                                        + message
+                                        + "\"",
+                                e);
+                    }
+                });
     }
 
-    /**
-     * Show an error Toast styled Sketchware-like and with length {@link Toast#LENGTH_SHORT}.
-     *
-     * @param message The message to toast
-     */
     public static void toastError(String message) {
         toastError(message, Toast.LENGTH_SHORT);
     }
 
-    /**
-     * Converts dps into pixels.
-     *
-     * @param dp The amount of density-independent pixels to convert
-     * @return {@code dp} in pixels
-     */
     public static int dpToPx(float dp) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getContext().getResources().getDisplayMetrics());
+        return (int)
+                TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        dp,
+                        getContext().getResources().getDisplayMetrics());
     }
 
     /**
@@ -133,58 +131,91 @@ public class SketchwareUtil {
     }
 
     public static Optional<String> doSingleStringContentQuery(Uri uri, String columnName) {
-        try (Cursor cursor = getContext().getContentResolver().query(uri, new String[]{columnName}, null, null, null)) {
+        try (Cursor cursor =
+                getContext()
+                        .getContentResolver()
+                        .query(uri, new String[] {columnName}, null, null, null)) {
             if (cursor != null && cursor.moveToFirst() && !cursor.isNull(0)) {
                 return Optional.of(cursor.getString(0));
             } else {
                 return Optional.empty();
             }
         } catch (IllegalArgumentException | NullPointerException e) {
-            LogUtil.e("SketchwareUtil", "Failed to do single string content query for Uri " + uri + " and column name " + columnName, e);
+            LogUtil.e(
+                    "SketchwareUtil",
+                    "Failed to do single string content query for Uri "
+                            + uri
+                            + " and column name "
+                            + columnName,
+                    e);
             return Optional.empty();
         }
     }
 
-    public static void copySafDocumentToTempFile(Uri document, Activity context, String tempFileExtension, Consumer<File> tempFileConsumer, Consumer<IOException> exceptionHandler) {
-        BackgroundTasks.callIo(TaskHost.of(context), "SketchwareUtil", () -> {
-            try (ParcelFileDescriptor parcelFileDescriptor = context.getContentResolver().openFileDescriptor(document, "r");
-                 FileInputStream inputStream = new FileInputStream(parcelFileDescriptor.getFileDescriptor())) {
+    public static void copySafDocumentToTempFile(
+            Uri document,
+            Activity context,
+            String tempFileExtension,
+            Consumer<File> tempFileConsumer,
+            Consumer<IOException> exceptionHandler) {
+        BackgroundTasks.callIo(
+                TaskHost.of(context),
+                "SketchwareUtil",
+                () -> {
+                    try (ParcelFileDescriptor parcelFileDescriptor =
+                                    context.getContentResolver().openFileDescriptor(document, "r");
+                            FileInputStream inputStream =
+                                    new FileInputStream(parcelFileDescriptor.getFileDescriptor())) {
 
-                File temporaryFile = File.createTempFile("document", "." + tempFileExtension);
-                try (FileOutputStream outputStream = new FileOutputStream(temporaryFile);
-                     BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream)) {
+                        File temporaryFile =
+                                File.createTempFile("document", "." + tempFileExtension);
+                        try (FileOutputStream outputStream = new FileOutputStream(temporaryFile);
+                                BufferedOutputStream bufferedOutputStream =
+                                        new BufferedOutputStream(outputStream)) {
 
-                    byte[] buffer = new byte[4096];
-                    int length;
-                    while ((length = inputStream.read(buffer)) > 0) {
-                        bufferedOutputStream.write(buffer, 0, length);
+                            byte[] buffer = new byte[4096];
+                            int length;
+                            while ((length = inputStream.read(buffer)) > 0) {
+                                bufferedOutputStream.write(buffer, 0, length);
+                            }
+                        }
+
+                        return temporaryFile;
                     }
-                }
-
-                return temporaryFile;
-            }
-        }, tempFileConsumer, exceptionHandler == null ? null : error -> {
-            if (error instanceof IOException) {
-                exceptionHandler.accept((IOException) error);
-            } else {
-                exceptionHandler.accept(new IOException(error));
-            }
-        });
+                },
+                tempFileConsumer,
+                exceptionHandler == null
+                        ? null
+                        : error -> {
+                            if (error instanceof IOException) {
+                                exceptionHandler.accept((IOException) error);
+                            } else {
+                                exceptionHandler.accept(new IOException(error));
+                            }
+                        });
     }
 
     /**
      * @param componentLabel Label of component that failed to be parsed, e.g. Block selector menus
      */
-    public static void showFailedToParseJsonDialog(Activity context, File json, String componentLabel, Consumer<Void> afterRenameLogic) {
+    public static void showFailedToParseJsonDialog(
+            Activity context, File json, String componentLabel, Consumer<Void> afterRenameLogic) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(context);
         dialog.setIcon(R.drawable.break_warning_96_red);
         dialog.setTitle(Helper.getResString(R.string.parse_error_title_format, componentLabel));
-        dialog.setMessage(Helper.getResString(R.string.parse_error_message_format, componentLabel, json, json.getName() + ".bak"));
-        dialog.setPositiveButton(R.string.common_word_rename, (v, which) -> {
-            FileUtil.renameFile(json.getAbsolutePath(), json.getAbsolutePath() + ".bak");
-            afterRenameLogic.accept(null);
-            v.dismiss();
-        });
+        dialog.setMessage(
+                Helper.getResString(
+                        R.string.parse_error_message_format,
+                        componentLabel,
+                        json,
+                        json.getName() + ".bak"));
+        dialog.setPositiveButton(
+                R.string.common_word_rename,
+                (v, which) -> {
+                    FileUtil.renameFile(json.getAbsolutePath(), json.getAbsolutePath() + ".bak");
+                    afterRenameLogic.accept(null);
+                    v.dismiss();
+                });
         dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
         dialog.show();
     }
@@ -198,31 +229,40 @@ public class SketchwareUtil {
         builder.show();
     }
 
-    public static void sortListMap(ArrayList<HashMap<String, Object>> listMap, String key, boolean isNumber, boolean ascending) {
-        Collections.sort(listMap, new Comparator<>() {
-            @Override
-            public int compare(HashMap<String, Object> _compareMap1, HashMap<String, Object> _compareMap2) {
-                if (isNumber) {
-                    Object value1 = _compareMap1.get(key);
-                    Object value2 = _compareMap2.get(key);
-                    int _count1 = value1 instanceof Number ? ((Number) value1).intValue() : 0;
-                    int _count2 = value2 instanceof Number ? ((Number) value2).intValue() : 0;
-                    if (ascending) {
-                        return Integer.compare(_count1, _count2);
-                    } else {
-                        return Integer.compare(_count2, _count1);
+    public static void sortListMap(
+            ArrayList<HashMap<String, Object>> listMap,
+            String key,
+            boolean isNumber,
+            boolean ascending) {
+        Collections.sort(
+                listMap,
+                new Comparator<>() {
+                    @Override
+                    public int compare(
+                            HashMap<String, Object> _compareMap1,
+                            HashMap<String, Object> _compareMap2) {
+                        if (isNumber) {
+                            Object value1 = _compareMap1.get(key);
+                            Object value2 = _compareMap2.get(key);
+                            int _count1 =
+                                    value1 instanceof Number ? ((Number) value1).intValue() : 0;
+                            int _count2 =
+                                    value2 instanceof Number ? ((Number) value2).intValue() : 0;
+                            if (ascending) {
+                                return Integer.compare(_count1, _count2);
+                            } else {
+                                return Integer.compare(_count2, _count1);
+                            }
+                        } else {
+                            String text1 = String.valueOf(_compareMap1.get(key));
+                            String text2 = String.valueOf(_compareMap2.get(key));
+                            if (ascending) {
+                                return text1.compareTo(text2);
+                            } else {
+                                return text2.compareTo(text1);
+                            }
+                        }
                     }
-                } else {
-                    String text1 = String.valueOf(_compareMap1.get(key));
-                    String text2 = String.valueOf(_compareMap2.get(key));
-                    if (ascending) {
-                        return text1.compareTo(text2);
-                    } else {
-                        return text2.compareTo(text1);
-                    }
-                }
-            }
-        });
+                });
     }
-
 }
