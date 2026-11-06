@@ -22,7 +22,7 @@ Welcome to Sketchware Pro! Here you'll find the source code of many classes in S
    git clone https://github.com/webmturn/Sketchware-Pro.git
    ```
 2. Open the project in Android Studio.
-3. Wait for Gradle sync to complete. If `google-services.json` is missing, a mock file is generated automatically during the pre-build step.
+3. Wait for Gradle sync to complete. The project does not apply the `google-services` Gradle plugin, so no Firebase configuration file is needed to build.
 4. Build and run the `app` module on a device or emulator (minSdk 26).
 
 > [!NOTE]
@@ -30,31 +30,40 @@ Welcome to Sketchware Pro! Here you'll find the source code of many classes in S
 
 ### Source Code Map
 
-| Class           | Role                                        |
-| --------------- | ------------------------------------------- |
-| `pro.sketchware.core.ProjectBuilder` | Helper for compiling an entire project |
-| `pro.sketchware.core.ManifestGenerator` | Responsible for generating AndroidManifest.xml |
-| `pro.sketchware.core.ActivityCodeGenerator` | Generates source code of activities |
-| `pro.sketchware.core.ComponentCodeGenerator` | Generates source code of components, such as listeners, etc. |
-| `pro.sketchware.core.EventCodeGenerator` | Generates source code for event handlers |
-| `pro.sketchware.core.LayoutGenerator` | Responsible for generating XML files of layouts |
-| `pro.sketchware.core.GradleFileGenerator` | Generates Gradle build files |
-| `pro.sketchware.core.BlockInterpreter` | Interprets and translates block specifications into Java code |
-| `pro.sketchware.core.BlockCodeRegistry` | Registry-based replacement for block code interpretation |
-| `pro.sketchware.core.BlockSpecRegistry` | Central registry mapping block/event opCodes to their specifications |
-| `pro.sketchware.core.ListenerCodeRegistry` | Registry for listener code generation patterns |
-| `pro.sketchware.core.EventRegistry` | Registry of known event names and configurations |
-| `pro.sketchware.core.BuiltInLibrary` | Represents a single built-in library and its metadata |
-| `pro.sketchware.core.LibraryManager` | Manages external libraries and dependencies |
-| `pro.sketchware.core.ResourceManager` | Manages project resources (images, colors, strings, etc.) |
-| `pro.sketchware.core.ProjectDataManager` | Singleton factory for project-scoped manager instances |
-| `pro.sketchware.core.ProjectFileManager` | Manages project file persistence and loading |
-| `pro.sketchware.core.ProjectListManager` | Manages the list of projects |
-| `pro.sketchware.core.ProjectFilePaths` | Organizes Sketchware projects' file paths |
-| `pro.sketchware.core.CompileQuizManager` | Responsible for the compiling dialog's quizzes |
+| Class | Package | Role |
+| --- | --- | --- |
+| `ProjectBuilder` | `pro.sketchware.core.build` | Runs the full project build pipeline (resources, Java, DEX, signing) |
+| `ProjectFilePaths` | `pro.sketchware.core.build` | Resolves generated and build file paths for a project |
+| `CompileQuizManager` | `pro.sketchware.core.build` | Provides the compiling dialog's quizzes |
+| `ManifestGenerator` | `pro.sketchware.core.codegen` | Generates `AndroidManifest.xml` |
+| `ActivityCodeGenerator` | `pro.sketchware.core.codegen` | Generates activity Java source |
+| `ComponentCodeGenerator` | `pro.sketchware.core.codegen` | Generates component and listener source |
+| `EventCodeGenerator` | `pro.sketchware.core.codegen` | Generates event-handler source |
+| `LayoutGenerator` | `pro.sketchware.core.codegen` | Generates layout XML |
+| `GradleFileGenerator` | `pro.sketchware.core.codegen` | Generates Gradle build files |
+| `BlockInterpreter` | `pro.sketchware.core.codegen` | Interprets block specs into Java code |
+| `BlockCodeRegistry` | `pro.sketchware.core.codegen` | Registry-based block code generation |
+| `ListenerCodeRegistry` | `pro.sketchware.core.codegen` | Listener code-generation patterns |
+| `EventRegistry` | `pro.sketchware.core.codegen` | Known event names and configurations |
+| `BlockSpecRegistry` | `pro.sketchware.core.block` | Block/event opCode specifications |
+| `BuiltInLibrary` | `pro.sketchware.core.library` | Built-in library metadata |
+| `LibraryManager` | `pro.sketchware.core.project` | External libraries and dependencies |
+| `ResourceManager` | `pro.sketchware.core.project` | Project resources (images, colors, strings) |
+| `ProjectDataManager` | `pro.sketchware.core.project` | Project-scoped manager factory |
+| `ProjectFileManager` | `pro.sketchware.core.project` | Project persistence and loading |
+| `ProjectListManager` | `pro.sketchware.core.project` | Project list and metadata |
+
+> `:resolver` (Kotlin) resolves Maven/Jitpack dependencies for the library downloader;
+> `:vendor-dx` is the bundled dx fork that `ProjectBuilder` uses to read and merge DEX files.
 
 > [!TIP]
-> You can also check the `mod` package, which contains the majority of contributors' changes.
+> Start from `pro.sketchware.core` for build/codegen work and `pro.sketchware.activities` for UI work. The old `mod` and `com.besome.sketch` trees are retired; `checkPackageBoundaries` rejects new files there.
+
+### Documentation
+
+- [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) — development handbook: architecture, code generation, build pipeline, and extension guides.
+- [`docs/WIRELESS-DEBUGGING-zh.md`](docs/WIRELESS-DEBUGGING-zh.md) — wireless ADB debugging setup.
+- [`docs/I18N-COVERAGE-zh.md`](docs/I18N-COVERAGE-zh.md) — Chinese localization coverage.
 
 ## Contributing
 
@@ -90,7 +99,7 @@ Examples:
 > [!IMPORTANT]
 > If you want to add new features that don't require editing other packages other than `pro.sketchware`, make your changes in `pro.sketchware` package, and respect the directories and files structure and names. Also, even though the project compiles just fine with Kotlin classes that you might add, try to make your changes or additions in Java, not Kotlin unless it is more than necessary.
 >
-> The full hard rule for where new `.java` files must live, including the naming conventions and the PR review checklist, is documented in [`docs/package-migration-policy.md`](docs/package-migration-policy.md).
+> The hard rules for where new `.java` files must live are enforced by the `checkPackageBoundaries` Gradle task, which runs first in CI.
 
 ## Thanks for Contributing
 
