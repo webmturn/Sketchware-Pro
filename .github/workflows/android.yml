@@ -64,6 +64,9 @@ jobs:
           ORG_GRADLE_PROJECT_spotlessRatchetFrom: ${{ steps.format-baseline.outputs.base }}
         run: ./gradlew spotlessCheck
 
+      - name: Check Java imports
+        run: ./gradlew checkJavaImports
+
       - name: Verify package boundaries
         run: ./gradlew checkPackageBoundaries
 

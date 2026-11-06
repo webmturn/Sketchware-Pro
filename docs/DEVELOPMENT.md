@@ -497,6 +497,8 @@ register("onMyEvent", (id, logic) ->
 - **数据经由门面访问**:读写项目数据统一通过 `ProjectDataManager` 获取管理器,再操作 `ProjectDataStore` 等,不要绕过门面直接持有实例。
 - **Java 17 / Android**:遵循 `compileOptions` 的 Java 17 语言级别;注意 `minSdk = 26`。
 - **格式**:Java 使用 AOSP 风格(块缩进 4 空格、续行 8 空格),其他文件遵循根目录 `.editorconfig`。
+- **导入**:不写同包类的普通导入,保留需要的静态导入和嵌套类型导入。`checkJavaImports` 全量检查与 Java 格式化相同的源码范围,不受 ratchet 基线影响。
+- **注释**:说明签名之外的信息,例如约束、单位、副作用和设计原因;不重复方法名或逐句翻译方法体。
 - **函数式接口**:`BlockCodeHandler`、`EventCodeHandler` 为单方法接口,注册时优先用 lambda。
 
 Java 格式检查覆盖 `app/src/*/java/pro/sketchware/`,排除 `third_party/`。Kotlin 源码和 `vendor-dx` 不参与此检查。以 `origin/main` 为基线,仅检查相对基线有改动的文件;选中的文件会整份格式化。格式化与功能修改分开提交。
@@ -505,10 +507,10 @@ Java 格式检查覆盖 `app/src/*/java/pro/sketchware/`,排除 `third_party/`�
 
 ```bash
 ./gradlew spotlessApply
-./gradlew spotlessCheck checkPackageBoundaries
+./gradlew spotlessCheck checkJavaImports checkPackageBoundaries
 ```
 
-CI 单独运行 `spotlessCheck`。PR 使用目标分支提交 SHA,push 使用推送前的提交,并取其与 HEAD 的共同祖先。基线为空、全零、不存在或没有共同祖先时,回退到 HEAD 的父提交;首提交没有父提交时,全量检查 Java 源码。手动指定基线使用 `-PspotlessRatchetFrom=<ref>`;传空值表示全量检查。
+CI 分别运行 `spotlessCheck`、`checkJavaImports` 和 `checkPackageBoundaries`。PR 格式检查使用目标分支提交 SHA,push 使用推送前的提交,并取其与 HEAD 的共同祖先。基线为空、全零、不存在或没有共同祖先时,回退到 HEAD 的父提交;首提交没有父提交时,全量检查 Java 源码。手动指定基线使用 `-PspotlessRatchetFrom=<ref>`;传空值表示全量检查。
 
 ---
 

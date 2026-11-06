@@ -33,6 +33,40 @@ tasks.named("clean", Delete) {
     delete rootProject.layout.buildDirectory
 }
 
+// Ignore package and import text inside comments and literals.
+def nonCode = ~/(?s)""".*?"""|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\/\*.*?\*\/|\/\/[^\r\n]*/
+
+tasks.register("checkJavaImports") {
+    group = "verification"
+    description = "Checks Java sources for redundant same-package imports."
+
+    doLast {
+        def violations = []
+        def qualifiedName = /\p{javaJavaIdentifierPart}+(?:\s*\.\s*\p{javaJavaIdentifierPart}+)*/
+        fileTree("app/src") {
+            include "*/java/pro/sketchware/**/*.java"
+            exclude "main/java/pro/sketchware/third_party/**"
+        }.files.each { sourceFile ->
+            def code = nonCode.matcher(sourceFile.getText("UTF-8")).replaceAll(" ")
+            def packageMatch = code =~ /\bpackage\s+(${qualifiedName})\s*;/
+            if (!packageMatch.find()) return
+            def declaredPackage = packageMatch.group(1).replaceAll(/\s+/, "")
+            def imports = code =~ /\bimport\s+(?!static\b)(${qualifiedName}(?:\s*\.\s*\*)?)\s*;/
+            imports.each { declaration ->
+                def importedType = declaration[1].replaceAll(/\s+/, "")
+                int separator = importedType.lastIndexOf('.')
+                if (separator > 0 && importedType.substring(0, separator) == declaredPackage) {
+                    violations.add("${rootProject.relativePath(sourceFile)}: ${importedType}")
+                }
+            }
+        }
+        if (!violations.isEmpty()) {
+            throw new GradleException("Redundant same-package Java imports found:\n"
+                    + violations.sort().collect { " - ${it}" }.join("\n"))
+        }
+    }
+}
+
 tasks.register("checkPackageBoundaries") {
     group = "verification"
     description = "Checks retired packages, shared-service dependencies, and design-tab data access."
@@ -41,8 +75,6 @@ tasks.register("checkPackageBoundaries") {
         def sourceRoot = file("app/src/main/java")
         def violations = [] as Set
 
-        // Mask comments and literals before checking imports and qualified code references.
-        def nonCode = ~/(?s)""".*?"""|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\/\*.*?\*\/|\/\/[^\r\n]*/
         def retiredClassNames = [
                 "pro.sketchware.core.project.BuiltInLibrary",
                 "pro.sketchware.core.codegen.BlockColorMapper",
