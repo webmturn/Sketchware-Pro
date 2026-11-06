@@ -1,26 +1,7 @@
 package pro.sketchware.core.build;
 
-import pro.sketchware.core.codegen.ActivityCodeGenerator;
-import pro.sketchware.core.project.BlockConstants;
-import pro.sketchware.core.project.BuildConfig;
-import pro.sketchware.core.codegen.ComponentCodeGenerator;
-import pro.sketchware.core.codegen.ComponentTemplates;
-import pro.sketchware.util.io.EncryptedFileUtil;
-import pro.sketchware.core.codegen.LayoutGenerator;
-import pro.sketchware.core.codegen.ManifestGenerator;
-import pro.sketchware.core.project.LibraryManager;
-import pro.sketchware.core.codegen.LocalLibraryManifestMerger;
-import pro.sketchware.util.MapValueHelper;
-import pro.sketchware.core.project.ProjectDataManager;
-import pro.sketchware.core.project.ProjectDataStore;
-import pro.sketchware.core.project.ProjectFileManager;
-import pro.sketchware.core.project.ProjectListManager;
-import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.util.io.ZipUtil;
-
 import static pro.sketchware.core.build.BuildDefaults.VAR_DEFAULT_MIN_SDK_VERSION;
 import static pro.sketchware.core.build.BuildDefaults.VAR_DEFAULT_TARGET_SDK_VERSION;
-
 import static pro.sketchware.core.project.ProjectThemeColors.getDefaultColor;
 
 import android.content.Context;
@@ -28,18 +9,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
-
-import java.io.FileInputStream;
-import java.util.zip.CRC32;
-
-import pro.sketchware.beans.BlockBean;
-import pro.sketchware.beans.ComponentBean;
-import pro.sketchware.beans.ProjectFileBean;
-import pro.sketchware.beans.ProjectLibraryBean;
-import pro.sketchware.beans.SrcCodeBean;
-import pro.sketchware.beans.ViewBean;
-import pro.sketchware.core.library.Material3LibraryManager;
+import android.util.Pair;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -52,81 +24,95 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.regex.Pattern;
-
-import android.util.Pair;
-
-import pro.sketchware.core.codegen.ExtraBlockFile;
+import java.util.zip.CRC32;
+import pro.sketchware.SketchApplication;
+import pro.sketchware.beans.BlockBean;
+import pro.sketchware.beans.ComponentBean;
+import pro.sketchware.beans.ProjectFileBean;
+import pro.sketchware.beans.ProjectLibraryBean;
+import pro.sketchware.beans.SrcCodeBean;
+import pro.sketchware.beans.ViewBean;
+import pro.sketchware.core.codegen.ActivityCodeGenerator;
+import pro.sketchware.core.codegen.AndroidManifestInjector;
 import pro.sketchware.core.codegen.BlockLoader;
+import pro.sketchware.core.codegen.CommandBlock;
+import pro.sketchware.core.codegen.ComponentCodeGenerator;
+import pro.sketchware.core.codegen.ComponentTemplates;
 import pro.sketchware.core.codegen.EventsHandler;
+import pro.sketchware.core.codegen.ExtraBlockFile;
+import pro.sketchware.core.codegen.LayoutGenerator;
+import pro.sketchware.core.codegen.LocalLibraryManifestMerger;
+import pro.sketchware.core.codegen.ManifestGenerator;
+import pro.sketchware.core.library.BuiltInLibraryManager;
 import pro.sketchware.core.library.ManageLocalLibrary;
-import pro.sketchware.core.build.BuildSettings;
+import pro.sketchware.core.library.Material3LibraryManager;
+import pro.sketchware.core.project.BlockConstants;
+import pro.sketchware.core.project.BuildConfig;
+import pro.sketchware.core.project.LibraryManager;
+import pro.sketchware.core.project.ProjectDataManager;
+import pro.sketchware.core.project.ProjectDataStore;
+import pro.sketchware.core.project.ProjectFileManager;
+import pro.sketchware.core.project.ProjectListManager;
 import pro.sketchware.core.project.ProjectSettings;
 import pro.sketchware.core.project.ProjectThemeColors;
-import pro.sketchware.core.codegen.AndroidManifestInjector;
-import pro.sketchware.core.codegen.CommandBlock;
-import pro.sketchware.core.build.ViewBindingBuilder;
-import pro.sketchware.SketchApplication;
-import pro.sketchware.core.library.BuiltInLibraryManager;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.MapValueHelper;
+import pro.sketchware.util.io.EncryptedFileUtil;
+import pro.sketchware.util.io.ZipUtil;
 import pro.sketchware.util.xml.XmlBuilder;
 import pro.sketchware.util.xml.XmlBuilderHelper;
 
 public class ProjectFilePaths {
 
     /**
-     * Firebase Database storage location RegExp matcher to remove unwanted parts of storage URL
-     * to get the actual project ID.
-     * <p/>
-     * Users should enter the entire storage URL without <code>https://</code> at the beginning and
-     * <code>/</code> at the end, e.g. <code>sk-pro-default-rtdb.firebaseio.com</code>.
+     * Firebase Database storage location RegExp matcher to remove unwanted parts of storage URL to
+     * get the actual project ID.
+     *
+     * <p>Users should enter the entire storage URL without <code>https://</code> at the beginning
+     * and <code>/</code> at the end, e.g. <code>sk-pro-default-rtdb.firebaseio.com</code>.
      */
-    private static final String FIREBASE_DATABASE_STORAGE_LOCATION_MATCHER = "(-default-rtdb)?\\.[a-z](.?)+";
-    private static final Pattern PACKAGE_PLACEHOLDER_PATTERN = Pattern.compile("<\\?package_name\\?>");
+    private static final String FIREBASE_DATABASE_STORAGE_LOCATION_MATCHER =
+            "(-default-rtdb)?\\.[a-z](.?)+";
 
-    /**
-     * Example content: /storage/emulated/0/.sketchware/mysc/605/app/src/main/assets
-     */
+    private static final Pattern PACKAGE_PLACEHOLDER_PATTERN =
+            Pattern.compile("<\\?package_name\\?>");
+
+    /** Example content: /storage/emulated/0/.sketchware/mysc/605/app/src/main/assets */
     public final String assetsPath;
 
-    /**
-     * Example content: /storage/emulated/0/.sketchware/mysc/605/app/src/main/assets/fonts
-     */
+    /** Example content: /storage/emulated/0/.sketchware/mysc/605/app/src/main/assets/fonts */
     public final String fontsPath;
 
     /**
-     * Path of ZIP file containing compiled resources of the current project,
-     * e.g. /storage/emulated/0/.sketchware/mysc/605/bin/InternalDemo.apk.res
+     * Path of ZIP file containing compiled resources of the current project, e.g.
+     * /storage/emulated/0/.sketchware/mysc/605/bin/InternalDemo.apk.res
      */
     public final String resourcesApkPath;
 
-    /**
-     * Example content: /storage/emulated/0/.sketchware/mysc/605/bin/classes.dex
-     */
+    /** Example content: /storage/emulated/0/.sketchware/mysc/605/bin/classes.dex */
     public final String classesDexPath;
 
-    /**
-     * Example content: /storage/emulated/0/.sketchware/mysc/605/bin/InternalDemo.apk.unsigned
-     */
+    /** Example content: /storage/emulated/0/.sketchware/mysc/605/bin/InternalDemo.apk.unsigned */
     public final String unsignedUnalignedApkPath;
 
-    /**
-     * Example content: /storage/emulated/0/.sketchware/mysc/605/bin/InternalDemo.apk
-     */
+    /** Example content: /storage/emulated/0/.sketchware/mysc/605/bin/InternalDemo.apk */
     public final String finalToInstallApkPath;
 
-    /**
-     * Example content: /storage/emulated/0/sketchware/signed_apk/InternalDemo_release.apk
-     */
+    /** Example content: /storage/emulated/0/sketchware/signed_apk/InternalDemo_release.apk */
     public final String releaseApkPath;
+
     /**
-     * Example content: /storage/emulated/0/.sketchware/mysc/605/bin/InternalDemo.apk.unsigned.aligned
+     * Example content:
+     * /storage/emulated/0/.sketchware/mysc/605/bin/InternalDemo.apk.unsigned.aligned
      */
     public final String unsignedAlignedApkPath;
+
     public final String sc_id;
-    /**
-     * Example content: /storage/emulated/0/.sketchware/mysc/605/
-     */
+
+    /** Example content: /storage/emulated/0/.sketchware/mysc/605/ */
     public final String projectMyscPath;
+
     public final String projectName;
     public final String packageName;
     public final String applicationName;
@@ -137,99 +123,95 @@ public class ProjectFilePaths {
     public final int colorControlNormal;
     public final String versionCode;
     public final String versionName;
+
     /**
-     * Package name of current project,
-     * but "folders" separated with slashes (/) instead of periods (.),
-     * e.g. com/jbk/internal/demo
+     * Package name of current project, but "folders" separated with slashes (/) instead of periods
+     * (.), e.g. com/jbk/internal/demo
      */
     public final String packageNameAsFolders;
+
     /**
-     * Path of file with ProGuard rules automatically generated by aapt2,
-     * e.g. /storage/emulated/0/.sketchware/mysc/605/bin/aapt_rules.pro
+     * Path of file with ProGuard rules automatically generated by aapt2, e.g.
+     * /storage/emulated/0/.sketchware/mysc/605/bin/aapt_rules.pro
      */
     public final String proguardAaptRules;
+
     /**
-     * Path of ProGuard rules auto-generated to exclude built-in libraries and non-Full Mode Local libraries,
-     * e.g. /storage/emulated/0/.sketchware/mysc/605/bin/rules_generated.pro
+     * Path of ProGuard rules auto-generated to exclude built-in libraries and non-Full Mode Local
+     * libraries, e.g. /storage/emulated/0/.sketchware/mysc/605/bin/rules_generated.pro
      */
     public final String proguardAutoGeneratedExclusions;
+
     /**
-     * ProGuarded classes.jar file's path of current project,
-     * e.g. /storage/emulated/0/.sketchware/mysc/605/bin/classes_proguard.jar
+     * ProGuarded classes.jar file's path of current project, e.g.
+     * /storage/emulated/0/.sketchware/mysc/605/bin/classes_proguard.jar
      */
     public final String proguardClassesPath;
+
     /**
-     * Path of file containing the ProGuard mapping,
-     * e.g. /storage/emulated/0/.sketchware/mysc/605/bin/mapping.txt
+     * Path of file containing the ProGuard mapping, e.g.
+     * /storage/emulated/0/.sketchware/mysc/605/bin/mapping.txt
      */
     public final String proguardMappingPath;
+
     /**
-     * Path of file containing ProGuard seeds,
-     * e.g. /storage/emulated/0/.sketchware/mysc/605/bin/seeds.txt
+     * Path of file containing ProGuard seeds, e.g.
+     * /storage/emulated/0/.sketchware/mysc/605/bin/seeds.txt
      */
     public final String proguardSeedsPath;
+
     /**
-     * Path of file containing ProGuard usage,
-     * e.g. /storage/emulated/0/.sketchware/mysc/605/bin/usage.txt
+     * Path of file containing ProGuard usage, e.g.
+     * /storage/emulated/0/.sketchware/mysc/605/bin/usage.txt
      */
     public final String proguardUsagePath;
-    /**
-     * Current project's ProjectSettings object
-     */
+
+    /** Current project's ProjectSettings object */
     public final ProjectSettings projectSettings;
+
     /**
      * Example content: /storage/emulated/0/.sketchware/mysc/605/app/src/main/AndroidManifest.xml
      */
     public final String androidManifestPath;
-    /**
-     * Example content: /storage/emulated/0/.sketchware/mysc/605/app/src/main
-     */
+
+    /** Example content: /storage/emulated/0/.sketchware/mysc/605/app/src/main */
     public final String generatedFilesPath;
-    /**
-     * Example content: /storage/emulated/0/.sketchware/mysc/605/app
-     */
+
+    /** Example content: /storage/emulated/0/.sketchware/mysc/605/app */
     public final String appDirectoryPath;
-    /**
-     * Example content: /storage/emulated/0/.sketchware/mysc/605/bin
-     */
+
+    /** Example content: /storage/emulated/0/.sketchware/mysc/605/bin */
     public final String binDirectoryPath;
-    /**
-     * Example content: /storage/emulated/0/.sketchware/mysc/605/bin/classes
-     */
+
+    /** Example content: /storage/emulated/0/.sketchware/mysc/605/bin/classes */
     public final String compiledClassesPath;
+
     /**
-     * Project's generated R.java files directory,
-     * e.g. /storage/emulated/0/.sketchware/mysc/605/gen
+     * Project's generated R.java files directory, e.g. /storage/emulated/0/.sketchware/mysc/605/gen
      */
     public final String rJavaDirectoryPath;
-    /**
-     * Example content: /storage/emulated/0/.sketchware/mysc/605/app/src/main/res
-     */
+
+    /** Example content: /storage/emulated/0/.sketchware/mysc/605/app/src/main/res */
     public final String resDirectoryPath;
-    /**
-     * Example content: /storage/emulated/0/.sketchware/mysc/605/app/src/main/res/values
-     */
+
+    /** Example content: /storage/emulated/0/.sketchware/mysc/605/app/src/main/res/values */
     public final String valuesFilesPath;
-    /**
-     * Example content: /storage/emulated/0/.sketchware/mysc/605/app/src/main/res/xml
-     */
+
+    /** Example content: /storage/emulated/0/.sketchware/mysc/605/app/src/main/res/xml */
     public final String xmlFilesPath;
-    /**
-     * Example content: /storage/emulated/0/.sketchware/mysc/605/app/src/main/proguard-rules.pro
-     */
+
+    /** Example content: /storage/emulated/0/.sketchware/mysc/605/app/src/main/proguard-rules.pro */
     public final String proguardFilePath;
-    /**
-     * Example content: /storage/emulated/0/.sketchware/mysc/605/app/src/main/res/layout
-     */
+
+    /** Example content: /storage/emulated/0/.sketchware/mysc/605/app/src/main/res/layout */
     public final String layoutFilesPath;
-    /**
-     * Example content: /storage/emulated/0/.sketchware/mysc/605/app/src/main/java
-     */
+
+    /** Example content: /storage/emulated/0/.sketchware/mysc/605/app/src/main/java */
     public final String javaFilesPath;
-    /**
-     * Example content: /storage/emulated/0/.sketchware/mysc/605/app/src/main/res/raw
-     */
+
+    /** Example content: /storage/emulated/0/.sketchware/mysc/605/app/src/main/res/raw */
     public final String importedSoundsPath;
+
     public final HashMap<String, Object> metadata;
     private volatile Material3LibraryManager material3LibraryManager;
     private final EncryptedFileUtil fileUtil;
@@ -248,25 +230,49 @@ public class ProjectFilePaths {
         material3LibraryManager = new Material3LibraryManager(sc_id);
     }
 
-    public ProjectFilePaths(Context context, String myscFolderPath, HashMap<String, Object> metadata) {
+    public ProjectFilePaths(
+            Context context, String myscFolderPath, HashMap<String, Object> metadata) {
         this.context = context;
         this.metadata = metadata;
         buildConfig = new BuildConfig();
         sc_id = MapValueHelper.getString(metadata, "sc_id");
         material3LibraryManager = new Material3LibraryManager(sc_id);
         buildConfig.sc_id = sc_id;
-        projectMyscPath = myscFolderPath.endsWith(File.separator) ? myscFolderPath : myscFolderPath + File.separator;
+        projectMyscPath =
+                myscFolderPath.endsWith(File.separator)
+                        ? myscFolderPath
+                        : myscFolderPath + File.separator;
         packageName = MapValueHelper.getString(metadata, "my_sc_pkg_name");
         projectName = MapValueHelper.getString(metadata, "my_ws_name");
         applicationName = MapValueHelper.getString(metadata, "my_app_name");
         versionCode = MapValueHelper.getString(metadata, "sc_ver_code");
         versionName = MapValueHelper.getString(metadata, "sc_ver_name");
 
-        colorAccent = MapValueHelper.get(metadata, ProjectThemeColors.COLOR_ACCENT, getDefaultColor(ProjectThemeColors.COLOR_ACCENT));
-        colorPrimary = MapValueHelper.get(metadata, ProjectThemeColors.COLOR_PRIMARY, getDefaultColor(ProjectThemeColors.COLOR_PRIMARY));
-        colorPrimaryDark = MapValueHelper.get(metadata, ProjectThemeColors.COLOR_PRIMARY_DARK, getDefaultColor(ProjectThemeColors.COLOR_PRIMARY_DARK));
-        colorControlHighlight = MapValueHelper.get(metadata, ProjectThemeColors.COLOR_CONTROL_HIGHLIGHT, getDefaultColor(ProjectThemeColors.COLOR_CONTROL_HIGHLIGHT));
-        colorControlNormal = MapValueHelper.get(metadata, ProjectThemeColors.COLOR_CONTROL_NORMAL, getDefaultColor(ProjectThemeColors.COLOR_CONTROL_NORMAL));
+        colorAccent =
+                MapValueHelper.get(
+                        metadata,
+                        ProjectThemeColors.COLOR_ACCENT,
+                        getDefaultColor(ProjectThemeColors.COLOR_ACCENT));
+        colorPrimary =
+                MapValueHelper.get(
+                        metadata,
+                        ProjectThemeColors.COLOR_PRIMARY,
+                        getDefaultColor(ProjectThemeColors.COLOR_PRIMARY));
+        colorPrimaryDark =
+                MapValueHelper.get(
+                        metadata,
+                        ProjectThemeColors.COLOR_PRIMARY_DARK,
+                        getDefaultColor(ProjectThemeColors.COLOR_PRIMARY_DARK));
+        colorControlHighlight =
+                MapValueHelper.get(
+                        metadata,
+                        ProjectThemeColors.COLOR_CONTROL_HIGHLIGHT,
+                        getDefaultColor(ProjectThemeColors.COLOR_CONTROL_HIGHLIGHT));
+        colorControlNormal =
+                MapValueHelper.get(
+                        metadata,
+                        ProjectThemeColors.COLOR_CONTROL_NORMAL,
+                        getDefaultColor(ProjectThemeColors.COLOR_CONTROL_NORMAL));
 
         projectSettings = new ProjectSettings(sc_id);
         fileUtil = new EncryptedFileUtil(true);
@@ -294,10 +300,12 @@ public class ProjectFilePaths {
         androidManifestPath = generatedFilesPath + File.separator + "AndroidManifest.xml";
         resourcesApkPath = binDirectoryPath + File.separator + projectName + ".apk.res";
         classesDexPath = binDirectoryPath + File.separator + "classes.dex";
-        unsignedUnalignedApkPath = binDirectoryPath + File.separator + projectName + ".apk.unsigned";
+        unsignedUnalignedApkPath =
+                binDirectoryPath + File.separator + projectName + ".apk.unsigned";
         unsignedAlignedApkPath = unsignedUnalignedApkPath + ".aligned";
         finalToInstallApkPath = binDirectoryPath + File.separator + projectName + ".apk";
-        releaseApkPath = SketchwarePaths.getSignedApkPath() + File.separator + projectName + "_release.apk";
+        releaseApkPath =
+                SketchwarePaths.getSignedApkPath() + File.separator + projectName + "_release.apk";
     }
 
     private String getResFilePath(String directoryName, String fileName) {
@@ -312,9 +320,7 @@ public class ProjectFilePaths {
         return xmlFilesPath + File.separator + fileName;
     }
 
-    /**
-     * Deletes the directory {@link ProjectFilePaths#resDirectoryPath}/values-v21/.
-     */
+    /** Deletes the directory {@link ProjectFilePaths#resDirectoryPath}/values-v21/. */
     public void deleteValuesV21Directory() {
         File file = new File(resDirectoryPath, "values-v21");
         if (file.exists()) {
@@ -323,8 +329,11 @@ public class ProjectFilePaths {
     }
 
     /**
-     * Creates needed build directories {@link ProjectFilePaths#binDirectoryPath}, {@link ProjectFilePaths#compiledClassesPath}, {@link ProjectFilePaths#rJavaDirectoryPath}, {@link ProjectFilePaths#javaFilesPath}, {@link ProjectFilePaths#resDirectoryPath},
-     * {@link ProjectFilePaths#layoutFilesPath}, {@link ProjectFilePaths#importedSoundsPath}, {@link ProjectFilePaths#assetsPath}, and {@link ProjectFilePaths#fontsPath}.
+     * Creates needed build directories {@link ProjectFilePaths#binDirectoryPath}, {@link
+     * ProjectFilePaths#compiledClassesPath}, {@link ProjectFilePaths#rJavaDirectoryPath}, {@link
+     * ProjectFilePaths#javaFilesPath}, {@link ProjectFilePaths#resDirectoryPath}, {@link
+     * ProjectFilePaths#layoutFilesPath}, {@link ProjectFilePaths#importedSoundsPath}, {@link
+     * ProjectFilePaths#assetsPath}, and {@link ProjectFilePaths#fontsPath}.
      */
     public void createBuildDirectories(Context context) {
         fileUtil.mkdirs(binDirectoryPath);
@@ -339,8 +348,9 @@ public class ProjectFilePaths {
     }
 
     /**
-     * Prepares to compile and creates /Internal storage/.sketchware/mysc/&lt;sc_id&gt;/ directories,
-     * {@link ProjectFilePaths#binDirectoryPath}, {@link ProjectFilePaths#compiledClassesPath} and {@link ProjectFilePaths#rJavaDirectoryPath}.
+     * Prepares to compile and creates /Internal storage/.sketchware/mysc/&lt;sc_id&gt;/
+     * directories, {@link ProjectFilePaths#binDirectoryPath}, {@link
+     * ProjectFilePaths#compiledClassesPath} and {@link ProjectFilePaths#rJavaDirectoryPath}.
      */
     public void prepareBuildDirectories() {
         fileUtil.mkdirs(binDirectoryPath);
@@ -349,8 +359,9 @@ public class ProjectFilePaths {
     }
 
     /**
-     * Deletes temporary compile cache directories, {@link ProjectFilePaths#binDirectoryPath} and {@link ProjectFilePaths#rJavaDirectoryPath}. The used method
-     * logs all files and folders which get deleted.
+     * Deletes temporary compile cache directories, {@link ProjectFilePaths#binDirectoryPath} and
+     * {@link ProjectFilePaths#rJavaDirectoryPath}. The used method logs all files and folders which
+     * get deleted.
      */
     public void cleanBuildCache() {
         fileUtil.deleteDirectoryByPath(binDirectoryPath);
@@ -358,9 +369,9 @@ public class ProjectFilePaths {
     }
 
     /**
-     * Incremental-build variant of {@link #cleanBuildCache()}: only deletes the R.java
-     * directory so that AAPT2 can regenerate a fresh R.java, while leaving the compiled
-     * {@code .class} files intact for reuse by the incremental ECJ compile step.
+     * Incremental-build variant of {@link #cleanBuildCache()}: only deletes the R.java directory so
+     * that AAPT2 can regenerate a fresh R.java, while leaving the compiled {@code .class} files
+     * intact for reuse by the incremental ECJ compile step.
      */
     public void cleanRJavaOnly() {
         fileUtil.deleteDirectoryByPath(rJavaDirectoryPath);
@@ -370,21 +381,38 @@ public class ProjectFilePaths {
      * Generates top-level build.gradle, build.gradle for module ':app' and settings.gradle files.
      */
     public void generateGradleFiles() {
-        fileUtil.writeText(appDirectoryPath + File.separator + "build.gradle",
-                ComponentCodeGenerator.getBuildGradleString(VAR_DEFAULT_TARGET_SDK_VERSION, VAR_DEFAULT_MIN_SDK_VERSION, projectSettings.getValue(ProjectSettings.SETTING_TARGET_SDK_VERSION, String.valueOf(VAR_DEFAULT_TARGET_SDK_VERSION)), buildConfig, projectSettings.getValue(ProjectSettings.SETTING_ENABLE_VIEWBINDING, ProjectSettings.SETTING_GENERIC_VALUE_FALSE).equals(ProjectSettings.SETTING_GENERIC_VALUE_TRUE)));
-        fileUtil.writeText(projectMyscPath + File.separator + "settings.gradle", ComponentCodeGenerator.getSettingsGradle());
-        fileUtil.writeText(projectMyscPath + File.separator + "build.gradle", ComponentCodeGenerator.getTopLevelBuildGradle("8.12.0", "4.4.3"));
+        fileUtil.writeText(
+                appDirectoryPath + File.separator + "build.gradle",
+                ComponentCodeGenerator.getBuildGradleString(
+                        VAR_DEFAULT_TARGET_SDK_VERSION,
+                        VAR_DEFAULT_MIN_SDK_VERSION,
+                        projectSettings.getValue(
+                                ProjectSettings.SETTING_TARGET_SDK_VERSION,
+                                String.valueOf(VAR_DEFAULT_TARGET_SDK_VERSION)),
+                        buildConfig,
+                        projectSettings
+                                .getValue(
+                                        ProjectSettings.SETTING_ENABLE_VIEWBINDING,
+                                        ProjectSettings.SETTING_GENERIC_VALUE_FALSE)
+                                .equals(ProjectSettings.SETTING_GENERIC_VALUE_TRUE)));
+        fileUtil.writeText(
+                projectMyscPath + File.separator + "settings.gradle",
+                ComponentCodeGenerator.getSettingsGradle());
+        fileUtil.writeText(
+                projectMyscPath + File.separator + "build.gradle",
+                ComponentCodeGenerator.getTopLevelBuildGradle("8.12.0", "4.4.3"));
 
-        fileUtil.writeText(projectMyscPath + File.separator + "gradle.properties", """
+        fileUtil.writeText(
+                projectMyscPath + File.separator + "gradle.properties",
+                """
                 android.enableR8.fullMode=false
                 android.enableJetifier=true
                 android.useAndroidX=true
-                """.trim());
+                """
+                        .trim());
     }
 
-    /**
-     * Extracts a ZIP archive from assets to {@link ProjectFilePaths#resDirectoryPath}.
-     */
+    /** Extracts a ZIP archive from assets to {@link ProjectFilePaths#resDirectoryPath}. */
     public void extractAssetsToRes(Context context, String assetZipName) {
         try {
             ZipUtil.extractAssetZip(context, assetZipName, resDirectoryPath);
@@ -394,7 +422,8 @@ public class ProjectFilePaths {
     }
 
     /**
-     * Copies a file to the project's app icon path, {@link ProjectFilePaths#resDirectoryPath}/drawable-xhdpi/app_icon.png
+     * Copies a file to the project's app icon path, {@link
+     * ProjectFilePaths#resDirectoryPath}/drawable-xhdpi/app_icon.png
      */
     public void copyAppIcon(String iconPath) {
         try {
@@ -405,9 +434,9 @@ public class ProjectFilePaths {
     }
 
     /**
-     * Copies a mipMaps folder to the project's app icon path, {@link ProjectFilePaths#resDirectoryPath}/mipmap
+     * Copies a mipMaps folder to the project's app icon path, {@link
+     * ProjectFilePaths#resDirectoryPath}/mipmap
      */
-
     public void copyMipmapFolder(String iconPath) {
         try {
             FileUtil.copyDirectory(new File(iconPath), new File(resDirectoryPath));
@@ -417,9 +446,9 @@ public class ProjectFilePaths {
     }
 
     /**
-     * Creates ic_launcher.xml to the project's app icon path, {@link ProjectFilePaths#resDirectoryPath}/mipmap-anydpi-v26
+     * Creates ic_launcher.xml to the project's app icon path, {@link
+     * ProjectFilePaths#resDirectoryPath}/mipmap-anydpi-v26
      */
-
     public void createLauncherIconXml(String content) {
         String iconPath = getResFilePath("mipmap-anydpi-v26", "ic_launcher.xml");
         if (!fileUtil.writeText(iconPath, content)) {
@@ -431,23 +460,36 @@ public class ProjectFilePaths {
      * Generates DebugActivity.java, SketchApplication.java, and SketchLogger.java, if necessary.
      */
     public void generateDebugFiles(Context context) {
-        boolean logcatEnabled = buildConfig.isDebugBuild && new BuildSettings(sc_id).getValue(
-                        BuildSettings.SETTING_ENABLE_LOGCAT, BuildSettings.SETTING_GENERIC_VALUE_TRUE)
-                .equals(BuildSettings.SETTING_GENERIC_VALUE_TRUE);
+        boolean logcatEnabled =
+                buildConfig.isDebugBuild
+                        && new BuildSettings(sc_id)
+                                .getValue(
+                                        BuildSettings.SETTING_ENABLE_LOGCAT,
+                                        BuildSettings.SETTING_GENERIC_VALUE_TRUE)
+                                .equals(BuildSettings.SETTING_GENERIC_VALUE_TRUE);
 
         String javaDir = SketchwarePaths.getProjectJavaPath(sc_id) + File.separator;
 
         File debugActivityFile = new File(javaDir, "DebugActivity.java");
         if (!debugActivityFile.exists()) {
-            String debugActivityContent = fileUtil.readAssetFile(
-                    context,
-                    "debug" + File.separator + "DebugActivity.java"
-            );
-            debugActivityContent = PACKAGE_PLACEHOLDER_PATTERN.matcher(debugActivityContent).replaceAll(packageName);
-            fileUtil.writeText(javaFilesPath + File.separator + packageNameAsFolders + File.separator + "DebugActivity.java", debugActivityContent);
+            String debugActivityContent =
+                    fileUtil.readAssetFile(
+                            context, "debug" + File.separator + "DebugActivity.java");
+            debugActivityContent =
+                    PACKAGE_PLACEHOLDER_PATTERN
+                            .matcher(debugActivityContent)
+                            .replaceAll(packageName);
+            fileUtil.writeText(
+                    javaFilesPath
+                            + File.separator
+                            + packageNameAsFolders
+                            + File.separator
+                            + "DebugActivity.java",
+                    debugActivityContent);
         }
 
-        String fullCustomClassName = new ProjectSettings(sc_id).getApplicationClassName(packageName);
+        String fullCustomClassName =
+                new ProjectSettings(sc_id).getApplicationClassName(packageName);
 
         int lastDot = fullCustomClassName.lastIndexOf('.');
         String customClassSimpleName = fullCustomClassName.substring(lastDot + 1);
@@ -455,84 +497,119 @@ public class ProjectFilePaths {
         String customClassPackageAsFolders = customClassPackage.replace('.', File.separatorChar);
 
         // The Java manager stores project-package sources relative to the project's Java root.
-        String customSourceClassName = fullCustomClassName.startsWith(packageName + ".")
-                ? fullCustomClassName.substring(packageName.length() + 1) : fullCustomClassName;
-        File targetApplicationFile = new File(javaDir,
-                customSourceClassName.replace('.', File.separatorChar) + ".java");
+        String customSourceClassName =
+                fullCustomClassName.startsWith(packageName + ".")
+                        ? fullCustomClassName.substring(packageName.length() + 1)
+                        : fullCustomClassName;
+        File targetApplicationFile =
+                new File(javaDir, customSourceClassName.replace('.', File.separatorChar) + ".java");
         boolean projectApplication = fullCustomClassName.startsWith(packageName + ".");
         boolean customApplicationSource = targetApplicationFile.exists();
-        File generatedApplicationFile = new File(javaFilesPath,
-                fullCustomClassName.replace('.', File.separatorChar) + ".java");
+        File generatedApplicationFile =
+                new File(
+                        javaFilesPath,
+                        fullCustomClassName.replace('.', File.separatorChar) + ".java");
 
         // Classes outside the project package belong to user sources or dependencies.
         // Also remove a previous generated copy when the user supplies their own source.
         if (!projectApplication || customApplicationSource) {
             removeGeneratedApplication(generatedApplicationFile);
         } else {
-            boolean applyMultiDex = projectSettings.getMinSdkVersion() < Build.VERSION_CODES.LOLLIPOP;
-            String sketchApplicationFileContent = fileUtil.readAssetFile(
-                    context,
-                    "debug" + File.separator + "SketchApplication.java"
-            );
-            sketchApplicationFileContent = sketchApplicationFileContent.replace("<?package_name?>", customClassPackage);
-            sketchApplicationFileContent = sketchApplicationFileContent.replace(
-                    "public class SketchApplication", "public class " + customClassSimpleName);
+            boolean applyMultiDex =
+                    projectSettings.getMinSdkVersion() < Build.VERSION_CODES.LOLLIPOP;
+            String sketchApplicationFileContent =
+                    fileUtil.readAssetFile(
+                            context, "debug" + File.separator + "SketchApplication.java");
+            sketchApplicationFileContent =
+                    sketchApplicationFileContent.replace("<?package_name?>", customClassPackage);
+            sketchApplicationFileContent =
+                    sketchApplicationFileContent.replace(
+                            "public class SketchApplication",
+                            "public class " + customClassSimpleName);
 
             if (applyMultiDex) {
-                sketchApplicationFileContent = sketchApplicationFileContent.replace(
-                        "Application {", "androidx.multidex.MultiDexApplication {");
+                sketchApplicationFileContent =
+                        sketchApplicationFileContent.replace(
+                                "Application {", "androidx.multidex.MultiDexApplication {");
             }
             if (logcatEnabled) {
-                sketchApplicationFileContent = sketchApplicationFileContent.replace(
-                                "super.onCreate();", "SketchLogger.startLogging();\n        super.onCreate();")
-                        .replace("Process.killProcess(Process.myPid());",
-                                "SketchLogger.broadcastLog(Log.getStackTraceString(throwable));\n" +
-                                        "                    Process.killProcess(Process.myPid());"
-                        );
+                sketchApplicationFileContent =
+                        sketchApplicationFileContent
+                                .replace(
+                                        "super.onCreate();",
+                                        "SketchLogger.startLogging();\n        super.onCreate();")
+                                .replace(
+                                        "Process.killProcess(Process.myPid());",
+                                        "SketchLogger.broadcastLog(Log.getStackTraceString(throwable));\n"
+                                                + "                    Process.killProcess(Process.myPid());");
             }
             if (new Material3LibraryManager(sc_id).isDynamicColorsEnabled()) {
-                sketchApplicationFileContent = sketchApplicationFileContent.replace(
-                                "mApplicationContext = getApplicationContext();",
-                                "mApplicationContext = getApplicationContext();\n        DynamicColors.applyToActivitiesIfAvailable(this);")
-                        .replace("import android.util.Log;", "import android.util.Log;\nimport com.google.android.material.color.DynamicColors;");
+                sketchApplicationFileContent =
+                        sketchApplicationFileContent
+                                .replace(
+                                        "mApplicationContext = getApplicationContext();",
+                                        "mApplicationContext = getApplicationContext();\n        DynamicColors.applyToActivitiesIfAvailable(this);")
+                                .replace(
+                                        "import android.util.Log;",
+                                        "import android.util.Log;\nimport com.google.android.material.color.DynamicColors;");
             }
             if (!customClassPackage.equals(packageName)) {
-                String imports = "import android.util.Log;\nimport " + packageName + ".DebugActivity;";
+                String imports =
+                        "import android.util.Log;\nimport " + packageName + ".DebugActivity;";
                 if (logcatEnabled) {
                     imports += "\nimport " + packageName + ".SketchLogger;";
                 }
-                sketchApplicationFileContent = sketchApplicationFileContent.replace(
-                        "import android.util.Log;", imports);
+                sketchApplicationFileContent =
+                        sketchApplicationFileContent.replace("import android.util.Log;", imports);
             }
 
-            fileUtil.writeText(javaFilesPath + File.separator
-                    + customClassPackageAsFolders + File.separator
-                    + customClassSimpleName + ".java", sketchApplicationFileContent);
+            fileUtil.writeText(
+                    javaFilesPath
+                            + File.separator
+                            + customClassPackageAsFolders
+                            + File.separator
+                            + customClassSimpleName
+                            + ".java",
+                    sketchApplicationFileContent);
         }
 
-        File generatedLoggerFile = new File(javaFilesPath,
-                packageNameAsFolders + File.separator + "SketchLogger.java");
+        File generatedLoggerFile =
+                new File(
+                        javaFilesPath, packageNameAsFolders + File.separator + "SketchLogger.java");
         if (logcatEnabled || generatedLoggerFile.exists()) {
             File sketchLoggerFile = new File(javaDir, "SketchLogger.java");
             if (!sketchLoggerFile.exists()) {
-                String sketchLoggerFileContent = fileUtil.readAssetFile(
-                        context,
-                        "debug" + File.separator + "SketchLogger.java"
-                );
+                String sketchLoggerFileContent =
+                        fileUtil.readAssetFile(
+                                context, "debug" + File.separator + "SketchLogger.java");
 
-                sketchLoggerFileContent = PACKAGE_PLACEHOLDER_PATTERN.matcher(sketchLoggerFileContent).replaceAll(packageName);
+                sketchLoggerFileContent =
+                        PACKAGE_PLACEHOLDER_PATTERN
+                                .matcher(sketchLoggerFileContent)
+                                .replaceAll(packageName);
 
-                sketchLoggerFileContent = sketchLoggerFileContent.replace("<?class_name_package?>", customClassPackage);
+                sketchLoggerFileContent =
+                        sketchLoggerFileContent.replace(
+                                "<?class_name_package?>", customClassPackage);
 
-                sketchLoggerFileContent = sketchLoggerFileContent.replace("<?class_name?>", customClassSimpleName);
+                sketchLoggerFileContent =
+                        sketchLoggerFileContent.replace("<?class_name?>", customClassSimpleName);
 
                 if (!projectApplication && !customApplicationSource) {
                     // A library Application need not implement Sketchware's getContext() helper.
-                    sketchLoggerFileContent = sketchLoggerFileContent
-                            .replace("import " + fullCustomClassName + ";", "")
-                            .replace("private static volatile boolean isRunning", "private static volatile Context libraryContext;\n"
-                                    + "    private static volatile boolean isRunning")
-                            .replace("Context context = " + customClassSimpleName + ".getContext();", String.format("""
+                    sketchLoggerFileContent =
+                            sketchLoggerFileContent
+                                    .replace("import " + fullCustomClassName + ";", "")
+                                    .replace(
+                                            "private static volatile boolean isRunning",
+                                            "private static volatile Context libraryContext;\n"
+                                                    + "    private static volatile boolean isRunning")
+                                    .replace(
+                                            "Context context = "
+                                                    + customClassSimpleName
+                                                    + ".getContext();",
+                                            String.format(
+                                                    """
                                     Context context = libraryContext;
                                             if (context == null) {
                                                 try {
@@ -543,7 +620,8 @@ public class ProjectFilePaths {
                                                 if (context == null) return;
                                                 libraryContext = context;
                                             }
-                                    """, fullCustomClassName));
+                                    """,
+                                                    fullCustomClassName));
                 }
 
                 fileUtil.writeText(generatedLoggerFile.getAbsolutePath(), sketchLoggerFileContent);
@@ -555,25 +633,38 @@ public class ProjectFilePaths {
         var generatedRoot = new File(javaFilesPath).toPath().toAbsolutePath().normalize();
         var target = generatedApplicationFile.toPath().toAbsolutePath().normalize();
         if (!target.startsWith(generatedRoot)) {
-            throw new IllegalArgumentException("Application source is outside the generated Java directory");
+            throw new IllegalArgumentException(
+                    "Application source is outside the generated Java directory");
         }
         if (generatedApplicationFile.exists() && !generatedApplicationFile.delete()) {
-            throw new IllegalStateException("Cannot remove obsolete generated Application: " + generatedApplicationFile);
+            throw new IllegalStateException(
+                    "Cannot remove obsolete generated Application: " + generatedApplicationFile);
         }
     }
 
     /**
      * Writes a project file to its correct location. Java files, for example, get saved to
+     *
      * <pre>
      *     {@link ProjectFilePaths#javaFilesPath} + File.separator + {@link ProjectFilePaths#packageNameAsFolders}
-     * </pre>, while AndroidManifest.xml gets saved to {@link ProjectFilePaths#androidManifestPath}.
+     * </pre>
+     *
+     * , while AndroidManifest.xml gets saved to {@link ProjectFilePaths#androidManifestPath}.
      */
     public void writeProjectFile(String fileName, String fileContent) {
         if (fileName.endsWith("java")) {
-            fileUtil.writeText(javaFilesPath + File.separator + packageNameAsFolders + File.separator + fileName, fileContent);
+            fileUtil.writeText(
+                    javaFilesPath
+                            + File.separator
+                            + packageNameAsFolders
+                            + File.separator
+                            + fileName,
+                    fileContent);
         } else if (fileName.equals("AndroidManifest.xml")) {
             fileUtil.writeText(androidManifestPath, fileContent);
-        } else if (fileName.equals("colors.xml") || fileName.equals("styles.xml") || fileName.equals("strings.xml")) {
+        } else if (fileName.equals("colors.xml")
+                || fileName.equals("styles.xml")
+                || fileName.equals("strings.xml")) {
             fileUtil.writeText(getValuesFilePath(fileName), fileContent);
         } else if (fileName.equals("provider_paths.xml")) {
             fileUtil.writeText(getXmlFilePath(fileName), fileContent);
@@ -582,11 +673,16 @@ public class ProjectFilePaths {
         }
     }
 
-    /**
-     * Initialize project metadata
-     */
-    public void initializeMetadata(LibraryManager projectLibraryManager, ProjectFileManager projectFileManager, ProjectDataStore projectDataManager) {
-        initializeMetadata(projectLibraryManager, projectFileManager, projectDataManager, ExportType.DEBUG_APP);
+    /** Initialize project metadata */
+    public void initializeMetadata(
+            LibraryManager projectLibraryManager,
+            ProjectFileManager projectFileManager,
+            ProjectDataStore projectDataManager) {
+        initializeMetadata(
+                projectLibraryManager,
+                projectFileManager,
+                projectDataManager,
+                ExportType.DEBUG_APP);
     }
 
     private void addImageReadPermissions(String activityName) {
@@ -601,7 +697,11 @@ public class ProjectFilePaths {
         buildConfig.addPermission(activityName, BuildConfig.PERMISSION_READ_MEDIA_AUDIO);
     }
 
-    public void initializeMetadata(LibraryManager projectLibraryManager, ProjectFileManager projectFileManager, ProjectDataStore projectDataManager, ExportType exportingType) {
+    public void initializeMetadata(
+            LibraryManager projectLibraryManager,
+            ProjectFileManager projectFileManager,
+            ProjectDataStore projectDataManager,
+            ExportType exportingType) {
         ProjectLibraryBean adMob = projectLibraryManager.getAdmob();
         ProjectLibraryBean appCompat = projectLibraryManager.getCompat();
         ProjectLibraryBean firebase = projectLibraryManager.getFirebaseDB();
@@ -615,7 +715,9 @@ public class ProjectFilePaths {
         buildConfig.sc_id = sc_id;
         buildConfig.isDebugBuild = exportingType == ExportType.DEBUG_APP;
         isAndroidStudioExport = exportingType == ExportType.ANDROID_STUDIO;
-        generateDataBindingClasses = !(exportingType == ExportType.DEBUG_APP || exportingType == ExportType.ANDROID_STUDIO);
+        generateDataBindingClasses =
+                !(exportingType == ExportType.DEBUG_APP
+                        || exportingType == ExportType.ANDROID_STUDIO);
         if (firebase.useYn.equals(ProjectLibraryBean.LIB_USE_Y)) {
             buildConfig.isFirebaseEnabled = true;
             buildConfig.addPermission(BuildConfig.PERMISSION_INTERNET);
@@ -637,18 +739,24 @@ public class ProjectFilePaths {
             buildConfig.setupGoogleMap(googleMaps);
         }
         for (ProjectFileBean customView : projectFileManager.getCustomViews()) {
-            for (ViewBean viewBean : ProjectDataStore.getSortedRootViews(projectDataManager.getViews(customView.getXmlName()))) {
+            for (ViewBean viewBean :
+                    ProjectDataStore.getSortedRootViews(
+                            projectDataManager.getViews(customView.getXmlName()))) {
                 var classNameParts = viewBean.convert.split("\\.");
                 var className = classNameParts[classNameParts.length - 1];
                 switch (className) {
-                    case "CircleImageView" -> buildConfig.constVarComponent.isCircleImageViewUsed = true;
+                    case "CircleImageView" ->
+                            buildConfig.constVarComponent.isCircleImageViewUsed = true;
                     case "CodeView" -> buildConfig.constVarComponent.isCodeViewUsed = true;
                     case "LottieAnimationView" -> buildConfig.constVarComponent.isLottieUsed = true;
                     case "OTPView" -> buildConfig.constVarComponent.isOTPViewUsed = true;
-                    case "PatternLockView" -> buildConfig.constVarComponent.isPatternLockViewUsed = true;
+                    case "PatternLockView" ->
+                            buildConfig.constVarComponent.isPatternLockViewUsed = true;
                     case "WaveSideBar" -> buildConfig.constVarComponent.isWaveSideBarUsed = true;
-                    case "YouTubePlayerView" -> buildConfig.constVarComponent.isYoutubePlayerUsed = true;
-                    case "SwipeRefreshLayout" -> buildConfig.constVarComponent.isSwipeRefreshLayoutUsed = true;
+                    case "YouTubePlayerView" ->
+                            buildConfig.constVarComponent.isYoutubePlayerUsed = true;
+                    case "SwipeRefreshLayout" ->
+                            buildConfig.constVarComponent.isSwipeRefreshLayoutUsed = true;
                 }
             }
         }
@@ -656,89 +764,123 @@ public class ProjectFilePaths {
             if (activity.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
                 buildConfig.getActivityPermissions(activity.getActivityName()).hasDrawer = true;
             }
-            for (ComponentBean component : projectDataManager.getComponents(activity.getJavaName())) {
+            for (ComponentBean component :
+                    projectDataManager.getComponents(activity.getJavaName())) {
                 switch (component.type) {
-                    case ComponentBean.COMPONENT_TYPE_CAMERA, ComponentBean.COMPONENT_TYPE_CAMERA_LEGACY -> {
+                    case ComponentBean.COMPONENT_TYPE_CAMERA,
+                            ComponentBean.COMPONENT_TYPE_CAMERA_LEGACY -> {
                         buildConfig.isAppCompatEnabled = true;
                         buildConfig.isFileProviderUsed = true;
-                        buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_CAMERA);
+                        buildConfig.addPermission(
+                                activity.getActivityName(), BuildConfig.PERMISSION_CAMERA);
                         addImageReadPermissions(activity.getActivityName());
-                        buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE);
+                        buildConfig.addPermission(
+                                activity.getActivityName(),
+                                BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE);
                     }
                     case ComponentBean.COMPONENT_TYPE_FILE_PICKER ->
                             addAllMediaReadPermissions(activity.getActivityName());
                     case ComponentBean.COMPONENT_TYPE_FIREBASE -> {
                         buildConfig.isGsonUsed = true;
                         buildConfig.isFirebaseDatabaseUsed = true;
-                        buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_INTERNET);
-                        buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_ACCESS_NETWORK_STATE);
+                        buildConfig.addPermission(
+                                activity.getActivityName(), BuildConfig.PERMISSION_INTERNET);
+                        buildConfig.addPermission(
+                                activity.getActivityName(),
+                                BuildConfig.PERMISSION_ACCESS_NETWORK_STATE);
                     }
                     case ComponentBean.COMPONENT_TYPE_FIREBASE_STORAGE -> {
                         buildConfig.isFirebaseStorageUsed = true;
                         addAllMediaReadPermissions(activity.getActivityName());
-                        buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE);
+                        buildConfig.addPermission(
+                                activity.getActivityName(),
+                                BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE);
                     }
                     case ComponentBean.COMPONENT_TYPE_VIBRATOR ->
-                            buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_VIBRATE);
+                            buildConfig.addPermission(
+                                    activity.getActivityName(), BuildConfig.PERMISSION_VIBRATE);
                     case ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH -> {
                         buildConfig.isFirebaseAuthUsed = true;
-                        buildConfig.getActivityPermissions(activity.getActivityName()).usesFirebaseAuth = true;
+                        buildConfig.getActivityPermissions(activity.getActivityName())
+                                        .usesFirebaseAuth =
+                                true;
                     }
                     case ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_PHONE -> {
                         buildConfig.isFirebaseAuthUsed = true;
-                        buildConfig.getActivityPermissions(activity.getActivityName()).usesFirebaseAuth = true;
+                        buildConfig.getActivityPermissions(activity.getActivityName())
+                                        .usesFirebaseAuth =
+                                true;
                     }
                     case ComponentBean.COMPONENT_TYPE_REQUEST_NETWORK -> {
                         buildConfig.isGsonUsed = true;
                         buildConfig.isHttp3Used = true;
-                        buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_INTERNET);
-                        buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_ACCESS_NETWORK_STATE);
+                        buildConfig.addPermission(
+                                activity.getActivityName(), BuildConfig.PERMISSION_INTERNET);
+                        buildConfig.addPermission(
+                                activity.getActivityName(),
+                                BuildConfig.PERMISSION_ACCESS_NETWORK_STATE);
                     }
-                    case ComponentBean.COMPONENT_TYPE_TEXT_TO_SPEECH -> buildConfig.isTextToSpeechUsed = true;
+                    case ComponentBean.COMPONENT_TYPE_TEXT_TO_SPEECH ->
+                            buildConfig.isTextToSpeechUsed = true;
                     case ComponentBean.COMPONENT_TYPE_SPEECH_TO_TEXT -> {
                         buildConfig.isSpeechToTextUsed = true;
-                        buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_RECORD_AUDIO);
+                        buildConfig.addPermission(
+                                activity.getActivityName(), BuildConfig.PERMISSION_RECORD_AUDIO);
                     }
                     case ComponentBean.COMPONENT_TYPE_BLUETOOTH_CONNECT -> {
-                        buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_BLUETOOTH);
-                        buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_BLUETOOTH_ADMIN);
-                        buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_BLUETOOTH_CONNECT);
+                        buildConfig.addPermission(
+                                activity.getActivityName(), BuildConfig.PERMISSION_BLUETOOTH);
+                        buildConfig.addPermission(
+                                activity.getActivityName(), BuildConfig.PERMISSION_BLUETOOTH_ADMIN);
+                        buildConfig.addPermission(
+                                activity.getActivityName(),
+                                BuildConfig.PERMISSION_BLUETOOTH_CONNECT);
                     }
                     case ComponentBean.COMPONENT_TYPE_LOCATION_MANAGER ->
-                            buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_ACCESS_FINE_LOCATION);
+                            buildConfig.addPermission(
+                                    activity.getActivityName(),
+                                    BuildConfig.PERMISSION_ACCESS_FINE_LOCATION);
                     case ComponentBean.COMPONENT_TYPE_NOTIFICATION ->
                             buildConfig.isNotificationUsed = true;
                     case ComponentBean.COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE ->
                             buildConfig.constVarComponent.isFCMUsed = true;
                     case ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN ->
                             buildConfig.constVarComponent.isFBGoogleUsed = true;
-                    default -> {
-                    }
+                    default -> {}
                 }
             }
 
-            for (ViewBean view : ProjectDataStore.getSortedRootViews(projectDataManager.getViews(activity.getXmlName()))) {
+            for (ViewBean view :
+                    ProjectDataStore.getSortedRootViews(
+                            projectDataManager.getViews(activity.getXmlName()))) {
                 var classNameParts = view.convert.split("\\.");
                 var className = classNameParts[classNameParts.length - 1];
                 switch (className) {
-                    case "CircleImageView" -> buildConfig.constVarComponent.isCircleImageViewUsed = true;
+                    case "CircleImageView" ->
+                            buildConfig.constVarComponent.isCircleImageViewUsed = true;
                     case "CodeView" -> buildConfig.constVarComponent.isCodeViewUsed = true;
                     case "LottieAnimationView" -> buildConfig.constVarComponent.isLottieUsed = true;
                     case "OTPView" -> buildConfig.constVarComponent.isOTPViewUsed = true;
-                    case "PatternLockView" -> buildConfig.constVarComponent.isPatternLockViewUsed = true;
+                    case "PatternLockView" ->
+                            buildConfig.constVarComponent.isPatternLockViewUsed = true;
                     case "WaveSideBar" -> buildConfig.constVarComponent.isWaveSideBarUsed = true;
-                    case "YouTubePlayerView" -> buildConfig.constVarComponent.isYoutubePlayerUsed = true;
-                    case "SwipeRefreshLayout" -> buildConfig.constVarComponent.isSwipeRefreshLayoutUsed = true;
+                    case "YouTubePlayerView" ->
+                            buildConfig.constVarComponent.isYoutubePlayerUsed = true;
+                    case "SwipeRefreshLayout" ->
+                            buildConfig.constVarComponent.isSwipeRefreshLayoutUsed = true;
                 }
             }
 
-            for (Map.Entry<String, ArrayList<BlockBean>> entry : projectDataManager.getBlockMap(activity.getJavaName()).entrySet()) {
+            for (Map.Entry<String, ArrayList<BlockBean>> entry :
+                    projectDataManager.getBlockMap(activity.getJavaName()).entrySet()) {
                 for (BlockBean block : entry.getValue()) {
                     switch (block.opCode) {
                         case "intentSetAction":
                             // If an Intent setAction (ACTION_CALL) block is used
                             if (block.parameters.get(1).equals(BlockConstants.INTENT_ACTIONS[1])) {
-                                buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_CALL_PHONE);
+                                buildConfig.addPermission(
+                                        activity.getActivityName(),
+                                        BuildConfig.PERMISSION_CALL_PHONE);
                             }
                             break;
 
@@ -763,7 +905,9 @@ public class ProjectFilePaths {
                         case "fileutildelete":
                         case "fileutilmakedir":
                             addAllMediaReadPermissions(activity.getActivityName());
-                            buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE);
+                            buildConfig.addPermission(
+                                    activity.getActivityName(),
+                                    BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE);
                             break;
 
                         case "resizeBitmapFileRetainRatio":
@@ -778,7 +922,9 @@ public class ProjectFilePaths {
                         case "setBitmapFileBrightness":
                         case "setBitmapFileContrast":
                             addImageReadPermissions(activity.getActivityName());
-                            buildConfig.addPermission(activity.getActivityName(), BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE);
+                            buildConfig.addPermission(
+                                    activity.getActivityName(),
+                                    BuildConfig.PERMISSION_WRITE_EXTERNAL_STORAGE);
                             break;
 
                         case "strToMap":
@@ -809,11 +955,21 @@ public class ProjectFilePaths {
         }
     }
 
-    public void generateProjectFiles(ProjectFileManager projectFileManager, ProjectDataStore projectDataManger, LibraryManager projectLibraryManager, BuiltInLibraryManager builtInLibraryManager) {
+    public void generateProjectFiles(
+            ProjectFileManager projectFileManager,
+            ProjectDataStore projectDataManger,
+            LibraryManager projectLibraryManager,
+            BuiltInLibraryManager builtInLibraryManager) {
         long generateProjectFilesStarted = System.currentTimeMillis();
         long generateSourceCodeBeansStarted = System.currentTimeMillis();
-        ArrayList<SrcCodeBean> srcCodeBeans = generateSourceCodeBeans(projectFileManager, projectDataManger, projectLibraryManager, builtInLibraryManager);
-        long generateSourceCodeBeansDuration = System.currentTimeMillis() - generateSourceCodeBeansStarted;
+        ArrayList<SrcCodeBean> srcCodeBeans =
+                generateSourceCodeBeans(
+                        projectFileManager,
+                        projectDataManger,
+                        projectLibraryManager,
+                        builtInLibraryManager);
+        long generateSourceCodeBeansDuration =
+                System.currentTimeMillis() - generateSourceCodeBeansStarted;
         int javaBeanCount = 0;
         int xmlBeanCount = 0;
         int otherBeanCount = 0;
@@ -826,11 +982,19 @@ public class ProjectFilePaths {
                 otherBeanCount++;
             }
         }
-        Log.d("ProjectFilePaths", "generateProjectFiles: generateSourceCodeBeans produced " + srcCodeBeans.size()
-                + " bean(s) (java=" + javaBeanCount
-                + ", xml=" + xmlBeanCount
-                + ", other=" + otherBeanCount
-                + ") in " + generateSourceCodeBeansDuration + " ms");
+        Log.d(
+                "ProjectFilePaths",
+                "generateProjectFiles: generateSourceCodeBeans produced "
+                        + srcCodeBeans.size()
+                        + " bean(s) (java="
+                        + javaBeanCount
+                        + ", xml="
+                        + xmlBeanCount
+                        + ", other="
+                        + otherBeanCount
+                        + ") in "
+                        + generateSourceCodeBeansDuration
+                        + " ms");
         int writtenProjectFileCount = 0;
         long writeProjectFilesStarted = System.currentTimeMillis();
         if (buildConfig.isFileProviderUsed) {
@@ -849,7 +1013,10 @@ public class ProjectFilePaths {
             writtenProjectFileCount++;
         }
         long writeProjectFilesDuration = System.currentTimeMillis() - writeProjectFilesStarted;
-        boolean generatedSecrets = buildConfig.isFirebaseEnabled || buildConfig.isAdMobEnabled || buildConfig.isMapUsed;
+        boolean generatedSecrets =
+                buildConfig.isFirebaseEnabled
+                        || buildConfig.isAdMobEnabled
+                        || buildConfig.isMapUsed;
         long generateSecretsStarted = System.currentTimeMillis();
         if (generatedSecrets) {
             CommandBlock.clearTempCommands();
@@ -864,7 +1031,10 @@ public class ProjectFilePaths {
                     String libraryData = firebaseLibrary.data;
                     if (libraryData.contains(".")) {
                         databaseUrl = "https://" + libraryData;
-                        projectId = libraryData.trim().replaceAll(FIREBASE_DATABASE_STORAGE_LOCATION_MATCHER, "");
+                        projectId =
+                                libraryData
+                                        .trim()
+                                        .replaceAll(FIREBASE_DATABASE_STORAGE_LOCATION_MATCHER, "");
                     } else {
                         databaseUrl = "https://" + libraryData + ".firebaseio.com";
                         projectId = libraryData;
@@ -876,14 +1046,17 @@ public class ProjectFilePaths {
                         xmlBuilder.addString("google_api_key", firebaseLibrary.reserved2, false);
                     }
                     if (firebaseLibrary.reserved3 != null && !firebaseLibrary.reserved3.isEmpty()) {
-                        xmlBuilder.addString("google_storage_bucket", firebaseLibrary.reserved3, false);
+                        xmlBuilder.addString(
+                                "google_storage_bucket", firebaseLibrary.reserved3, false);
                     }
                 }
                 if (buildConfig.isMapUsed) {
-                    xmlBuilder.addString("google_maps_key", projectLibraryManager.getGoogleMap().data, false);
+                    xmlBuilder.addString(
+                            "google_maps_key", projectLibraryManager.getGoogleMap().data, false);
                 }
                 String filePath = "values/secrets.xml";
-                fileUtil.writeText(getValuesFilePath("secrets.xml"),
+                fileUtil.writeText(
+                        getValuesFilePath("secrets.xml"),
                         CommandBlock.applyCommands(filePath, xmlBuilder.toCode()));
             } finally {
                 CommandBlock.clearTempCommands();
@@ -893,22 +1066,43 @@ public class ProjectFilePaths {
         long generateGradleFilesStarted = System.currentTimeMillis();
         generateGradleFiles();
         long generateGradleFilesDuration = System.currentTimeMillis() - generateGradleFilesStarted;
-        Log.d("ProjectFilePaths", "generateProjectFiles: wrote " + writtenProjectFileCount
-                + " generated file(s) in " + writeProjectFilesDuration + " ms"
-                + ", generatedSecrets=" + generatedSecrets
-                + " (" + generateSecretsDuration + " ms)"
-                + ", generateGradleFiles=" + generateGradleFilesDuration + " ms"
-                + ", total=" + (System.currentTimeMillis() - generateProjectFilesStarted) + " ms");
+        Log.d(
+                "ProjectFilePaths",
+                "generateProjectFiles: wrote "
+                        + writtenProjectFileCount
+                        + " generated file(s) in "
+                        + writeProjectFilesDuration
+                        + " ms"
+                        + ", generatedSecrets="
+                        + generatedSecrets
+                        + " ("
+                        + generateSecretsDuration
+                        + " ms)"
+                        + ", generateGradleFiles="
+                        + generateGradleFilesDuration
+                        + " ms"
+                        + ", total="
+                        + (System.currentTimeMillis() - generateProjectFilesStarted)
+                        + " ms");
     }
 
-    public ArrayList<SrcCodeBean> generateSourceCodeBeans(ProjectFileManager projectFileManager, ProjectDataStore projectDataManager, BuiltInLibraryManager builtInLibraryManager) {
-        return generateSourceCodeBeans(projectFileManager, projectDataManager, ProjectDataManager.getLibraryManager(sc_id), builtInLibraryManager);
+    public ArrayList<SrcCodeBean> generateSourceCodeBeans(
+            ProjectFileManager projectFileManager,
+            ProjectDataStore projectDataManager,
+            BuiltInLibraryManager builtInLibraryManager) {
+        return generateSourceCodeBeans(
+                projectFileManager,
+                projectDataManager,
+                ProjectDataManager.getLibraryManager(sc_id),
+                builtInLibraryManager);
     }
 
-    /**
-     * Get source code files that are viewable in SrcCodeViewer
-     */
-    public ArrayList<SrcCodeBean> generateSourceCodeBeans(ProjectFileManager projectFileManager, ProjectDataStore projectDataManager, LibraryManager projectLibraryManager, BuiltInLibraryManager builtInLibraryManager) {
+    /** Get source code files that are viewable in SrcCodeViewer */
+    public ArrayList<SrcCodeBean> generateSourceCodeBeans(
+            ProjectFileManager projectFileManager,
+            ProjectDataStore projectDataManager,
+            LibraryManager projectLibraryManager,
+            BuiltInLibraryManager builtInLibraryManager) {
         long generateSourceCodeBeansStarted = System.currentTimeMillis();
         generateDebugFiles(SketchApplication.getAppContext());
         CommandBlock.clearTempCommands();
@@ -940,8 +1134,13 @@ public class ProjectFilePaths {
             }
 
             // Code generation cache: skip regeneration if inputs haven't changed
-            File codegenCacheDir = new File(SketchApplication.getAppContext().getCacheDir(), "codegenCache/" + sc_id);
-            String cacheKey = computeCodeGenCacheKey(projectFileManager, projectDataManager, projectLibraryManager);
+            File codegenCacheDir =
+                    new File(
+                            SketchApplication.getAppContext().getCacheDir(),
+                            "codegenCache/" + sc_id);
+            String cacheKey =
+                    computeCodeGenCacheKey(
+                            projectFileManager, projectDataManager, projectLibraryManager);
             String cacheKeyHash = Integer.toHexString(cacheKey.hashCode());
             boolean cacheHit = false;
             String codegenCacheDecision = "cacheKeyFileMissing";
@@ -958,14 +1157,18 @@ public class ProjectFilePaths {
                         boolean allCached = true;
                         ArrayList<SrcCodeBean> cachedBeans = new ArrayList<>();
                         for (ProjectFileBean activity : activitiesToGenerate) {
-                            File cachedFile = new File(codegenCacheDir, activity.getJavaName() + ".code");
+                            File cachedFile =
+                                    new File(codegenCacheDir, activity.getJavaName() + ".code");
                             if (cachedFile.exists()) {
                                 String cachedCode = FileUtil.readFile(cachedFile.getAbsolutePath());
-                                cachedBeans.add(new SrcCodeBean(activity.getJavaName(),
-                                        ActivityCodeGenerator.applyCommands(cachedCode)));
+                                cachedBeans.add(
+                                        new SrcCodeBean(
+                                                activity.getJavaName(),
+                                                ActivityCodeGenerator.applyCommands(cachedCode)));
                             } else {
                                 allCached = false;
-                                missingCachedFiles = activitiesToGenerate.size() - cachedBeans.size();
+                                missingCachedFiles =
+                                        activitiesToGenerate.size() - cachedBeans.size();
                                 break;
                             }
                         }
@@ -983,7 +1186,13 @@ public class ProjectFilePaths {
                     }
                 } catch (RuntimeException e) {
                     codegenCacheDecision = "cacheReadFailed";
-                    Log.e("ProjectFilePaths", "Failed to read code generation cache for project " + sc_id + " from " + cacheKeyFile.getAbsolutePath(), e);
+                    Log.e(
+                            "ProjectFilePaths",
+                            "Failed to read code generation cache for project "
+                                    + sc_id
+                                    + " from "
+                                    + cacheKeyFile.getAbsolutePath(),
+                            e);
                 }
             }
 
@@ -991,7 +1200,8 @@ public class ProjectFilePaths {
                 CommandBlock.clearTempCommands();
             }
 
-            long codegenCacheLookupDuration = System.currentTimeMillis() - codegenCacheLookupStarted;
+            long codegenCacheLookupDuration =
+                    System.currentTimeMillis() - codegenCacheLookupStarted;
             int threadCount = 0;
             long codeGenerationDuration = 0;
             if (!cacheHit) {
@@ -1001,21 +1211,37 @@ public class ProjectFilePaths {
 
                 // Pre-build shared objects once for all Activities (optimization)
                 ManageLocalLibrary sharedMll = new ManageLocalLibrary(projectDataManager.projectId);
-                Material3LibraryManager sharedMaterialLibraryManager = new Material3LibraryManager(projectDataManager.projectId);
+                Material3LibraryManager sharedMaterialLibraryManager =
+                        new Material3LibraryManager(projectDataManager.projectId);
 
                 // Pre-warm BlockLoader caches to avoid race conditions during parallel execution
                 BlockLoader.getBlockFromProject(sc_id, "");
 
-                threadCount = activitiesToGenerate.isEmpty() ? 0
-                        : Math.min(Runtime.getRuntime().availableProcessors(), activitiesToGenerate.size());
+                threadCount =
+                        activitiesToGenerate.isEmpty()
+                                ? 0
+                                : Math.min(
+                                        Runtime.getRuntime().availableProcessors(),
+                                        activitiesToGenerate.size());
                 if (threadCount <= 1) {
                     for (ProjectFileBean activity : activitiesToGenerate) {
-                        String phase1Code = new ActivityCodeGenerator(buildConfig, activity, projectDataManager,
-                                sharedMll, projectSettings, sharedMaterialLibraryManager)
-                                .generateCode(isAndroidStudioExport, sc_id, false);
-                        srcCodeBeans.add(new SrcCodeBean(activity.getJavaName(),
-                                ActivityCodeGenerator.applyCommands(phase1Code)));
-                        FileUtil.writeFile(new File(codegenCacheDir, activity.getJavaName() + ".code").getAbsolutePath(), phase1Code);
+                        String phase1Code =
+                                new ActivityCodeGenerator(
+                                                buildConfig,
+                                                activity,
+                                                projectDataManager,
+                                                sharedMll,
+                                                projectSettings,
+                                                sharedMaterialLibraryManager)
+                                        .generateCode(isAndroidStudioExport, sc_id, false);
+                        srcCodeBeans.add(
+                                new SrcCodeBean(
+                                        activity.getJavaName(),
+                                        ActivityCodeGenerator.applyCommands(phase1Code)));
+                        FileUtil.writeFile(
+                                new File(codegenCacheDir, activity.getJavaName() + ".code")
+                                        .getAbsolutePath(),
+                                phase1Code);
                     }
                 } else {
                     ExecutorService executor = Executors.newFixedThreadPool(threadCount);
@@ -1023,33 +1249,70 @@ public class ProjectFilePaths {
                         List<Future<Pair<String, String>>> futures = new ArrayList<>();
 
                         for (ProjectFileBean activity : activitiesToGenerate) {
-                            futures.add(executor.submit(() -> {
-                                String rawCode = new ActivityCodeGenerator(buildConfig, activity, projectDataManager,
-                                        sharedMll, projectSettings, sharedMaterialLibraryManager)
-                                        .generateCode(isAndroidStudioExport, sc_id, false);
-                                return new Pair<>(activity.getJavaName(), rawCode);
-                            }));
+                            futures.add(
+                                    executor.submit(
+                                            () -> {
+                                                String rawCode =
+                                                        new ActivityCodeGenerator(
+                                                                        buildConfig,
+                                                                        activity,
+                                                                        projectDataManager,
+                                                                        sharedMll,
+                                                                        projectSettings,
+                                                                        sharedMaterialLibraryManager)
+                                                                .generateCode(
+                                                                        isAndroidStudioExport,
+                                                                        sc_id,
+                                                                        false);
+                                                return new Pair<>(activity.getJavaName(), rawCode);
+                                            }));
                         }
 
                         // Phase 2: Apply command blocks serially (CommandBlock is not thread-safe)
                         for (int i = 0; i < futures.size(); i++) {
                             try {
                                 Pair<String, String> result = futures.get(i).get();
-                                srcCodeBeans.add(new SrcCodeBean(result.first,
-                                        ActivityCodeGenerator.applyCommands(result.second)));
-                                FileUtil.writeFile(new File(codegenCacheDir, result.first + ".code").getAbsolutePath(), result.second);
-                            } catch (InterruptedException | ExecutionException | RuntimeException e) {
+                                srcCodeBeans.add(
+                                        new SrcCodeBean(
+                                                result.first,
+                                                ActivityCodeGenerator.applyCommands(
+                                                        result.second)));
+                                FileUtil.writeFile(
+                                        new File(codegenCacheDir, result.first + ".code")
+                                                .getAbsolutePath(),
+                                        result.second);
+                            } catch (InterruptedException
+                                    | ExecutionException
+                                    | RuntimeException e) {
                                 if (e instanceof InterruptedException) {
                                     Thread.currentThread().interrupt();
                                 }
                                 ProjectFileBean activity = activitiesToGenerate.get(i);
-                                Log.e("ProjectFilePaths", "Parallel code generation failed for " + activity.getJavaName() + " in project " + sc_id + "; falling back to serial generation", e);
-                                String phase1Code = new ActivityCodeGenerator(buildConfig, activity, projectDataManager,
-                                        sharedMll, projectSettings, sharedMaterialLibraryManager)
-                                        .generateCode(isAndroidStudioExport, sc_id, false);
-                                srcCodeBeans.add(new SrcCodeBean(activity.getJavaName(),
-                                        ActivityCodeGenerator.applyCommands(phase1Code)));
-                                FileUtil.writeFile(new File(codegenCacheDir, activity.getJavaName() + ".code").getAbsolutePath(), phase1Code);
+                                Log.e(
+                                        "ProjectFilePaths",
+                                        "Parallel code generation failed for "
+                                                + activity.getJavaName()
+                                                + " in project "
+                                                + sc_id
+                                                + "; falling back to serial generation",
+                                        e);
+                                String phase1Code =
+                                        new ActivityCodeGenerator(
+                                                        buildConfig,
+                                                        activity,
+                                                        projectDataManager,
+                                                        sharedMll,
+                                                        projectSettings,
+                                                        sharedMaterialLibraryManager)
+                                                .generateCode(isAndroidStudioExport, sc_id, false);
+                                srcCodeBeans.add(
+                                        new SrcCodeBean(
+                                                activity.getJavaName(),
+                                                ActivityCodeGenerator.applyCommands(phase1Code)));
+                                FileUtil.writeFile(
+                                        new File(codegenCacheDir, activity.getJavaName() + ".code")
+                                                .getAbsolutePath(),
+                                        phase1Code);
                             }
                         }
                     } finally {
@@ -1062,7 +1325,11 @@ public class ProjectFilePaths {
             }
 
             var path = SketchwarePaths.getProjectCommandPath(sc_id);
-            var newXMLCommand = Boolean.parseBoolean(projectSettings.getValue(ProjectSettings.SETTING_NEW_XML_COMMAND, ProjectSettings.SETTING_GENERIC_VALUE_FALSE));
+            var newXMLCommand =
+                    Boolean.parseBoolean(
+                            projectSettings.getValue(
+                                    ProjectSettings.SETTING_NEW_XML_COMMAND,
+                                    ProjectSettings.SETTING_GENERIC_VALUE_FALSE));
             if (newXMLCommand && FileUtil.isExistFile(path)) {
                 FileUtil.copyFile(path, SketchwarePaths.getTempCommandsPath());
             }
@@ -1075,19 +1342,29 @@ public class ProjectFilePaths {
             for (ProjectFileBean layout : regularLayouts) {
                 String xmlName = layout.getXmlName();
                 LayoutGenerator layoutGenerator = new LayoutGenerator(buildConfig, layout);
-                layoutGenerator.setViews(ProjectDataStore.getSortedRootViews(projectDataManager.getViews(xmlName)), projectDataManager.getFabView(xmlName));
+                layoutGenerator.setViews(
+                        ProjectDataStore.getSortedRootViews(projectDataManager.getViews(xmlName)),
+                        projectDataManager.getFabView(xmlName));
                 var ogFile = new File(layoutDir + xmlName);
                 if (!layoutFiles.contains(ogFile)) {
-                    srcCodeBeans.add(new SrcCodeBean(xmlName, CommandBlock.applyCommands(xmlName, layoutGenerator.toXmlString())));
+                    srcCodeBeans.add(
+                            new SrcCodeBean(
+                                    xmlName,
+                                    CommandBlock.applyCommands(
+                                            xmlName, layoutGenerator.toXmlString())));
 
                     if (isViewBindingEnable()) {
                         var privFile = new File(context.getCacheDir(), xmlName);
-                        FileUtil.writeFile(privFile.getAbsolutePath(), CommandBlock.applyCommands(xmlName, layoutGenerator.toXmlString()));
+                        FileUtil.writeFile(
+                                privFile.getAbsolutePath(),
+                                CommandBlock.applyCommands(xmlName, layoutGenerator.toXmlString()));
                         var code = viewBindingBuilder.generateBindingForLayout(privFile);
-                        srcCodeBeans.add(new SrcCodeBean(
-                                ViewBindingBuilder.generateFileNameForLayout(xmlName.replace(".xml", "")) + ".java",
-                                code
-                        ));
+                        srcCodeBeans.add(
+                                new SrcCodeBean(
+                                        ViewBindingBuilder.generateFileNameForLayout(
+                                                        xmlName.replace(".xml", ""))
+                                                + ".java",
+                                        code));
                     }
                 }
             }
@@ -1096,80 +1373,140 @@ public class ProjectFilePaths {
             for (ProjectFileBean customViewFile : customViewFiles) {
                 String xmlName = customViewFile.getXmlName();
                 LayoutGenerator layoutGenerator = new LayoutGenerator(buildConfig, customViewFile);
-                layoutGenerator.setViews(ProjectDataStore.getSortedRootViews(projectDataManager.getViews(xmlName)));
+                layoutGenerator.setViews(
+                        ProjectDataStore.getSortedRootViews(projectDataManager.getViews(xmlName)));
                 var ogFile = new File(layoutDir + xmlName);
                 if (!layoutFiles.contains(ogFile)) {
-                    srcCodeBeans.add(new SrcCodeBean(xmlName, CommandBlock.applyCommands(xmlName, layoutGenerator.toXmlString())));
+                    srcCodeBeans.add(
+                            new SrcCodeBean(
+                                    xmlName,
+                                    CommandBlock.applyCommands(
+                                            xmlName, layoutGenerator.toXmlString())));
 
                     if (isViewBindingEnable()) {
                         var privFile = new File(context.getCacheDir(), xmlName);
-                        FileUtil.writeFile(privFile.getAbsolutePath(), CommandBlock.applyCommands(xmlName, layoutGenerator.toXmlString()));
+                        FileUtil.writeFile(
+                                privFile.getAbsolutePath(),
+                                CommandBlock.applyCommands(xmlName, layoutGenerator.toXmlString()));
                         var code = viewBindingBuilder.generateBindingForLayout(privFile);
-                        srcCodeBeans.add(new SrcCodeBean(
-                                ViewBindingBuilder.generateFileNameForLayout(xmlName.replace(".xml", "")) + ".java",
-                                code
-                        ));
+                        srcCodeBeans.add(
+                                new SrcCodeBean(
+                                        ViewBindingBuilder.generateFileNameForLayout(
+                                                        xmlName.replace(".xml", ""))
+                                                + ".java",
+                                        code));
                     }
                 }
             }
 
-            ManifestGenerator manifestGenerator = new ManifestGenerator(buildConfig, projectFileManager.getActivities(), builtInLibraryManager);
+            ManifestGenerator manifestGenerator =
+                    new ManifestGenerator(
+                            buildConfig, projectFileManager.getActivities(), builtInLibraryManager);
             manifestGenerator.setProjectFilePaths(this);
 
             // Make generated classes viewable
             if (!javaFiles.contains(new File(javaDir + "SketchwareUtil.java"))) {
-                srcCodeBeans.add(new SrcCodeBean("SketchwareUtil.java",
-                        ComponentTemplates.getSketchwareUtilCode(packageName, material3LibraryManager.isMaterial3Enabled())));
+                srcCodeBeans.add(
+                        new SrcCodeBean(
+                                "SketchwareUtil.java",
+                                ComponentTemplates.getSketchwareUtilCode(
+                                        packageName,
+                                        material3LibraryManager.isMaterial3Enabled())));
             }
 
             if (!javaFiles.contains(new File(javaDir + "FileUtil.java"))) {
-                srcCodeBeans.add(new SrcCodeBean("FileUtil.java",
-                        ComponentTemplates.getFileUtilCode(packageName)));
+                srcCodeBeans.add(
+                        new SrcCodeBean(
+                                "FileUtil.java", ComponentTemplates.getFileUtilCode(packageName)));
             }
 
-            if (!javaFiles.contains(new File(javaDir + "RequestNetwork.java")) && buildConfig.isHttp3Used) {
-                srcCodeBeans.add(new SrcCodeBean("RequestNetwork.java",
-                        ComponentCodeGenerator.formatCode(ComponentTemplates.getRequestNetworkCode(packageName), false)));
+            if (!javaFiles.contains(new File(javaDir + "RequestNetwork.java"))
+                    && buildConfig.isHttp3Used) {
+                srcCodeBeans.add(
+                        new SrcCodeBean(
+                                "RequestNetwork.java",
+                                ComponentCodeGenerator.formatCode(
+                                        ComponentTemplates.getRequestNetworkCode(packageName),
+                                        false)));
             }
 
-            if (!FileUtil.isExistFile(javaDir + "RequestNetworkController.java") && buildConfig.isHttp3Used) {
-                srcCodeBeans.add(new SrcCodeBean("RequestNetworkController.java",
-                        ComponentCodeGenerator.formatCode(ComponentTemplates.getRequestNetworkControllerCode(packageName), false)));
+            if (!FileUtil.isExistFile(javaDir + "RequestNetworkController.java")
+                    && buildConfig.isHttp3Used) {
+                srcCodeBeans.add(
+                        new SrcCodeBean(
+                                "RequestNetworkController.java",
+                                ComponentCodeGenerator.formatCode(
+                                        ComponentTemplates.getRequestNetworkControllerCode(
+                                                packageName),
+                                        false)));
             }
 
-            if (!javaFiles.contains(new File(javaDir + "BluetoothConnect.java")) && buildConfig.hasPermission(BuildConfig.PERMISSION_BLUETOOTH)) {
-                srcCodeBeans.add(new SrcCodeBean("BluetoothConnect.java",
-                        ComponentCodeGenerator.formatCode(ComponentTemplates.getBluetoothConnectCode(packageName), false)));
+            if (!javaFiles.contains(new File(javaDir + "BluetoothConnect.java"))
+                    && buildConfig.hasPermission(BuildConfig.PERMISSION_BLUETOOTH)) {
+                srcCodeBeans.add(
+                        new SrcCodeBean(
+                                "BluetoothConnect.java",
+                                ComponentCodeGenerator.formatCode(
+                                        ComponentTemplates.getBluetoothConnectCode(packageName),
+                                        false)));
             }
 
-            if (!javaFiles.contains(new File(javaDir + "BluetoothController.java")) && buildConfig.hasPermission(BuildConfig.PERMISSION_BLUETOOTH)) {
-                srcCodeBeans.add(new SrcCodeBean("BluetoothController.java",
-                        ComponentCodeGenerator.formatCode(ComponentTemplates.getBluetoothControllerCode(packageName), false)));
+            if (!javaFiles.contains(new File(javaDir + "BluetoothController.java"))
+                    && buildConfig.hasPermission(BuildConfig.PERMISSION_BLUETOOTH)) {
+                srcCodeBeans.add(
+                        new SrcCodeBean(
+                                "BluetoothController.java",
+                                ComponentCodeGenerator.formatCode(
+                                        ComponentTemplates.getBluetoothControllerCode(packageName),
+                                        false)));
             }
 
             if (buildConfig.isMapUsed) {
-                if (!javaFiles.contains(new File(javaDir + "GoogleMapController.java")) && buildConfig.isMapUsed) {
-                    srcCodeBeans.add(new SrcCodeBean("GoogleMapController.java",
-                            ComponentCodeGenerator.formatCode(ComponentTemplates.getGoogleMapControllerCode(packageName), false)));
+                if (!javaFiles.contains(new File(javaDir + "GoogleMapController.java"))
+                        && buildConfig.isMapUsed) {
+                    srcCodeBeans.add(
+                            new SrcCodeBean(
+                                    "GoogleMapController.java",
+                                    ComponentCodeGenerator.formatCode(
+                                            ComponentTemplates.getGoogleMapControllerCode(
+                                                    packageName),
+                                            false)));
                 }
             }
 
-            String generatedManifest = finalizeGeneratedManifest(manifestGenerator.generateManifest());
+            String generatedManifest =
+                    finalizeGeneratedManifest(manifestGenerator.generateManifest());
             srcCodeBeans.add(new SrcCodeBean("AndroidManifest.xml", generatedManifest));
             srcCodeBeans.add(new SrcCodeBean("styles.xml", getXMLStyle()));
             srcCodeBeans.add(new SrcCodeBean("colors.xml", getXMLColor()));
             srcCodeBeans.add(new SrcCodeBean("strings.xml", getXMLString()));
-            Log.d("ProjectFilePaths", "generateSourceCodeBeans: activitiesToGenerate=" + activitiesToGenerate.size()
-                    + ", cache=" + codegenCacheDecision
-                    + ", cachedActivitiesLoaded=" + cachedActivitiesLoaded
-                    + ", missingCachedFiles=" + missingCachedFiles
-                    + ", cacheLookup=" + codegenCacheLookupDuration + " ms"
-                    + ", codeGeneration=" + codeGenerationDuration + " ms"
-                    + ", threadCount=" + threadCount
-                    + ", viewBindingEnabled=" + isViewBindingEnable()
-                    + ", cacheKeyHash=" + cacheKeyHash
-                    + ", totalBeans=" + srcCodeBeans.size()
-                    + ", total=" + (System.currentTimeMillis() - generateSourceCodeBeansStarted) + " ms");
+            Log.d(
+                    "ProjectFilePaths",
+                    "generateSourceCodeBeans: activitiesToGenerate="
+                            + activitiesToGenerate.size()
+                            + ", cache="
+                            + codegenCacheDecision
+                            + ", cachedActivitiesLoaded="
+                            + cachedActivitiesLoaded
+                            + ", missingCachedFiles="
+                            + missingCachedFiles
+                            + ", cacheLookup="
+                            + codegenCacheLookupDuration
+                            + " ms"
+                            + ", codeGeneration="
+                            + codeGenerationDuration
+                            + " ms"
+                            + ", threadCount="
+                            + threadCount
+                            + ", viewBindingEnabled="
+                            + isViewBindingEnable()
+                            + ", cacheKeyHash="
+                            + cacheKeyHash
+                            + ", totalBeans="
+                            + srcCodeBeans.size()
+                            + ", total="
+                            + (System.currentTimeMillis() - generateSourceCodeBeansStarted)
+                            + " ms");
             return srcCodeBeans;
         } finally {
             CommandBlock.clearTempCommands();
@@ -1177,7 +1514,12 @@ public class ProjectFilePaths {
     }
 
     private boolean isViewBindingEnable() {
-        return generateDataBindingClasses && projectSettings.getValue(ProjectSettings.SETTING_ENABLE_VIEWBINDING, ProjectSettings.SETTING_GENERIC_VALUE_FALSE).equals(ProjectSettings.SETTING_GENERIC_VALUE_TRUE);
+        return generateDataBindingClasses
+                && projectSettings
+                        .getValue(
+                                ProjectSettings.SETTING_ENABLE_VIEWBINDING,
+                                ProjectSettings.SETTING_GENERIC_VALUE_FALSE)
+                        .equals(ProjectSettings.SETTING_GENERIC_VALUE_TRUE);
     }
 
     /**
@@ -1185,19 +1527,24 @@ public class ProjectFilePaths {
      *
      * @return The file's code or an empty String if not found
      */
-    public String getFileSrc(String filename, ProjectFileManager projectFileManager, ProjectDataStore projectDataManager, LibraryManager projectLibraryManager) {
+    public String getFileSrc(
+            String filename,
+            ProjectFileManager projectFileManager,
+            ProjectDataStore projectDataManager,
+            LibraryManager projectLibraryManager) {
         initializeMetadata(projectLibraryManager, projectFileManager, projectDataManager);
         CommandBlock.clearTempCommands();
         try {
             boolean isJavaFile = filename.endsWith(".java");
             boolean isXmlFile = filename.endsWith(".xml");
             boolean isManifestFile = filename.equals("AndroidManifest.xml");
-            ArrayList<ProjectFileBean> projectFiles = new ArrayList<>(projectFileManager.getActivities());
+            ArrayList<ProjectFileBean> projectFiles =
+                    new ArrayList<>(projectFileManager.getActivities());
             projectFiles.addAll(new ArrayList<>(projectFileManager.getCustomViews()));
             if (isXmlFile) {
                 /*
-                 Generating every java file is necessary to make command blocks for xml work
-                 */
+                Generating every java file is necessary to make command blocks for xml work
+                */
                 prepareXmlCommands(projectFileManager, projectDataManager);
             }
 
@@ -1214,20 +1561,32 @@ public class ProjectFilePaths {
             }
 
             if (isManifestFile) {
-                ProjectBuilder builder = new ProjectBuilder(SketchApplication.getAppContext(), this);
+                ProjectBuilder builder =
+                        new ProjectBuilder(SketchApplication.getAppContext(), this);
                 builder.buildBuiltInLibraryInformation();
-                ManifestGenerator manifestGenerator = new ManifestGenerator(buildConfig, projectFileManager.getActivities(), builder.getBuiltInLibraryManager());
+                ManifestGenerator manifestGenerator =
+                        new ManifestGenerator(
+                                buildConfig,
+                                projectFileManager.getActivities(),
+                                builder.getBuiltInLibraryManager());
                 manifestGenerator.setProjectFilePaths(this);
                 return finalizeGeneratedManifest(manifestGenerator.generateManifest());
             }
 
             for (ProjectFileBean projectFile : projectFiles) {
-                if (filename.equals(isJavaFile ? projectFile.getJavaName() : projectFile.getXmlName())) {
+                if (filename.equals(
+                        isJavaFile ? projectFile.getJavaName() : projectFile.getXmlName())) {
                     if (isJavaFile) {
-                        return new ActivityCodeGenerator(buildConfig, projectFile, projectDataManager).generateCode(isAndroidStudioExport, sc_id);
+                        return new ActivityCodeGenerator(
+                                        buildConfig, projectFile, projectDataManager)
+                                .generateCode(isAndroidStudioExport, sc_id);
                     } else if (isXmlFile) {
-                        LayoutGenerator xmlGenerator = new LayoutGenerator(buildConfig, projectFile);
-                        xmlGenerator.setViews(ProjectDataStore.getSortedRootViews(projectDataManager.getViews(filename)), projectDataManager.getFabView(filename));
+                        LayoutGenerator xmlGenerator =
+                                new LayoutGenerator(buildConfig, projectFile);
+                        xmlGenerator.setViews(
+                                ProjectDataStore.getSortedRootViews(
+                                        projectDataManager.getViews(filename)),
+                                projectDataManager.getFabView(filename));
                         return CommandBlock.applyCommands(filename, xmlGenerator.toXmlString());
                     }
                 }
@@ -1239,17 +1598,25 @@ public class ProjectFilePaths {
         }
     }
 
-    private void prepareXmlCommands(ProjectFileManager projectFileManager, ProjectDataStore projectDataManager) {
-        ArrayList<ProjectFileBean> projectFiles = new ArrayList<>(projectFileManager.getActivities());
+    private void prepareXmlCommands(
+            ProjectFileManager projectFileManager, ProjectDataStore projectDataManager) {
+        ArrayList<ProjectFileBean> projectFiles =
+                new ArrayList<>(projectFileManager.getActivities());
         projectFiles.addAll(new ArrayList<>(projectFileManager.getCustomViews()));
         String commandFilePath = SketchwarePaths.getProjectCommandPath(sc_id);
-        boolean newXMLCommand = Boolean.parseBoolean(projectSettings.getValue(ProjectSettings.SETTING_NEW_XML_COMMAND, ProjectSettings.SETTING_GENERIC_VALUE_FALSE));
+        boolean newXMLCommand =
+                Boolean.parseBoolean(
+                        projectSettings.getValue(
+                                ProjectSettings.SETTING_NEW_XML_COMMAND,
+                                ProjectSettings.SETTING_GENERIC_VALUE_FALSE));
         if (newXMLCommand && FileUtil.isExistFile(commandFilePath)) {
             FileUtil.copyFile(commandFilePath, SketchwarePaths.getTempCommandsPath());
         } else {
             for (ProjectFileBean projectFile : projectFiles) {
                 try {
-                    CommandBlock.collectXmlCommandBlocks(new ActivityCodeGenerator(buildConfig, projectFile, projectDataManager).generateCode(isAndroidStudioExport, sc_id, false));
+                    CommandBlock.collectXmlCommandBlocks(
+                            new ActivityCodeGenerator(buildConfig, projectFile, projectDataManager)
+                                    .generateCode(isAndroidStudioExport, sc_id, false));
                 } catch (RuntimeException e) {
                     Log.e("ProjectFilePaths", "Failed to prepare XML commands", e);
                 }
@@ -1274,10 +1641,13 @@ public class ProjectFilePaths {
         }
         XmlBuilderHelper colorsFileBuilder = new XmlBuilderHelper();
         colorsFileBuilder.addColor("colorPrimary", String.format("#%06X", colorPrimary & 0xffffff));
-        colorsFileBuilder.addColor("colorPrimaryDark", String.format("#%06X", colorPrimaryDark & 0xffffff));
+        colorsFileBuilder.addColor(
+                "colorPrimaryDark", String.format("#%06X", colorPrimaryDark & 0xffffff));
         colorsFileBuilder.addColor("colorAccent", String.format("#%06X", colorAccent & 0xffffff));
-        colorsFileBuilder.addColor("colorControlHighlight", String.format("#%06X", colorControlHighlight & 0xffffff));
-        colorsFileBuilder.addColor("colorControlNormal", String.format("#%06X", colorControlNormal & 0xffffff));
+        colorsFileBuilder.addColor(
+                "colorControlHighlight", String.format("#%06X", colorControlHighlight & 0xffffff));
+        colorsFileBuilder.addColor(
+                "colorControlNormal", String.format("#%06X", colorControlNormal & 0xffffff));
         return applyStoredXmlCommandsIfNeeded("colors.xml", colorsFileBuilder.toCode());
     }
 
@@ -1288,13 +1658,21 @@ public class ProjectFilePaths {
         }
         if (material3LibraryManager.isMaterial3Enabled()) {
             XmlBuilderHelper stylesFileBuilder = new XmlBuilderHelper();
-            stylesFileBuilder.addStyle("AppTheme", String.format("Theme.Material3.%s.NoActionBar", material3LibraryManager.getTheme()));
-            stylesFileBuilder.addItemToStyle("AppTheme", "android:statusBarColor", "@android:color/transparent");
-            stylesFileBuilder.addItemToStyle("AppTheme", "android:navigationBarColor", "@android:color/transparent");
-            stylesFileBuilder.addItemToStyle("AppTheme", "android:windowLightStatusBar", "?attr/isLightTheme");
+            stylesFileBuilder.addStyle(
+                    "AppTheme",
+                    String.format(
+                            "Theme.Material3.%s.NoActionBar", material3LibraryManager.getTheme()));
+            stylesFileBuilder.addItemToStyle(
+                    "AppTheme", "android:statusBarColor", "@android:color/transparent");
+            stylesFileBuilder.addItemToStyle(
+                    "AppTheme", "android:navigationBarColor", "@android:color/transparent");
+            stylesFileBuilder.addItemToStyle(
+                    "AppTheme", "android:windowLightStatusBar", "?attr/isLightTheme");
             stylesFileBuilder.addStyle("AppTheme.FullScreen", "AppTheme");
-            stylesFileBuilder.addItemToStyle("AppTheme.FullScreen", "android:windowFullscreen", "true");
-            stylesFileBuilder.addItemToStyle("AppTheme.FullScreen", "android:windowContentOverlay", "@null");
+            stylesFileBuilder.addItemToStyle(
+                    "AppTheme.FullScreen", "android:windowFullscreen", "true");
+            stylesFileBuilder.addItemToStyle(
+                    "AppTheme.FullScreen", "android:windowContentOverlay", "@null");
             stylesFileBuilder.addStyle("AppTheme.AppBarOverlay", "ThemeOverlay.Material3");
             stylesFileBuilder.addStyle("AppTheme.PopupOverlay", "ThemeOverlay.Material3");
             stylesFileBuilder.addStyle("AppTheme.DebugActivity", "AppTheme");
@@ -1302,51 +1680,89 @@ public class ProjectFilePaths {
             stylesFileBuilder.addItemToStyle("AppTheme.DebugActivity", "windowNoTitle", "false");
             return applyStoredXmlCommandsIfNeeded("styles.xml", stylesFileBuilder.toCode());
         } else if (buildConfig.isAppCompatEnabled) {
-            boolean useNewMaterialComponentsTheme = projectSettings.getValue(ProjectSettings.SETTING_ENABLE_BRIDGELESS_THEMES,
-                    BuildSettings.SETTING_GENERIC_VALUE_FALSE).equals(BuildSettings.SETTING_GENERIC_VALUE_TRUE);
+            boolean useNewMaterialComponentsTheme =
+                    projectSettings
+                            .getValue(
+                                    ProjectSettings.SETTING_ENABLE_BRIDGELESS_THEMES,
+                                    BuildSettings.SETTING_GENERIC_VALUE_FALSE)
+                            .equals(BuildSettings.SETTING_GENERIC_VALUE_TRUE);
             XmlBuilderHelper stylesFileBuilder = new XmlBuilderHelper();
-            stylesFileBuilder.addStyle("AppTheme", "Theme.MaterialComponents.Light.NoActionBar" + (useNewMaterialComponentsTheme ? "" : ".Bridge"));
+            stylesFileBuilder.addStyle(
+                    "AppTheme",
+                    "Theme.MaterialComponents.Light.NoActionBar"
+                            + (useNewMaterialComponentsTheme ? "" : ".Bridge"));
             // todo: add 'colorOnPrimary' to custom theme colors.
             stylesFileBuilder.addItemToStyle("AppTheme", "colorOnPrimary", "@android:color/white");
             stylesFileBuilder.addItemToStyle("AppTheme", "colorPrimary", "@color/colorPrimary");
-            stylesFileBuilder.addItemToStyle("AppTheme", "colorPrimaryDark", "@color/colorPrimaryDark");
+            stylesFileBuilder.addItemToStyle(
+                    "AppTheme", "colorPrimaryDark", "@color/colorPrimaryDark");
             stylesFileBuilder.addItemToStyle("AppTheme", "colorAccent", "@color/colorAccent");
-            stylesFileBuilder.addItemToStyle("AppTheme", "colorControlHighlight", "@color/colorControlHighlight");
-            stylesFileBuilder.addItemToStyle("AppTheme", "colorControlNormal", "@color/colorControlNormal");
+            stylesFileBuilder.addItemToStyle(
+                    "AppTheme", "colorControlHighlight", "@color/colorControlHighlight");
+            stylesFileBuilder.addItemToStyle(
+                    "AppTheme", "colorControlNormal", "@color/colorControlNormal");
 
             stylesFileBuilder.addStyle("AppTheme.FullScreen", "AppTheme");
-            stylesFileBuilder.addItemToStyle("AppTheme.FullScreen", "android:windowFullscreen", "true");
-            stylesFileBuilder.addItemToStyle("AppTheme.FullScreen", "android:windowContentOverlay", "@null");
+            stylesFileBuilder.addItemToStyle(
+                    "AppTheme.FullScreen", "android:windowFullscreen", "true");
+            stylesFileBuilder.addItemToStyle(
+                    "AppTheme.FullScreen", "android:windowContentOverlay", "@null");
 
-            stylesFileBuilder.addStyle("AppTheme.AppBarOverlay", "ThemeOverlay.MaterialComponents.Dark.ActionBar");
-            stylesFileBuilder.addStyle("AppTheme.PopupOverlay", "ThemeOverlay.MaterialComponents.Light");
+            stylesFileBuilder.addStyle(
+                    "AppTheme.AppBarOverlay", "ThemeOverlay.MaterialComponents.Dark.ActionBar");
+            stylesFileBuilder.addStyle(
+                    "AppTheme.PopupOverlay", "ThemeOverlay.MaterialComponents.Light");
 
             stylesFileBuilder.addStyle("AppTheme.DebugActivity", "AppTheme");
-            stylesFileBuilder.addItemToStyle("AppTheme.DebugActivity", "actionBarStyle", "@style/ThemeOverlay.MaterialComponents.ActionBar.Primary");
-            stylesFileBuilder.addItemToStyle("AppTheme.DebugActivity", "actionBarTheme", "@style/Widget.MaterialComponents.ActionBar.Primary");
+            stylesFileBuilder.addItemToStyle(
+                    "AppTheme.DebugActivity",
+                    "actionBarStyle",
+                    "@style/ThemeOverlay.MaterialComponents.ActionBar.Primary");
+            stylesFileBuilder.addItemToStyle(
+                    "AppTheme.DebugActivity",
+                    "actionBarTheme",
+                    "@style/Widget.MaterialComponents.ActionBar.Primary");
             stylesFileBuilder.addItemToStyle("AppTheme.DebugActivity", "windowActionBar", "true");
             stylesFileBuilder.addItemToStyle("AppTheme.DebugActivity", "windowNoTitle", "false");
             return applyStoredXmlCommandsIfNeeded("styles.xml", stylesFileBuilder.toCode());
         } else {
             XmlBuilderHelper stylesFileBuilder = new XmlBuilderHelper();
-            stylesFileBuilder.addStyle("AppTheme", "@android:style/Theme.Material.Light.DarkActionBar");
-            stylesFileBuilder.addItemToStyle("AppTheme", "android:colorPrimary", "@color/colorPrimary");
-            stylesFileBuilder.addItemToStyle("AppTheme", "android:colorPrimaryDark", "@color/colorPrimaryDark");
-            stylesFileBuilder.addItemToStyle("AppTheme", "android:colorAccent", "@color/colorAccent");
-            stylesFileBuilder.addItemToStyle("AppTheme", "android:colorControlHighlight", "@color/colorControlHighlight");
-            stylesFileBuilder.addItemToStyle("AppTheme", "android:colorControlNormal", "@color/colorControlNormal");
-            stylesFileBuilder.addStyle("FullScreen", "@android:style/Theme.Material.Light.NoActionBar.Fullscreen");
-            stylesFileBuilder.addItemToStyle("FullScreen", "android:colorPrimary", "@color/colorPrimary");
-            stylesFileBuilder.addItemToStyle("FullScreen", "android:colorPrimaryDark", "@color/colorPrimaryDark");
-            stylesFileBuilder.addItemToStyle("FullScreen", "android:colorAccent", "@color/colorAccent");
-            stylesFileBuilder.addItemToStyle("FullScreen", "android:colorControlHighlight", "@color/colorControlHighlight");
-            stylesFileBuilder.addItemToStyle("FullScreen", "android:colorControlNormal", "@color/colorControlNormal");
-            stylesFileBuilder.addStyle("NoActionBar", "@android:style/Theme.Material.Light.NoActionBar");
-            stylesFileBuilder.addItemToStyle("NoActionBar", "android:colorPrimary", "@color/colorPrimary");
-            stylesFileBuilder.addItemToStyle("NoActionBar", "android:colorPrimaryDark", "@color/colorPrimaryDark");
-            stylesFileBuilder.addItemToStyle("NoActionBar", "android:colorAccent", "@color/colorAccent");
-            stylesFileBuilder.addItemToStyle("NoActionBar", "android:colorControlHighlight", "@color/colorControlHighlight");
-            stylesFileBuilder.addItemToStyle("NoActionBar", "android:colorControlNormal", "@color/colorControlNormal");
+            stylesFileBuilder.addStyle(
+                    "AppTheme", "@android:style/Theme.Material.Light.DarkActionBar");
+            stylesFileBuilder.addItemToStyle(
+                    "AppTheme", "android:colorPrimary", "@color/colorPrimary");
+            stylesFileBuilder.addItemToStyle(
+                    "AppTheme", "android:colorPrimaryDark", "@color/colorPrimaryDark");
+            stylesFileBuilder.addItemToStyle(
+                    "AppTheme", "android:colorAccent", "@color/colorAccent");
+            stylesFileBuilder.addItemToStyle(
+                    "AppTheme", "android:colorControlHighlight", "@color/colorControlHighlight");
+            stylesFileBuilder.addItemToStyle(
+                    "AppTheme", "android:colorControlNormal", "@color/colorControlNormal");
+            stylesFileBuilder.addStyle(
+                    "FullScreen", "@android:style/Theme.Material.Light.NoActionBar.Fullscreen");
+            stylesFileBuilder.addItemToStyle(
+                    "FullScreen", "android:colorPrimary", "@color/colorPrimary");
+            stylesFileBuilder.addItemToStyle(
+                    "FullScreen", "android:colorPrimaryDark", "@color/colorPrimaryDark");
+            stylesFileBuilder.addItemToStyle(
+                    "FullScreen", "android:colorAccent", "@color/colorAccent");
+            stylesFileBuilder.addItemToStyle(
+                    "FullScreen", "android:colorControlHighlight", "@color/colorControlHighlight");
+            stylesFileBuilder.addItemToStyle(
+                    "FullScreen", "android:colorControlNormal", "@color/colorControlNormal");
+            stylesFileBuilder.addStyle(
+                    "NoActionBar", "@android:style/Theme.Material.Light.NoActionBar");
+            stylesFileBuilder.addItemToStyle(
+                    "NoActionBar", "android:colorPrimary", "@color/colorPrimary");
+            stylesFileBuilder.addItemToStyle(
+                    "NoActionBar", "android:colorPrimaryDark", "@color/colorPrimaryDark");
+            stylesFileBuilder.addItemToStyle(
+                    "NoActionBar", "android:colorAccent", "@color/colorAccent");
+            stylesFileBuilder.addItemToStyle(
+                    "NoActionBar", "android:colorControlHighlight", "@color/colorControlHighlight");
+            stylesFileBuilder.addItemToStyle(
+                    "NoActionBar", "android:colorControlNormal", "@color/colorControlNormal");
             stylesFileBuilder.addStyle("NoStatusBar", "AppTheme");
             stylesFileBuilder.addItemToStyle("NoStatusBar", "android:windowFullscreen", "true");
             stylesFileBuilder.addStyle("AppTheme.DebugActivity", "AppTheme");
@@ -1360,7 +1776,11 @@ public class ProjectFilePaths {
             return CommandBlock.applyCommands(fileName, sourceCode);
         }
 
-        boolean newXMLCommand = Boolean.parseBoolean(projectSettings.getValue(ProjectSettings.SETTING_NEW_XML_COMMAND, ProjectSettings.SETTING_GENERIC_VALUE_FALSE));
+        boolean newXMLCommand =
+                Boolean.parseBoolean(
+                        projectSettings.getValue(
+                                ProjectSettings.SETTING_NEW_XML_COMMAND,
+                                ProjectSettings.SETTING_GENERIC_VALUE_FALSE));
         String storedCommandPath = SketchwarePaths.getProjectCommandPath(sc_id);
         if (!newXMLCommand || !FileUtil.isExistFile(storedCommandPath)) {
             return CommandBlock.applyCommands(fileName, sourceCode);
@@ -1386,16 +1806,21 @@ public class ProjectFilePaths {
         String manifest = AndroidManifestInjector.injectCustomComponents(sourceCode, sc_id);
         manifest = manifest.replace("${applicationId}", packageName);
         if (isLocalLibraryManifestMergeEnabled() && !isAndroidStudioExport) {
-            manifest = LocalLibraryManifestMerger.mergeLocalLibraryManifests(manifest, sc_id, packageName);
+            manifest =
+                    LocalLibraryManifestMerger.mergeLocalLibraryManifests(
+                            manifest, sc_id, packageName);
         }
         return applyStoredXmlCommandsIfNeeded("AndroidManifest.xml", manifest);
     }
 
     /**
-     * Computes a cache key for code generation based on all input data files and settings.
-     * If any input changes, the key changes and cached code is invalidated.
+     * Computes a cache key for code generation based on all input data files and settings. If any
+     * input changes, the key changes and cached code is invalidated.
      */
-    private String computeCodeGenCacheKey(ProjectFileManager projectFileManager, ProjectDataStore projectDataManager, LibraryManager projectLibraryManager) {
+    private String computeCodeGenCacheKey(
+            ProjectFileManager projectFileManager,
+            ProjectDataStore projectDataManager,
+            LibraryManager projectLibraryManager) {
         StringBuilder key = new StringBuilder(256);
 
         String dataPath = SketchwarePaths.getDataPath(sc_id);
@@ -1409,7 +1834,10 @@ public class ProjectFilePaths {
                 appendFileInfo(key, new File(dataPath, "logic"));
             }
         } catch (RuntimeException e) {
-            Log.w("ProjectFilePaths", "Falling back to on-disk logic signature for project " + sc_id, e);
+            Log.w(
+                    "ProjectFilePaths",
+                    "Falling back to on-disk logic signature for project " + sc_id,
+                    e);
             appendFileInfo(key, new File(dataPath, "logic"));
         }
 
@@ -1422,7 +1850,10 @@ public class ProjectFilePaths {
                 appendFileInfo(key, new File(dataPath, "view"));
             }
         } catch (RuntimeException e) {
-            Log.w("ProjectFilePaths", "Falling back to on-disk view signature for project " + sc_id, e);
+            Log.w(
+                    "ProjectFilePaths",
+                    "Falling back to on-disk view signature for project " + sc_id,
+                    e);
             appendFileInfo(key, new File(dataPath, "view"));
         }
 
@@ -1435,7 +1866,10 @@ public class ProjectFilePaths {
                 appendFileInfo(key, new File(dataPath, "file"));
             }
         } catch (RuntimeException e) {
-            Log.w("ProjectFilePaths", "Falling back to on-disk file signature for project " + sc_id, e);
+            Log.w(
+                    "ProjectFilePaths",
+                    "Falling back to on-disk file signature for project " + sc_id,
+                    e);
             appendFileInfo(key, new File(dataPath, "file"));
         }
 
@@ -1448,14 +1882,19 @@ public class ProjectFilePaths {
                 appendFileInfo(key, new File(dataPath, "library"));
             }
         } catch (RuntimeException e) {
-            Log.w("ProjectFilePaths", "Falling back to on-disk library signature for project " + sc_id, e);
+            Log.w(
+                    "ProjectFilePaths",
+                    "Falling back to on-disk library signature for project " + sc_id,
+                    e);
             appendFileInfo(key, new File(dataPath, "library"));
         }
 
         boolean localLibraryManifestMergeEnabled = isLocalLibraryManifestMergeEnabled();
-        appendTextInfo(key, localLibraryManifestMergeEnabled
-                ? ProjectSettings.SETTING_GENERIC_VALUE_TRUE
-                : ProjectSettings.SETTING_GENERIC_VALUE_FALSE);
+        appendTextInfo(
+                key,
+                localLibraryManifestMergeEnabled
+                        ? ProjectSettings.SETTING_GENERIC_VALUE_TRUE
+                        : ProjectSettings.SETTING_GENERIC_VALUE_FALSE);
         appendFileInfo(key, new File(dataPath, "local_library"));
         if (localLibraryManifestMergeEnabled) {
             try {
@@ -1463,7 +1902,10 @@ public class ProjectFilePaths {
                     appendFileInfo(key, new File(manifestPath));
                 }
             } catch (RuntimeException e) {
-                Log.w("ProjectFilePaths", "Failed to append local library manifest signatures for project " + sc_id, e);
+                Log.w(
+                        "ProjectFilePaths",
+                        "Failed to append local library manifest signatures for project " + sc_id,
+                        e);
             }
         }
 
@@ -1475,7 +1917,9 @@ public class ProjectFilePaths {
 
         appendFileInfo(key, new File(EventsHandler.CUSTOM_EVENTS_FILE_PATH));
         appendFileInfo(key, new File(EventsHandler.CUSTOM_LISTENER_FILE_PATH));
-        appendFileInfo(key, new File(SketchwarePaths.getAbsolutePathOf(SketchwarePaths.CUSTOM_COMPONENT_FILE)));
+        appendFileInfo(
+                key,
+                new File(SketchwarePaths.getAbsolutePathOf(SketchwarePaths.CUSTOM_COMPONENT_FILE)));
 
         key.append(isAndroidStudioExport ? '1' : '0');
         appendTextInfo(key, packageName);
@@ -1491,7 +1935,8 @@ public class ProjectFilePaths {
     }
 
     private static void appendTextInfo(StringBuilder key, CharSequence text) {
-        byte[] bytes = text == null ? new byte[0] : text.toString().getBytes(StandardCharsets.UTF_8);
+        byte[] bytes =
+                text == null ? new byte[0] : text.toString().getBytes(StandardCharsets.UTF_8);
         CRC32 crc = new CRC32();
         crc.update(bytes, 0, bytes.length);
         key.append(crc.getValue()).append('|').append(bytes.length).append('|');

@@ -4,15 +4,11 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
-
-import pro.sketchware.beans.ViewBean;
-import pro.sketchware.widgets.CustomScrollView;
-
 import java.util.ArrayList;
-
-import pro.sketchware.activities.editor.view.palette.WidgetPaletteIcon;
-import pro.sketchware.util.ViewUtil;
 import pro.sketchware.R;
+import pro.sketchware.beans.ViewBean;
+import pro.sketchware.util.ViewUtil;
+import pro.sketchware.widgets.CustomScrollView;
 
 public class PaletteFavorite extends LinearLayout {
     private LinearLayout collectionWidgets;

@@ -1,21 +1,18 @@
 package pro.sketchware.core.project;
 
-import pro.sketchware.R;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import pro.sketchware.core.build.ProjectBuilder;
-import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.util.Helper;
+import pro.sketchware.R;
 import pro.sketchware.core.build.BuildProgressReceiver;
 import pro.sketchware.core.build.BuildStage;
-import pro.sketchware.util.LogUtil;
+import pro.sketchware.core.build.ProjectBuilder;
 import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.LogUtil;
 
 public class ProguardHandler {
     public static String ANDROID_PROGUARD_RULES_PATH = createAndroidRules();
@@ -37,47 +34,49 @@ public class ProguardHandler {
         String rulePath = SketchwarePaths.getAndroidProguardRulesPath();
 
         if (!FileUtil.isExistFile(rulePath)) {
-            FileUtil.writeFile(rulePath, """
+            FileUtil.writeFile(
+                    rulePath,
+                    """
                     -dontusemixedcaseclassnames
                     -dontskipnonpubliclibraryclasses
                     -verbose
-                    
+
                     -dontoptimize
-                    
+
                     -keepattributes *Annotation*
                     -keep public class com.google.vending.licensing.ILicensingService
                     -keep public class com.android.vending.licensing.ILicensingService
-                    
+
                     -keepclasseswithmembernames class * {
                         native <methods>;
                     }
-                    
+
                     -keepclassmembers public class * extends android.view.View {
                        void set*(***);
                        *** get*();
                     }
-                    
+
                     -keepclassmembers class * extends android.app.Activity {
                        public void *(android.view.View);
                     }
-                    
+
                     -keepclassmembers enum * {
                         public static **[] values();
                         public static ** valueOf(java.lang.String);
                     }
-                    
+
                     -keepclassmembers class * implements android.os.Parcelable {
                       public static final android.os.Parcelable$Creator CREATOR;
                     }
-                    
+
                     -keepclassmembers class **.R$* {
                         public static <fields>;
                     }
-                    
+
                     -keepclassmembers class * {
                         @android.webkit.JavascriptInterface <methods>;
                     }
-                    
+
                     -dontwarn androidx.arch.**
                     -dontwarn androidx.lifecycle.**
                     -keep class androidx.arch.** { *; }
@@ -92,7 +91,9 @@ public class ProguardHandler {
         String path = SketchwarePaths.getProjectProguardRulesPath(sc_id);
 
         if (!FileUtil.isExistFile(path)) {
-            FileUtil.writeFile(path, """
+            FileUtil.writeFile(
+                    path,
+                    """
                     -repackageclasses
                     -dontwarn
                     -dontnote
@@ -119,7 +120,8 @@ public class ProguardHandler {
         boolean debugFiles = true;
         if (FileUtil.isExistFile(config_path)) {
             try {
-                HashMap<String, String> config = new Gson().fromJson(FileUtil.readFile(config_path), Helper.TYPE_STRING_MAP);
+                HashMap<String, String> config =
+                        new Gson().fromJson(FileUtil.readFile(config_path), Helper.TYPE_STRING_MAP);
 
                 if (!config.containsKey("debug")) return false;
 
@@ -156,7 +158,8 @@ public class ProguardHandler {
         boolean r8Enabled = true;
         if (FileUtil.isExistFile(config_path)) {
             try {
-                var config = new Gson().fromJson(FileUtil.readFile(config_path), Helper.TYPE_STRING_MAP);
+                var config =
+                        new Gson().fromJson(FileUtil.readFile(config_path), Helper.TYPE_STRING_MAP);
 
                 String enabled = config.get("r8");
                 if (enabled == null) {
@@ -222,13 +225,18 @@ public class ProguardHandler {
         FileUtil.writeFile(fm_config_path, new Gson().toJson(fullModeLibs));
     }
 
-    public void start(BuildProgressReceiver progressReceiver, ProjectBuilder builder) throws IOException {
+    public void start(BuildProgressReceiver progressReceiver, ProjectBuilder builder)
+            throws IOException {
         if (isShrinkingEnabled()) {
             if (isR8Enabled()) {
-                progressReceiver.onProgress(Helper.getResString(R.string.build_progress_running_r8_on_classes), BuildStage.SHRINK_WITH_R8);
+                progressReceiver.onProgress(
+                        Helper.getResString(R.string.build_progress_running_r8_on_classes),
+                        BuildStage.SHRINK_WITH_R8);
                 builder.runR8();
             } else {
-                progressReceiver.onProgress(Helper.getResString(R.string.build_progress_proguarding_classes), BuildStage.SHRINK_WITH_PROGUARD);
+                progressReceiver.onProgress(
+                        Helper.getResString(R.string.build_progress_proguarding_classes),
+                        BuildStage.SHRINK_WITH_PROGUARD);
                 builder.runProguard();
             }
         }

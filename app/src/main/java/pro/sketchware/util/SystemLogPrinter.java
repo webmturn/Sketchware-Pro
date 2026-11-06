@@ -3,12 +3,9 @@ package pro.sketchware.util;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.third_party.kellinwood.logging.LogManager;
 import pro.sketchware.third_party.kellinwood.logging.Logger;
-import pro.sketchware.util.LogUtil;
-import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.util.FileUtil;
 
 public class SystemLogPrinter {
 
@@ -21,59 +18,53 @@ public class SystemLogPrinter {
 
     public static void start(String path) {
         // Remove logging in Kellinwood's zipsigner
-        LogManager.setLoggerFactory(category -> new Logger() {
-            @Override
-            public boolean isErrorEnabled() {
-                return false;
-            }
+        LogManager.setLoggerFactory(
+                category ->
+                        new Logger() {
+                            @Override
+                            public boolean isErrorEnabled() {
+                                return false;
+                            }
 
-            @Override
-            public void error(String message) {
-            }
+                            @Override
+                            public void error(String message) {}
 
-            @Override
-            public void error(String message, Throwable t) {
-            }
+                            @Override
+                            public void error(String message, Throwable t) {}
 
-            @Override
-            public boolean isWarnEnabled() {
-                return false;
-            }
+                            @Override
+                            public boolean isWarnEnabled() {
+                                return false;
+                            }
 
-            @Override
-            public void warn(String message) {
-            }
+                            @Override
+                            public void warn(String message) {}
 
-            @Override
-            public void warn(String message, Throwable t) {
-            }
+                            @Override
+                            public void warn(String message, Throwable t) {}
 
-            @Override
-            public boolean isInfoEnabled() {
-                return false;
-            }
+                            @Override
+                            public boolean isInfoEnabled() {
+                                return false;
+                            }
 
-            @Override
-            public void info(String message) {
-            }
+                            @Override
+                            public void info(String message) {}
 
-            @Override
-            public void info(String message, Throwable t) {
-            }
+                            @Override
+                            public void info(String message, Throwable t) {}
 
-            @Override
-            public boolean isDebugEnabled() {
-                return false;
-            }
+                            @Override
+                            public boolean isDebugEnabled() {
+                                return false;
+                            }
 
-            @Override
-            public void debug(String message) {
-            }
+                            @Override
+                            public void debug(String message) {}
 
-            @Override
-            public void debug(String message, Throwable t) {
-            }
-        });
+                            @Override
+                            public void debug(String message, Throwable t) {}
+                        });
 
         // Reset the log file
         FileUtil.writeFile(path, "");

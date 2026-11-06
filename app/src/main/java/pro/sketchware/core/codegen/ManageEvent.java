@@ -1,16 +1,15 @@
 package pro.sketchware.core.codegen;
 
-import pro.sketchware.core.codegen.BuiltinEventLocalization;
 import java.util.ArrayList;
-
+import pro.sketchware.R;
 import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.util.Helper;
-import pro.sketchware.R;
 
 public class ManageEvent {
 
     /**
-     * Used in {@link pro.sketchware.core.codegen.EventRegistry#getEventsForClass(ClassInfo)} to retrieve extra Events of Components.
+     * Used in {@link pro.sketchware.core.codegen.EventRegistry#getEventsForClass(ClassInfo)} to
+     * retrieve extra Events of Components.
      */
     public static void addExtraEvents(ClassInfo classInfo, ArrayList<String> events) {
         if (classInfo.matchesType("RatingBar")) {
@@ -75,8 +74,8 @@ public class ManageEvent {
     }
 
     /**
-     * Used in {@link pro.sketchware.core.codegen.EventRegistry#getListenersForClass(ClassInfo)}
-     * to get extra listeners for Components and Widgets.
+     * Used in {@link pro.sketchware.core.codegen.EventRegistry#getListenersForClass(ClassInfo)} to
+     * get extra listeners for Components and Widgets.
      */
     public static void addExtraListeners(ClassInfo classInfo, ArrayList<String> listeners) {
         if (classInfo.matchesType("RatingBar")) {
@@ -155,7 +154,8 @@ public class ManageEvent {
     }
 
     /**
-     * Used in {@link pro.sketchware.core.codegen.EventRegistry#getEventsForListener(String)} to get extra listeners' Events.
+     * Used in {@link pro.sketchware.core.codegen.EventRegistry#getEventsForListener(String)} to get
+     * extra listeners' Events.
      */
     public static void addEventsForListener(String eventName, ArrayList<String> list) {
         switch (eventName) {
@@ -319,12 +319,18 @@ public class ManageEvent {
             case "onRestoreInstanceState" -> R.drawable.ic_mtrl_warning;
             case "onError" -> R.drawable.ic_mtrl_vid_error;
             case "onVerificationCompleted" -> R.drawable.ic_mtrl_verified_user;
-            case "onSaveInstanceState", "onCreateOptionsMenu", "onCreateContextMenu",
-                 "onContextItemSelected", "onOptionsItemSelected" ->
+            case "onSaveInstanceState",
+                    "onCreateOptionsMenu",
+                    "onCreateContextMenu",
+                    "onContextItemSelected",
+                    "onOptionsItemSelected" ->
                     R.drawable.bg_event_type_activity;
             case "onSuccessLink" -> R.drawable.ic_mtrl_link_check;
-            case "onPatternLockCleared", "onPatternLockProgress", "onPatternLockStarted",
-                 "onPatternLockComplete" -> R.drawable.ic_mtrl_pattern;
+            case "onPatternLockCleared",
+                    "onPatternLockProgress",
+                    "onPatternLockStarted",
+                    "onPatternLockComplete" ->
+                    R.drawable.ic_mtrl_pattern;
             case "onAccountPickerCancelled" -> R.drawable.ic_mtrl_user_delete;
             case "onVerificationFailed" -> R.drawable.ic_mtrl_gpp_bad;
             case "onGoogleSignIn" -> R.drawable.event_google_signin;
@@ -334,9 +340,17 @@ public class ManageEvent {
             case "signInWithPhoneAuthComplete", "onCodeSent" -> R.drawable.ic_mtrl_email_sent;
             case "onRatingChanged" -> R.drawable.ic_mtrl_star;
             case "onLetterSelected" -> R.drawable.ic_mtrl_abc_click;
-            case "onScrollChanged", "onPageChanged", "onPageScrolled", "onRecyclerScrolled",
-                 "onRecyclerScrollChanged", "onNavigationItemSelected", "onScrolled",
-                 "onTabUnselected", "onPageSelected", "onTabSelected", "onTabReselected" ->
+            case "onScrollChanged",
+                    "onPageChanged",
+                    "onPageScrolled",
+                    "onRecyclerScrolled",
+                    "onRecyclerScrollChanged",
+                    "onNavigationItemSelected",
+                    "onScrolled",
+                    "onTabUnselected",
+                    "onPageSelected",
+                    "onTabSelected",
+                    "onTabReselected" ->
                     R.drawable.ic_mtrl_touch_long;
             case "onPrepared" -> R.drawable.ic_mtrl_vid_prepared;
             case "onTabAdded" -> R.drawable.ic_mtrl_post_added;
@@ -352,35 +366,75 @@ public class ManageEvent {
      */
     public static String getEventDescription(String eventName) {
         return switch (eventName) {
-            case "onScrolled", "onRecyclerScrolled", "onFailureLink" -> BuiltinEventLocalization.getName(eventName);
+            case "onScrolled", "onRecyclerScrolled", "onFailureLink" ->
+                    BuiltinEventLocalization.getName(eventName);
             case "onSaveInstanceState" -> Helper.getResString(R.string.event_onsaveinstancestate);
             case "onCreateOptionsMenu" -> Helper.getResString(R.string.event_oncreateoptionsmenu);
-            case "onVerificationCompleted", "onRecyclerScrollChanged", "onScrollChanged" -> BuiltinEventLocalization.getName(eventName);
+            case "onVerificationCompleted", "onRecyclerScrollChanged", "onScrollChanged" ->
+                    BuiltinEventLocalization.getName(eventName);
             case "onCreateContextMenu" -> Helper.getResString(R.string.event_oncreatecontextmenu);
-            case "onRestoreInstanceState" -> Helper.getResString(R.string.event_onrestoreinstancestate);
-            case "onContextItemSelected" -> Helper.getResString(R.string.event_oncontextitemselected);
-            case "onSuccessLink", "onAccountPickerCancelled" -> BuiltinEventLocalization.getName(eventName);
+            case "onRestoreInstanceState" ->
+                    Helper.getResString(R.string.event_onrestoreinstancestate);
+            case "onContextItemSelected" ->
+                    Helper.getResString(R.string.event_oncontextitemselected);
+            case "onSuccessLink", "onAccountPickerCancelled" ->
+                    BuiltinEventLocalization.getName(eventName);
             case "onFragmentAdded" -> Helper.getResString(R.string.event_onfragmentadded);
             case "onPageChanged" -> BuiltinEventLocalization.getName("onPageScrollStateChanged");
-            case "onOptionsItemSelected" -> Helper.getResString(R.string.event_onoptionsitemselected);
+            case "onOptionsItemSelected" ->
+                    Helper.getResString(R.string.event_onoptionsitemselected);
             case "onBannerAdClicked" -> BuiltinEventLocalization.getName("onAdClicked");
             case "onBannerAdLoaded" -> BuiltinEventLocalization.getName("onAdLoaded");
             case "onTabAdded" -> Helper.getResString(R.string.event_ontabadded);
-            case "onCompleteRegister", "onBannerAdFailedToLoad", "onInterstitialAdFailedToLoad",
-                 "onRewardAdLoaded", "onRewardAdFailedToLoad" -> BuiltinEventLocalization.getName(eventName);
+            case "onCompleteRegister",
+                    "onBannerAdFailedToLoad",
+                    "onInterstitialAdFailedToLoad",
+                    "onRewardAdLoaded",
+                    "onRewardAdFailedToLoad" ->
+                    BuiltinEventLocalization.getName(eventName);
             case "onBannerAdClosed" -> BuiltinEventLocalization.getName("onAdClosed");
-            case "onUpdateProfileComplete", "onEmailVerificationSent", "onDateChanged",
-                 "onDeleteUserComplete", "onNavigationItemSelected", "onDateSet", "onCompletion",
-                 "onPatternLockCleared", "onQueryTextChanged", "onUpdateEmailComplete", "onError",
-                 "onPageScrolled", "onVerificationFailed", "onGoogleSignIn", "onAccountPicker",
-                 "onTimeSet", "signInWithPhoneAuthComplete", "onRatingChanged",
-                 "onPatternLockProgress", "onTabSelected", "onTabReselected", "onLetterSelected",
-                 "onTabUnselected", "onPageSelected", "onPrepared", "onQueryTextSubmit",
-                 "onCodeSent", "onTimeChanged", "onUpdatePasswordComplete",
-                 "onAdDismissedFullScreenContent", "onAdFailedToShowFullScreenContent",
-                 "onAdShowedFullScreenContent", "onUserEarnedReward", "onSQLiteError",
-                 "onPatternLockStarted", "onPatternLockComplete", "onPageScrollStateChanged",
-                 "onAdLoaded", "onAdOpened", "onAdClicked", "onAdClosed" -> BuiltinEventLocalization.getName(eventName);
+            case "onUpdateProfileComplete",
+                    "onEmailVerificationSent",
+                    "onDateChanged",
+                    "onDeleteUserComplete",
+                    "onNavigationItemSelected",
+                    "onDateSet",
+                    "onCompletion",
+                    "onPatternLockCleared",
+                    "onQueryTextChanged",
+                    "onUpdateEmailComplete",
+                    "onError",
+                    "onPageScrolled",
+                    "onVerificationFailed",
+                    "onGoogleSignIn",
+                    "onAccountPicker",
+                    "onTimeSet",
+                    "signInWithPhoneAuthComplete",
+                    "onRatingChanged",
+                    "onPatternLockProgress",
+                    "onTabSelected",
+                    "onTabReselected",
+                    "onLetterSelected",
+                    "onTabUnselected",
+                    "onPageSelected",
+                    "onPrepared",
+                    "onQueryTextSubmit",
+                    "onCodeSent",
+                    "onTimeChanged",
+                    "onUpdatePasswordComplete",
+                    "onAdDismissedFullScreenContent",
+                    "onAdFailedToShowFullScreenContent",
+                    "onAdShowedFullScreenContent",
+                    "onUserEarnedReward",
+                    "onSQLiteError",
+                    "onPatternLockStarted",
+                    "onPatternLockComplete",
+                    "onPageScrollStateChanged",
+                    "onAdLoaded",
+                    "onAdOpened",
+                    "onAdClicked",
+                    "onAdClosed" ->
+                    BuiltinEventLocalization.getName(eventName);
             default -> EventsHandler.getDesc(eventName);
         };
     }
@@ -388,270 +442,358 @@ public class ManageEvent {
     public static String getExtraEventCode(String targetId, String eventName, String eventLogic) {
         String code;
         String resetInterstitialAd = targetId.isEmpty() ? "" : targetId + " = null;\r\n";
-        String setAdFullScreenContentCallback = targetId.isEmpty() ? "\r\n" : targetId + " = _param1;\r\n" +
-                targetId + ".setFullScreenContentCallback(_" + targetId + "_full_screen_content_callback);\r\n" +
-                eventLogic + "\r\n";
+        String setAdFullScreenContentCallback =
+                targetId.isEmpty()
+                        ? "\r\n"
+                        : targetId
+                                + " = _param1;\r\n"
+                                + targetId
+                                + ".setFullScreenContentCallback(_"
+                                + targetId
+                                + "_full_screen_content_callback);\r\n"
+                                + eventLogic
+                                + "\r\n";
         return switch (eventName) {
-            case "onUpdateProfileComplete", "onEmailVerificationSent", "onDeleteUserComplete",
-                 "onUpdateEmailComplete", "onUpdatePasswordComplete" -> "@Override\r\n" +
-                    "public void onComplete(Task<Void> _param1) {\r\n" +
-                    "final boolean _success = _param1.isSuccessful();\r\n" +
-                    "final String _errorMessage = _param1.getException() != null ? _param1.getException().getMessage() : \"\";\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onScrolled" -> "@Override\r\n" +
-                    "public void onScroll(AbsListView abs, int _firstVisibleItem, int _visibleItemCount, int _totalItemCount) {\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onDateChanged" -> "@Override\r\n" +
-                    "public void onDateChanged(DatePicker _datePicker, int _year, int _month, int _day) {\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onFailureLink" -> "@Override\r\n" +
-                    "public void onFailure(Exception _e) {\r\n" +
-                    "final String _errorMessage = _e.getMessage();\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onNavigationItemSelected" -> "@Override\r\n" +
-                    "public boolean onNavigationItemSelected(MenuItem item) {\r\n" +
-                    "final int _itemId = item.getItemId();\r\n" +
-                    eventLogic + "\r\n" +
-                    "return true;\r\n" +
-                    "}";
-            case "onDateSet" -> "@Override\r\n" +
-                    "public void onDateSet(DatePicker _datePicker, int _year, int _month, int _day) {\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onCompletion" -> "@Override\r\n" +
-                    "public void onCompletion(MediaPlayer _mediaPlayer) {\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onSaveInstanceState" -> "@Override\r\n" +
-                    "protected void onSaveInstanceState(Bundle outState) {\r\n" +
-                    eventLogic + "\r\n" +
-                    "super.onSaveInstanceState(outState);\r\n" +
-                    "}";
-            case "onCreateOptionsMenu" -> "@Override\r\n" +
-                    "public boolean onCreateOptionsMenu(Menu menu) {\r\n" +
-                    eventLogic + "\r\n" +
-                    "return super.onCreateOptionsMenu(menu);\r\n" +
-                    "}";
-            case "onQueryTextChanged" -> "@Override\r\n" +
-                    "public boolean onQueryTextChange(String _charSeq) {\r\n" +
-                    eventLogic + "\r\n" +
-                    "return true;\r\n" +
-                    "}";
-            case "onError" -> "@Override\r\n" +
-                    "public boolean onError(MediaPlayer _mediaPlayer, int _what, int _extra) {\r\n" +
-                    eventLogic + "\r\n" +
-                    "return true;\r\n" +
-                    "}";
-            case "onVerificationCompleted" -> "@Override\r\n" +
-                    "public void onVerificationCompleted(PhoneAuthCredential _credential) {\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onRecyclerScrollChanged" -> "@Override\r\n" +
-                    "public void onScrollStateChanged(RecyclerView recyclerView, int _scrollState) {\r\n" +
-                    "super.onScrollStateChanged(recyclerView, _scrollState);\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onCreateContextMenu" -> "@Override\r\n" +
-                    "public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {\r\n" +
-                    eventLogic + "\r\n" +
-                    "super.onCreateContextMenu(menu, view, menuInfo);\r\n" +
-                    "}";
-            case "onRestoreInstanceState" -> "@Override\r\n" +
-                    "protected void onRestoreInstanceState(Bundle savedInstanceState) {\r\n" +
-                    eventLogic + "\r\n" +
-                    "super.onRestoreInstanceState(savedInstanceState);\r\n" +
-                    "}";
-            case "onContextItemSelected" -> "@Override\r\n" +
-                    "public boolean onContextItemSelected(MenuItem item) {\r\n" +
-                    eventLogic + "\r\n" +
-                    "return super.onContextItemSelected(item);\r\n" +
-                    "}";
-            case "onRecyclerScrolled" -> "@Override\r\n" +
-                    "public void onScrolled(RecyclerView recyclerView, int _offsetX, int _offsetY) {\r\n" +
-                    "super.onScrolled(recyclerView, _offsetX, _offsetY);\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onPatternLockCleared" -> "@Override\r\n" +
-                    "public void onCleared() {\r\n" +
-                    eventLogic + "\n" +
-                    "}";
-            case "onPageScrolled" -> "@Override\r\n" +
-                    "public void onPageScrolled(int _position, float _positionOffset, int _positionOffsetPixels) {\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onVerificationFailed" -> "@Override\r\n" +
-                    "public void onVerificationFailed(FirebaseException e) {\r\n" +
-                    "final String _exception = e.getMessage();\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onGoogleSignIn" -> "@Override\r\n" +
-                    "public void onComplete(Task<AuthResult> task) {\r\n" +
-                    "final boolean _success = task.isSuccessful();\r\n" +
-                    "final String _errorMessage = task.getException() != null ? task.getException().getMessage() : \"\";\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onFragmentAdded" -> buildMethodWithFallbackReturn("""
+            case "onUpdateProfileComplete",
+                    "onEmailVerificationSent",
+                    "onDeleteUserComplete",
+                    "onUpdateEmailComplete",
+                    "onUpdatePasswordComplete" ->
+                    "@Override\r\n"
+                            + "public void onComplete(Task<Void> _param1) {\r\n"
+                            + "final boolean _success = _param1.isSuccessful();\r\n"
+                            + "final String _errorMessage = _param1.getException() != null ? _param1.getException().getMessage() : \"\";\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onScrolled" ->
+                    "@Override\r\n"
+                            + "public void onScroll(AbsListView abs, int _firstVisibleItem, int _visibleItemCount, int _totalItemCount) {\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onDateChanged" ->
+                    "@Override\r\n"
+                            + "public void onDateChanged(DatePicker _datePicker, int _year, int _month, int _day) {\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onFailureLink" ->
+                    "@Override\r\n"
+                            + "public void onFailure(Exception _e) {\r\n"
+                            + "final String _errorMessage = _e.getMessage();\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onNavigationItemSelected" ->
+                    "@Override\r\n"
+                            + "public boolean onNavigationItemSelected(MenuItem item) {\r\n"
+                            + "final int _itemId = item.getItemId();\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "return true;\r\n"
+                            + "}";
+            case "onDateSet" ->
+                    "@Override\r\n"
+                            + "public void onDateSet(DatePicker _datePicker, int _year, int _month, int _day) {\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onCompletion" ->
+                    "@Override\r\n"
+                            + "public void onCompletion(MediaPlayer _mediaPlayer) {\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onSaveInstanceState" ->
+                    "@Override\r\n"
+                            + "protected void onSaveInstanceState(Bundle outState) {\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "super.onSaveInstanceState(outState);\r\n"
+                            + "}";
+            case "onCreateOptionsMenu" ->
+                    "@Override\r\n"
+                            + "public boolean onCreateOptionsMenu(Menu menu) {\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "return super.onCreateOptionsMenu(menu);\r\n"
+                            + "}";
+            case "onQueryTextChanged" ->
+                    "@Override\r\n"
+                            + "public boolean onQueryTextChange(String _charSeq) {\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "return true;\r\n"
+                            + "}";
+            case "onError" ->
+                    "@Override\r\n"
+                            + "public boolean onError(MediaPlayer _mediaPlayer, int _what, int _extra) {\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "return true;\r\n"
+                            + "}";
+            case "onVerificationCompleted" ->
+                    "@Override\r\n"
+                            + "public void onVerificationCompleted(PhoneAuthCredential _credential) {\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onRecyclerScrollChanged" ->
+                    "@Override\r\n"
+                            + "public void onScrollStateChanged(RecyclerView recyclerView, int _scrollState) {\r\n"
+                            + "super.onScrollStateChanged(recyclerView, _scrollState);\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onCreateContextMenu" ->
+                    "@Override\r\n"
+                            + "public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "super.onCreateContextMenu(menu, view, menuInfo);\r\n"
+                            + "}";
+            case "onRestoreInstanceState" ->
+                    "@Override\r\n"
+                            + "protected void onRestoreInstanceState(Bundle savedInstanceState) {\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "super.onRestoreInstanceState(savedInstanceState);\r\n"
+                            + "}";
+            case "onContextItemSelected" ->
+                    "@Override\r\n"
+                            + "public boolean onContextItemSelected(MenuItem item) {\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "return super.onContextItemSelected(item);\r\n"
+                            + "}";
+            case "onRecyclerScrolled" ->
+                    "@Override\r\n"
+                            + "public void onScrolled(RecyclerView recyclerView, int _offsetX, int _offsetY) {\r\n"
+                            + "super.onScrolled(recyclerView, _offsetX, _offsetY);\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onPatternLockCleared" ->
+                    "@Override\r\n" + "public void onCleared() {\r\n" + eventLogic + "\n" + "}";
+            case "onPageScrolled" ->
+                    "@Override\r\n"
+                            + "public void onPageScrolled(int _position, float _positionOffset, int _positionOffsetPixels) {\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onVerificationFailed" ->
+                    "@Override\r\n"
+                            + "public void onVerificationFailed(FirebaseException e) {\r\n"
+                            + "final String _exception = e.getMessage();\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onGoogleSignIn" ->
+                    "@Override\r\n"
+                            + "public void onComplete(Task<AuthResult> task) {\r\n"
+                            + "final boolean _success = task.isSuccessful();\r\n"
+                            + "final String _errorMessage = task.getException() != null ? task.getException().getMessage() : \"\";\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onFragmentAdded" ->
+                    buildMethodWithFallbackReturn(
+                            """
                     @Override
                     public Fragment getItem(int _position) {
                         %s
                     }
-                    """, eventLogic, "new Fragment()");
-            case "onTimeSet" -> "@Override\r\n" +
-                    "public void onTimeSet(TimePicker _timePicker, int _hour, int _minute) {\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onPageChanged" -> "@Override\r\n" +
-                    "public void onPageScrollStateChanged(int _scrollState) {\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "signInWithPhoneAuthComplete" -> "@Override\r\n" +
-                    "public void onComplete(Task<AuthResult> task) {\r\n" +
-                    "final boolean _success = task.isSuccessful();\r\n" +
-                    "final String _errorMessage = task.getException() != null ? task.getException().getMessage() : \"\";\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onRatingChanged" -> "@Override\r\n" +
-                    "public void onRatingChanged(RatingBar _ratingBar, float _value, boolean _fromUser) {\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onPatternLockProgress" -> "@Override\r\n" +
-                    "public void onProgress(List<PatternLockView.Dot> _pattern) {\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onOptionsItemSelected" -> "@Override\r\n" +
-                    "public boolean onOptionsItemSelected(MenuItem item) {\r\n" +
-                    "final int _id = item.getItemId();\r\n" +
-                    "final String _title = (String) item.getTitle();\r\n" +
-                    eventLogic + "\r\n" +
-                    "return super.onOptionsItemSelected(item);\r\n" +
-                    "}";
-            case "onPatternLockStarted" -> "@Override\r\n" +
-                    "public void onStarted() {\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onPatternLockComplete" -> "@Override\r\n" +
-                    "public void onComplete(List<PatternLockView.Dot> _pattern) {\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onTabSelected" -> "@Override\r\n" +
-                    "public void onTabSelected(TabLayout.Tab tab) {\r\n" +
-                    "final int _position = tab.getPosition();\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onTabReselected" -> "@Override\r\n" +
-                    "public void onTabReselected(TabLayout.Tab tab) {\r\n" +
-                    "final int _position = tab.getPosition();\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onLetterSelected" -> "@Override\r\n" +
-                    "public void onLetterSelected(String _index) {\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onTabUnselected" -> "@Override\r\n" +
-                    "public void onTabUnselected(TabLayout.Tab tab) {\r\n" +
-                    "final int _position = tab.getPosition();\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onPageSelected" -> "@Override\r\n" +
-                    "public void onPageSelected(int _position) {\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onPrepared" -> "@Override\r\n" +
-                    "public void onPrepared(MediaPlayer _mediaPlayer) {\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onQueryTextSubmit" -> "@Override\r\n" +
-                    "public boolean onQueryTextSubmit(String _charSeq) {\r\n" +
-                    eventLogic + "\r\n" +
-                    "return true;\r\n" +
-                    "}";
-            case "onTabAdded" -> buildMethodWithFallbackReturn("""
+                    """,
+                            eventLogic, "new Fragment()");
+            case "onTimeSet" ->
+                    "@Override\r\n"
+                            + "public void onTimeSet(TimePicker _timePicker, int _hour, int _minute) {\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onPageChanged" ->
+                    "@Override\r\n"
+                            + "public void onPageScrollStateChanged(int _scrollState) {\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "signInWithPhoneAuthComplete" ->
+                    "@Override\r\n"
+                            + "public void onComplete(Task<AuthResult> task) {\r\n"
+                            + "final boolean _success = task.isSuccessful();\r\n"
+                            + "final String _errorMessage = task.getException() != null ? task.getException().getMessage() : \"\";\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onRatingChanged" ->
+                    "@Override\r\n"
+                            + "public void onRatingChanged(RatingBar _ratingBar, float _value, boolean _fromUser) {\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onPatternLockProgress" ->
+                    "@Override\r\n"
+                            + "public void onProgress(List<PatternLockView.Dot> _pattern) {\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onOptionsItemSelected" ->
+                    "@Override\r\n"
+                            + "public boolean onOptionsItemSelected(MenuItem item) {\r\n"
+                            + "final int _id = item.getItemId();\r\n"
+                            + "final String _title = (String) item.getTitle();\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "return super.onOptionsItemSelected(item);\r\n"
+                            + "}";
+            case "onPatternLockStarted" ->
+                    "@Override\r\n" + "public void onStarted() {\r\n" + eventLogic + "\r\n" + "}";
+            case "onPatternLockComplete" ->
+                    "@Override\r\n"
+                            + "public void onComplete(List<PatternLockView.Dot> _pattern) {\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onTabSelected" ->
+                    "@Override\r\n"
+                            + "public void onTabSelected(TabLayout.Tab tab) {\r\n"
+                            + "final int _position = tab.getPosition();\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onTabReselected" ->
+                    "@Override\r\n"
+                            + "public void onTabReselected(TabLayout.Tab tab) {\r\n"
+                            + "final int _position = tab.getPosition();\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onLetterSelected" ->
+                    "@Override\r\n"
+                            + "public void onLetterSelected(String _index) {\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onTabUnselected" ->
+                    "@Override\r\n"
+                            + "public void onTabUnselected(TabLayout.Tab tab) {\r\n"
+                            + "final int _position = tab.getPosition();\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onPageSelected" ->
+                    "@Override\r\n"
+                            + "public void onPageSelected(int _position) {\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onPrepared" ->
+                    "@Override\r\n"
+                            + "public void onPrepared(MediaPlayer _mediaPlayer) {\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onQueryTextSubmit" ->
+                    "@Override\r\n"
+                            + "public boolean onQueryTextSubmit(String _charSeq) {\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "return true;\r\n"
+                            + "}";
+            case "onTabAdded" ->
+                    buildMethodWithFallbackReturn(
+                            """
                     @Override
                     public CharSequence getPageTitle(int _position) {
                         %s
                     }
-                    """, eventLogic, "\"\"");
-            case "onCompleteRegister" -> "@Override\r\n" +
-                    "public void onComplete(Task<String> task) {\r\n" +
-                    "final boolean _success = task.isSuccessful();\r\n" +
-                    "final String _token = task.isSuccessful() ? task.getResult() : \"\";\r\n" +
-                    "final String _errorMessage = task.getException() != null ? task.getException().getMessage() : \"\";\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onCodeSent" -> "@Override\r\n" +
-                    "public void onCodeSent(String _verificationId, PhoneAuthProvider.ForceResendingToken _token) {\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onTimeChanged" -> "@Override\r\n" +
-                    "public void onTimeChanged(TimePicker _timePicker, int _hour, int _minute) {\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onScrollChanged" -> "@Override\r\n" +
-                    "public void onScrollStateChanged(AbsListView abs, int _scrollState) {\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
+                    """,
+                            eventLogic, "\"\"");
+            case "onCompleteRegister" ->
+                    "@Override\r\n"
+                            + "public void onComplete(Task<String> task) {\r\n"
+                            + "final boolean _success = task.isSuccessful();\r\n"
+                            + "final String _token = task.isSuccessful() ? task.getResult() : \"\";\r\n"
+                            + "final String _errorMessage = task.getException() != null ? task.getException().getMessage() : \"\";\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onCodeSent" ->
+                    "@Override\r\n"
+                            + "public void onCodeSent(String _verificationId, PhoneAuthProvider.ForceResendingToken _token) {\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onTimeChanged" ->
+                    "@Override\r\n"
+                            + "public void onTimeChanged(TimePicker _timePicker, int _hour, int _minute) {\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onScrollChanged" ->
+                    "@Override\r\n"
+                            + "public void onScrollStateChanged(AbsListView abs, int _scrollState) {\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
             case "onInterstitialAdLoaded" -> {
                 code = setAdFullScreenContentCallback;
-                yield "@Override\r\n" +
-                        "public void onAdLoaded(InterstitialAd _param1) {\r\n" +
-                        code +
-                        "}";
+                yield "@Override\r\n"
+                        + "public void onAdLoaded(InterstitialAd _param1) {\r\n"
+                        + code
+                        + "}";
             }
-            case "onBannerAdFailedToLoad", "onInterstitialAdFailedToLoad",
-                 "onRewardAdFailedToLoad" -> "@Override\r\n" +
-                    "public void onAdFailedToLoad(LoadAdError _param1) {\r\n" +
-                    "final int _errorCode = _param1.getCode();\r\n" +
-                    "final String _errorMessage = _param1.getMessage();\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
+            case "onBannerAdFailedToLoad",
+                    "onInterstitialAdFailedToLoad",
+                    "onRewardAdFailedToLoad" ->
+                    "@Override\r\n"
+                            + "public void onAdFailedToLoad(LoadAdError _param1) {\r\n"
+                            + "final int _errorCode = _param1.getCode();\r\n"
+                            + "final String _errorMessage = _param1.getMessage();\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
             case "onAdDismissedFullScreenContent" -> {
                 code = resetInterstitialAd;
-                yield "@Override\r\n" +
-                        "public void onAdDismissedFullScreenContent() {\r\n" +
-                        code +
-                        eventLogic + "\r\n" +
-                        "}";
+                yield "@Override\r\n"
+                        + "public void onAdDismissedFullScreenContent() {\r\n"
+                        + code
+                        + eventLogic
+                        + "\r\n"
+                        + "}";
             }
             case "onAdFailedToShowFullScreenContent" -> {
                 code = resetInterstitialAd;
-                yield "@Override\r\n" +
-                        "public void onAdFailedToShowFullScreenContent(AdError _adError) {\r\n" +
-                        code +
-                        "final int _errorCode = _adError.getCode();\r\n" +
-                        "final String _errorMessage = _adError.getMessage();\r\n" +
-                        eventLogic + "\r\n" +
-                        "}";
+                yield "@Override\r\n"
+                        + "public void onAdFailedToShowFullScreenContent(AdError _adError) {\r\n"
+                        + code
+                        + "final int _errorCode = _adError.getCode();\r\n"
+                        + "final String _errorMessage = _adError.getMessage();\r\n"
+                        + eventLogic
+                        + "\r\n"
+                        + "}";
             }
-            case "onAdShowedFullScreenContent" -> "@Override\r\n" +
-                    "public void onAdShowedFullScreenContent() {\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onBannerAdClicked" -> "@Override\r\n" +
-                    "public void onAdClicked() {\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onBannerAdClosed" -> "@Override\r\n" +
-                    "public void onAdClosed() {\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onBannerAdLoaded" -> "@Override\r\n" +
-                    "public void onAdLoaded() {\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
-            case "onBannerAdOpened" -> "@Override\r\n" +
-                    "public void onAdOpened() {\r\n" +
-                    eventLogic + "\r\n" +
-                    "}";
+            case "onAdShowedFullScreenContent" ->
+                    "@Override\r\n"
+                            + "public void onAdShowedFullScreenContent() {\r\n"
+                            + eventLogic
+                            + "\r\n"
+                            + "}";
+            case "onBannerAdClicked" ->
+                    "@Override\r\n" + "public void onAdClicked() {\r\n" + eventLogic + "\r\n" + "}";
+            case "onBannerAdClosed" ->
+                    "@Override\r\n" + "public void onAdClosed() {\r\n" + eventLogic + "\r\n" + "}";
+            case "onBannerAdLoaded" ->
+                    "@Override\r\n" + "public void onAdLoaded() {\r\n" + eventLogic + "\r\n" + "}";
+            case "onBannerAdOpened" ->
+                    "@Override\r\n" + "public void onAdOpened() {\r\n" + eventLogic + "\r\n" + "}";
             case "onRewardAdLoaded" -> {
                 code = setAdFullScreenContentCallback;
-                yield "@Override\r\n" +
-                        "public void onAdLoaded(RewardedAd _param1) {\r\n" +
-                        code +
-                        "}";
+                yield "@Override\r\n"
+                        + "public void onAdLoaded(RewardedAd _param1) {\r\n"
+                        + code
+                        + "}";
             }
             case "onUserEarnedReward" -> eventLogic;
             case "onSQLiteError" -> eventLogic;
@@ -660,191 +802,279 @@ public class ManageEvent {
     }
 
     /**
-     * @return Code of extra listeners, used in {@link pro.sketchware.core.codegen.ComponentCodeGenerator#getListenerCode(String, String, String)}
+     * @return Code of extra listeners, used in {@link
+     *     pro.sketchware.core.codegen.ComponentCodeGenerator#getListenerCode(String, String,
+     *     String)}
      */
-    public static String getExtraListenerCode(String listenerName, String targetId, String listenerLogic) {
+    public static String getExtraListenerCode(
+            String listenerName, String targetId, String listenerLogic) {
         return switch (listenerName) {
             case "OnCompletionListener" ->
-                    targetId + ".setOnCompletionListener(new MediaPlayer.OnCompletionListener() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "});";
+                    targetId
+                            + ".setOnCompletionListener(new MediaPlayer.OnCompletionListener() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "});";
             case "OnDateSetListener" ->
-                    "public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {\r\n" +
-                            "@Override\r\n" +
-                            "public Dialog onCreateDialog(Bundle savedInstanceState) {\r\n" +
-                            "final Calendar c = Calendar.getInstance();\r\n" +
-                            "int year = c.get(Calendar.YEAR);\r\n" +
-                            "int month = c.get(Calendar.MONTH);\r\n" +
-                            "int day = c.get(Calendar.DAY_OF_MONTH);\r\n" +
-                            "return new DatePickerDialog(getActivity(), this, year, month, day);\r\n" +
-                            "}\r\n" +
-                            listenerLogic + "\r\n" +
-                            "}";
+                    "public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {\r\n"
+                            + "@Override\r\n"
+                            + "public Dialog onCreateDialog(Bundle savedInstanceState) {\r\n"
+                            + "final Calendar c = Calendar.getInstance();\r\n"
+                            + "int year = c.get(Calendar.YEAR);\r\n"
+                            + "int month = c.get(Calendar.MONTH);\r\n"
+                            + "int day = c.get(Calendar.DAY_OF_MONTH);\r\n"
+                            + "return new DatePickerDialog(getActivity(), this, year, month, day);\r\n"
+                            + "}\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "}";
             case "OnQueryTextListener" ->
-                    targetId + ".setOnQueryTextListener(new SearchView.OnQueryTextListener() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "});";
+                    targetId
+                            + ".setOnQueryTextListener(new SearchView.OnQueryTextListener() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "});";
             case "OnVerificationStateChangedListener" ->
-                    targetId + " = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "};";
+                    targetId
+                            + " = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "};";
             case "OnScrollListener" ->
-                    targetId + ".setOnScrollListener(new AbsListView.OnScrollListener() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "});";
+                    targetId
+                            + ".setOnScrollListener(new AbsListView.OnScrollListener() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "});";
             case "authsignInWithPhoneAuth" ->
-                    targetId + "_phoneAuthListener = new OnCompleteListener<AuthResult>() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "};";
+                    targetId
+                            + "_phoneAuthListener = new OnCompleteListener<AuthResult>() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "};";
             case "FragmentStatePagerAdapter" -> {
-                String className = ComponentCodeGenerator.getAdapterClassName(targetId + "Fragment", false);
-                yield "public class " + className + " extends FragmentStatePagerAdapter {\r\n" +
-                        "// This class is deprecated, you should migrate to ViewPager2:\r\n" +
-                        "// https://developer.android.com/reference/androidx/viewpager2/widget/ViewPager2\r\n" +
-                        "Context context;\r\n" +
-                        "int tabCount;\r\n" +
-                        "\r\n" +
-                        "public " + className + "(Context context, FragmentManager manager) {\r\n" +
-                        "super(manager);\r\n" +
-                        "this.context = context;\r\n" +
-                        "}\r\n" +
-                        "\r\n" +
-                        "public void setTabCount(int tabCount) {\r\n" +
-                        "this.tabCount = tabCount;\r\n" +
-                        "}\r\n" +
-                        "\r\n" +
-                        "@Override\r\n" +
-                        "public int getCount() {\r\n" +
-                        "return tabCount;\r\n" +
-                        "}\r\n" +
-                        "\r\n" +
-                        listenerLogic + "\r\n" +
-                        "}";
+                String className =
+                        ComponentCodeGenerator.getAdapterClassName(targetId + "Fragment", false);
+                yield "public class "
+                        + className
+                        + " extends FragmentStatePagerAdapter {\r\n"
+                        + "// This class is deprecated, you should migrate to ViewPager2:\r\n"
+                        + "// https://developer.android.com/reference/androidx/viewpager2/widget/ViewPager2\r\n"
+                        + "Context context;\r\n"
+                        + "int tabCount;\r\n"
+                        + "\r\n"
+                        + "public "
+                        + className
+                        + "(Context context, FragmentManager manager) {\r\n"
+                        + "super(manager);\r\n"
+                        + "this.context = context;\r\n"
+                        + "}\r\n"
+                        + "\r\n"
+                        + "public void setTabCount(int tabCount) {\r\n"
+                        + "this.tabCount = tabCount;\r\n"
+                        + "}\r\n"
+                        + "\r\n"
+                        + "@Override\r\n"
+                        + "public int getCount() {\r\n"
+                        + "return tabCount;\r\n"
+                        + "}\r\n"
+                        + "\r\n"
+                        + listenerLogic
+                        + "\r\n"
+                        + "}";
             }
             case "OnTimeSetListener" ->
-                    targetId + "_listener = new TimePickerDialog.OnTimeSetListener() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "};";
+                    targetId
+                            + "_listener = new TimePickerDialog.OnTimeSetListener() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "};";
             case "OnFailureListener" ->
-                    targetId + "_onFailureLink = new OnFailureListener() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "};";
+                    targetId
+                            + "_onFailureLink = new OnFailureListener() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "};";
             case "authUpdatePasswordComplete" ->
-                    targetId + "_updatePasswordListener = new OnCompleteListener<Void>() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "};";
+                    targetId
+                            + "_updatePasswordListener = new OnCompleteListener<Void>() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "};";
             case "OnGridItemClickListener" ->
-                    targetId + ".setOnItemClickListener(new AdapterView.OnItemClickListener() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "});";
+                    targetId
+                            + ".setOnItemClickListener(new AdapterView.OnItemClickListener() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "});";
             case "OnRecyclerScrollListener" ->
-                    targetId + ".addOnScrollListener(new RecyclerView.OnScrollListener() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "});";
+                    targetId
+                            + ".addOnScrollListener(new RecyclerView.OnScrollListener() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "});";
             case "OnTimeChangeListener" ->
-                    targetId + ".setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "});";
+                    targetId
+                            + ".setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "});";
             case "authDeleteUserComplete" ->
-                    targetId + "_deleteUserListener = new OnCompleteListener<Void>() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "};";
+                    targetId
+                            + "_deleteUserListener = new OnCompleteListener<Void>() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "};";
             case "authUpdateProfileComplete" ->
-                    targetId + "_updateProfileListener = new OnCompleteListener<Void>() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "};";
+                    targetId
+                            + "_updateProfileListener = new OnCompleteListener<Void>() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "};";
             case "OnPageChangeListener" ->
-                    targetId + ".addOnPageChangeListener(new ViewPager.OnPageChangeListener() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "});";
+                    targetId
+                            + ".addOnPageChangeListener(new ViewPager.OnPageChangeListener() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "});";
             case "OnErrorListener" ->
-                    targetId + ".setOnErrorListener(new MediaPlayer.OnErrorListener() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "});";
+                    targetId
+                            + ".setOnErrorListener(new MediaPlayer.OnErrorListener() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "});";
             case "authEmailVerificationSent" ->
-                    targetId + "_emailVerificationSentListener = new OnCompleteListener<Void>() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "};";
+                    targetId
+                            + "_emailVerificationSentListener = new OnCompleteListener<Void>() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "};";
             case "authUpdateEmailComplete" ->
-                    targetId + "_updateEmailListener = new OnCompleteListener<Void>() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "};";
+                    targetId
+                            + "_updateEmailListener = new OnCompleteListener<Void>() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "};";
             case "OnPreparedListener" ->
-                    targetId + ".setOnPreparedListener(new MediaPlayer.OnPreparedListener() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "});";
+                    targetId
+                            + ".setOnPreparedListener(new MediaPlayer.OnPreparedListener() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "});";
             case "OnNavigationItemSelected" ->
-                    targetId + ".setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "});";
+                    targetId
+                            + ".setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "});";
             case "OnLetterSelectedListener" ->
-                    targetId + ".setOnLetterSelectedListener(new WaveSideBar.OnLetterSelectedListener() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "});";
+                    targetId
+                            + ".setOnLetterSelectedListener(new WaveSideBar.OnLetterSelectedListener() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "});";
             case "OnRatingBarChangeListener" ->
-                    targetId + ".setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "});";
+                    targetId
+                            + ".setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "});";
             case "OnTabSelectedListener" ->
-                    targetId + ".addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "});";
-            case "OnDateChangeListener" -> "Calendar _calendar = Calendar.getInstance();\r\n" +
-                    targetId + ".init(_calendar.get(Calendar.YEAR), _calendar.get(Calendar.MONTH), " +
-                    "_calendar.get(Calendar.DAY_OF_MONTH), new DatePicker.OnDateChangedListener() {\r\n" +
-                    listenerLogic + "\r\n" +
-                    "});";
+                    targetId
+                            + ".addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "});";
+            case "OnDateChangeListener" ->
+                    "Calendar _calendar = Calendar.getInstance();\r\n"
+                            + targetId
+                            + ".init(_calendar.get(Calendar.YEAR), _calendar.get(Calendar.MONTH), "
+                            + "_calendar.get(Calendar.DAY_OF_MONTH), new DatePicker.OnDateChangedListener() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "});";
             case "OnCompleteListenerFCM" ->
-                    targetId + "_onCompleteListener = new OnCompleteListener<String>() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "};";
+                    targetId
+                            + "_onCompleteListener = new OnCompleteListener<String>() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "};";
             case "PatternLockViewListener" ->
-                    targetId + ".addPatternLockListener(new PatternLockViewListener() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "});";
+                    targetId
+                            + ".addPatternLockListener(new PatternLockViewListener() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "});";
             case "OnGridItemLongClickListener" ->
-                    targetId + ".setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "});";
+                    targetId
+                            + ".setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "});";
             case "googleSignInListener" ->
-                    targetId + "_googleSignInListener = new OnCompleteListener<AuthResult>() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "};";
+                    targetId
+                            + "_googleSignInListener = new OnCompleteListener<AuthResult>() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "};";
             case "sqliteErrorHandler" ->
-                    "private void _" + targetId + "_onSQLiteError(String _errorMessage) {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "}";
+                    "private void _"
+                            + targetId
+                            + "_onSQLiteError(String _errorMessage) {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "}";
             case "interstitialAdLoadCallback" ->
-                    "_" + targetId + "_interstitial_ad_load_callback = new InterstitialAdLoadCallback() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "};";
+                    "_"
+                            + targetId
+                            + "_interstitial_ad_load_callback = new InterstitialAdLoadCallback() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "};";
             case "fullScreenContentCallback" ->
-                    "_" + targetId + "_full_screen_content_callback = new FullScreenContentCallback() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "};";
-            case "bannerAdViewListener" -> targetId + ".setAdListener(new AdListener() {\r\n" +
-                    listenerLogic + "\r\n" +
-                    "});";
+                    "_"
+                            + targetId
+                            + "_full_screen_content_callback = new FullScreenContentCallback() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "};";
+            case "bannerAdViewListener" ->
+                    targetId
+                            + ".setAdListener(new AdListener() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "});";
             case "rewardedAdLoadCallback" ->
-                    "_" + targetId + "_rewarded_ad_load_callback = new RewardedAdLoadCallback() {\r\n" +
-                            listenerLogic + "\r\n" +
-                            "};";
+                    "_"
+                            + targetId
+                            + "_rewarded_ad_load_callback = new RewardedAdLoadCallback() {\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "};";
             case "onUserEarnedRewardListener" ->
-                    "_" + targetId + "_on_user_earned_reward_listener = new OnUserEarnedRewardListener() {\r\n" +
-                            "@Override\r\npublic void onUserEarnedReward(RewardItem _param1) {\r\n" +
-                            "int _rewardAmount = _param1.getAmount();\r\n" +
-                            "String _rewardType = _param1.getType();\r\n" +
-                            listenerLogic + "\r\n" +
-                            "}\r\n};";
+                    "_"
+                            + targetId
+                            + "_on_user_earned_reward_listener = new OnUserEarnedRewardListener() {\r\n"
+                            + "@Override\r\npublic void onUserEarnedReward(RewardItem _param1) {\r\n"
+                            + "int _rewardAmount = _param1.getAmount();\r\n"
+                            + "String _rewardType = _param1.getType();\r\n"
+                            + listenerLogic
+                            + "\r\n"
+                            + "}\r\n};";
             default -> EventsHandler.getListenerCode(listenerName, targetId, listenerLogic);
         };
     }
 
     public static String getExtraEventBlocks(String eventName) {
         return switch (eventName) {
-            case "onUpdateProfileComplete", "onEmailVerificationSent", "onDeleteUserComplete",
-                 "onUpdateEmailComplete", "onGoogleSignIn", "signInWithPhoneAuthComplete",
-                 "onUpdatePasswordComplete" -> "%b.success %s.errorMessage";
+            case "onUpdateProfileComplete",
+                    "onEmailVerificationSent",
+                    "onDeleteUserComplete",
+                    "onUpdateEmailComplete",
+                    "onGoogleSignIn",
+                    "signInWithPhoneAuthComplete",
+                    "onUpdatePasswordComplete" ->
+                    "%b.success %s.errorMessage";
             case "onScrolled" -> "%d.firstVisibleItem %d.visibleItemCount %d.totalItemCount";
             case "onDateChanged" -> "%d.year %d.month %d.day";
             case "onFailureLink" -> "%s.errorMessage";
@@ -865,16 +1095,23 @@ public class ManageEvent {
             case "onPatternLockProgress" -> "%m.listStr.pattern";
             case "onOptionsItemSelected" -> "%d.id %s.title";
             case "onPatternLockComplete" -> "%m.listStr.pattern";
-            case "onTabSelected", "onTabReselected", "onTabAdded", "onTabUnselected",
-                 "onFragmentAdded" -> "%d.position";
+            case "onTabSelected",
+                    "onTabReselected",
+                    "onTabAdded",
+                    "onTabUnselected",
+                    "onFragmentAdded" ->
+                    "%d.position";
             case "onLetterSelected" -> "%s.index";
             case "onPageSelected" -> "%m.listMap.data %d.position";
             case "onCompleteRegister" -> "%b.success %s.token %s.errorMessage";
             case "onCodeSent" -> "%s.verificationId %m.FirebasePhoneAuth.token";
             case "onTimeChanged" -> "%d.hour %d.minute";
             case "onScrollChanged" -> "%d.scrollState";
-            case "onBannerAdFailedToLoad", "onRewardAdFailedToLoad", "onInterstitialAdFailedToLoad",
-                 "onAdFailedToShowFullScreenContent" -> "%d.errorCode %s.errorMessage";
+            case "onBannerAdFailedToLoad",
+                    "onRewardAdFailedToLoad",
+                    "onInterstitialAdFailedToLoad",
+                    "onAdFailedToShowFullScreenContent" ->
+                    "%d.errorCode %s.errorMessage";
             case "onSQLiteError" -> "%s.errorMessage";
             default -> EventsHandler.getBlocks(eventName);
         };
@@ -925,69 +1162,242 @@ public class ManageEvent {
 
     public static String getExtraEventSpec(String targetId, String eventName) {
         return switch (eventName) {
-            case "onUpdateProfileComplete", "onEmailVerificationSent", "onDeleteUserComplete",
-                 "onUpdateEmailComplete", "onGoogleSignIn", "onUpdatePasswordComplete",
-                 "signInWithPhoneAuthComplete" ->
-                    Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %b.success %s.errorMessage";
+            case "onUpdateProfileComplete",
+                    "onEmailVerificationSent",
+                    "onDeleteUserComplete",
+                    "onUpdateEmailComplete",
+                    "onGoogleSignIn",
+                    "onUpdatePasswordComplete",
+                    "signInWithPhoneAuthComplete" ->
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + targetId
+                            + " "
+                            + BuiltinEventLocalization.getName(eventName)
+                            + " %b.success %s.errorMessage";
             case "onScrolled" ->
-                    Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %d.firstVisibleItem %d.visibleItemCount %d.totalItemCount";
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + targetId
+                            + " "
+                            + BuiltinEventLocalization.getName(eventName)
+                            + " %d.firstVisibleItem %d.visibleItemCount %d.totalItemCount";
             case "onDateChanged", "onDateSet" ->
-                    Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %d.year %d.month %d.day";
-            case "onFailureLink" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %s.errorMessage";
-            case "onNavigationItemSelected" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %d.itemId";
-            case "onPrepared", "onCompletion", "onPatternLockCleared", "onAccountPickerCancelled",
-                 "onPatternLockStarted" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName);
-            case "onSaveInstanceState", "onCreateOptionsMenu", "onCreateContextMenu",
-                 "onRestoreInstanceState", "onContextItemSelected" -> Helper.getResString(R.string.root_spec_common_when) + " " + BuiltinEventLocalization.getName(eventName);
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + targetId
+                            + " "
+                            + BuiltinEventLocalization.getName(eventName)
+                            + " %d.year %d.month %d.day";
+            case "onFailureLink" ->
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + targetId
+                            + " "
+                            + BuiltinEventLocalization.getName(eventName)
+                            + " %s.errorMessage";
+            case "onNavigationItemSelected" ->
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + targetId
+                            + " "
+                            + BuiltinEventLocalization.getName(eventName)
+                            + " %d.itemId";
+            case "onPrepared",
+                    "onCompletion",
+                    "onPatternLockCleared",
+                    "onAccountPickerCancelled",
+                    "onPatternLockStarted" ->
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + targetId
+                            + " "
+                            + BuiltinEventLocalization.getName(eventName);
+            case "onSaveInstanceState",
+                    "onCreateOptionsMenu",
+                    "onCreateContextMenu",
+                    "onRestoreInstanceState",
+                    "onContextItemSelected" ->
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + BuiltinEventLocalization.getName(eventName);
             case "onQueryTextChanged", "onQueryTextSubmit" ->
-                    Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %s.charSeq";
-            case "onError" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %d.what %d.extra";
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + targetId
+                            + " "
+                            + BuiltinEventLocalization.getName(eventName)
+                            + " %s.charSeq";
+            case "onError" ->
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + targetId
+                            + " "
+                            + BuiltinEventLocalization.getName(eventName)
+                            + " %d.what %d.extra";
             case "onVerificationCompleted" ->
-                    Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %m.PhoneAuthCredential.credential";
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + targetId
+                            + " "
+                            + BuiltinEventLocalization.getName(eventName)
+                            + " %m.PhoneAuthCredential.credential";
             case "onRecyclerScrollChanged" ->
-                    Helper.getResString(R.string.root_spec_common_when) + " " + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %d.scrollState";
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + " "
+                            + targetId
+                            + " "
+                            + BuiltinEventLocalization.getName(eventName)
+                            + " %d.scrollState";
             case "onRecyclerScrolled" ->
-                    Helper.getResString(R.string.root_spec_common_when) + " " + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %d.offsetX %d.offsetY";
-            case "onSuccessLink" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %s.link";
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + " "
+                            + targetId
+                            + " "
+                            + BuiltinEventLocalization.getName(eventName)
+                            + " %d.offsetX %d.offsetY";
+            case "onSuccessLink" ->
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + targetId
+                            + " "
+                            + BuiltinEventLocalization.getName(eventName)
+                            + " %s.link";
             case "onPageScrolled" ->
-                    Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %d.position %d.positionOffset %d.positionOffsetPixels";
-            case "onVerificationFailed" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %s.exception";
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + targetId
+                            + " "
+                            + BuiltinEventLocalization.getName(eventName)
+                            + " %d.position %d.positionOffset %d.positionOffsetPixels";
+            case "onVerificationFailed" ->
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + targetId
+                            + " "
+                            + BuiltinEventLocalization.getName(eventName)
+                            + " %s.exception";
             case "onAccountPicker" ->
-                    Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %m.GoogleSignInAccount.task";
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + targetId
+                            + " "
+                            + BuiltinEventLocalization.getName(eventName)
+                            + " %m.GoogleSignInAccount.task";
             case "onFragmentAdded" -> Helper.getResString(R.string.event_fragment_get_item);
-            case "onTimeSet" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %d.hour %d.minute";
-            case "onPageChanged" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName("onPageScrollStateChanged") + " %d.scrollState";
-            case "onRatingChanged" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %d.value";
+            case "onTimeSet" ->
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + targetId
+                            + " "
+                            + BuiltinEventLocalization.getName(eventName)
+                            + " %d.hour %d.minute";
+            case "onPageChanged" ->
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + targetId
+                            + " "
+                            + BuiltinEventLocalization.getName("onPageScrollStateChanged")
+                            + " %d.scrollState";
+            case "onRatingChanged" ->
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + targetId
+                            + " "
+                            + BuiltinEventLocalization.getName(eventName)
+                            + " %d.value";
             case "onPatternLockProgress", "onPatternLockComplete" ->
-                    Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %m.listStr.pattern";
-            case "onOptionsItemSelected" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + Helper.getResString(R.string.event_onoptionsitemselected) + " %d.id %s.title";
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + targetId
+                            + " "
+                            + BuiltinEventLocalization.getName(eventName)
+                            + " %m.listStr.pattern";
+            case "onOptionsItemSelected" ->
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + targetId
+                            + " "
+                            + Helper.getResString(R.string.event_onoptionsitemselected)
+                            + " %d.id %s.title";
             case "onTabSelected", "onTabUnselected", "onTabReselected", "onPageSelected" ->
                     targetId + ": " + BuiltinEventLocalization.getName(eventName) + " %d.position";
-            case "onLetterSelected" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %s.index";
+            case "onLetterSelected" ->
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + targetId
+                            + " "
+                            + BuiltinEventLocalization.getName(eventName)
+                            + " %s.index";
             case "onTabAdded" -> Helper.getResString(R.string.event_get_page_title);
             case "onCompleteRegister" ->
-                    Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %b.success %s.token %s.errorMessage";
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + targetId
+                            + " "
+                            + BuiltinEventLocalization.getName(eventName)
+                            + " %b.success %s.token %s.errorMessage";
             case "onCodeSent" ->
-                    Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %s.verificationId %m.FirebasePhoneAuth.token";
-            case "onTimeChanged" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName(eventName) + " %d.hour %d.minute";
-            case "onScrollChanged" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + ": " + BuiltinEventLocalization.getName(eventName) + " %d.scrollState";
-            case "onBannerAdFailedToLoad", "onInterstitialAdFailedToLoad", "onRewardAdFailedToLoad",
-                 "onAdFailedToShowFullScreenContent" ->
-                    targetId + ": " + BuiltinEventLocalization.getName(eventName) + " %d.errorCode %s.errorMessage";
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + targetId
+                            + " "
+                            + BuiltinEventLocalization.getName(eventName)
+                            + " %s.verificationId %m.FirebasePhoneAuth.token";
+            case "onTimeChanged" ->
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + targetId
+                            + " "
+                            + BuiltinEventLocalization.getName(eventName)
+                            + " %d.hour %d.minute";
+            case "onScrollChanged" ->
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + targetId
+                            + ": "
+                            + BuiltinEventLocalization.getName(eventName)
+                            + " %d.scrollState";
+            case "onBannerAdFailedToLoad",
+                    "onInterstitialAdFailedToLoad",
+                    "onRewardAdFailedToLoad",
+                    "onAdFailedToShowFullScreenContent" ->
+                    targetId
+                            + ": "
+                            + BuiltinEventLocalization.getName(eventName)
+                            + " %d.errorCode %s.errorMessage";
             case "onUserEarnedReward" ->
-                    targetId + ": " + BuiltinEventLocalization.getName(eventName) + " %d.rewardAmount %s.rewardType";
-            case "onInterstitialAdLoaded", "onBannerAdLoaded" -> targetId + ": " + BuiltinEventLocalization.getName("onAdLoaded");
-            case "onAdDismissedFullScreenContent", "onAdShowedFullScreenContent",
-                 "onRewardAdLoaded" -> targetId + ": " + BuiltinEventLocalization.getName(eventName);
-            case "onBannerAdOpened" -> targetId + ": " + BuiltinEventLocalization.getName("onAdOpened");
-            case "onBannerAdClicked" -> targetId + ": " + BuiltinEventLocalization.getName("onAdClicked");
-            case "onBannerAdClosed" -> targetId + ": " + BuiltinEventLocalization.getName("onAdClosed");
-            case "onSQLiteError" -> Helper.getResString(R.string.root_spec_common_when) + " " + targetId + " " + BuiltinEventLocalization.getName("onSQLiteError") + " %s.errorMessage";
+                    targetId
+                            + ": "
+                            + BuiltinEventLocalization.getName(eventName)
+                            + " %d.rewardAmount %s.rewardType";
+            case "onInterstitialAdLoaded", "onBannerAdLoaded" ->
+                    targetId + ": " + BuiltinEventLocalization.getName("onAdLoaded");
+            case "onAdDismissedFullScreenContent",
+                    "onAdShowedFullScreenContent",
+                    "onRewardAdLoaded" ->
+                    targetId + ": " + BuiltinEventLocalization.getName(eventName);
+            case "onBannerAdOpened" ->
+                    targetId + ": " + BuiltinEventLocalization.getName("onAdOpened");
+            case "onBannerAdClicked" ->
+                    targetId + ": " + BuiltinEventLocalization.getName("onAdClicked");
+            case "onBannerAdClosed" ->
+                    targetId + ": " + BuiltinEventLocalization.getName("onAdClosed");
+            case "onSQLiteError" ->
+                    Helper.getResString(R.string.root_spec_common_when)
+                            + " "
+                            + targetId
+                            + " "
+                            + BuiltinEventLocalization.getName("onSQLiteError")
+                            + " %s.errorMessage";
             default -> EventsHandler.getSpec(targetId, eventName);
         };
     }
 
-    public static String buildMethodWithFallbackReturn(String template, String logicCode, String returnValue) {
+    public static String buildMethodWithFallbackReturn(
+            String template, String logicCode, String returnValue) {
         String fallbackReturn = String.format("return %s;", returnValue);
         String finalCode;
 
@@ -1000,5 +1410,4 @@ public class ManageEvent {
 
         return String.format(template, finalCode);
     }
-
 }

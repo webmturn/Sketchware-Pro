@@ -8,19 +8,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.airbnb.lottie.LottieAnimationView;
-import pro.sketchware.beans.ProjectLibraryBean;
-import pro.sketchware.activities.editor.manage.library.ProjectComparator;
-import pro.sketchware.widgets.CircleImageView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-
 import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
@@ -30,17 +24,17 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import pro.sketchware.util.LogUtil;
+import pro.sketchware.R;
+import pro.sketchware.beans.ProjectLibraryBean;
 import pro.sketchware.core.async.BackgroundTasks;
+import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.project.LibraryManager;
 import pro.sketchware.core.project.ProjectListManager;
-import pro.sketchware.core.async.TaskHost;
-import pro.sketchware.util.UIHelper;
-import pro.sketchware.util.ViewUtil;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.MapValueHelper;
-import pro.sketchware.R;
+import pro.sketchware.util.UIHelper;
+import pro.sketchware.util.ViewUtil;
+import pro.sketchware.widgets.CircleImageView;
 
 public class LibrarySettingsImporter {
     private static final ProjectComparator PROJECT_COMPARATOR = new ProjectComparator();
@@ -52,7 +46,8 @@ public class LibrarySettingsImporter {
     private ProjectAdapter adapter;
     private List<? extends Map<String, Object>> projects;
 
-    public LibrarySettingsImporter(String sc_id, Function<LibraryManager, ProjectLibraryBean> getLibrarySettings) {
+    public LibrarySettingsImporter(
+            String sc_id, Function<LibraryManager, ProjectLibraryBean> getLibrarySettings) {
         this.sc_id = sc_id;
         this.getLibrarySettings = getLibrarySettings;
     }
@@ -66,63 +61,80 @@ public class LibrarySettingsImporter {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(activity);
         dialog.setTitle(R.string.design_library_title_select_project);
         dialog.setIcon(R.drawable.widget_firebase);
-        LinearLayout root = (LinearLayout) ViewUtil.inflateLayout(activity, R.layout.manage_library_popup_project_selector);
+        LinearLayout root =
+                (LinearLayout)
+                        ViewUtil.inflateLayout(
+                                activity, R.layout.manage_library_popup_project_selector);
         LottieAnimationView animationView = root.findViewById(R.id.animation_view);
         RecyclerView recyclerView = root.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        BackgroundTasks.runIoIfAlive(TaskHost.of(activity), "LibrarySettingsImporter", this::loadProjects, () -> {
-            animationView.cancelAnimation();
-            animationView.setVisibility(View.GONE);
-            root.removeView(animationView);
-            recyclerView.setVisibility(View.VISIBLE);
-            adapter = new ProjectAdapter();
-            recyclerView.setAdapter(adapter);
-        }, error -> {
-            projects = Collections.emptyList();
-            animationView.cancelAnimation();
-            animationView.setVisibility(View.GONE);
-            root.removeView(animationView);
-            recyclerView.setVisibility(View.VISIBLE);
-            adapter = new ProjectAdapter();
-            recyclerView.setAdapter(adapter);
-        });
+        BackgroundTasks.runIoIfAlive(
+                TaskHost.of(activity),
+                "LibrarySettingsImporter",
+                this::loadProjects,
+                () -> {
+                    animationView.cancelAnimation();
+                    animationView.setVisibility(View.GONE);
+                    root.removeView(animationView);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    adapter = new ProjectAdapter();
+                    recyclerView.setAdapter(adapter);
+                },
+                error -> {
+                    projects = Collections.emptyList();
+                    animationView.cancelAnimation();
+                    animationView.setVisibility(View.GONE);
+                    root.removeView(animationView);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    adapter = new ProjectAdapter();
+                    recyclerView.setAdapter(adapter);
+                });
         dialog.setView(root);
-        dialog.setPositiveButton(R.string.common_word_select, (v, which) -> {
-            if (!UIHelper.isClickThrottled()) {
-                if (adapter == null) {
-                    return;
-                }
-                if (adapter.selectedProjectIndex >= 0) {
-                    var settings = (ProjectLibraryBean) projects.get(adapter.selectedProjectIndex).get("settings");
-                    for (var listener : onProjectSelectedListeners) {
-                        listener.accept(settings);
+        dialog.setPositiveButton(
+                R.string.common_word_select,
+                (v, which) -> {
+                    if (!UIHelper.isClickThrottled()) {
+                        if (adapter == null) {
+                            return;
+                        }
+                        if (adapter.selectedProjectIndex >= 0) {
+                            var settings =
+                                    (ProjectLibraryBean)
+                                            projects.get(adapter.selectedProjectIndex)
+                                                    .get("settings");
+                            for (var listener : onProjectSelectedListeners) {
+                                listener.accept(settings);
+                            }
+                            v.dismiss();
+                        }
                     }
-                    v.dismiss();
-                }
-            }
-        });
+                });
         dialog.setNegativeButton(R.string.common_word_cancel, null);
         dialog.show();
     }
 
     private void loadProjects() {
-        projects = ProjectListManager.listProjects().stream()
-                .filter(project -> {
-                    var projectSc_id = MapValueHelper.getString(project, "sc_id");
-                    if (!sc_id.equals(projectSc_id)) {
-                        var projectLibraryHandler = new LibraryManager(projectSc_id);
-                        projectLibraryHandler.loadFromData();
-                        var settings = getLibrarySettings.apply(projectLibraryHandler);
-                        if (settings.useYn.equals("Y")) {
-                            project.put("settings", settings);
-                            return true;
-                        }
-                    }
-                    return false;
-                })
-                .sorted(PROJECT_COMPARATOR)
-                .collect(Collectors.toList());
+        projects =
+                ProjectListManager.listProjects().stream()
+                        .filter(
+                                project -> {
+                                    var projectSc_id = MapValueHelper.getString(project, "sc_id");
+                                    if (!sc_id.equals(projectSc_id)) {
+                                        var projectLibraryHandler =
+                                                new LibraryManager(projectSc_id);
+                                        projectLibraryHandler.loadFromData();
+                                        var settings =
+                                                getLibrarySettings.apply(projectLibraryHandler);
+                                        if (settings.useYn.equals("Y")) {
+                                            project.put("settings", settings);
+                                            return true;
+                                        }
+                                    }
+                                    return false;
+                                })
+                        .sorted(PROJECT_COMPARATOR)
+                        .collect(Collectors.toList());
     }
 
     private class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHolder> {
@@ -140,7 +152,11 @@ public class LibrarySettingsImporter {
             if (MapValueHelper.get(projectMap, "custom_icon")) {
                 String iconPath = SketchwarePaths.getIconsPath() + File.separator + sc_id;
                 Uri iconUri;
-                iconUri = FileProvider.getUriForFile(activity.getApplicationContext(), activity.getPackageName() + ".provider", new File(iconPath, "icon.png"));
+                iconUri =
+                        FileProvider.getUriForFile(
+                                activity.getApplicationContext(),
+                                activity.getPackageName() + ".provider",
+                                new File(iconPath, "icon.png"));
                 viewHolder.imgIcon.setImageURI(iconUri);
             } else {
                 viewHolder.imgIcon.setImageResource(R.drawable.default_icon);
@@ -149,14 +165,25 @@ public class LibrarySettingsImporter {
             viewHolder.appName.setText(MapValueHelper.getString(projectMap, "my_app_name"));
             viewHolder.projectName.setText(MapValueHelper.getString(projectMap, "my_ws_name"));
             viewHolder.pkgName.setText(MapValueHelper.getString(projectMap, "my_sc_pkg_name"));
-            viewHolder.projectVersion.setText(String.format("%s(%s)", MapValueHelper.getString(projectMap, "sc_ver_name"), MapValueHelper.getString(projectMap, "sc_ver_code")));
-            viewHolder.imgSelected.setVisibility(MapValueHelper.get(projectMap, "selected") ? View.VISIBLE : View.GONE);
+            viewHolder.projectVersion.setText(
+                    String.format(
+                            "%s(%s)",
+                            MapValueHelper.getString(projectMap, "sc_ver_name"),
+                            MapValueHelper.getString(projectMap, "sc_ver_code")));
+            viewHolder.imgSelected.setVisibility(
+                    MapValueHelper.get(projectMap, "selected") ? View.VISIBLE : View.GONE);
         }
 
         @Override
         @NonNull
-        public ProjectAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new ProjectAdapter.ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.manage_library_popup_project_list_item, parent, false));
+        public ProjectAdapter.ViewHolder onCreateViewHolder(
+                @NonNull ViewGroup parent, int viewType) {
+            return new ProjectAdapter.ViewHolder(
+                    LayoutInflater.from(parent.getContext())
+                            .inflate(
+                                    R.layout.manage_library_popup_project_list_item,
+                                    parent,
+                                    false));
         }
 
         private class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

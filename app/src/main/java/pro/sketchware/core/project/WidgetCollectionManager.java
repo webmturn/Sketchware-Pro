@@ -1,21 +1,17 @@
 package pro.sketchware.core.project;
 
-import pro.sketchware.core.exception.CompileException;
-import pro.sketchware.core.project.SketchwarePaths;
-
 import android.util.Log;
-
-import pro.sketchware.beans.CollectionBean;
-import pro.sketchware.beans.ViewBean;
-import pro.sketchware.beans.WidgetCollectionBean;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import pro.sketchware.beans.CollectionBean;
+import pro.sketchware.beans.ViewBean;
+import pro.sketchware.beans.WidgetCollectionBean;
+import pro.sketchware.core.exception.CompileException;
 
 public class WidgetCollectionManager extends BaseCollectionManager {
     private static volatile WidgetCollectionManager instance;
@@ -39,7 +35,9 @@ public class WidgetCollectionManager extends BaseCollectionManager {
     public WidgetCollectionBean getWidgetByName(String widgetName) {
         for (CollectionBean collection : collections) {
             if (collection.name.equals(widgetName)) {
-                return new WidgetCollectionBean(collection.name, ProjectDataParser.parseViewBeans(widgetGson, collection.data));
+                return new WidgetCollectionBean(
+                        collection.name,
+                        ProjectDataParser.parseViewBeans(widgetGson, collection.data));
             }
         }
         return null;
@@ -55,7 +53,8 @@ public class WidgetCollectionManager extends BaseCollectionManager {
         if (save) saveCollections();
     }
 
-    public void addWidget(String widgetName, ArrayList<ViewBean> widgets, boolean save) throws CompileException {
+    public void addWidget(String widgetName, ArrayList<ViewBean> widgets, boolean save)
+            throws CompileException {
         if (collections == null) initialize();
         if (widgetGson == null) initializeGson();
         for (CollectionBean collection : collections) {
@@ -77,7 +76,8 @@ public class WidgetCollectionManager extends BaseCollectionManager {
     }
 
     public void initializePaths() {
-        String basePath = SketchwarePaths.getCollectionPath() + File.separator + "widget" + File.separator;
+        String basePath =
+                SketchwarePaths.getCollectionPath() + File.separator + "widget" + File.separator;
         collectionFilePath = basePath + "list";
         dataDirPath = basePath + "data";
     }
@@ -107,7 +107,10 @@ public class WidgetCollectionManager extends BaseCollectionManager {
         if (widgetGson == null) initializeGson();
         ArrayList<WidgetCollectionBean> result = new ArrayList<>();
         for (CollectionBean collection : collections) {
-            result.add(new WidgetCollectionBean(collection.name, ProjectDataParser.parseViewBeans(widgetGson, collection.data)));
+            result.add(
+                    new WidgetCollectionBean(
+                            collection.name,
+                            ProjectDataParser.parseViewBeans(widgetGson, collection.data)));
         }
         return result;
     }

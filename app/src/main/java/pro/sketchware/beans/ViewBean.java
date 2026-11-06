@@ -2,27 +2,22 @@ package pro.sketchware.beans;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import androidx.annotation.NonNull;
-
 import com.google.gson.annotations.Expose;
-
 import java.util.HashMap;
-
+import pro.sketchware.R;
 import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.util.format.ReflectiveToString;
-import pro.sketchware.beans.ViewBeans;
-import pro.sketchware.R;
 
 /**
  * Represents a UI view widget in a project's layout tree.
- * <p>
- * Each view has a {@link #type} constant (see {@code VIEW_TYPE_*}), a unique {@link #id}
- * (the Android ID used in code generation), and a {@link #parent} reference forming the
- * layout hierarchy. Views contain sub-beans for layout properties ({@link LayoutBean}),
- * text properties ({@link TextBean}), and image properties ({@link ImageBean}).
- * <p>
- * Views are stored per-XML-file in {@link pro.sketchware.core.project.ProjectDataStore#viewMap}
+ *
+ * <p>Each view has a {@link #type} constant (see {@code VIEW_TYPE_*}), a unique {@link #id} (the
+ * Android ID used in code generation), and a {@link #parent} reference forming the layout
+ * hierarchy. Views contain sub-beans for layout properties ({@link LayoutBean}), text properties
+ * ({@link TextBean}), and image properties ({@link ImageBean}).
+ *
+ * <p>Views are stored per-XML-file in {@link pro.sketchware.core.project.ProjectDataStore#viewMap}
  * and rendered in the UI designer via {@link pro.sketchware.activities.editor.view.ViewPane}.
  *
  * @see LayoutBean
@@ -31,22 +26,22 @@ import pro.sketchware.R;
  * @see pro.sketchware.core.project.ProjectDataStore
  */
 public class ViewBean extends ReflectiveToString implements Parcelable {
-    public static final Parcelable.Creator<ViewBean> CREATOR = new Parcelable.Creator<>() {
-        @Override
-        public ViewBean createFromParcel(Parcel source) {
-            return new ViewBean(source);
-        }
+    public static final Parcelable.Creator<ViewBean> CREATOR =
+            new Parcelable.Creator<>() {
+                @Override
+                public ViewBean createFromParcel(Parcel source) {
+                    return new ViewBean(source);
+                }
 
-        @Override
-        public ViewBean[] newArray(int size) {
-            return new ViewBean[size];
-        }
-    };
+                @Override
+                public ViewBean[] newArray(int size) {
+                    return new ViewBean[size];
+                }
+            };
 
     public static final int CHOICE_MODE_NONE = 0;
     public static final int CHOICE_MODE_SINGLE = 1;
     public static final int CHOICE_MODE_MULTI = 2;
-
 
     public static final int DEFAULT_PROGRESS = 0;
     public static final int DEFAULT_MAX = 100;
@@ -78,77 +73,43 @@ public class ViewBean extends ReflectiveToString implements Parcelable {
     public static final int VIEW_TYPE_WIDGET_MAPVIEW = 18;
     public static final int VIEW_TYPE_COUNT = 19;
 
-    @Expose
-    public String adSize;
-    @Expose
-    public String adUnitId;
-    @Expose
-    public float alpha;
-    @Expose
-    public int checked;
-    @Expose
-    public int choiceMode;
+    @Expose public String adSize;
+    @Expose public String adUnitId;
+    @Expose public float alpha;
+    @Expose public int checked;
+    @Expose public int choiceMode;
     public ClassInfo classInfo;
-    @Expose
-    public int clickable;
-    @Expose
-    public String convert;
-    @Expose
-    public String customView;
-    @Expose
-    public int dividerHeight;
-    @Expose
-    public int enabled;
-    @Expose
-    public int firstDayOfWeek;
-    @Expose
-    public String id;
-    @Expose
-    public ImageBean image;
-    @Expose
-    public String indeterminate;
-    @Expose
-    public int index;
-    @Expose
-    public String inject;
-    @Expose
-    public LayoutBean layout;
-    @Expose
-    public int max;
+    @Expose public int clickable;
+    @Expose public String convert;
+    @Expose public String customView;
+    @Expose public int dividerHeight;
+    @Expose public int enabled;
+    @Expose public int firstDayOfWeek;
+    @Expose public String id;
+    @Expose public ImageBean image;
+    @Expose public String indeterminate;
+    @Expose public int index;
+    @Expose public String inject;
+    @Expose public LayoutBean layout;
+    @Expose public int max;
     public String name;
-    @Expose
-    public String parent;
+    @Expose public String parent;
     public ClassInfo parentClassInfo;
-    @Expose
-    public int parentType;
-    @Expose
-    public String preId;
-    @Expose
-    public int preIndex;
-    @Expose
-    public String preParent;
-    @Expose
-    public int preParentType;
-    @Expose
-    public int progress;
-    @Expose
-    public String progressStyle;
-    @Expose
-    public float scaleX;
-    @Expose
-    public float scaleY;
-    @Expose
-    public int spinnerMode;
-    @Expose
-    public TextBean text;
-    @Expose
-    public float translationX;
-    @Expose
-    public float translationY;
-    @Expose
-    public int type;
-    @Expose
-    public HashMap<String, String> parentAttributes;
+    @Expose public int parentType;
+    @Expose public String preId;
+    @Expose public int preIndex;
+    @Expose public String preParent;
+    @Expose public int preParentType;
+    @Expose public int progress;
+    @Expose public String progressStyle;
+    @Expose public float scaleX;
+    @Expose public float scaleY;
+    @Expose public int spinnerMode;
+    @Expose public TextBean text;
+    @Expose public float translationX;
+    @Expose public float translationY;
+    @Expose public int type;
+    @Expose public HashMap<String, String> parentAttributes;
     public boolean isCustomWidget;
 
     public ViewBean() {
@@ -313,28 +274,29 @@ public class ViewBean extends ReflectiveToString implements Parcelable {
     }
 
     public ClassInfo buildClassInfo(int type) {
-        String name = switch (type) {
-            case VIEW_TYPE_LAYOUT_LINEAR -> "LinearLayout";
-            case VIEW_TYPE_LAYOUT_RELATIVE -> "RelativeLayout";
-            case VIEW_TYPE_LAYOUT_HSCROLLVIEW -> "HorizontalScrollView";
-            case VIEW_TYPE_WIDGET_BUTTON -> "Button";
-            case VIEW_TYPE_WIDGET_TEXTVIEW -> "TextView";
-            case VIEW_TYPE_WIDGET_EDITTEXT -> "EditText";
-            case VIEW_TYPE_WIDGET_IMAGEVIEW -> "ImageView";
-            case VIEW_TYPE_WIDGET_WEBVIEW -> "WebView";
-            case VIEW_TYPE_WIDGET_PROGRESSBAR -> "ProgressBar";
-            case VIEW_TYPE_WIDGET_LISTVIEW -> "ListView";
-            case VIEW_TYPE_WIDGET_SPINNER -> "Spinner";
-            case VIEW_TYPE_WIDGET_CHECKBOX -> "CheckBox";
-            case VIEW_TYPE_LAYOUT_VSCROLLVIEW -> "ScrollView";
-            case VIEW_TYPE_WIDGET_SWITCH -> "Switch";
-            case VIEW_TYPE_WIDGET_SEEKBAR -> "SeekBar";
-            case VIEW_TYPE_WIDGET_CALENDARVIEW -> "CalendarView";
-            case VIEW_TYPE_WIDGET_FAB -> "FloatingActionButton";
-            case VIEW_TYPE_WIDGET_ADVIEW -> "AdView";
-            case VIEW_TYPE_WIDGET_MAPVIEW -> "MapView";
-            default -> ViewBeans.buildClassInfo(type);
-        };
+        String name =
+                switch (type) {
+                    case VIEW_TYPE_LAYOUT_LINEAR -> "LinearLayout";
+                    case VIEW_TYPE_LAYOUT_RELATIVE -> "RelativeLayout";
+                    case VIEW_TYPE_LAYOUT_HSCROLLVIEW -> "HorizontalScrollView";
+                    case VIEW_TYPE_WIDGET_BUTTON -> "Button";
+                    case VIEW_TYPE_WIDGET_TEXTVIEW -> "TextView";
+                    case VIEW_TYPE_WIDGET_EDITTEXT -> "EditText";
+                    case VIEW_TYPE_WIDGET_IMAGEVIEW -> "ImageView";
+                    case VIEW_TYPE_WIDGET_WEBVIEW -> "WebView";
+                    case VIEW_TYPE_WIDGET_PROGRESSBAR -> "ProgressBar";
+                    case VIEW_TYPE_WIDGET_LISTVIEW -> "ListView";
+                    case VIEW_TYPE_WIDGET_SPINNER -> "Spinner";
+                    case VIEW_TYPE_WIDGET_CHECKBOX -> "CheckBox";
+                    case VIEW_TYPE_LAYOUT_VSCROLLVIEW -> "ScrollView";
+                    case VIEW_TYPE_WIDGET_SWITCH -> "Switch";
+                    case VIEW_TYPE_WIDGET_SEEKBAR -> "SeekBar";
+                    case VIEW_TYPE_WIDGET_CALENDARVIEW -> "CalendarView";
+                    case VIEW_TYPE_WIDGET_FAB -> "FloatingActionButton";
+                    case VIEW_TYPE_WIDGET_ADVIEW -> "AdView";
+                    case VIEW_TYPE_WIDGET_MAPVIEW -> "MapView";
+                    default -> ViewBeans.buildClassInfo(type);
+                };
         return new ClassInfo(name);
     }
 
@@ -413,17 +375,33 @@ public class ViewBean extends ReflectiveToString implements Parcelable {
     }
 
     public boolean isEqual(ViewBean viewBean) {
-        if (type != viewBean.type || parentType != viewBean.parentType || index != viewBean.index ||
-                enabled != viewBean.enabled || clickable != viewBean.clickable || alpha != viewBean.alpha ||
-                translationX != viewBean.translationX || translationY != viewBean.translationY ||
-                scaleX != viewBean.scaleX || scaleY != viewBean.scaleY || spinnerMode != viewBean.spinnerMode ||
-                dividerHeight != viewBean.dividerHeight || choiceMode != viewBean.choiceMode ||
-                checked != viewBean.checked || max != viewBean.max || progress != viewBean.progress ||
-                firstDayOfWeek != viewBean.firstDayOfWeek || !adSize.equals(viewBean.adSize) ||
-                !adUnitId.equals(viewBean.adUnitId) || !text.isEqual(viewBean.text) || !layout.isEqual(viewBean.layout) ||
-                !image.isEqual(viewBean.image) || !indeterminate.equals(viewBean.indeterminate) ||
-                !inject.equals(viewBean.inject) || !convert.equals(viewBean.convert) ||
-                !progressStyle.equals(viewBean.progressStyle) || !parentAttributes.equals(viewBean.parentAttributes)) {
+        if (type != viewBean.type
+                || parentType != viewBean.parentType
+                || index != viewBean.index
+                || enabled != viewBean.enabled
+                || clickable != viewBean.clickable
+                || alpha != viewBean.alpha
+                || translationX != viewBean.translationX
+                || translationY != viewBean.translationY
+                || scaleX != viewBean.scaleX
+                || scaleY != viewBean.scaleY
+                || spinnerMode != viewBean.spinnerMode
+                || dividerHeight != viewBean.dividerHeight
+                || choiceMode != viewBean.choiceMode
+                || checked != viewBean.checked
+                || max != viewBean.max
+                || progress != viewBean.progress
+                || firstDayOfWeek != viewBean.firstDayOfWeek
+                || !adSize.equals(viewBean.adSize)
+                || !adUnitId.equals(viewBean.adUnitId)
+                || !text.isEqual(viewBean.text)
+                || !layout.isEqual(viewBean.layout)
+                || !image.isEqual(viewBean.image)
+                || !indeterminate.equals(viewBean.indeterminate)
+                || !inject.equals(viewBean.inject)
+                || !convert.equals(viewBean.convert)
+                || !progressStyle.equals(viewBean.progressStyle)
+                || !parentAttributes.equals(viewBean.parentAttributes)) {
             return false;
         }
 

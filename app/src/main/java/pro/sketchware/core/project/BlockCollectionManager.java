@@ -1,22 +1,18 @@
 package pro.sketchware.core.project;
 
-import pro.sketchware.core.exception.CompileException;
-import pro.sketchware.core.project.SketchwarePaths;
-
 import android.util.Log;
-
-import pro.sketchware.beans.BlockBean;
-import pro.sketchware.beans.BlockCollectionBean;
-import pro.sketchware.beans.CollectionBean;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import pro.sketchware.beans.BlockBean;
+import pro.sketchware.beans.BlockCollectionBean;
+import pro.sketchware.beans.CollectionBean;
+import pro.sketchware.core.exception.CompileException;
 
 public class BlockCollectionManager extends BaseCollectionManager {
     private static volatile BlockCollectionManager instance;
@@ -24,7 +20,9 @@ public class BlockCollectionManager extends BaseCollectionManager {
     private long revision;
 
     public record BlocksSnapshot(long revision, List<BlockCollectionBean> blocks) {
-        public BlocksSnapshot { blocks = List.copyOf(blocks); }
+        public BlocksSnapshot {
+            blocks = List.copyOf(blocks);
+        }
     }
 
     public BlockCollectionManager() {
@@ -45,7 +43,9 @@ public class BlockCollectionManager extends BaseCollectionManager {
     public synchronized BlockCollectionBean getBlockByName(String blockName) {
         for (CollectionBean collection : collections) {
             if (collection.name.equals(blockName)) {
-                return new BlockCollectionBean(collection.name, ProjectDataParser.parseBlockBeans(blockGson, collection.data));
+                return new BlockCollectionBean(
+                        collection.name,
+                        ProjectDataParser.parseBlockBeans(blockGson, collection.data));
             }
         }
         return null;
@@ -62,7 +62,8 @@ public class BlockCollectionManager extends BaseCollectionManager {
         if (save) saveCollections();
     }
 
-    public synchronized void addBlock(String blockName, ArrayList<BlockBean> blocks, boolean save) throws CompileException {
+    public synchronized void addBlock(String blockName, ArrayList<BlockBean> blocks, boolean save)
+            throws CompileException {
         if (collections == null) initialize();
         if (blockGson == null) initializeGson();
         for (CollectionBean collection : collections) {
@@ -85,7 +86,8 @@ public class BlockCollectionManager extends BaseCollectionManager {
     }
 
     public void initializePaths() {
-        String basePath = SketchwarePaths.getCollectionPath() + File.separator + "block" + File.separator;
+        String basePath =
+                SketchwarePaths.getCollectionPath() + File.separator + "block" + File.separator;
         collectionFilePath = basePath + "list";
         dataDirPath = basePath + "data";
     }
@@ -124,15 +126,17 @@ public class BlockCollectionManager extends BaseCollectionManager {
             if (collections == null) initialize();
             if (blockGson == null) initializeGson();
             for (CollectionBean collection : collections) {
-                if (collection != null) sources.add(new CollectionBean(collection.name, collection.data));
+                if (collection != null)
+                    sources.add(new CollectionBean(collection.name, collection.data));
             }
             parser = blockGson;
             capturedRevision = revision;
         }
         ArrayList<BlockCollectionBean> result = new ArrayList<>();
         for (CollectionBean collection : sources) {
-            ArrayList<BlockBean> blocks = ProjectDataParser.parseBlockBeans(parser,
-                    collection.data != null ? collection.data : "");
+            ArrayList<BlockBean> blocks =
+                    ProjectDataParser.parseBlockBeans(
+                            parser, collection.data != null ? collection.data : "");
             blocks.removeIf(block -> block == null);
             result.add(new BlockCollectionBean(collection.name, blocks));
         }
@@ -143,14 +147,21 @@ public class BlockCollectionManager extends BaseCollectionManager {
         return snapshot.revision() == revision;
     }
 
-    @Override public synchronized void initialize() { super.initialize(); }
+    @Override
+    public synchronized void initialize() {
+        super.initialize();
+    }
 
-    @Override public synchronized void clearCollections() {
+    @Override
+    public synchronized void clearCollections() {
         super.clearCollections();
         revision++;
     }
 
-    @Override public synchronized void saveCollections() { super.saveCollections(); }
+    @Override
+    public synchronized void saveCollections() {
+        super.saveCollections();
+    }
 
     public synchronized ArrayList<String> getBlockNames() {
         if (collections == null) initialize();

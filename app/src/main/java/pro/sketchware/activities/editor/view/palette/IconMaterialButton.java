@@ -4,13 +4,10 @@ import android.content.Context;
 import android.graphics.Color;
 import android.view.Gravity;
 import android.view.ViewGroup;
-
-import pro.sketchware.beans.ViewBean;
-import pro.sketchware.activities.editor.view.AndroidxOrMaterialView;
-import pro.sketchware.activities.editor.view.palette.IconBase;
-
-import pro.sketchware.beans.ViewBeans;
 import pro.sketchware.R;
+import pro.sketchware.activities.editor.view.AndroidxOrMaterialView;
+import pro.sketchware.beans.ViewBean;
+import pro.sketchware.beans.ViewBeans;
 
 public class IconMaterialButton extends IconBase implements AndroidxOrMaterialView {
 

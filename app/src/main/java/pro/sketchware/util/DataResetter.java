@@ -1,18 +1,13 @@
 package pro.sketchware.util;
 
 import android.content.Context;
-
 import java.util.HashMap;
-
-import pro.sketchware.util.io.SharedPrefsHelper;
-import pro.sketchware.util.SketchToast;
-import pro.sketchware.core.project.ProjectListManager;
-import pro.sketchware.util.io.EncryptedFileUtil;
-import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.util.MapValueHelper;
-import pro.sketchware.util.Helper;
-import pro.sketchware.core.library.BuiltInLibraries;
 import pro.sketchware.R;
+import pro.sketchware.core.library.BuiltInLibraries;
+import pro.sketchware.core.project.ProjectListManager;
+import pro.sketchware.core.project.SketchwarePaths;
+import pro.sketchware.util.io.EncryptedFileUtil;
+import pro.sketchware.util.io.SharedPrefsHelper;
 
 public class DataResetter {
     public static void resetData(Context context, boolean resetOnlySettings) {
@@ -27,7 +22,8 @@ public class DataResetter {
 
         EncryptedFileUtil fileUtil = new EncryptedFileUtil();
         fileUtil.deleteDirectoryByPath(SketchwarePaths.getLibsPath());
-        fileUtil.deleteDirectoryByPath(BuiltInLibraries.EXTRACTED_COMPILE_ASSETS_PATH.getAbsolutePath());
+        fileUtil.deleteDirectoryByPath(
+                BuiltInLibraries.EXTRACTED_COMPILE_ASSETS_PATH.getAbsolutePath());
 
         if (!resetOnlySettings) {
             fileUtil.deleteDirectoryByPath(SketchwarePaths.getSketchwareRootPath());
@@ -44,7 +40,12 @@ public class DataResetter {
             new SharedPrefsHelper(context, "P15").clearAll();
         }
 
-        SketchToast.toast(context, Helper.getResString(R.string.program_information_reset_system_complete_initialize), SketchToast.TOAST_NORMAL).show();
+        SketchToast.toast(
+                        context,
+                        Helper.getResString(
+                                R.string.program_information_reset_system_complete_initialize),
+                        SketchToast.TOAST_NORMAL)
+                .show();
         ProjectListManager.initializeDb(context, true);
     }
 }

@@ -1,21 +1,17 @@
 package pro.sketchware.core.project;
 
-import pro.sketchware.core.exception.CompileException;
-import pro.sketchware.core.project.SketchwarePaths;
-
 import android.util.Log;
-
-import pro.sketchware.beans.BlockBean;
-import pro.sketchware.beans.CollectionBean;
-import pro.sketchware.beans.MoreBlockCollectionBean;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import pro.sketchware.beans.BlockBean;
+import pro.sketchware.beans.CollectionBean;
+import pro.sketchware.beans.MoreBlockCollectionBean;
+import pro.sketchware.core.exception.CompileException;
 
 public class MoreBlockCollectionManager extends BaseCollectionManager {
     private static volatile MoreBlockCollectionManager instance;
@@ -39,13 +35,18 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
     public MoreBlockCollectionBean getMoreBlockByName(String moreBlockName) {
         for (CollectionBean collection : collections) {
             if (collection.name.equals(moreBlockName)) {
-                return new MoreBlockCollectionBean(collection.name, collection.reserved1, ProjectDataParser.parseBlockBeans(moreBlockGson, collection.data));
+                return new MoreBlockCollectionBean(
+                        collection.name,
+                        collection.reserved1,
+                        ProjectDataParser.parseBlockBeans(moreBlockGson, collection.data));
             }
         }
         return null;
     }
 
-    public void addMoreBlock(String moreBlockName, String moreBlockSpec, ArrayList<BlockBean> blocks, boolean save) throws CompileException {
+    public void addMoreBlock(
+            String moreBlockName, String moreBlockSpec, ArrayList<BlockBean> blocks, boolean save)
+            throws CompileException {
         if (collections == null) initialize();
         if (moreBlockGson == null) initializeGson();
         for (CollectionBean collection : collections) {
@@ -57,7 +58,8 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
         for (BlockBean block : blocks) {
             contentBuilder.append(moreBlockGson.toJson(block)).append("\n");
         }
-        collections.add(new CollectionBean(moreBlockName, contentBuilder.toString(), moreBlockSpec));
+        collections.add(
+                new CollectionBean(moreBlockName, contentBuilder.toString(), moreBlockSpec));
         if (save) saveCollections();
     }
 
@@ -77,7 +79,12 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
     }
 
     public void initializePaths() {
-        collectionFilePath = SketchwarePaths.getCollectionPath() + File.separator + "more_block" + File.separator + "list";
+        collectionFilePath =
+                SketchwarePaths.getCollectionPath()
+                        + File.separator
+                        + "more_block"
+                        + File.separator
+                        + "list";
     }
 
     @Override
@@ -105,7 +112,11 @@ public class MoreBlockCollectionManager extends BaseCollectionManager {
         if (moreBlockGson == null) initializeGson();
         ArrayList<MoreBlockCollectionBean> result = new ArrayList<>();
         for (CollectionBean collection : collections) {
-            result.add(new MoreBlockCollectionBean(collection.name, collection.reserved1, ProjectDataParser.parseBlockBeans(moreBlockGson, collection.data)));
+            result.add(
+                    new MoreBlockCollectionBean(
+                            collection.name,
+                            collection.reserved1,
+                            ProjectDataParser.parseBlockBeans(moreBlockGson, collection.data)));
         }
         return result;
     }

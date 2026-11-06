@@ -1,21 +1,17 @@
 package pro.sketchware.activities.editor.manage.view;
 
-import pro.sketchware.util.locale.LocalizedDisplayNames;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import pro.sketchware.beans.ProjectFileBean;
-import pro.sketchware.activities.base.BaseDialogActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-
 import java.util.ArrayList;
-
-import pro.sketchware.activities.editor.manage.view.PresetLayoutFactory;
-import pro.sketchware.util.Helper;
 import pro.sketchware.R;
+import pro.sketchware.activities.base.BaseDialogActivity;
+import pro.sketchware.beans.ProjectFileBean;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.locale.LocalizedDisplayNames;
 
 public class PresetSettingActivity extends BaseDialogActivity implements View.OnClickListener {
 
@@ -27,12 +23,16 @@ public class PresetSettingActivity extends BaseDialogActivity implements View.On
     private ArrayList<ProjectFileBean> presets;
 
     private void applyPresetData(String presetName) {
-        int resDrawable = switch (requestCode) {
-            case ViewPresetRequestCodes.ACTIVITY -> PresetLayoutFactory.getActivityPresetIcon(presetName);
-            case ViewPresetRequestCodes.LIST_ITEM -> PresetLayoutFactory.getListItemPresetIcon(presetName);
-            case ViewPresetRequestCodes.DRAWER -> PresetLayoutFactory.getDrawerPresetIcon(presetName);
-            default -> -1;
-        };
+        int resDrawable =
+                switch (requestCode) {
+                    case ViewPresetRequestCodes.ACTIVITY ->
+                            PresetLayoutFactory.getActivityPresetIcon(presetName);
+                    case ViewPresetRequestCodes.LIST_ITEM ->
+                            PresetLayoutFactory.getListItemPresetIcon(presetName);
+                    case ViewPresetRequestCodes.DRAWER ->
+                            PresetLayoutFactory.getDrawerPresetIcon(presetName);
+                    default -> -1;
+                };
 
         activity.setImageResource(resDrawable);
         activityName.setText(LocalizedDisplayNames.get(presetName));
@@ -51,7 +51,8 @@ public class PresetSettingActivity extends BaseDialogActivity implements View.On
         dialog.setIcon(R.drawable.ic_detail_setting_48dp);
         dialog.setCancelable(false);
         dialog.setMessage(Helper.getResString(R.string.preset_setting_edit_warning));
-        dialog.setPositiveButton(Helper.getResString(R.string.common_word_ok), (v, which) -> close());
+        dialog.setPositiveButton(
+                Helper.getResString(R.string.common_word_ok), (v, which) -> close());
         dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
         dialog.show();
     }

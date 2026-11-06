@@ -1,23 +1,18 @@
 package pro.sketchware.core.library;
 
 import android.widget.Toast;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
-
-import pro.sketchware.core.library.LocalLibrariesUtil;
-import pro.sketchware.core.library.LocalLibraryImportPackageIndex;
-import pro.sketchware.util.Helper;
-import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.LogUtil;
 import pro.sketchware.util.SketchwareUtil;
 
 public class ManageLocalLibrary {
@@ -54,16 +49,21 @@ public class ManageLocalLibrary {
 
                         String name = (String) nameObject;
                         File primaryLibDir = new File(SketchwarePaths.getLocalLibsDir(), name);
-                        File fallbackLibDir = new File(SketchwarePaths.getLocalLibsFallbackDir(), name);
+                        File fallbackLibDir =
+                                new File(SketchwarePaths.getLocalLibsFallbackDir(), name);
                         if (!primaryLibDir.exists() && !fallbackLibDir.exists()) {
                             changed = true;
                             continue;
                         }
 
                         Object dependencyObject = entry.get("dependency");
-                        String dependency = dependencyObject instanceof String && !((String) dependencyObject).isEmpty()
-                                ? (String) dependencyObject : null;
-                        HashMap<String, Object> normalizedEntry = LocalLibrariesUtil.createLibraryMap(name, dependency);
+                        String dependency =
+                                dependencyObject instanceof String
+                                                && !((String) dependencyObject).isEmpty()
+                                        ? (String) dependencyObject
+                                        : null;
+                        HashMap<String, Object> normalizedEntry =
+                                LocalLibrariesUtil.createLibraryMap(name, dependency);
                         normalizedList.add(normalizedEntry);
                         if (!entry.equals(normalizedEntry)) {
                             changed = true;
@@ -96,7 +96,11 @@ public class ManageLocalLibrary {
                 if (assetsPath instanceof String) {
                     assets.add((String) assetsPath);
                 } else {
-                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.local_lib_error_invalid_assets), i), Toast.LENGTH_LONG);
+                    SketchwareUtil.toastError(
+                            String.format(
+                                    Helper.getResString(R.string.local_lib_error_invalid_assets),
+                                    i),
+                            Toast.LENGTH_LONG);
                 }
             }
         }
@@ -114,7 +118,9 @@ public class ManageLocalLibrary {
             if (dexPath instanceof String) {
                 dexes.add((String) dexPath);
             } else {
-                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.local_lib_error_invalid_dex), i), Toast.LENGTH_LONG);
+                SketchwareUtil.toastError(
+                        String.format(Helper.getResString(R.string.local_lib_error_invalid_dex), i),
+                        Toast.LENGTH_LONG);
             }
         }
 
@@ -151,8 +157,11 @@ public class ManageLocalLibrary {
         for (String packageName : getPackageNames()) {
             if (!packageName.isEmpty()) {
                 File projectGenFolder = new File(SketchwarePaths.getMyscPath(projectId), "gen");
-                String rJavaPath = packageName.replace(".", File.separator)
-                        .concat(File.separator).concat("R.java");
+                String rJavaPath =
+                        packageName
+                                .replace(".", File.separator)
+                                .concat(File.separator)
+                                .concat("R.java");
                 genPaths.add(new File(projectGenFolder, rJavaPath).getAbsolutePath());
             }
         }
@@ -195,7 +204,12 @@ public class ManageLocalLibrary {
             if (jarPath instanceof String) {
                 jars.add(new File((String) jarPath));
             } else {
-                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.local_lib_error_invalid_jar), i, localLibrary.get("name")), Toast.LENGTH_LONG);
+                SketchwareUtil.toastError(
+                        String.format(
+                                Helper.getResString(R.string.local_lib_error_invalid_jar),
+                                i,
+                                localLibrary.get("name")),
+                        Toast.LENGTH_LONG);
             }
         }
 
@@ -213,7 +227,12 @@ public class ManageLocalLibrary {
                 classpath.append(":");
                 classpath.append((String) jarPath);
             } else {
-                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.local_lib_error_invalid_jar), i, localLibrary.get("name")), Toast.LENGTH_LONG);
+                SketchwareUtil.toastError(
+                        String.format(
+                                Helper.getResString(R.string.local_lib_error_invalid_jar),
+                                i,
+                                localLibrary.get("name")),
+                        Toast.LENGTH_LONG);
             }
         }
 
@@ -247,7 +266,11 @@ public class ManageLocalLibrary {
                 if (packageName instanceof String) {
                     packageNames.add((String) packageName);
                 } else {
-                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.local_lib_error_invalid_package), i), Toast.LENGTH_LONG);
+                    SketchwareUtil.toastError(
+                            String.format(
+                                    Helper.getResString(R.string.local_lib_error_invalid_package),
+                                    i),
+                            Toast.LENGTH_LONG);
                 }
             }
         }
@@ -261,9 +284,10 @@ public class ManageLocalLibrary {
             return importPackages;
         }
 
-        String libraryName = localLibrary.get("name") instanceof String
-                ? (String) localLibrary.get("name")
-                : null;
+        String libraryName =
+                localLibrary.get("name") instanceof String
+                        ? (String) localLibrary.get("name")
+                        : null;
         if (libraryName != null && !libraryName.isEmpty()) {
             return LocalLibraryImportPackageIndex.readPackages(
                     LocalLibrariesUtil.getLocalLibraryDirectory(libraryName));
@@ -272,7 +296,8 @@ public class ManageLocalLibrary {
         return new ArrayList<>();
     }
 
-    private ArrayList<String> getConfiguredImportPackages(HashMap<String, Object> localLibrary, int index) {
+    private ArrayList<String> getConfiguredImportPackages(
+            HashMap<String, Object> localLibrary, int index) {
         ArrayList<String> importPackages = new ArrayList<>();
         Object configuredPackages = localLibrary.get("importPackages");
         if (configuredPackages == null) {
@@ -280,8 +305,11 @@ public class ManageLocalLibrary {
         }
 
         if (!(configuredPackages instanceof Collection)) {
-            LogUtil.w(getClass().getSimpleName(),
-                    "Invalid importPackages entry at index " + index + " for local library "
+            LogUtil.w(
+                    getClass().getSimpleName(),
+                    "Invalid importPackages entry at index "
+                            + index
+                            + " for local library "
                             + localLibrary.get("name"));
             return importPackages;
         }
@@ -322,7 +350,11 @@ public class ManageLocalLibrary {
                 if (proguardRulesPath instanceof String) {
                     proguardRules.add((String) proguardRulesPath);
                 } else {
-                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.local_lib_error_invalid_proguard), i), Toast.LENGTH_LONG);
+                    SketchwareUtil.toastError(
+                            String.format(
+                                    Helper.getResString(R.string.local_lib_error_invalid_proguard),
+                                    i),
+                            Toast.LENGTH_LONG);
                 }
             }
         }
@@ -341,7 +373,12 @@ public class ManageLocalLibrary {
                 if (manifestPath instanceof String && !((String) manifestPath).isEmpty()) {
                     manifestPaths.add((String) manifestPath);
                 } else {
-                    LogUtil.w(getClass().getSimpleName(), "Invalid manifestPath entry at index " + i + " for local library " + localLibrary.get("name"));
+                    LogUtil.w(
+                            getClass().getSimpleName(),
+                            "Invalid manifestPath entry at index "
+                                    + i
+                                    + " for local library "
+                                    + localLibrary.get("name"));
                 }
             }
         }
@@ -360,7 +397,10 @@ public class ManageLocalLibrary {
                 if (resPath instanceof String) {
                     localLibraryRes.add((String) resPath);
                 } else {
-                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.local_lib_error_invalid_res), i), Toast.LENGTH_LONG);
+                    SketchwareUtil.toastError(
+                            String.format(
+                                    Helper.getResString(R.string.local_lib_error_invalid_res), i),
+                            Toast.LENGTH_LONG);
                 }
             }
         }

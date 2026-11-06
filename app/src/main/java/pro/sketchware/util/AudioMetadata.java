@@ -6,24 +6,20 @@ import android.media.MediaMetadataRetriever;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.ImageView;
-
 import com.bumptech.glide.Glide;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
-
-import pro.sketchware.util.Helper;
 import pro.sketchware.R;
-import pro.sketchware.util.SketchwareUtil;
 
 public class AudioMetadata {
-    public static final AudioAttributes MEDIA_PLAYER_AUDIO_ATTRIBUTES = new AudioAttributes.Builder()
-            .setUsage(AudioAttributes.USAGE_MEDIA)
-            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-            .build();
+    public static final AudioAttributes MEDIA_PLAYER_AUDIO_ATTRIBUTES =
+            new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build();
 
     private static final ExecutorService metadataExecutor = Executors.newSingleThreadExecutor();
     private static final Handler mainHandler = new Handler(Looper.getMainLooper());
@@ -42,24 +38,31 @@ public class AudioMetadata {
         MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
         try {
             mediaMetadataRetriever.setDataSource(audio.toString());
-            int durationInMs = (int) Long.parseLong(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
-            return new AudioMetadata(audio, durationInMs, mediaMetadataRetriever.getEmbeddedPicture());
+            int durationInMs =
+                    (int)
+                            Long.parseLong(
+                                    mediaMetadataRetriever.extractMetadata(
+                                            MediaMetadataRetriever.METADATA_KEY_DURATION));
+            return new AudioMetadata(
+                    audio, durationInMs, mediaMetadataRetriever.getEmbeddedPicture());
         } catch (IllegalArgumentException unused) {
             return new AudioMetadata(audio, -1, null);
         } finally {
             try {
                 mediaMetadataRetriever.release();
             } catch (IOException e) {
-                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.error_release_file), audio, e));
+                SketchwareUtil.toastError(
+                        String.format(Helper.getResString(R.string.error_release_file), audio, e));
             }
         }
     }
 
     public static void fromPathAsync(Path audio, Consumer<AudioMetadata> callback) {
-        metadataExecutor.execute(() -> {
-            AudioMetadata metadata = fromPath(audio);
-            mainHandler.post(() -> callback.accept(metadata));
-        });
+        metadataExecutor.execute(
+                () -> {
+                    AudioMetadata metadata = fromPath(audio);
+                    mainHandler.post(() -> callback.accept(metadata));
+                });
     }
 
     public int getDurationInMs() {
@@ -80,9 +83,7 @@ public class AudioMetadata {
 
     public void setEmbeddedPictureAsAlbumCover(Activity activity, ImageView imageView) {
         if (hasEmbeddedPicture()) {
-            Glide.with(activity)
-                    .load(getEmbeddedPicture())
-                    .into(imageView);
+            Glide.with(activity).load(getEmbeddedPicture()).into(imageView);
         } else {
             imageView.setImageResource(R.drawable.default_album_art_200dp);
             imageView.setBackgroundResource(R.drawable.bg_outline_album);

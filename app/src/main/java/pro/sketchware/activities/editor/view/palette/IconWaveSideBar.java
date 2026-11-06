@@ -2,12 +2,9 @@ package pro.sketchware.activities.editor.view.palette;
 
 import android.content.Context;
 import android.view.ViewGroup;
-
-import pro.sketchware.beans.ViewBean;
-import pro.sketchware.activities.editor.view.palette.IconBase;
-
-import pro.sketchware.beans.ViewBeans;
 import pro.sketchware.R;
+import pro.sketchware.beans.ViewBean;
+import pro.sketchware.beans.ViewBeans;
 
 public class IconWaveSideBar extends IconBase {
 
@@ -27,7 +24,8 @@ public class IconWaveSideBar extends IconBase {
         viewBean.text.textSize = 16;
         viewBean.text.textColor = 0xff008dcd;
         viewBean.convert = "com.sayuti.lib.WaveSideBar";
-        viewBean.inject = "app:sidebar_text_alignment=\"center\"\napp:sidebar_position=\"left\"\napp:sidebar_max_offset=\"80dp\"";
+        viewBean.inject =
+                "app:sidebar_text_alignment=\"center\"\napp:sidebar_position=\"left\"\napp:sidebar_max_offset=\"80dp\"";
         return viewBean;
     }
 }

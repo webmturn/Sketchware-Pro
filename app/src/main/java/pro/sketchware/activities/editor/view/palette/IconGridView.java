@@ -2,13 +2,10 @@ package pro.sketchware.activities.editor.view.palette;
 
 import android.content.Context;
 import android.widget.LinearLayout;
-
+import pro.sketchware.R;
 import pro.sketchware.beans.LayoutBean;
 import pro.sketchware.beans.ViewBean;
-import pro.sketchware.activities.editor.view.palette.IconBase;
-
 import pro.sketchware.beans.ViewBeans;
-import pro.sketchware.R;
 
 public class IconGridView extends IconBase {
 
@@ -30,8 +27,7 @@ public class IconGridView extends IconBase {
         layoutBean.paddingRight = 8;
         layoutBean.paddingBottom = 8;
         viewBean.convert = getName();
-        viewBean.inject = "android:numColumns=\"3\"\n" +
-                "android:stretchMode=\"columnWidth\"";
+        viewBean.inject = "android:numColumns=\"3\"\n" + "android:stretchMode=\"columnWidth\"";
         return viewBean;
     }
 }

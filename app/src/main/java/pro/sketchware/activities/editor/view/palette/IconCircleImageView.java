@@ -1,12 +1,9 @@
 package pro.sketchware.activities.editor.view.palette;
 
 import android.content.Context;
-
-import pro.sketchware.beans.ViewBean;
-import pro.sketchware.activities.editor.view.palette.IconBase;
-
-import pro.sketchware.beans.ViewBeans;
 import pro.sketchware.R;
+import pro.sketchware.beans.ViewBean;
+import pro.sketchware.beans.ViewBeans;
 
 public class IconCircleImageView extends IconBase {
 
@@ -23,7 +20,8 @@ public class IconCircleImageView extends IconBase {
         ViewBean viewBean = new ViewBean();
         viewBean.type = ViewBeans.VIEW_TYPE_WIDGET_CIRCLEIMAGEVIEW;
         viewBean.convert = "de.hdodenhof.circleimageview.CircleImageView";
-        viewBean.inject = "app:civ_border_width=\"3dp\"\napp:civ_border_color=\"#008DCD\"\napp:civ_circle_background_color=\"#FFFFFF\"\napp:civ_border_overlay=\"true\"";
+        viewBean.inject =
+                "app:civ_border_width=\"3dp\"\napp:civ_border_color=\"#008DCD\"\napp:civ_circle_background_color=\"#FFFFFF\"\napp:civ_border_overlay=\"true\"";
         viewBean.image.resName = resourceName;
         return viewBean;
     }

@@ -1,6 +1,5 @@
 package pro.sketchware.core.library;
 
-import pro.sketchware.core.library.BuiltInLibraries;
 import pro.sketchware.core.library.BuiltInLibraries.BuiltInLibrary;
 
 public class BuiltInLibraryUtils {
@@ -20,9 +19,7 @@ public class BuiltInLibraryUtils {
         throw new IllegalArgumentException("Unknown built-in library '" + libraryName + "'!");
     }
 
-    /**
-     * Returns the package name of a given built-in library.
-     */
+    /** Returns the package name of a given built-in library. */
     public static String getPackageName(String libraryName) {
         for (BuiltInLibrary library : BuiltInLibraries.KNOWN_BUILT_IN_LIBRARIES) {
             if (library.getName().equals(libraryName)) {
@@ -34,8 +31,8 @@ public class BuiltInLibraryUtils {
     }
 
     /**
-     * Returns whether a given built-in library has resources that need to be mapped to a R.java file
-     * by a resource processor.
+     * Returns whether a given built-in library has resources that need to be mapped to a R.java
+     * file by a resource processor.
      */
     public static boolean hasResources(String libraryName) {
         for (BuiltInLibrary library : BuiltInLibraries.KNOWN_BUILT_IN_LIBRARIES) {

@@ -5,42 +5,36 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
-
-import pro.sketchware.activities.export.ExportProjectActivity;
-import pro.sketchware.widgets.LoadingDialog;
-import pro.sketchware.activities.projects.MyProjectSettingActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-
-import pro.sketchware.core.async.BackgroundTasks;
-import pro.sketchware.util.io.SharedPrefsHelper;
-import pro.sketchware.core.project.ProjectListManager;
-import pro.sketchware.core.async.TaskHost;
-import pro.sketchware.util.UIHelper;
-import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.util.MapValueHelper;
-import pro.sketchware.util.Helper;
-import pro.sketchware.util.LogUtil;
 import pro.sketchware.R;
-import pro.sketchware.activities.main.fragments.projects.ProjectsFragment;
+import pro.sketchware.activities.export.ExportProjectActivity;
+import pro.sketchware.activities.projects.MyProjectSettingActivity;
+import pro.sketchware.core.async.BackgroundTasks;
+import pro.sketchware.core.async.TaskHost;
+import pro.sketchware.core.project.ProjectListManager;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.databinding.BottomSheetProjectOptionsBinding;
 import pro.sketchware.databinding.MyprojectsItemBinding;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.MapValueHelper;
+import pro.sketchware.util.UIHelper;
+import pro.sketchware.util.io.SharedPrefsHelper;
+import pro.sketchware.widgets.LoadingDialog;
 
 public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ProjectViewHolder> {
     private final ProjectsFragment projectsFragment;
@@ -50,13 +44,13 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
     private List<HashMap<String, Object>> shownProjects = new ArrayList<>();
     private List<HashMap<String, Object>> allProjects;
 
-    public ProjectsAdapter(ProjectsFragment projectsFragment, List<HashMap<String, Object>> allProjects) {
+    public ProjectsAdapter(
+            ProjectsFragment projectsFragment, List<HashMap<String, Object>> allProjects) {
         this.projectsFragment = projectsFragment;
         activity = projectsFragment.requireActivity();
         iconRequests = Glide.with(projectsFragment);
         this.allProjects = allProjects;
         preference = new SharedPrefsHelper(activity, "project");
-
     }
 
     public void setAllProjects(List<HashMap<String, Object>> projects) {
@@ -64,7 +58,8 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
     }
 
     public void filterData(String query) {
-        List<HashMap<String, Object>> newProjects = query.isEmpty() ? allProjects : new ArrayList<>();
+        List<HashMap<String, Object>> newProjects =
+                query.isEmpty() ? allProjects : new ArrayList<>();
         if (!query.isEmpty()) {
             for (HashMap<String, Object> project : allProjects) {
                 if (matchesQuery(project, query)) {
@@ -73,38 +68,54 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
             }
         }
 
-        DiffUtil.DiffResult result = DiffUtil.calculateDiff(new DiffUtil.Callback() {
-            @Override
-            public int getOldListSize() {
-                return shownProjects.size();
-            }
+        DiffUtil.DiffResult result =
+                DiffUtil.calculateDiff(
+                        new DiffUtil.Callback() {
+                            @Override
+                            public int getOldListSize() {
+                                return shownProjects.size();
+                            }
 
-            @Override
-            public int getNewListSize() {
-                return newProjects.size();
-            }
+                            @Override
+                            public int getNewListSize() {
+                                return newProjects.size();
+                            }
 
-            @Override
-            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                String oldScId = MapValueHelper.getString(shownProjects.get(oldItemPosition), "sc_id");
-                String newScId = MapValueHelper.getString(newProjects.get(newItemPosition), "sc_id");
-                return oldScId.equalsIgnoreCase(newScId);
-            }
+                            @Override
+                            public boolean areItemsTheSame(
+                                    int oldItemPosition, int newItemPosition) {
+                                String oldScId =
+                                        MapValueHelper.getString(
+                                                shownProjects.get(oldItemPosition), "sc_id");
+                                String newScId =
+                                        MapValueHelper.getString(
+                                                newProjects.get(newItemPosition), "sc_id");
+                                return oldScId.equalsIgnoreCase(newScId);
+                            }
 
-            @Override
-            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                HashMap<String, Object> oldMap = shownProjects.get(oldItemPosition);
-                HashMap<String, Object> newMap = newProjects.get(newItemPosition);
-                for (String key : Arrays.asList("my_app_name", "my_ws_name", "sc_ver_name", "sc_ver_code", "my_sc_pkg_name")) {
-                    if (!MapValueHelper.getString(oldMap, key).equals(MapValueHelper.getString(newMap, key))) {
-                        return false;
-                    }
-                }
-                boolean oldCustomIcon = MapValueHelper.get(oldMap, "custom_icon");
-                boolean newCustomIcon = MapValueHelper.get(newMap, "custom_icon");
-                return oldCustomIcon == newCustomIcon;
-            }
-        }, true);
+                            @Override
+                            public boolean areContentsTheSame(
+                                    int oldItemPosition, int newItemPosition) {
+                                HashMap<String, Object> oldMap = shownProjects.get(oldItemPosition);
+                                HashMap<String, Object> newMap = newProjects.get(newItemPosition);
+                                for (String key :
+                                        Arrays.asList(
+                                                "my_app_name",
+                                                "my_ws_name",
+                                                "sc_ver_name",
+                                                "sc_ver_code",
+                                                "my_sc_pkg_name")) {
+                                    if (!MapValueHelper.getString(oldMap, key)
+                                            .equals(MapValueHelper.getString(newMap, key))) {
+                                        return false;
+                                    }
+                                }
+                                boolean oldCustomIcon = MapValueHelper.get(oldMap, "custom_icon");
+                                boolean newCustomIcon = MapValueHelper.get(newMap, "custom_icon");
+                                return oldCustomIcon == newCustomIcon;
+                            }
+                        },
+                        true);
         shownProjects = newProjects;
         result.dispatchUpdatesTo(this);
         notifyDataSetChanged();
@@ -158,12 +169,16 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
             ProjectListManager.updateProject(scId, projectMap);
         }
 
-        if (MapValueHelper.get(projectMap, "custom_icon") && !activity.isFinishing() && !activity.isDestroyed()
-                && projectsFragment.isAdded() && projectsFragment.getView() != null) {
+        if (MapValueHelper.get(projectMap, "custom_icon")
+                && !activity.isFinishing()
+                && !activity.isDestroyed()
+                && projectsFragment.isAdded()
+                && projectsFragment.getView() != null) {
             String iconFolder = SketchwarePaths.getIconsPath() + File.separator + scId;
             File iconFile = new File(iconFolder, "icon.png");
             // Icons are overwritten at a fixed path; even timestamp/size can remain unchanged.
-            iconRequests.load(iconFile)
+            iconRequests
+                    .load(iconFile)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .skipMemoryCache(true)
                     .placeholder(R.drawable.default_icon)
@@ -175,43 +190,59 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
             holder.binding.imgPin.setVisibility(View.VISIBLE);
         } else {
             holder.binding.imgPin.setVisibility(View.INVISIBLE);
-
         }
 
-        String version = " - " + MapValueHelper.getString(projectMap, "sc_ver_name") + " (" + MapValueHelper.getString(projectMap, "sc_ver_code") + ")";
-        holder.binding.appName.setText(MapValueHelper.getString(projectMap, "my_ws_name") + version);
+        String version =
+                " - "
+                        + MapValueHelper.getString(projectMap, "sc_ver_name")
+                        + " ("
+                        + MapValueHelper.getString(projectMap, "sc_ver_code")
+                        + ")";
+        holder.binding.appName.setText(
+                MapValueHelper.getString(projectMap, "my_ws_name") + version);
         holder.binding.projectName.setText(MapValueHelper.getString(projectMap, "my_app_name"));
         holder.binding.packageName.setText(MapValueHelper.getString(projectMap, "my_sc_pkg_name"));
         holder.binding.tvPublished.setVisibility(View.VISIBLE);
         holder.binding.tvPublished.setText(scId);
         holder.itemView.setTag("custom");
 
-        holder.binding.getRoot().setOnClickListener(v -> {
-            if (!UIHelper.isClickThrottled()) {
-                projectsFragment.toDesignActivity(scId);
-            }
-        });
+        holder.binding
+                .getRoot()
+                .setOnClickListener(
+                        v -> {
+                            if (!UIHelper.isClickThrottled()) {
+                                projectsFragment.toDesignActivity(scId);
+                            }
+                        });
 
-        View.OnClickListener showProjectSettingsDialog = v -> {
-            UIHelper.disableTemporarily(v);
-            int currentPosition = holder.getAbsoluteAdapterPosition();
-            if (currentPosition != RecyclerView.NO_POSITION) {
-                showProjectOptionsBottomSheet(projectMap, currentPosition);
-            }
-        };
+        View.OnClickListener showProjectSettingsDialog =
+                v -> {
+                    UIHelper.disableTemporarily(v);
+                    int currentPosition = holder.getAbsoluteAdapterPosition();
+                    if (currentPosition != RecyclerView.NO_POSITION) {
+                        showProjectOptionsBottomSheet(projectMap, currentPosition);
+                    }
+                };
 
         holder.binding.expand.setOnClickListener(showProjectSettingsDialog);
-        holder.binding.imgIcon.setOnClickListener(v -> toProjectSettingOrRequestPermission(projectMap, position));
-        holder.binding.getRoot().setOnLongClickListener(v -> {
-            showProjectOptionsBottomSheet(projectMap, holder.getAbsoluteAdapterPosition());
-            return true;
-        });
+        holder.binding.imgIcon.setOnClickListener(
+                v -> toProjectSettingOrRequestPermission(projectMap, position));
+        holder.binding
+                .getRoot()
+                .setOnLongClickListener(
+                        v -> {
+                            showProjectOptionsBottomSheet(
+                                    projectMap, holder.getAbsoluteAdapterPosition());
+                            return true;
+                        });
     }
 
     @NonNull
     @Override
     public ProjectViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        MyprojectsItemBinding binding = MyprojectsItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        MyprojectsItemBinding binding =
+                MyprojectsItemBinding.inflate(
+                        LayoutInflater.from(parent.getContext()), parent, false);
         return new ProjectViewHolder(binding);
     }
 
@@ -227,12 +258,17 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
         progressDialog.show();
 
         String scId = MapValueHelper.getString(projectMap, "sc_id");
-        BackgroundTasks.runIo(TaskHost.of(activity), "ProjectsAdapter", () -> ProjectListManager.deleteProject(activity, scId), () -> {
-            progressDialog.dismiss();
-            shownProjects.remove(position);
-            notifyDataSetChanged();
-            allProjects.remove(projectMap);
-        }, error -> progressDialog.dismiss());
+        BackgroundTasks.runIo(
+                TaskHost.of(activity),
+                "ProjectsAdapter",
+                () -> ProjectListManager.deleteProject(activity, scId),
+                () -> {
+                    progressDialog.dismiss();
+                    shownProjects.remove(position);
+                    notifyDataSetChanged();
+                    allProjects.remove(projectMap);
+                },
+                error -> progressDialog.dismiss());
     }
 
     private void toProjectSettingOrRequestPermission(HashMap<String, Object> project, int index) {
@@ -271,12 +307,15 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
     }
 
     private boolean isPinned(HashMap<String, Object> projectMap) {
-        return Objects.equals(MapValueHelper.getString(projectMap, "sc_id"), preference.getString("pinnedProject", "-1"));
+        return Objects.equals(
+                MapValueHelper.getString(projectMap, "sc_id"),
+                preference.getString("pinnedProject", "-1"));
     }
 
     private void showProjectOptionsBottomSheet(HashMap<String, Object> projectMap, int position) {
         BottomSheetDialog projectOptionsBSD = new BottomSheetDialog(activity);
-        BottomSheetProjectOptionsBinding binding = BottomSheetProjectOptionsBinding.inflate(LayoutInflater.from(activity));
+        BottomSheetProjectOptionsBinding binding =
+                BottomSheetProjectOptionsBinding.inflate(LayoutInflater.from(activity));
         projectOptionsBSD.setContentView(binding.getRoot());
         // Auto peek height can show only the header in wide landscape windows.
         projectOptionsBSD.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -285,44 +324,57 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.Projec
         binding.title.setText(MapValueHelper.getString(projectMap, "my_ws_name"));
         binding.tvProjectId.setText(MapValueHelper.getString(projectMap, "sc_id"));
 
-        binding.projectSettings.setOnClickListener(v -> {
-            toProjectSettingOrRequestPermission(projectMap, position);
-            projectOptionsBSD.dismiss();
-        });
+        binding.projectSettings.setOnClickListener(
+                v -> {
+                    toProjectSettingOrRequestPermission(projectMap, position);
+                    projectOptionsBSD.dismiss();
+                });
 
-        binding.projectBackup.setOnClickListener(v -> {
-            backupProject(projectMap);
-            projectOptionsBSD.dismiss();
-        });
+        binding.projectBackup.setOnClickListener(
+                v -> {
+                    backupProject(projectMap);
+                    projectOptionsBSD.dismiss();
+                });
 
-        binding.pinProject.setOnClickListener(v -> {
-            changePinState(projectMap);
-            projectOptionsBSD.dismiss();
-        });
+        binding.pinProject.setOnClickListener(
+                v -> {
+                    changePinState(projectMap);
+                    projectOptionsBSD.dismiss();
+                });
 
-        binding.exportSign.setOnClickListener(v -> {
-            toExportProjectActivity(projectMap);
-            projectOptionsBSD.dismiss();
-        });
+        binding.exportSign.setOnClickListener(
+                v -> {
+                    toExportProjectActivity(projectMap);
+                    projectOptionsBSD.dismiss();
+                });
 
-        binding.projectConfig.setOnClickListener(v -> {
-            showProjectSettingDialog(projectMap);
-            projectOptionsBSD.dismiss();
-        });
+        binding.projectConfig.setOnClickListener(
+                v -> {
+                    showProjectSettingDialog(projectMap);
+                    projectOptionsBSD.dismiss();
+                });
 
-        binding.projectDelete.setOnClickListener(v -> {
-            projectOptionsBSD.dismiss();
-            MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(activity);
-            dialog.setIcon(R.drawable.icon_delete);
-            dialog.setTitle(Helper.getResString(R.string.delete_project_dialog_title));
-            dialog.setMessage(Helper.getResString(R.string.delete_project_dialog_message).replace("%1$s", MapValueHelper.getString(projectMap, "my_app_name")));
-            dialog.setPositiveButton(Helper.getResString(R.string.common_word_delete), (v1, which) -> {
-                deleteProject(projectMap, position);
-                v1.dismiss();
-            });
-            dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
-            dialog.show();
-        });
+        binding.projectDelete.setOnClickListener(
+                v -> {
+                    projectOptionsBSD.dismiss();
+                    MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(activity);
+                    dialog.setIcon(R.drawable.icon_delete);
+                    dialog.setTitle(Helper.getResString(R.string.delete_project_dialog_title));
+                    dialog.setMessage(
+                            Helper.getResString(R.string.delete_project_dialog_message)
+                                    .replace(
+                                            "%1$s",
+                                            MapValueHelper.getString(projectMap, "my_app_name")));
+                    dialog.setPositiveButton(
+                            Helper.getResString(R.string.common_word_delete),
+                            (v1, which) -> {
+                                deleteProject(projectMap, position);
+                                v1.dismiss();
+                            });
+                    dialog.setNegativeButton(
+                            Helper.getResString(R.string.common_word_cancel), null);
+                    dialog.show();
+                });
 
         if (isPinned(projectMap)) {
             binding.pinIcon.setImageResource(R.drawable.ic_mtrl_unpin);

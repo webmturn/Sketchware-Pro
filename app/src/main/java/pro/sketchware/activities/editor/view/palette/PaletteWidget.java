@@ -8,46 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import pro.sketchware.widgets.CustomScrollView;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.color.MaterialColors;
-
 import java.util.HashMap;
-
-import pro.sketchware.util.ViewUtil;
-import pro.sketchware.activities.editor.view.palette.IconBadgeView;
-import pro.sketchware.activities.editor.view.palette.IconBottomNavigationView;
-import pro.sketchware.activities.editor.view.palette.IconCardView;
-import pro.sketchware.activities.editor.view.palette.IconCircleImageView;
-import pro.sketchware.activities.editor.view.palette.IconCodeView;
-import pro.sketchware.activities.editor.view.palette.IconCollapsingToolbar;
-import pro.sketchware.activities.editor.view.palette.IconGoogleSignInButton;
-import pro.sketchware.activities.editor.view.palette.IconLottieAnimation;
-import pro.sketchware.activities.editor.view.palette.IconMaterialButton;
-import pro.sketchware.activities.editor.view.palette.IconOTPView;
-import pro.sketchware.activities.editor.view.palette.IconPatternLockView;
-import pro.sketchware.activities.editor.view.palette.IconRadioGroup;
-import pro.sketchware.activities.editor.view.palette.IconRecyclerView;
-import pro.sketchware.activities.editor.view.palette.IconSwipeRefreshLayout;
-import pro.sketchware.activities.editor.view.palette.IconTabLayout;
-import pro.sketchware.activities.editor.view.palette.IconTextInputLayout;
-import pro.sketchware.activities.editor.view.palette.IconViewPager;
-import pro.sketchware.activities.editor.view.palette.IconWaveSideBar;
-import pro.sketchware.activities.editor.view.palette.IconYoutubePlayer;
-import pro.sketchware.activities.editor.view.palette.IconAnalogClock;
-import pro.sketchware.activities.editor.view.palette.IconAutoCompleteTextView;
-import pro.sketchware.activities.editor.view.palette.IconDatePicker;
-import pro.sketchware.activities.editor.view.palette.IconDigitalClock;
-import pro.sketchware.activities.editor.view.palette.IconGridView;
-import pro.sketchware.activities.editor.view.palette.IconMultiAutoCompleteTextView;
-import pro.sketchware.activities.editor.view.palette.IconRadioButton;
-import pro.sketchware.activities.editor.view.palette.IconRatingBar;
-import pro.sketchware.activities.editor.view.palette.IconSearchView;
-import pro.sketchware.activities.editor.view.palette.IconTimePicker;
-import pro.sketchware.activities.editor.view.palette.IconVideoView;
-import pro.sketchware.util.Helper;
 import pro.sketchware.R;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.ViewUtil;
+import pro.sketchware.widgets.CustomScrollView;
 
 public class PaletteWidget extends LinearLayout {
 
@@ -99,12 +66,13 @@ public class PaletteWidget extends LinearLayout {
     }
 
     public View addLayout(PaletteWidget.LayoutType layoutType, String tag) {
-        LinearLayout layout = switch (layoutType) {
-            case a -> new IconLinearHorizontal(getContext());
-            case b -> new IconLinearVertical(getContext());
-            case c -> new IconScrollViewHorizontal(getContext());
-            case d -> new IconScrollViewVertical(getContext());
-        };
+        LinearLayout layout =
+                switch (layoutType) {
+                    case a -> new IconLinearHorizontal(getContext());
+                    case b -> new IconLinearVertical(getContext());
+                    case c -> new IconScrollViewHorizontal(getContext());
+                    case d -> new IconScrollViewVertical(getContext());
+                };
 
         if (tag != null && !tag.isEmpty()) {
             layout.setTag(tag);
@@ -114,7 +82,8 @@ public class PaletteWidget extends LinearLayout {
         return layout;
     }
 
-    public View addWidget(PaletteWidget.WidgetType widgetType, String tag, String text, String resourceName) {
+    public View addWidget(
+            PaletteWidget.WidgetType widgetType, String tag, String text, String resourceName) {
         IconBase iconBase;
         switch (widgetType) {
             case a -> iconBase = new IconButton(getContext());
@@ -171,7 +140,9 @@ public class PaletteWidget extends LinearLayout {
         LinearLayout target = targetType == 0 ? layoutContainer : widgetsContainer;
 
         TextView titleView = new TextView(getContext());
-        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LayoutParams layoutParams =
+                new LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(dpToPx(4), dpToPx(4), dpToPx(4), dpToPx(4));
         titleView.setLayoutParams(layoutParams);
         titleView.setText(title);
@@ -183,32 +154,33 @@ public class PaletteWidget extends LinearLayout {
     public View extraWidget(String tag, String title, String name) {
         IconBase iconBase;
         Context context = getContext();
-        iconBase = switch (title) {
-            case "DatePicker" -> new IconDatePicker(context);
-            case "RatingBar" -> new IconRatingBar(context);
-            case "SearchView" -> new IconSearchView(context);
-            case "DigitalClock" -> new IconDigitalClock(context);
-            case "RadioButton" -> new IconRadioButton(context);
-            case "GridView" -> new IconGridView(context);
-            case "AutoCompleteTextView" -> new IconAutoCompleteTextView(context);
-            case "MultiAutoCompleteTextView" -> new IconMultiAutoCompleteTextView(context);
-            case "VideoView" -> new IconVideoView(context);
-            case "TimePicker" -> new IconTimePicker(context);
-            case "AnalogClock" -> new IconAnalogClock(context);
-            case "ViewPager" -> new IconViewPager(context);
-            case "BadgeView" -> new IconBadgeView(context);
-            case "PatternLockView" -> new IconPatternLockView(context);
-            case "WaveSideBar" -> new IconWaveSideBar(context);
-            case "SignInButton" -> new IconGoogleSignInButton(context);
-            case "MaterialButton" -> new IconMaterialButton(context);
-            case "CircleImageView" -> new IconCircleImageView(context);
-            case "LottieAnimation" -> new IconLottieAnimation(context);
-            case "YoutubePlayer" -> new IconYoutubePlayer(context);
-            case "OTPView" -> new IconOTPView(context);
-            case "CodeView" -> new IconCodeView(context);
-            case "RecyclerView" -> new IconRecyclerView(context);
-            default -> new IconBase(context);
-        };
+        iconBase =
+                switch (title) {
+                    case "DatePicker" -> new IconDatePicker(context);
+                    case "RatingBar" -> new IconRatingBar(context);
+                    case "SearchView" -> new IconSearchView(context);
+                    case "DigitalClock" -> new IconDigitalClock(context);
+                    case "RadioButton" -> new IconRadioButton(context);
+                    case "GridView" -> new IconGridView(context);
+                    case "AutoCompleteTextView" -> new IconAutoCompleteTextView(context);
+                    case "MultiAutoCompleteTextView" -> new IconMultiAutoCompleteTextView(context);
+                    case "VideoView" -> new IconVideoView(context);
+                    case "TimePicker" -> new IconTimePicker(context);
+                    case "AnalogClock" -> new IconAnalogClock(context);
+                    case "ViewPager" -> new IconViewPager(context);
+                    case "BadgeView" -> new IconBadgeView(context);
+                    case "PatternLockView" -> new IconPatternLockView(context);
+                    case "WaveSideBar" -> new IconWaveSideBar(context);
+                    case "SignInButton" -> new IconGoogleSignInButton(context);
+                    case "MaterialButton" -> new IconMaterialButton(context);
+                    case "CircleImageView" -> new IconCircleImageView(context);
+                    case "LottieAnimation" -> new IconLottieAnimation(context);
+                    case "YoutubePlayer" -> new IconYoutubePlayer(context);
+                    case "OTPView" -> new IconOTPView(context);
+                    case "CodeView" -> new IconCodeView(context);
+                    case "RecyclerView" -> new IconRecyclerView(context);
+                    default -> new IconBase(context);
+                };
         if (tag != null && !tag.isEmpty()) {
             iconBase.setTag(tag);
         }
@@ -222,17 +194,18 @@ public class PaletteWidget extends LinearLayout {
     public View extraWidgetLayout(String tag, String name) {
         IconBase iconBase;
         Context context = getContext();
-        iconBase = switch (name) {
-            case "TabLayout" -> new IconTabLayout(context);
-            case "BottomNavigationView" -> new IconBottomNavigationView(context);
-            case "CollapsingToolbarLayout" -> new IconCollapsingToolbar(context);
-            case "SwipeRefreshLayout" -> new IconSwipeRefreshLayout(context);
-            case "RadioGroup" -> new IconRadioGroup(context);
-            case "CardView" -> new IconCardView(context);
-            case "TextInputLayout" -> new IconTextInputLayout(context);
-            case "RelativeLayout" -> new IconRelativeLayout(context);
-            default -> new IconBase(context);
-        };
+        iconBase =
+                switch (name) {
+                    case "TabLayout" -> new IconTabLayout(context);
+                    case "BottomNavigationView" -> new IconBottomNavigationView(context);
+                    case "CollapsingToolbarLayout" -> new IconCollapsingToolbar(context);
+                    case "SwipeRefreshLayout" -> new IconSwipeRefreshLayout(context);
+                    case "RadioGroup" -> new IconRadioGroup(context);
+                    case "CardView" -> new IconCardView(context);
+                    case "TextInputLayout" -> new IconTextInputLayout(context);
+                    case "RelativeLayout" -> new IconRelativeLayout(context);
+                    default -> new IconBase(context);
+                };
         if (tag != null && !tag.isEmpty()) {
             iconBase.setTag(tag);
         }
@@ -260,27 +233,27 @@ public class PaletteWidget extends LinearLayout {
     }
 
     public enum LayoutType {
-        a, //eLinearHorizontal
-        b, //eLinearVertical
-        c, //eScrollHorizontal
-        d //eScrollVertical
+        a, // eLinearHorizontal
+        b, // eLinearVertical
+        c, // eScrollHorizontal
+        d // eScrollVertical
     }
 
     public enum WidgetType {
-        a, //eButton
-        b, //eTextView
-        c, //eEditText
-        d, //eImageView
-        e, //eListView
-        f, //eSpinner
-        g, //eCheckBox
-        h, //eWebView
-        i, //eSwitch
-        j, //eSeekBar
-        k, //eCalenderView
-        l, //eAddView
-        m, //eProgressBar
-        n, //eMapView
-        o //eRadioButton
+        a, // eButton
+        b, // eTextView
+        c, // eEditText
+        d, // eImageView
+        e, // eListView
+        f, // eSpinner
+        g, // eCheckBox
+        h, // eWebView
+        i, // eSwitch
+        j, // eSeekBar
+        k, // eCalenderView
+        l, // eAddView
+        m, // eProgressBar
+        n, // eMapView
+        o // eRadioButton
     }
 }

@@ -2,13 +2,10 @@ package pro.sketchware.activities.editor.view.palette;
 
 import android.content.Context;
 import android.view.ViewGroup;
-
+import pro.sketchware.R;
 import pro.sketchware.beans.LayoutBean;
 import pro.sketchware.beans.ViewBean;
-import pro.sketchware.activities.editor.view.palette.IconBase;
-
 import pro.sketchware.beans.ViewBeans;
-import pro.sketchware.R;
 
 public class IconSearchView extends IconBase {
 

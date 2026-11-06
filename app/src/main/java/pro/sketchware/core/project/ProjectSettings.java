@@ -3,18 +3,14 @@ package pro.sketchware.core.project;
 import android.app.Application;
 import android.content.pm.ApplicationInfo;
 import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.io.File;
-
+import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.LogUtil;
-import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.util.FileUtil;
 
 public class ProjectSettings {
 
@@ -26,13 +22,12 @@ public class ProjectSettings {
     public static final String SETTING_MINIMUM_SDK_VERSION = "min_sdk";
 
     /**
-     * Setting to make the app's main theme inherit from fully material-styled themes, and not *.Bridge ones
+     * Setting to make the app's main theme inherit from fully material-styled themes, and not
+     * *.Bridge ones
      */
     public static final String SETTING_ENABLE_BRIDGELESS_THEMES = "enable_bridgeless_themes";
 
-    /**
-     * Setting to enable view binding in the project
-     */
+    /** Setting to enable view binding in the project */
     public static final String SETTING_ENABLE_VIEWBINDING = "enable_viewbinding";
 
     /**
@@ -50,14 +45,16 @@ public class ProjectSettings {
     public static final String SETTING_TARGET_SDK_VERSION = "target_sdk";
 
     /**
-     * Setting to disable showing deprecated methods included in every generated class, e.g. showMessage(String)
+     * Setting to disable showing deprecated methods included in every generated class, e.g.
+     * showMessage(String)
      */
     public static final String SETTING_DISABLE_OLD_METHODS = "disable_old_methods";
-    /**
-     * Setting to use new xml command
-     */
+
+    /** Setting to use new xml command */
     public static final String SETTING_NEW_XML_COMMAND = "xml_command";
-    public static final String SETTING_ENABLE_LOCAL_LIBRARY_MANIFEST_MERGE = "enable_local_library_manifest_merge";
+
+    public static final String SETTING_ENABLE_LOCAL_LIBRARY_MANIFEST_MERGE =
+            "enable_local_library_manifest_merge";
     public static final String SETTING_GENERIC_VALUE_TRUE = "true";
     public static final String SETTING_GENERIC_VALUE_FALSE = "false";
     private static final String TAG = "ProjectSettings";
@@ -81,12 +78,16 @@ public class ProjectSettings {
     private void load() {
         if (FileUtil.isExistFile(path)) {
             try {
-                settings = new Gson().fromJson(FileUtil.readFile(path).trim(), Helper.TYPE_STRING_MAP);
+                settings =
+                        new Gson().fromJson(FileUtil.readFile(path).trim(), Helper.TYPE_STRING_MAP);
                 if (settings == null) {
                     settings = new HashMap<>();
                 }
             } catch (JsonSyntaxException e) {
-                Log.e("ProjectSettings", "Failed to read project settings for project " + sc_id + "!", e);
+                Log.e(
+                        "ProjectSettings",
+                        "Failed to read project settings for project " + sc_id + "!",
+                        e);
                 settings = new HashMap<>();
                 save();
             }
@@ -105,7 +106,10 @@ public class ProjectSettings {
                 //noinspection ConstantConditions because we catch that already
                 return Integer.parseInt(settings.get(SETTING_MINIMUM_SDK_VERSION));
             } catch (NumberFormatException | NullPointerException e) {
-                LogUtil.e(TAG, "Failed to parse the project's minimum SDK version! Defaulting to 21", e);
+                LogUtil.e(
+                        TAG,
+                        "Failed to parse the project's minimum SDK version! Defaulting to 21",
+                        e);
                 return 21;
             }
         } else {

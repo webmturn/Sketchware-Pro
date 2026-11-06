@@ -1,28 +1,23 @@
 package pro.sketchware.activities.editor.manage.view;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-
-import pro.sketchware.beans.ProjectFileBean;
-import pro.sketchware.beans.ViewBean;
-import pro.sketchware.activities.base.BaseDialogActivity;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-
 import java.util.ArrayList;
 import java.util.Objects;
-
-import pro.sketchware.core.validation.ActivityNameValidator;
-import pro.sketchware.util.SketchToast;
-import pro.sketchware.activities.editor.manage.view.PresetLayoutFactory;
-import pro.sketchware.core.project.BlockConstants;
-import pro.sketchware.util.Helper;
 import pro.sketchware.R;
+import pro.sketchware.activities.base.BaseDialogActivity;
+import pro.sketchware.beans.ProjectFileBean;
+import pro.sketchware.beans.ViewBean;
+import pro.sketchware.core.project.BlockConstants;
+import pro.sketchware.core.validation.ActivityNameValidator;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.SketchToast;
 
 public class AddCustomViewActivity extends BaseDialogActivity implements View.OnClickListener {
 
@@ -38,12 +33,20 @@ public class AddCustomViewActivity extends BaseDialogActivity implements View.On
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presetLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(), result -> {
-                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        presetName = ((ProjectFileBean) Objects.requireNonNull(result.getData().getParcelableExtra("preset_data"))).presetName;
-                    }
-                });
+        presetLauncher =
+                registerForActivityResult(
+                        new ActivityResultContracts.StartActivityForResult(),
+                        result -> {
+                            if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                                presetName =
+                                        ((ProjectFileBean)
+                                                        Objects.requireNonNull(
+                                                                result.getData()
+                                                                        .getParcelableExtra(
+                                                                                "preset_data")))
+                                                .presetName;
+                            }
+                        });
         setContentView(R.layout.manage_screen_custom_view_add);
         setDialogTitle(Helper.getResString(R.string.design_manager_view_title_add_custom_view));
         setDialogIcon(R.drawable.ic_mtrl_add);
@@ -52,10 +55,18 @@ public class AddCustomViewActivity extends BaseDialogActivity implements View.On
 
         ArrayList<String> alreadyInUseNames = getIntent().getStringArrayListExtra("screen_names");
         customViewName = findViewById(R.id.ed_input);
-        ((TextInputLayout) findViewById(R.id.ti_input)).setHint(Helper.getResString(R.string.design_manager_view_hint_enter_view_name));
+        ((TextInputLayout) findViewById(R.id.ti_input))
+                .setHint(Helper.getResString(R.string.design_manager_view_hint_enter_view_name));
         TextView description = findViewById(R.id.tv_desc);
-        description.setText(Helper.getResString(R.string.design_manager_view_description_guide_use_custom_view));
-        viewNameValidator = new ActivityNameValidator(this, findViewById(R.id.ti_input), BlockConstants.RESERVED_KEYWORDS, alreadyInUseNames);
+        description.setText(
+                Helper.getResString(
+                        R.string.design_manager_view_description_guide_use_custom_view));
+        viewNameValidator =
+                new ActivityNameValidator(
+                        this,
+                        findViewById(R.id.ti_input),
+                        BlockConstants.RESERVED_KEYWORDS,
+                        alreadyInUseNames);
         super.dialogOkButton.setOnClickListener(this);
         super.dialogCancelButton.setOnClickListener(this);
     }
@@ -69,13 +80,21 @@ public class AddCustomViewActivity extends BaseDialogActivity implements View.On
             }
 
             Intent intent = new Intent();
-            intent.putExtra("project_file", new ProjectFileBean(ProjectFileBean.PROJECT_FILE_TYPE_CUSTOM_VIEW, Helper.getText(customViewName)));
+            intent.putExtra(
+                    "project_file",
+                    new ProjectFileBean(
+                            ProjectFileBean.PROJECT_FILE_TYPE_CUSTOM_VIEW,
+                            Helper.getText(customViewName)));
             if (presetName != null) {
                 intent.putExtra("preset_views", getPresetData(presetName));
             }
 
             setResult(RESULT_OK, intent);
-            SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.design_manager_message_add_complete), 0).show();
+            SketchToast.toast(
+                            getApplicationContext(),
+                            Helper.getResString(R.string.design_manager_message_add_complete),
+                            0)
+                    .show();
             finish();
         } else if (id == R.id.common_dialog_default_button) {
             Intent intent = new Intent(getApplicationContext(), PresetSettingActivity.class);

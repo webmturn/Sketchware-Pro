@@ -1,19 +1,14 @@
 package pro.sketchware.core.codegen;
 
 import androidx.annotation.DrawableRes;
-
 import java.util.ArrayList;
-
-import pro.sketchware.util.Helper;
-import pro.sketchware.core.codegen.EventsHandler;
 import pro.sketchware.R;
 import pro.sketchware.core.project.ClassInfo;
+import pro.sketchware.util.Helper;
 
 public class EventRegistry {
 
-    /**
-     * The known Event names that can be added to all Activities.
-     */
+    /** The known Event names that can be added to all Activities. */
     public static final String[] ACTIVITY_EVENTS = EventsHandler.getActivityEvents();
 
     /**
@@ -22,8 +17,15 @@ public class EventRegistry {
     @DrawableRes
     public static int getEventIconResource(String eventName) {
         return switch (eventName) {
-            case "initializeLogic", "onBackPressed", "onPostCreate", "onStart", "onStop",
-                 "onDestroy", "onResume", "onPause", "moreBlock" ->
+            case "initializeLogic",
+                    "onBackPressed",
+                    "onPostCreate",
+                    "onStart",
+                    "onStop",
+                    "onDestroy",
+                    "onResume",
+                    "onPause",
+                    "moreBlock" ->
                     R.drawable.bg_event_type_activity;
             case "onBannerAdClicked", "onClick" -> R.drawable.ic_mtrl_touch;
             case "onCheckedChange" -> R.drawable.ic_mtrl_checkbox;
@@ -55,8 +57,11 @@ public class EventRegistry {
             case "onAccuracyChanged" -> R.drawable.ic_mtrl_center;
             case "onInterstitialAdLoaded", "onBannerAdLoaded", "onRewardAdLoaded" ->
                     R.drawable.ic_mtrl_loaded;
-            case "onBannerAdFailedToLoad", "onInterstitialAdFailedToLoad",
-                 "onAdFailedToShowFullScreenContent", "onRewardAdFailedToLoad", "onFailure" ->
+            case "onBannerAdFailedToLoad",
+                    "onInterstitialAdFailedToLoad",
+                    "onAdFailedToShowFullScreenContent",
+                    "onRewardAdFailedToLoad",
+                    "onFailure" ->
                     R.drawable.ic_mtrl_load_failed;
             case "onAdDismissedFullScreenContent", "onBannerAdClosed" ->
                     R.drawable.ic_mtrl_preview_off;

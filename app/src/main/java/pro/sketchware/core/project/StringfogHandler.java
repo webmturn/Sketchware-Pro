@@ -1,16 +1,13 @@
 package pro.sketchware.core.project;
 
-import pro.sketchware.R;
 import com.google.gson.Gson;
-
 import java.util.HashMap;
-
-import pro.sketchware.core.build.ProjectBuilder;
-import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.util.Helper;
+import pro.sketchware.R;
 import pro.sketchware.core.build.BuildProgressReceiver;
 import pro.sketchware.core.build.BuildStage;
+import pro.sketchware.core.build.ProjectBuilder;
 import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.Helper;
 
 public class StringfogHandler {
 
@@ -36,13 +33,15 @@ public class StringfogHandler {
             HashMap<String, String> config = null;
 
             try {
-                config = new Gson().fromJson(FileUtil.readFile(config_path), Helper.TYPE_STRING_MAP);
+                config =
+                        new Gson().fromJson(FileUtil.readFile(config_path), Helper.TYPE_STRING_MAP);
             } finally {
                 Object enabledValue;
 
-                enabled = (config != null)
-                        && (enabledValue = config.get("enabled")) != null
-                        && enabledValue.equals("true");
+                enabled =
+                        (config != null)
+                                && (enabledValue = config.get("enabled")) != null
+                                && enabledValue.equals("true");
             }
 
             return enabled;
@@ -63,12 +62,12 @@ public class StringfogHandler {
         FileUtil.writeFile(config_path, new Gson().toJson(config));
     }
 
-    /**
-     * Check if StringFog is enabled for the project, and run it if it is.
-     */
+    /** Check if StringFog is enabled for the project, and run it if it is. */
     public void start(BuildProgressReceiver progressReceiver, ProjectBuilder builder) {
         if (isStringfogEnabled()) {
-            progressReceiver.onProgress(Helper.getResString(R.string.build_progress_running_stringfog), BuildStage.OBFUSCATE_STRINGS);
+            progressReceiver.onProgress(
+                    Helper.getResString(R.string.build_progress_running_stringfog),
+                    BuildStage.OBFUSCATE_STRINGS);
             builder.runStringfog();
         }
     }

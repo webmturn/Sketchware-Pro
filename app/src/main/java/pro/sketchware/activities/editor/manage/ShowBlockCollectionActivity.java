@@ -9,32 +9,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-
 import androidx.annotation.NonNull;
-
-import pro.sketchware.beans.BlockBean;
-import pro.sketchware.beans.BlockCollectionBean;
-import pro.sketchware.activities.editor.logic.BlockPane;
-import pro.sketchware.activities.base.BaseAppCompatActivity;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import pro.sketchware.util.DeviceUtil;
-import pro.sketchware.core.project.BlockCollectionManager;
-import pro.sketchware.core.validation.UniqueNameValidator;
+import pro.sketchware.R;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
+import pro.sketchware.activities.editor.logic.BlockPane;
+import pro.sketchware.beans.BlockBean;
+import pro.sketchware.beans.BlockCollectionBean;
+import pro.sketchware.core.block.view.BaseBlockView;
 import pro.sketchware.core.block.view.BlockView;
 import pro.sketchware.core.block.view.FieldBlockView;
-import pro.sketchware.core.block.view.BaseBlockView;
-import pro.sketchware.util.SketchToast;
-import pro.sketchware.util.Helper;
-import pro.sketchware.R;
+import pro.sketchware.core.project.BlockCollectionManager;
+import pro.sketchware.core.validation.UniqueNameValidator;
 import pro.sketchware.databinding.ManageCollectionShowBlockBinding;
-import pro.sketchware.activities.editor.manage.BlockImageExporter;
+import pro.sketchware.util.DeviceUtil;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.SketchToast;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.UI;
 
-public class ShowBlockCollectionActivity extends BaseAppCompatActivity implements View.OnClickListener {
+public class ShowBlockCollectionActivity extends BaseAppCompatActivity
+        implements View.OnClickListener {
 
     private String blockName;
     private BlockPane pane;
@@ -90,9 +86,12 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
 
                     if (parameter != null && !parameter.isEmpty()) {
                         if (parameter.charAt(0) == '@') {
-                            BlockView parameterBlock = blockIdsWithBlocks.get(Integer.valueOf(parameter.substring(1)));
-                            if (parameterBlock != null && block.childViews.get(i) instanceof BaseBlockView) {
-                                block.replaceParameter((BaseBlockView) block.childViews.get(i), parameterBlock);
+                            BlockView parameterBlock =
+                                    blockIdsWithBlocks.get(Integer.valueOf(parameter.substring(1)));
+                            if (parameterBlock != null
+                                    && block.childViews.get(i) instanceof BaseBlockView) {
+                                block.replaceParameter(
+                                        (BaseBlockView) block.childViews.get(i), parameterBlock);
                             }
                         } else if (block.childViews.get(i) instanceof FieldBlockView fieldBlock) {
                             fieldBlock.setArgValue(parameter);
@@ -111,17 +110,25 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
     private void resizeBottomViews() {
         int screenHeight = getResources().getDisplayMetrics().heightPixels;
         binding.layoutButton.measure(0, 0);
-        binding.editor.setLayoutParams(new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ((screenHeight - DeviceUtil.getToolbarHeight((Context) this)) - UI.getStatusBarHeight(this)) - binding.layoutButton.getMeasuredHeight()));
+        binding.editor.setLayoutParams(
+                new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ((screenHeight - DeviceUtil.getToolbarHeight((Context) this))
+                                        - UI.getStatusBarHeight(this))
+                                - binding.layoutButton.getMeasuredHeight()));
         binding.editor.requestLayout();
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.save_button && blockNameValidator.isValid()) {
-            BlockCollectionManager.getInstance().renameBlock(blockName, Helper.getText(blockNameEditorText), true);
-            SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.design_manager_message_edit_complete), SketchToast.TOAST_NORMAL).show();
+            BlockCollectionManager.getInstance()
+                    .renameBlock(blockName, Helper.getText(blockNameEditorText), true);
+            SketchToast.toast(
+                            getApplicationContext(),
+                            Helper.getResString(R.string.design_manager_message_edit_complete),
+                            SketchToast.TOAST_NORMAL)
+                    .show();
             finish();
         }
     }
@@ -138,7 +145,9 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
         binding = ManageCollectionShowBlockBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setSupportActionBar(binding.toolbar);
-        getSupportActionBar().setTitle(Helper.getResString(R.string.design_manager_block_detail_actionbar_title));
+        getSupportActionBar()
+                .setTitle(
+                        Helper.getResString(R.string.design_manager_block_detail_actionbar_title));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         binding.toolbar.setNavigationOnClickListener(Helper.getBackPressedClickListener(this));
@@ -150,11 +159,16 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
         blockNameEditorText = binding.edInput.getEditText();
         blockNameEditorText.setPrivateImeOptions("defaultInputmode=english;");
         blockNameEditorText.setText(blockName);
-        binding.edInput.setHint(Helper.getResString(R.string.design_manager_block_hint_enter_block_name));
+        binding.edInput.setHint(
+                Helper.getResString(R.string.design_manager_block_hint_enter_block_name));
 
         binding.saveButton.setText(Helper.getResString(R.string.common_word_save));
         binding.saveButton.setOnClickListener(this);
-        blockNameValidator = new UniqueNameValidator(this, binding.edInput.getTextInputLayout(), BlockCollectionManager.getInstance().getBlockNames());
+        blockNameValidator =
+                new UniqueNameValidator(
+                        this,
+                        binding.edInput.getTextInputLayout(),
+                        BlockCollectionManager.getInstance().getBlockNames());
     }
 
     @Override
@@ -178,7 +192,13 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
     }
 
     private BlockView getBlock(BlockBean blockBean) {
-        return new BlockView(this, Integer.parseInt(blockBean.id), blockBean.spec, blockBean.type, blockBean.typeName, blockBean.opCode);
+        return new BlockView(
+                this,
+                Integer.parseInt(blockBean.id),
+                blockBean.spec,
+                blockBean.type,
+                blockBean.typeName,
+                blockBean.opCode);
     }
 
     @Override
@@ -194,7 +214,9 @@ public class ShowBlockCollectionActivity extends BaseAppCompatActivity implement
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == 12) {
             if (BlockImageExporter.saveBitmap(binding.editor.getChildAt(0), blockName).exists()) {
-                SketchwareUtil.toast(String.format(Helper.getResString(R.string.toast_block_image_saved), blockName));
+                SketchwareUtil.toast(
+                        String.format(
+                                Helper.getResString(R.string.toast_block_image_saved), blockName));
             } else {
                 SketchwareUtil.toastError(Helper.getResString(R.string.error_save_image_failed));
             }

@@ -1,9 +1,8 @@
 package pro.sketchware.core.codegen;
-import pro.sketchware.core.codegen.ComponentCodeGenerator;
 
 /**
- * Formats generated Java and XML code with proper indentation.
- * Extracted from {@link ComponentCodeGenerator} to reduce its size.
+ * Formats generated Java and XML code with proper indentation. Extracted from {@link
+ * ComponentCodeGenerator} to reduce its size.
  */
 public class CodeFormatter {
 
@@ -25,8 +24,11 @@ public class CodeFormatter {
         for (int i = 0; i < codeChars.length; i++) {
             char codeBit = codeChars[i];
 
-            if (isNewLine && !processingSingleLineComment && !processingMultiLineComment
-                    && !processingChar && !processingString) {
+            if (isNewLine
+                    && !processingSingleLineComment
+                    && !processingMultiLineComment
+                    && !processingChar
+                    && !processingString) {
                 if (!isXML) {
                     if (codeBit == ' ' || codeBit == '\t') {
                         continue;

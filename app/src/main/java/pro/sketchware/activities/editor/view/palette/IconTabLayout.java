@@ -2,13 +2,10 @@ package pro.sketchware.activities.editor.view.palette;
 
 import android.content.Context;
 import android.view.ViewGroup;
-
-import pro.sketchware.beans.ViewBean;
-import pro.sketchware.activities.editor.view.AndroidxOrMaterialView;
-import pro.sketchware.activities.editor.view.palette.IconBase;
-
-import pro.sketchware.beans.ViewBeans;
 import pro.sketchware.R;
+import pro.sketchware.activities.editor.view.AndroidxOrMaterialView;
+import pro.sketchware.beans.ViewBean;
+import pro.sketchware.beans.ViewBeans;
 
 public class IconTabLayout extends IconBase implements AndroidxOrMaterialView {
 
@@ -25,7 +22,8 @@ public class IconTabLayout extends IconBase implements AndroidxOrMaterialView {
         viewBean.layout.width = ViewGroup.LayoutParams.MATCH_PARENT;
         viewBean.layout.backgroundColor = 0xff008dcd;
         viewBean.convert = "com.google.android.material.tabs.TabLayout";
-        viewBean.inject = "app:tabGravity=\"fill\"\napp:tabMode=\"fixed\"\napp:tabIndicatorHeight=\"3dp\"\napp:tabIndicatorColor=\"@android:color/white\"\napp:tabSelectedTextColor=\"@android:color/white\"\napp:tabTextColor=\"@android:color/white\"\napp:tabTextAppearance=\"@android:style/TextAppearance.Widget.TabWidget\"";
+        viewBean.inject =
+                "app:tabGravity=\"fill\"\napp:tabMode=\"fixed\"\napp:tabIndicatorHeight=\"3dp\"\napp:tabIndicatorColor=\"@android:color/white\"\napp:tabSelectedTextColor=\"@android:color/white\"\napp:tabTextColor=\"@android:color/white\"\napp:tabTextAppearance=\"@android:style/TextAppearance.Widget.TabWidget\"";
         return viewBean;
     }
 }

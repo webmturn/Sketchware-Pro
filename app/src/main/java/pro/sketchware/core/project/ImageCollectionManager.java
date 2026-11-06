@@ -1,15 +1,12 @@
 package pro.sketchware.core.project;
 
-import pro.sketchware.graphics.BitmapUtil;
-import pro.sketchware.core.exception.CompileException;
-import pro.sketchware.core.project.SketchwarePaths;
-
-import pro.sketchware.beans.CollectionBean;
-import pro.sketchware.beans.ProjectResourceBean;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
+import pro.sketchware.beans.CollectionBean;
+import pro.sketchware.beans.ProjectResourceBean;
+import pro.sketchware.core.exception.CompileException;
+import pro.sketchware.graphics.BitmapUtil;
 
 public class ImageCollectionManager extends BaseCollectionManager {
     private static volatile ImageCollectionManager instance;
@@ -43,11 +40,13 @@ public class ImageCollectionManager extends BaseCollectionManager {
         if (save) saveCollections();
     }
 
-    public void addResource(String sourcePath, ProjectResourceBean resourceBean) throws CompileException {
+    public void addResource(String sourcePath, ProjectResourceBean resourceBean)
+            throws CompileException {
         addResource(sourcePath, resourceBean, true);
     }
 
-    public void addResource(String sourcePath, ProjectResourceBean resourceBean, boolean save) throws CompileException {
+    public void addResource(String sourcePath, ProjectResourceBean resourceBean, boolean save)
+            throws CompileException {
         if (collections == null) initialize();
         for (CollectionBean collection : collections) {
             if (collection.name.equals(resourceBean.resName)) {
@@ -62,12 +61,22 @@ public class ImageCollectionManager extends BaseCollectionManager {
             }
             try {
                 fileUtil.mkdirs(dataDirPath);
-                BitmapUtil.processAndSaveBitmap(resourceBean.resFullName, destPath, resourceBean.rotate, resourceBean.flipHorizontal, resourceBean.flipVertical);
+                BitmapUtil.processAndSaveBitmap(
+                        resourceBean.resFullName,
+                        destPath,
+                        resourceBean.rotate,
+                        resourceBean.flipHorizontal,
+                        resourceBean.flipVertical);
             } catch (Exception e) {
                 throw new CompileException("fail_to_copy");
             }
         } else {
-            String srcPath = SketchwarePaths.getImagesPath() + File.separator + sourcePath + File.separator + resourceBean.resFullName;
+            String srcPath =
+                    SketchwarePaths.getImagesPath()
+                            + File.separator
+                            + sourcePath
+                            + File.separator
+                            + resourceBean.resFullName;
             if (!fileUtil.exists(srcPath)) {
                 throw new CompileException("file_no_exist");
             }
@@ -82,7 +91,9 @@ public class ImageCollectionManager extends BaseCollectionManager {
         if (save) saveCollections();
     }
 
-    public void addResources(String category, ArrayList<ProjectResourceBean> resources, boolean save) throws CompileException {
+    public void addResources(
+            String category, ArrayList<ProjectResourceBean> resources, boolean save)
+            throws CompileException {
         if (collections == null) initialize();
 
         ArrayList<String> duplicateNames = new ArrayList<>();
@@ -120,7 +131,12 @@ public class ImageCollectionManager extends BaseCollectionManager {
             String destPath = dataDirPath + File.separator + fileName;
             try {
                 fileUtil.mkdirs(dataDirPath);
-                BitmapUtil.processAndSaveBitmap(srcPath, destPath, resource.rotate, resource.flipHorizontal, resource.flipVertical);
+                BitmapUtil.processAndSaveBitmap(
+                        srcPath,
+                        destPath,
+                        resource.rotate,
+                        resource.flipHorizontal,
+                        resource.flipVertical);
                 collections.add(new CollectionBean(resource.resName, fileName));
                 processedPaths.add(destPath);
             } catch (Exception e) {
@@ -140,7 +156,11 @@ public class ImageCollectionManager extends BaseCollectionManager {
 
     private String resolveSourcePath(String category, ProjectResourceBean resource) {
         if (resource.savedPos == 0) {
-            return SketchwarePaths.getImagesPath() + File.separator + category + File.separator + resource.resFullName;
+            return SketchwarePaths.getImagesPath()
+                    + File.separator
+                    + category
+                    + File.separator
+                    + resource.resFullName;
         }
         return resource.resFullName;
     }
@@ -158,7 +178,8 @@ public class ImageCollectionManager extends BaseCollectionManager {
     }
 
     public void initializePaths() {
-        String basePath = SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator;
+        String basePath =
+                SketchwarePaths.getCollectionPath() + File.separator + "image" + File.separator;
         collectionFilePath = basePath + "list";
         dataDirPath = basePath + "data";
     }
@@ -179,7 +200,11 @@ public class ImageCollectionManager extends BaseCollectionManager {
         if (collections == null) initialize();
         ArrayList<ProjectResourceBean> resources = new ArrayList<>();
         for (CollectionBean collection : collections) {
-            resources.add(new ProjectResourceBean(ProjectResourceBean.PROJECT_RES_TYPE_FILE, collection.name, collection.data));
+            resources.add(
+                    new ProjectResourceBean(
+                            ProjectResourceBean.PROJECT_RES_TYPE_FILE,
+                            collection.name,
+                            collection.data));
         }
         return resources;
     }

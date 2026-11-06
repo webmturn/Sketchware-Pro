@@ -13,37 +13,27 @@ import android.graphics.drawable.RippleDrawable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
-
 import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
-
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.reflect.TypeToken;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-import pro.sketchware.util.FileUtil;
-
 public class Helper {
-    public static final TypeToken<HashMap<String, Object>> TYPE_MAP = new TypeToken<>() {
-    };
-    public static final TypeToken<ArrayList<HashMap<String, Object>>> TYPE_MAP_LIST = new TypeToken<>() {
-    };
-    public static final TypeToken<ArrayList<String>> TYPE_STRING = new TypeToken<>() {
-    };
-    public static final TypeToken<HashMap<String, String>> TYPE_STRING_MAP = new TypeToken<>() {
-    };
+    public static final TypeToken<HashMap<String, Object>> TYPE_MAP = new TypeToken<>() {};
+    public static final TypeToken<ArrayList<HashMap<String, Object>>> TYPE_MAP_LIST =
+            new TypeToken<>() {};
+    public static final TypeToken<ArrayList<String>> TYPE_STRING = new TypeToken<>() {};
+    public static final TypeToken<HashMap<String, String>> TYPE_STRING_MAP = new TypeToken<>() {};
 
-    private Helper() {
-    }
+    private Helper() {}
 
     public static ArrayList<String> createStringList(String... strings) {
         ArrayList<String> result = new ArrayList<>();
@@ -68,8 +58,8 @@ public class Helper {
     }
 
     public static String getResString(@StringRes int resId) {
-        String override = pro.sketchware.util.locale.LanguageOverrideManager
-                .getInstance().getOverride(resId);
+        String override =
+                pro.sketchware.util.locale.LanguageOverrideManager.getInstance().getOverride(resId);
         if (override != null) return override;
         return getContext().getString(resId);
     }
@@ -88,27 +78,30 @@ public class Helper {
 
     public static void applyRipple(Context context, View view) {
         TypedValue typedValue = new TypedValue();
-        context.getTheme().resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, typedValue, true);
+        context.getTheme()
+                .resolveAttribute(
+                        android.R.attr.selectableItemBackgroundBorderless, typedValue, true);
 
         view.setBackgroundResource(typedValue.resourceId);
         view.setClickable(true);
     }
 
-    public static void addBasicTextChangedListener(TextInputEditText input, BasicTextChangedListener listener) {
-        input.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+    public static void addBasicTextChangedListener(
+            TextInputEditText input, BasicTextChangedListener listener) {
+        input.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(
+                            CharSequence s, int start, int count, int after) {}
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                listener.onTextChanged(s.toString());
-            }
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        listener.onTextChanged(s.toString());
+                    }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-        });
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                });
     }
 
     @NonNull
@@ -128,20 +121,17 @@ public class Helper {
         view.setBackground(
                 new RippleDrawable(
                         new ColorStateList(
-                                new int[][]{new int[]{0}},
-                                new int[]{Color.parseColor("#64b5f6")}
-                        ),
+                                new int[][] {new int[] {0}},
+                                new int[] {Color.parseColor("#64b5f6")}),
                         content,
-                        null
-                )
-        );
+                        null));
     }
 
     /**
      * Applies a boxy ripple effect to a view.
      *
-     * @param target        The view to apply the effect on
-     * @param rippleColor   The effect's color
+     * @param target The view to apply the effect on
+     * @param rippleColor The effect's color
      * @param standardColor The view's color when untouched
      */
     public static void applyRippleEffect(View target, int rippleColor, int standardColor) {
@@ -151,14 +141,9 @@ public class Helper {
 
         target.setBackground(
                 new RippleDrawable(
-                        new ColorStateList(
-                                new int[][]{new int[]{}},
-                                new int[]{rippleColor}
-                        ),
+                        new ColorStateList(new int[][] {new int[] {}}, new int[] {rippleColor}),
                         new ColorDrawable(standardColor),
-                        null
-                )
-        );
+                        null));
     }
 
     public static String trimPath(String path) {
@@ -188,28 +173,27 @@ public class Helper {
     }
 
     public static void addClearErrorOnTextChangeTextWatcher(TextInputLayout target) {
-        target.getEditText().addTextChangedListener(new BaseTextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                target.setError(null);
-            }
-        });
+        target.getEditText()
+                .addTextChangedListener(
+                        new BaseTextWatcher() {
+                            @Override
+                            public void onTextChanged(
+                                    CharSequence s, int start, int before, int count) {
+                                target.setError(null);
+                            }
+                        });
     }
 
     public interface BasicTextChangedListener {
         void onTextChanged(String text);
     }
 
-    /**
-     * A listener class for dismissing {@link Dialog}s.
-     */
+    /** A listener class for dismissing {@link Dialog}s. */
     public static class DialogDismissListener implements View.OnClickListener {
 
         private final DialogInterface dialog;
 
-        /**
-         * Constructor for {@link Helper#getDialogDismissListener(DialogInterface)}.
-         */
+        /** Constructor for {@link Helper#getDialogDismissListener(DialogInterface)}. */
         private DialogDismissListener(DialogInterface dialog) {
             this.dialog = dialog;
         }

@@ -2,13 +2,10 @@ package pro.sketchware.activities.editor.view.palette;
 
 import android.content.Context;
 import android.view.ViewGroup;
-
-import pro.sketchware.beans.ViewBean;
-import pro.sketchware.activities.editor.view.AndroidxOrMaterialView;
-import pro.sketchware.activities.editor.view.palette.IconBase;
-
-import pro.sketchware.beans.ViewBeans;
 import pro.sketchware.R;
+import pro.sketchware.activities.editor.view.AndroidxOrMaterialView;
+import pro.sketchware.beans.ViewBean;
+import pro.sketchware.beans.ViewBeans;
 
 public class IconCollapsingToolbar extends IconBase implements AndroidxOrMaterialView {
 
@@ -29,7 +26,8 @@ public class IconCollapsingToolbar extends IconBase implements AndroidxOrMateria
         viewBean.layout.paddingRight = 8;
         viewBean.layout.paddingBottom = 8;
         viewBean.convert = "com.google.android.material.appbar.CollapsingToolbarLayout";
-        viewBean.inject = "android:fitsSystemWindows=\"true\"\napp:layout_scrollFlags=\"scroll|exitUntilCollapsed\"";
+        viewBean.inject =
+                "android:fitsSystemWindows=\"true\"\napp:layout_scrollFlags=\"scroll|exitUntilCollapsed\"";
         return viewBean;
     }
 }

@@ -10,25 +10,20 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.google.android.material.button.MaterialButtonToggleGroup;
+import java.util.ArrayList;
+import pro.sketchware.R;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ViewBean;
-import pro.sketchware.activities.base.BaseAppCompatActivity;
-import com.google.android.material.button.MaterialButtonToggleGroup;
-
-import java.util.ArrayList;
-
-import pro.sketchware.core.validation.ActivityNameValidator;
-import pro.sketchware.util.SketchToast;
-import pro.sketchware.activities.editor.manage.view.PresetLayoutFactory;
 import pro.sketchware.core.project.BlockConstants;
-import pro.sketchware.util.ViewUtil;
-import pro.sketchware.util.Helper;
-import pro.sketchware.R;
+import pro.sketchware.core.validation.ActivityNameValidator;
 import pro.sketchware.databinding.ManageScreenActivityAddTempBinding;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.SketchToast;
+import pro.sketchware.util.ViewUtil;
 
 public class AddViewActivity extends BaseAppCompatActivity {
 
@@ -65,7 +60,10 @@ public class AddViewActivity extends BaseAppCompatActivity {
                 } else {
                     slideInVertically(binding.previewStatusbar);
                     if (featureToolbar) {
-                        binding.previewToolbar.animate().translationY((float) -binding.previewStatusbar.getMeasuredHeight()).start();
+                        binding.previewToolbar
+                                .animate()
+                                .translationY((float) -binding.previewStatusbar.getMeasuredHeight())
+                                .start();
                     } else {
                         slideOutPreviewToolbar();
                     }
@@ -74,7 +72,10 @@ public class AddViewActivity extends BaseAppCompatActivity {
             case FEATURE_TYPE_TOOLBAR -> {
                 if (featureItem.isEnabled) {
                     if (!featureStatusBar) {
-                        binding.previewToolbar.animate().translationY((float) -binding.previewStatusbar.getMeasuredHeight()).start();
+                        binding.previewToolbar
+                                .animate()
+                                .translationY((float) -binding.previewStatusbar.getMeasuredHeight())
+                                .start();
                     } else {
                         resetTranslationY(binding.previewToolbar);
                     }
@@ -126,7 +127,13 @@ public class AddViewActivity extends BaseAppCompatActivity {
     }
 
     private void slideOutPreviewToolbar() {
-        binding.previewToolbar.animate().translationY((float) -(binding.previewStatusbar.getMeasuredHeight() + binding.previewToolbar.getMeasuredHeight())).start();
+        binding.previewToolbar
+                .animate()
+                .translationY(
+                        (float)
+                                -(binding.previewStatusbar.getMeasuredHeight()
+                                        + binding.previewToolbar.getMeasuredHeight()))
+                .start();
     }
 
     private void slideInVertically(View view) {
@@ -168,25 +175,55 @@ public class AddViewActivity extends BaseAppCompatActivity {
     }
 
     private void initItem(int featureOptions) {
-        featureToolbar = (featureOptions & ProjectFileBean.OPTION_ACTIVITY_TOOLBAR) == ProjectFileBean.OPTION_ACTIVITY_TOOLBAR;
-        featureStatusBar = (featureOptions & ProjectFileBean.OPTION_ACTIVITY_FULLSCREEN) != ProjectFileBean.OPTION_ACTIVITY_FULLSCREEN;
-        featureFab = (featureOptions & ProjectFileBean.OPTION_ACTIVITY_FAB) == ProjectFileBean.OPTION_ACTIVITY_FAB;
-        featureDrawer = (featureOptions & ProjectFileBean.OPTION_ACTIVITY_DRAWER) == ProjectFileBean.OPTION_ACTIVITY_DRAWER;
+        featureToolbar =
+                (featureOptions & ProjectFileBean.OPTION_ACTIVITY_TOOLBAR)
+                        == ProjectFileBean.OPTION_ACTIVITY_TOOLBAR;
+        featureStatusBar =
+                (featureOptions & ProjectFileBean.OPTION_ACTIVITY_FULLSCREEN)
+                        != ProjectFileBean.OPTION_ACTIVITY_FULLSCREEN;
+        featureFab =
+                (featureOptions & ProjectFileBean.OPTION_ACTIVITY_FAB)
+                        == ProjectFileBean.OPTION_ACTIVITY_FAB;
+        featureDrawer =
+                (featureOptions & ProjectFileBean.OPTION_ACTIVITY_DRAWER)
+                        == ProjectFileBean.OPTION_ACTIVITY_DRAWER;
     }
 
     private void initializeItems() {
         featureItems = new ArrayList<>();
-        featureItems.add(new FeatureItem(FEATURE_TYPE_STATUS_BAR, R.drawable.ic_statusbar_color_48dp, Helper.getResString(R.string.editor_preview_statusbar), featureStatusBar));
-        featureItems.add(new FeatureItem(FEATURE_TYPE_TOOLBAR, R.drawable.ic_toolbar_color_48dp, Helper.getResString(R.string.editor_preview_toolbar), featureToolbar));
-        featureItems.add(new FeatureItem(FEATURE_TYPE_DRAWER, R.drawable.ic_drawer_color_48dp, Helper.getResString(R.string.editor_preview_drawer), featureDrawer));
-        featureItems.add(new FeatureItem(FEATURE_TYPE_FAB, R.drawable.fab_color, Helper.getResString(R.string.editor_preview_fab), featureFab));
+        featureItems.add(
+                new FeatureItem(
+                        FEATURE_TYPE_STATUS_BAR,
+                        R.drawable.ic_statusbar_color_48dp,
+                        Helper.getResString(R.string.editor_preview_statusbar),
+                        featureStatusBar));
+        featureItems.add(
+                new FeatureItem(
+                        FEATURE_TYPE_TOOLBAR,
+                        R.drawable.ic_toolbar_color_48dp,
+                        Helper.getResString(R.string.editor_preview_toolbar),
+                        featureToolbar));
+        featureItems.add(
+                new FeatureItem(
+                        FEATURE_TYPE_DRAWER,
+                        R.drawable.ic_drawer_color_48dp,
+                        Helper.getResString(R.string.editor_preview_drawer),
+                        featureDrawer));
+        featureItems.add(
+                new FeatureItem(
+                        FEATURE_TYPE_FAB,
+                        R.drawable.fab_color,
+                        Helper.getResString(R.string.editor_preview_fab),
+                        featureFab));
         featuresAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_PRESET_SELECTION && resultCode == RESULT_OK && data != null) {
+        if (requestCode == REQUEST_CODE_PRESET_SELECTION
+                && resultCode == RESULT_OK
+                && data != null) {
             ProjectFileBean presetData = data.getParcelableExtra("preset_data");
             if (presetData == null) return;
             presetName = presetData.presetName;
@@ -209,41 +246,49 @@ public class AddViewActivity extends BaseAppCompatActivity {
         requestCode = intent.getIntExtra("request_code", REQUEST_CODE_ADD);
         projectFileBean = intent.getParcelableExtra("project_file");
         if (projectFileBean != null) {
-            binding.toolbar.setTitle(String.format(Helper.getResString(R.string.view_title_edit), projectFileBean.fileName));
+            binding.toolbar.setTitle(
+                    String.format(
+                            Helper.getResString(R.string.view_title_edit),
+                            projectFileBean.fileName));
         }
 
         featuresAdapter = new FeaturesAdapter();
         binding.featureTypes.setAdapter(featuresAdapter);
 
-        binding.keyboardSettingsSelector.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
-            if (isChecked) {
-                if (checkedId == R.id.select_visible || checkedId == R.id.select_unspecified) {
-                    resetTranslationY(binding.imgKeyboard);
-                } else {
-                    slideOutVertically(binding.imgKeyboard);
-                }
-            }
-        });
+        binding.keyboardSettingsSelector.addOnButtonCheckedListener(
+                (group, checkedId, isChecked) -> {
+                    if (isChecked) {
+                        if (checkedId == R.id.select_visible
+                                || checkedId == R.id.select_unspecified) {
+                            resetTranslationY(binding.imgKeyboard);
+                        } else {
+                            slideOutVertically(binding.imgKeyboard);
+                        }
+                    }
+                });
 
-        binding.viewTypeSelector.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
-            if (isChecked) {
-                setManifestViewState(checkedId == R.id.select_activity);
-                revalidateName();
-            }
-        });
+        binding.viewTypeSelector.addOnButtonCheckedListener(
+                (group, checkedId, isChecked) -> {
+                    if (isChecked) {
+                        setManifestViewState(checkedId == R.id.select_activity);
+                        revalidateName();
+                    }
+                });
 
-        binding.btnSave.setOnClickListener(v -> {
-            if (REQUEST_CODE_EDIT == requestCode) {
-                handleEditFile();
-            } else if (isValid(nameValidator)) {
-                handleCreateFile();
-            }
-        });
+        binding.btnSave.setOnClickListener(
+                v -> {
+                    if (REQUEST_CODE_EDIT == requestCode) {
+                        handleEditFile();
+                    } else if (isValid(nameValidator)) {
+                        handleCreateFile();
+                    }
+                });
 
-        binding.btnCancel.setOnClickListener(v -> {
-            setResult(RESULT_CANCELED);
-            finish();
-        });
+        binding.btnCancel.setOnClickListener(
+                v -> {
+                    setResult(RESULT_CANCELED);
+                    finish();
+                });
 
         if (requestCode == REQUEST_CODE_EDIT) {
             handleEditModeInitialization();
@@ -273,27 +318,53 @@ public class AddViewActivity extends BaseAppCompatActivity {
         Intent intent = new Intent();
         intent.putExtra("project_file", projectFileBean);
         setResult(RESULT_OK, intent);
-        SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.design_manager_message_edit_complete, new Object[0]), SketchToast.TOAST_NORMAL).show();
+        SketchToast.toast(
+                        getApplicationContext(),
+                        Helper.getResString(
+                                R.string.design_manager_message_edit_complete, new Object[0]),
+                        SketchToast.TOAST_NORMAL)
+                .show();
         finish();
     }
 
     private void handleCreateFile() {
         String fileName = getFileName();
-        ProjectFileBean projectFileBean = new ProjectFileBean(ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY, fileName, getSelectedButtonIndex(binding.screenOrientationSelector), getSelectedButtonIndex(binding.keyboardSettingsSelector), featureToolbar, !featureStatusBar, featureFab, featureDrawer);
+        ProjectFileBean projectFileBean =
+                new ProjectFileBean(
+                        ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY,
+                        fileName,
+                        getSelectedButtonIndex(binding.screenOrientationSelector),
+                        getSelectedButtonIndex(binding.keyboardSettingsSelector),
+                        featureToolbar,
+                        !featureStatusBar,
+                        featureFab,
+                        featureDrawer);
         Intent intent = new Intent();
         intent.putExtra("project_file", projectFileBean);
         if (presetName != null) {
             intent.putExtra("preset_views", getPresetData(presetName));
         }
         setResult(RESULT_OK, intent);
-        SketchToast.toast(getApplicationContext(), Helper.getResString(R.string.design_manager_message_add_complete, new Object[0]), SketchToast.TOAST_NORMAL).show();
+        SketchToast.toast(
+                        getApplicationContext(),
+                        Helper.getResString(
+                                R.string.design_manager_message_add_complete, new Object[0]),
+                        SketchToast.TOAST_NORMAL)
+                .show();
         finish();
     }
 
     private void handleEditModeInitialization() {
-        nameValidator = new ActivityNameValidator(getApplicationContext(), binding.tiName, BlockConstants.RESERVED_KEYWORDS, new ArrayList<>(), projectFileBean.fileName);
+        nameValidator =
+                new ActivityNameValidator(
+                        getApplicationContext(),
+                        binding.tiName,
+                        BlockConstants.RESERVED_KEYWORDS,
+                        new ArrayList<>(),
+                        projectFileBean.fileName);
         String displayName = projectFileBean.fileName;
-        for (String suffix : new String[]{"_bottomdialog_fragment", "_dialog_fragment", "_fragment"}) {
+        for (String suffix :
+                new String[] {"_bottomdialog_fragment", "_dialog_fragment", "_fragment"}) {
             if (displayName.endsWith(suffix)) {
                 displayName = displayName.substring(0, displayName.length() - suffix.length());
                 break;
@@ -308,38 +379,51 @@ public class AddViewActivity extends BaseAppCompatActivity {
             binding.viewOrientationSelectorLayout.setVisibility(View.GONE);
             binding.viewKeyboardSettingsSelectorLayout.setVisibility(View.GONE);
         }
-        binding.screenOrientationSelector.check(binding.screenOrientationSelector.getChildAt(projectFileBean.orientation).getId());
-        binding.keyboardSettingsSelector.check(binding.keyboardSettingsSelector.getChildAt(projectFileBean.keyboardSetting).getId());
+        binding.screenOrientationSelector.check(
+                binding.screenOrientationSelector.getChildAt(projectFileBean.orientation).getId());
+        binding.keyboardSettingsSelector.check(
+                binding.keyboardSettingsSelector
+                        .getChildAt(projectFileBean.keyboardSetting)
+                        .getId());
 
-        binding.imgKeyboard.post(() -> {
-            if (binding.keyboardSettingsSelector.getCheckedButtonId() == R.id.select_hidden) {
-                slideOutVertically(binding.imgKeyboard);
-            }
-        });
+        binding.imgKeyboard.post(
+                () -> {
+                    if (binding.keyboardSettingsSelector.getCheckedButtonId()
+                            == R.id.select_hidden) {
+                        slideOutVertically(binding.imgKeyboard);
+                    }
+                });
     }
 
     private void handleCreateModeInitialization() {
         featureToolbar = true;
         featureStatusBar = true;
         // Validate identifiers first, then compare the actual filename including its type suffix.
-        nameValidator = new ActivityNameValidator(getApplicationContext(), binding.tiName,
-                BlockConstants.RESERVED_KEYWORDS, new ArrayList<>()) {
-            @Override
-            public void onTextChanged(CharSequence input, int start, int before, int count) {
-                super.onTextChanged(input, start, before, count);
-                if (!valid) return;
-                String fileName = getFileName();
-                if (fileName.length() > 100) {
-                    textInputLayout.setErrorEnabled(true);
-                    textInputLayout.setError(Helper.getResString(R.string.invalid_value_max_lenth, 100));
-                    valid = false;
-                } else if (screenNames != null && screenNames.contains(fileName)) {
-                    textInputLayout.setErrorEnabled(true);
-                    textInputLayout.setError(Helper.getResString(R.string.common_message_name_unavailable));
-                    valid = false;
-                }
-            }
-        };
+        nameValidator =
+                new ActivityNameValidator(
+                        getApplicationContext(),
+                        binding.tiName,
+                        BlockConstants.RESERVED_KEYWORDS,
+                        new ArrayList<>()) {
+                    @Override
+                    public void onTextChanged(
+                            CharSequence input, int start, int before, int count) {
+                        super.onTextChanged(input, start, before, count);
+                        if (!valid) return;
+                        String fileName = getFileName();
+                        if (fileName.length() > 100) {
+                            textInputLayout.setErrorEnabled(true);
+                            textInputLayout.setError(
+                                    Helper.getResString(R.string.invalid_value_max_lenth, 100));
+                            valid = false;
+                        } else if (screenNames != null && screenNames.contains(fileName)) {
+                            textInputLayout.setErrorEnabled(true);
+                            textInputLayout.setError(
+                                    Helper.getResString(R.string.common_message_name_unavailable));
+                            valid = false;
+                        }
+                    }
+                };
     }
 
     private String getFileName() {
@@ -364,7 +448,7 @@ public class AddViewActivity extends BaseAppCompatActivity {
                 return i;
             }
         }
-        return -1;  // Return -1 if no button is selected
+        return -1; // Return -1 if no button is selected
     }
 
     public void makeTransitionAnimation(LinearLayout linearLayout) {
@@ -401,8 +485,7 @@ public class AddViewActivity extends BaseAppCompatActivity {
         public int layoutPosition = -1;
         public boolean isUpdatingAdapter;
 
-        public FeaturesAdapter() {
-        }
+        public FeaturesAdapter() {}
 
         @Override
         public int getItemCount() {
@@ -436,8 +519,13 @@ public class AddViewActivity extends BaseAppCompatActivity {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = ViewUtil.inflateLayout(parent.getContext(), R.layout.manage_screen_activity_add_feature_item);
-            itemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            View itemView =
+                    ViewUtil.inflateLayout(
+                            parent.getContext(), R.layout.manage_screen_activity_add_feature_item);
+            itemView.setLayoutParams(
+                    new ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT));
             return new ViewHolder(itemView);
         }
 
@@ -452,24 +540,25 @@ public class AddViewActivity extends BaseAppCompatActivity {
                 iconImageView = itemView.findViewById(R.id.img_icon);
                 nameTextView = itemView.findViewById(R.id.tv_name);
                 featureCheckBox = itemView.findViewById(R.id.checkbox);
-                featureCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    if (!isUpdatingAdapter) {
-                        layoutPosition = getLayoutPosition();
-                        if (layoutPosition == RecyclerView.NO_POSITION) return;
-                        FeatureItem item = featureItems.get(layoutPosition);
-                        item.isEnabled = isChecked;
-                        if (item.type == FEATURE_TYPE_DRAWER) {
-                            if (item.isEnabled) {
-                                enableToolbar();
+                featureCheckBox.setOnCheckedChangeListener(
+                        (buttonView, isChecked) -> {
+                            if (!isUpdatingAdapter) {
+                                layoutPosition = getLayoutPosition();
+                                if (layoutPosition == RecyclerView.NO_POSITION) return;
+                                FeatureItem item = featureItems.get(layoutPosition);
+                                item.isEnabled = isChecked;
+                                if (item.type == FEATURE_TYPE_DRAWER) {
+                                    if (item.isEnabled) {
+                                        enableToolbar();
+                                    }
+                                } else if (item.type == FEATURE_TYPE_TOOLBAR) {
+                                    if (!item.isEnabled) {
+                                        disableDrawer();
+                                    }
+                                }
+                                notifyItemChanged(layoutPosition);
                             }
-                        } else if (item.type == FEATURE_TYPE_TOOLBAR) {
-                            if (!item.isEnabled) {
-                                disableDrawer();
-                            }
-                        }
-                        notifyItemChanged(layoutPosition);
-                    }
-                });
+                        });
             }
         }
     }

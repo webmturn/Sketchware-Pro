@@ -5,27 +5,21 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
-
-import pro.sketchware.beans.ComponentBean;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
-import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.util.Helper;
-import pro.sketchware.core.project.OldResourceIdMapper;
 import pro.sketchware.R;
 import pro.sketchware.SketchApplication;
+import pro.sketchware.beans.ComponentBean;
 import pro.sketchware.beans.CustomComponent;
 import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.Helper;
 import pro.sketchware.util.SketchwareUtil;
 
 public class ComponentsHandler {
@@ -35,11 +29,8 @@ public class ComponentsHandler {
     private static final Gson GSON = new Gson();
     private static ArrayList<CustomComponent> cachedCustomComponents = readCustomComponents();
 
-    /**
-     * This is a utility class, don't instantiate it
-     */
-    private ComponentsHandler() {
-    }
+    /** This is a utility class, don't instantiate it */
+    private ComponentsHandler() {}
 
     private static final class ComponentMatch {
 
@@ -53,13 +44,16 @@ public class ComponentsHandler {
     }
 
     private static void reportNullComponent(int index) {
-        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_null), index));
+        SketchwareUtil.toastError(
+                String.format(Helper.getResString(R.string.component_error_null), index));
     }
 
-    private static int getComponentIdOrReport(CustomComponent component, int index, int errorResId) {
+    private static int getComponentIdOrReport(
+            CustomComponent component, int index, int errorResId) {
         int idVal = component.getIdAsInt();
         if (idVal == -1) {
-            SketchwareUtil.toastError(String.format(Helper.getResString(errorResId), index + 1), Toast.LENGTH_LONG);
+            SketchwareUtil.toastError(
+                    String.format(Helper.getResString(errorResId), index + 1), Toast.LENGTH_LONG);
         }
         return idVal;
     }
@@ -120,13 +114,12 @@ public class ComponentsHandler {
         return null;
     }
 
-    private static ArrayList<CustomComponent> parseCustomComponents(String content) throws JsonSyntaxException {
-        return GSON.fromJson(content, new TypeToken<ArrayList<CustomComponent>>(){}.getType());
+    private static ArrayList<CustomComponent> parseCustomComponents(String content)
+            throws JsonSyntaxException {
+        return GSON.fromJson(content, new TypeToken<ArrayList<CustomComponent>>() {}.getType());
     }
 
-    /**
-     * Called at {@link ComponentBean#getComponentTypeByTypeName(String)}.
-     */
+    /** Called at {@link ComponentBean#getComponentTypeByTypeName(String)}. */
     public static int getIdByTypeName(String name) {
         if (name.equals(ASYNC_TASK_TYPE_NAME)) {
             return ASYNC_TASK_COMPONENT_ID;
@@ -136,13 +129,13 @@ public class ComponentsHandler {
         if (match == null) {
             return -1;
         }
-        int idVal = getComponentIdOrReport(match.component, match.index, R.string.component_error_invalid_id_in);
+        int idVal =
+                getComponentIdOrReport(
+                        match.component, match.index, R.string.component_error_invalid_id_in);
         return idVal != -1 ? idVal : -1;
     }
 
-    /**
-     * Called at {@link ComponentBean#getComponentTypeName(int)}.
-     */
+    /** Called at {@link ComponentBean#getComponentTypeName(int)}. */
     public static String getTypeNameById(int id) {
         if (id == ASYNC_TASK_COMPONENT_ID) {
             return ASYNC_TASK_TYPE_NAME;
@@ -152,9 +145,7 @@ public class ComponentsHandler {
         return match != null ? match.component.getTypeName() : "";
     }
 
-    /**
-     * Called at {@link ComponentBean#getComponentName(Context, int)}.
-     */
+    /** Called at {@link ComponentBean#getComponentName(Context, int)}. */
     public static String getNameById(int id) {
         if (id == ASYNC_TASK_COMPONENT_ID) {
             return ASYNC_TASK_TYPE_NAME;
@@ -164,9 +155,7 @@ public class ComponentsHandler {
         return match != null ? match.component.getName() : "component";
     }
 
-    /**
-     * Called at {@link ComponentBean#getIconResource(int)}.
-     */
+    /** Called at {@link ComponentBean#getIconResource(int)}. */
     public static int getIconById(int id) {
         if (id == ASYNC_TASK_COMPONENT_ID) {
             return R.drawable.ic_cycle_color_48dp;
@@ -177,9 +166,14 @@ public class ComponentsHandler {
             return R.drawable.color_new_96;
         }
         try {
-            return OldResourceIdMapper.getDrawableFromOldResourceId(Integer.parseInt(match.component.getIcon()));
+            return OldResourceIdMapper.getDrawableFromOldResourceId(
+                    Integer.parseInt(match.component.getIcon()));
         } catch (NumberFormatException e) {
-            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_invalid_icon), match.index + 1), Toast.LENGTH_LONG);
+            SketchwareUtil.toastError(
+                    String.format(
+                            Helper.getResString(R.string.component_error_invalid_icon),
+                            match.index + 1),
+                    Toast.LENGTH_LONG);
             return R.drawable.color_new_96;
         }
     }
@@ -204,9 +198,7 @@ public class ComponentsHandler {
         return match != null ? match.component.getDescription() : "new component";
     }
 
-    /**
-     * Called at {@link ComponentBean#getComponentDocsUrlByTypeName(int)}.
-     */
+    /** Called at {@link ComponentBean#getComponentDocsUrlByTypeName(int)}. */
     public static String getDocsUrlById(int id) {
         if (id == ASYNC_TASK_COMPONENT_ID) {
             return "";
@@ -216,9 +208,7 @@ public class ComponentsHandler {
         return match != null ? match.component.getUrl() : "";
     }
 
-    /**
-     * Called at {@link ComponentBean#buildClassInfo()}.
-     */
+    /** Called at {@link ComponentBean#buildClassInfo()}. */
     public static String getBuildClassById(int id) {
         if (id == ASYNC_TASK_COMPONENT_ID) {
             return ASYNC_TASK_TYPE_NAME;
@@ -229,8 +219,8 @@ public class ComponentsHandler {
     }
 
     /**
-     * Adds Custom Components to available Components section.
-     * Used at {@link pro.sketchware.activities.editor.component.AddComponentBottomSheet#onCreate(Bundle)}.
+     * Adds Custom Components to available Components section. Used at {@link
+     * pro.sketchware.activities.editor.component.AddComponentBottomSheet#onCreate(Bundle)}.
      */
     public static void addCustomComponents(ArrayList<ComponentBean> list) {
         list.add(new ComponentBean(ASYNC_TASK_COMPONENT_ID));
@@ -241,7 +231,8 @@ public class ComponentsHandler {
                 reportNullComponent(i);
                 continue;
             }
-            int idVal = getComponentIdOrReport(component, i, R.string.component_error_invalid_id_for);
+            int idVal =
+                    getComponentIdOrReport(component, i, R.string.component_error_invalid_id_for);
             if (idVal != -1) {
                 list.add(new ComponentBean(idVal));
             }
@@ -272,8 +263,8 @@ public class ComponentsHandler {
     }
 
     /**
-     * Used at {@link pro.sketchware.core.codegen.ComponentCodeGenerator#getExtraVar(String, String, ComponentCodeGenerator.AccessModifier, String...)}
-     * to get Custom Components' fields.
+     * Used at {@link pro.sketchware.core.codegen.ComponentCodeGenerator#getExtraVar(String, String,
+     * ComponentCodeGenerator.AccessModifier, String...)} to get Custom Components' fields.
      */
     public static String getExtraVar(String name, String code, String varName) {
         ComponentMatch match = findComponentByName(name);
@@ -281,7 +272,9 @@ public class ComponentsHandler {
             return code;
         }
         String additionalVar = match.component.getAdditionalVar();
-        return TextUtils.isEmpty(additionalVar) ? code : code + "\r\n" + additionalVar.replace("###", varName);
+        return TextUtils.isEmpty(additionalVar)
+                ? code
+                : code + "\r\n" + additionalVar.replace("###", varName);
     }
 
     public static String getDefineExtraVar(String name, String varName) {
@@ -290,7 +283,9 @@ public class ComponentsHandler {
             return "";
         }
         String defineAdditionalVar = match.component.getDefineAdditionalVar();
-        return TextUtils.isEmpty(defineAdditionalVar) ? "" : defineAdditionalVar.replace("###", varName);
+        return TextUtils.isEmpty(defineAdditionalVar)
+                ? ""
+                : defineAdditionalVar.replace("###", varName);
     }
 
     public static void getImports(String name, ArrayList<String> arrayList) {
@@ -314,8 +309,8 @@ public class ComponentsHandler {
     }
 
     /**
-     * @return List of Custom Components. Will never return null, but will warn the user about
-     * an invalid Custom Components JSON file.
+     * @return List of Custom Components. Will never return null, but will warn the user about an
+     *     invalid Custom Components JSON file.
      */
     private static ArrayList<CustomComponent> readCustomComponents() {
         ArrayList<CustomComponent> data;
@@ -325,10 +320,14 @@ public class ComponentsHandler {
                 data = parseCustomComponents(content);
             } catch (JsonSyntaxException e) {
                 data = new ArrayList<>();
-                SketchwareUtil.toastError(String.format(Helper.getResString(R.string.component_error_read_failed), e.getMessage()));
+                SketchwareUtil.toastError(
+                        String.format(
+                                Helper.getResString(R.string.component_error_read_failed),
+                                e.getMessage()));
             }
             if (data == null) {
-                SketchwareUtil.toastError(Helper.getResString(R.string.component_error_invalid_file));
+                SketchwareUtil.toastError(
+                        Helper.getResString(R.string.component_error_invalid_file));
                 data = new ArrayList<>();
             }
         } else {
@@ -366,17 +365,23 @@ public class ComponentsHandler {
     public static Pair<Optional<String>, List<CustomComponent>> readComponents(String filePath) {
         String content = FileUtil.readFile(filePath);
         if (content.isEmpty() || content.equals("[]")) {
-            return new Pair<>(Optional.of(Helper.getResString(R.string.common_message_selected_file_empty)), Collections.emptyList());
+            return new Pair<>(
+                    Optional.of(Helper.getResString(R.string.common_message_selected_file_empty)),
+                    Collections.emptyList());
         }
 
         List<CustomComponent> components;
         try {
             components = parseCustomComponents(content);
         } catch (JsonSyntaxException e) {
-            return new Pair<>(Optional.of(Helper.getResString(R.string.publish_message_dialog_invalid_json)), Collections.emptyList());
+            return new Pair<>(
+                    Optional.of(Helper.getResString(R.string.publish_message_dialog_invalid_json)),
+                    Collections.emptyList());
         }
         if (components == null || components.isEmpty() || !isValidComponentList(components)) {
-            return new Pair<>(Optional.of(Helper.getResString(R.string.publish_message_dialog_invalid_json)), Collections.emptyList());
+            return new Pair<>(
+                    Optional.of(Helper.getResString(R.string.publish_message_dialog_invalid_json)),
+                    Collections.emptyList());
         }
 
         return new Pair<>(Optional.empty(), components);

@@ -1,7 +1,6 @@
 package pro.sketchware.core.codegen;
 
 import com.google.gson.Gson;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,25 +11,27 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-
-import pro.sketchware.util.Helper;
-import pro.sketchware.core.codegen.BuiltInBlockDefinitions;
 import pro.sketchware.R;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.settings.ApplicationSettings;
 import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.Helper;
 import pro.sketchware.util.SketchwareUtil;
 
 public class ExtraBlockFile {
 
     /** Default location. Use {@link #getExtraBlocksDataFile()} for the active configuration. */
-    public static final File EXTRA_BLOCKS_DATA_FILE = new File(SketchwarePaths.getBlockManagerBlockFilePath());
+    public static final File EXTRA_BLOCKS_DATA_FILE =
+            new File(SketchwarePaths.getBlockManagerBlockFilePath());
+
     /** Default location. Use {@link #getExtraBlocksPaletteFile()} for the active configuration. */
-    public static final File EXTRA_BLOCKS_PALETTE_FILE = new File(SketchwarePaths.getBlockManagerPaletteFilePath());
+    public static final File EXTRA_BLOCKS_PALETTE_FILE =
+            new File(SketchwarePaths.getBlockManagerPaletteFilePath());
 
     public static ArrayList<HashMap<String, Object>> buildInBlocks = new ArrayList<>();
     private static final ArrayList<HashMap<String, Object>> cachedExtraBlocks = new ArrayList<>();
-    private static final HashMap<String, ArrayList<HashMap<String, Object>>> cachedExtraBlocksByPalette = new HashMap<>();
+    private static final HashMap<String, ArrayList<HashMap<String, Object>>>
+            cachedExtraBlocksByPalette = new HashMap<>();
     private static final ArrayList<HashMap<String, Object>> cachedPaletteBlocks = new ArrayList<>();
     private static long cachedExtraBlocksLastModified = Long.MIN_VALUE;
     private static long cachedExtraBlocksLength = Long.MIN_VALUE;
@@ -43,16 +44,21 @@ public class ExtraBlockFile {
     private static long revision;
 
     public static File getExtraBlocksDataFile() {
-        return getConfiguredFile(ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH);
+        return getConfiguredFile(
+                ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_BLOCK_FILE_PATH);
     }
 
     public static File getExtraBlocksPaletteFile() {
-        return getConfiguredFile(ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH);
+        return getConfiguredFile(
+                ApplicationSettings.SETTING_BLOCKMANAGER_DIRECTORY_PALETTE_FILE_PATH);
     }
 
     private static File getConfiguredFile(String settingKey) {
-        return new File(SketchwarePaths.resolveExternalStorageRelativePath(ApplicationSettings.getString(
-                settingKey, (String) ApplicationSettings.getDefaultValue(settingKey))));
+        return new File(
+                SketchwarePaths.resolveExternalStorageRelativePath(
+                        ApplicationSettings.getString(
+                                settingKey,
+                                (String) ApplicationSettings.getDefaultValue(settingKey))));
     }
 
     public static synchronized ArrayList<HashMap<String, Object>> getExtraBlockData() {
@@ -60,7 +66,8 @@ public class ExtraBlockFile {
         return new ArrayList<>(cachedExtraBlocks);
     }
 
-    public static synchronized ArrayList<HashMap<String, Object>> getExtraBlockData(String paletteId) {
+    public static synchronized ArrayList<HashMap<String, Object>> getExtraBlockData(
+            String paletteId) {
         ensureExtraBlocksCache();
         ArrayList<HashMap<String, Object>> extraBlocks = cachedExtraBlocksByPalette.get(paletteId);
         return extraBlocks == null ? new ArrayList<>() : new ArrayList<>(extraBlocks);
@@ -97,8 +104,12 @@ public class ExtraBlockFile {
         // Unchanged files need a bounded-buffer hash, without decoding/allocating the entire JSON.
         byte[] blocksDigest = digestFile(blocksFile);
         byte[] palettesDigest = digestFile(palettesFile);
-        boolean blocksChanged = !blocksFile.equals(cachedExtraBlocksFile) || !Arrays.equals(blocksDigest, cachedExtraBlocksDigest);
-        boolean palettesChanged = !palettesFile.equals(cachedPaletteBlocksFile) || !Arrays.equals(palettesDigest, cachedPaletteBlocksDigest);
+        boolean blocksChanged =
+                !blocksFile.equals(cachedExtraBlocksFile)
+                        || !Arrays.equals(blocksDigest, cachedExtraBlocksDigest);
+        boolean palettesChanged =
+                !palettesFile.equals(cachedPaletteBlocksFile)
+                        || !Arrays.equals(palettesDigest, cachedPaletteBlocksDigest);
         // Finish checked reads before updating either cache. Hash the actual parsed text as well,
         // since an external writer may have replaced the file between the check and this read.
         String blocks = blocksChanged ? readChecked(blocksFile) : null;
@@ -112,7 +123,8 @@ public class ExtraBlockFile {
         if (palettesChanged) {
             loadPaletteBlocksCache(palettesFile, palettes, digest(palettes));
         } else {
-            cachedPaletteBlocksLastModified = palettesFile.exists() ? palettesFile.lastModified() : -1L;
+            cachedPaletteBlocksLastModified =
+                    palettesFile.exists() ? palettesFile.lastModified() : -1L;
             cachedPaletteBlocksLength = palettesFile.exists() ? palettesFile.length() : 0L;
         }
     }
@@ -133,7 +145,7 @@ public class ExtraBlockFile {
         boolean hasContent = false;
         try (FileInputStream stream = new FileInputStream(file)) {
             byte[] buffer = new byte[32 * 1024];
-            for (int read; (read = stream.read(buffer)) != -1;) {
+            for (int read; (read = stream.read(buffer)) != -1; ) {
                 digest.update(buffer, 0, read);
                 hasContent |= read > 0;
             }
@@ -153,7 +165,9 @@ public class ExtraBlockFile {
         File file = getExtraBlocksDataFile();
         long lastModified = file.exists() ? file.lastModified() : -1L;
         long length = file.exists() ? file.length() : 0L;
-        if (file.equals(cachedExtraBlocksFile) && lastModified == cachedExtraBlocksLastModified && length == cachedExtraBlocksLength) {
+        if (file.equals(cachedExtraBlocksFile)
+                && lastModified == cachedExtraBlocksLastModified
+                && length == cachedExtraBlocksLength) {
             return;
         }
 
@@ -199,7 +213,9 @@ public class ExtraBlockFile {
         File file = getExtraBlocksPaletteFile();
         long lastModified = file.exists() ? file.lastModified() : -1L;
         long length = file.exists() ? file.length() : 0L;
-        if (file.equals(cachedPaletteBlocksFile) && lastModified == cachedPaletteBlocksLastModified && length == cachedPaletteBlocksLength) {
+        if (file.equals(cachedPaletteBlocksFile)
+                && lastModified == cachedPaletteBlocksLastModified
+                && length == cachedPaletteBlocksLength) {
             return;
         }
 
@@ -216,18 +232,20 @@ public class ExtraBlockFile {
         cachedPaletteBlocks.clear();
 
         try {
-            ArrayList<HashMap<String, Object>> paletteBlocks = new Gson().fromJson(json, Helper.TYPE_MAP_LIST);
+            ArrayList<HashMap<String, Object>> paletteBlocks =
+                    new Gson().fromJson(json, Helper.TYPE_MAP_LIST);
             if (paletteBlocks != null) {
                 cachedPaletteBlocks.addAll(paletteBlocks);
             }
         } catch (com.google.gson.JsonSyntaxException e) {
-            SketchwareUtil.toastError(String.format(Helper.getResString(R.string.error_load_palette), e));
+            SketchwareUtil.toastError(
+                    String.format(Helper.getResString(R.string.error_load_palette), e));
         }
     }
 
     /**
-     * @return Non-empty content of {@link #getExtraBlocksDataFile()},
-     * as cases of <code>""</code> as file content return <code>"[]"</code>
+     * @return Non-empty content of {@link #getExtraBlocksDataFile()}, as cases of <code>""</code>
+     *     as file content return <code>"[]"</code>
      */
     public static String getExtraBlockFile() {
         return readJsonFile(getExtraBlocksDataFile());

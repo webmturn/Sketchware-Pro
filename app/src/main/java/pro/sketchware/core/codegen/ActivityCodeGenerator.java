@@ -1,37 +1,28 @@
 package pro.sketchware.core.codegen;
-import pro.sketchware.core.project.BuildConfig;
-import pro.sketchware.core.project.ProjectDataManager;
-import pro.sketchware.core.project.ProjectDataStore;
 
 import android.text.TextUtils;
 import android.util.Pair;
-
-import pro.sketchware.beans.BlockBean;
-import pro.sketchware.beans.ComponentBean;
-import pro.sketchware.beans.ProjectFileBean;
-import pro.sketchware.beans.ViewBean;
-import pro.sketchware.core.block.ExtraBlockInfo;
-import pro.sketchware.core.library.Material3LibraryManager;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
-
+import pro.sketchware.beans.BlockBean;
+import pro.sketchware.beans.ComponentBean;
+import pro.sketchware.beans.ProjectFileBean;
+import pro.sketchware.beans.ViewBean;
 import pro.sketchware.beans.ViewBeans;
-import pro.sketchware.core.library.ManageLocalLibrary;
-import pro.sketchware.core.project.ConstVarComponent;
+import pro.sketchware.core.block.ExtraBlockInfo;
 import pro.sketchware.core.build.BuildSettings;
-import pro.sketchware.core.project.ProjectSettings;
-import pro.sketchware.core.codegen.AndroidManifestInjector;
-import pro.sketchware.core.codegen.CommandBlock;
-import pro.sketchware.core.codegen.LogicHandler;
 import pro.sketchware.core.build.ViewBindingBuilder;
-import pro.sketchware.core.codegen.BlockCodeRegistry;
-import pro.sketchware.core.codegen.BlockInterpreter;
-import pro.sketchware.core.codegen.CodeContext;
+import pro.sketchware.core.library.ManageLocalLibrary;
+import pro.sketchware.core.library.Material3LibraryManager;
+import pro.sketchware.core.project.BuildConfig;
+import pro.sketchware.core.project.ConstVarComponent;
+import pro.sketchware.core.project.ProjectDataManager;
+import pro.sketchware.core.project.ProjectDataStore;
+import pro.sketchware.core.project.ProjectSettings;
 
 public class ActivityCodeGenerator {
 
@@ -45,43 +36,39 @@ public class ActivityCodeGenerator {
     private final BuildConfig buildConfig;
     private final LayoutGenerator layoutGenerator;
     private final Boolean isViewBindingEnabled;
+
     /**
-     * Fields with static initializer that added Components need,
-     * e.g. {"private Timer _timer = new Timer();"}
+     * Fields with static initializer that added Components need, e.g. {"private Timer _timer = new
+     * Timer();"}
      */
     private final ArrayList<String> fieldsWithStaticInitializers = new ArrayList<>();
-    /**
-     * Fields of the currently generating class,
-     * e.g. {"private FloatingActionBar _fab;"}
-     */
+
+    /** Fields of the currently generating class, e.g. {"private FloatingActionBar _fab;"} */
     private final ArrayList<String> fields = new ArrayList<>();
+
     private final ArrayList<String> lists = new ArrayList<>();
     private final ArrayList<String> views = new ArrayList<>();
-    /**
-     * Field declarations from components. Can include static initializer, but doesn't have to.
-     */
+
+    /** Field declarations from components. Can include static initializer, but doesn't have to. */
     private final ArrayList<String> components = new ArrayList<>();
+
     /**
-     * Statements to be added to initialize(Bundle),
-     * e.g. {"_drawer.addDrawerListener(_toggle);"}
+     * Statements to be added to initialize(Bundle), e.g. {"_drawer.addDrawerListener(_toggle);"}
      */
     private final ArrayList<String> initializeMethodCode = new ArrayList<>();
+
     private final ManageLocalLibrary mll;
-    /**
-     * Component initializer lines which get added to <code>_initialize(Bundle)</code>
-     */
+
+    /** Component initializer lines which get added to <code>_initialize(Bundle)</code> */
     private final ArrayList<String> componentInitializers = new ArrayList<>();
-    /**
-     * Code of More Blocks that have been created
-     */
+
+    /** Code of More Blocks that have been created */
     private final ArrayList<String> moreBlocks = new ArrayList<>();
-    /**
-     * Code of inner Adapter classes, used for Widgets like ListView or RecyclerView
-     */
+
+    /** Code of inner Adapter classes, used for Widgets like ListView or RecyclerView */
     private final ArrayList<String> adapterClasses = new ArrayList<>();
-    /**
-     * Filled with request code constants for FilePicker components
-     */
+
+    /** Filled with request code constants for FilePicker components */
     private final ArrayList<String> filePickerRequestCodes = new ArrayList<>();
 
     private final CodeContext codeContext;
@@ -90,16 +77,24 @@ public class ActivityCodeGenerator {
     private String onCreateEventCode = "";
     private Material3LibraryManager materialLibraryManager;
 
-    public ActivityCodeGenerator(BuildConfig jqVar, ProjectFileBean projectFileBean, ProjectDataStore eCVar) {
-        this(jqVar, projectFileBean, eCVar,
+    public ActivityCodeGenerator(
+            BuildConfig jqVar, ProjectFileBean projectFileBean, ProjectDataStore eCVar) {
+        this(
+                jqVar,
+                projectFileBean,
+                eCVar,
                 new ManageLocalLibrary(eCVar.projectId),
                 new ProjectSettings(eCVar.projectId),
                 new Material3LibraryManager(eCVar.projectId));
     }
 
-    public ActivityCodeGenerator(BuildConfig jqVar, ProjectFileBean projectFileBean, ProjectDataStore eCVar,
-                                 ManageLocalLibrary sharedMll, ProjectSettings sharedSettings,
-                                 Material3LibraryManager sharedMaterialLibraryManager) {
+    public ActivityCodeGenerator(
+            BuildConfig jqVar,
+            ProjectFileBean projectFileBean,
+            ProjectDataStore eCVar,
+            ManageLocalLibrary sharedMll,
+            ProjectSettings sharedSettings,
+            Material3LibraryManager sharedMaterialLibraryManager) {
         packageName = jqVar.packageName;
         this.projectFileBean = projectFileBean;
         projectDataManager = eCVar;
@@ -108,25 +103,53 @@ public class ActivityCodeGenerator {
         settings = sharedSettings;
         permissionManager = new PermissionManager(eCVar.projectId, projectFileBean.getJavaName());
         layoutGenerator = new LayoutGenerator(buildConfig, projectFileBean);
-        isViewBindingEnabled = settings.getValue(ProjectSettings.SETTING_ENABLE_VIEWBINDING, BuildSettings.SETTING_GENERIC_VALUE_FALSE)
-                .equals(BuildSettings.SETTING_GENERIC_VALUE_TRUE);
+        isViewBindingEnabled =
+                settings.getValue(
+                                ProjectSettings.SETTING_ENABLE_VIEWBINDING,
+                                BuildSettings.SETTING_GENERIC_VALUE_FALSE)
+                        .equals(BuildSettings.SETTING_GENERIC_VALUE_TRUE);
         materialLibraryManager = sharedMaterialLibraryManager;
         boolean isFragment = projectFileBean.fileName.contains("_fragment");
         codeContext = new CodeContext(projectFileBean.getActivityName(), isFragment);
     }
 
     public String activityResult() {
-        ArrayList<BlockBean> blocks = ProjectDataManager.getProjectDataManager(projectDataManager.projectId).getBlocks(projectFileBean.getJavaName(), "onActivityResult_onActivityResult");
-        return ComponentCodeGenerator.formatCode(new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, blocks, isViewBindingEnabled, projectFileBean.getXmlName()).interpretBlocks(), false);
+        ArrayList<BlockBean> blocks =
+                ProjectDataManager.getProjectDataManager(projectDataManager.projectId)
+                        .getBlocks(
+                                projectFileBean.getJavaName(), "onActivityResult_onActivityResult");
+        return ComponentCodeGenerator.formatCode(
+                new BlockInterpreter(
+                                projectFileBean.getActivityName(),
+                                buildConfig,
+                                blocks,
+                                isViewBindingEnabled,
+                                projectFileBean.getXmlName())
+                        .interpretBlocks(),
+                false);
     }
 
     public String initializeLogic() {
-        ArrayList<BlockBean> blocks = ProjectDataManager.getProjectDataManager(projectDataManager.projectId).getBlocks(projectFileBean.getJavaName(), "initializeLogic_initializeLogic");
-        return ComponentCodeGenerator.formatCode(new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, blocks, isViewBindingEnabled, projectFileBean.getXmlName()).interpretBlocks(), false);
+        ArrayList<BlockBean> blocks =
+                ProjectDataManager.getProjectDataManager(projectDataManager.projectId)
+                        .getBlocks(
+                                projectFileBean.getJavaName(), "initializeLogic_initializeLogic");
+        return ComponentCodeGenerator.formatCode(
+                new BlockInterpreter(
+                                projectFileBean.getActivityName(),
+                                buildConfig,
+                                blocks,
+                                isViewBindingEnabled,
+                                projectFileBean.getXmlName())
+                        .interpretBlocks(),
+                false);
     }
 
     private void extraVariables() {
-        for (Map.Entry<String, ArrayList<BlockBean>> blocks : ProjectDataManager.getProjectDataManager(projectDataManager.projectId).getBlockMap(projectFileBean.getJavaName()).entrySet()) {
+        for (Map.Entry<String, ArrayList<BlockBean>> blocks :
+                ProjectDataManager.getProjectDataManager(projectDataManager.projectId)
+                        .getBlockMap(projectFileBean.getJavaName())
+                        .entrySet()) {
             for (BlockBean block : blocks.getValue()) {
                 switch (block.opCode) {
                     case "addCustomVariable":
@@ -156,13 +179,15 @@ public class ActivityCodeGenerator {
     }
 
     /**
-     * @return Import to be added to the currently generating class
-     * (includes import of default launcher activity)
+     * @return Import to be added to the currently generating class (includes import of default
+     *     launcher activity)
      */
     private String getLauncherActivity(String packageName) {
         String theImport = "";
 
-        String activityName = ProjectFileBean.getActivityName(AndroidManifestInjector.getLauncherActivity(projectDataManager.projectId));
+        String activityName =
+                ProjectFileBean.getActivityName(
+                        AndroidManifestInjector.getLauncherActivity(projectDataManager.projectId));
         if (!activityName.equals("MainActivity")) {
             theImport = "import " + packageName + "." + activityName + ";" + EOL;
         }
@@ -177,7 +202,9 @@ public class ActivityCodeGenerator {
         }
 
         ArrayList<String> billingParams = param.get("OnResultBillingResponse");
-        return "if (!" + billingParams.get(0) + ".handleActivityResult(_requestCode, _resultCode, _data))";
+        return "if (!"
+                + billingParams.get(0)
+                + ".handleActivityResult(_requestCode, _resultCode, _data))";
     }
 
     /**
@@ -188,11 +215,14 @@ public class ActivityCodeGenerator {
     }
 
     /**
-     * @param applyFormatting if false, returns raw code without CommandBlock.CB + formatCode (Phase 1, thread-safe)
+     * @param applyFormatting if false, returns raw code without CommandBlock.CB + formatCode (Phase
+     *     1, thread-safe)
      */
-    public String generateCode(boolean isAndroidStudioExport, String sc_id, boolean applyFormatting) {
+    public String generateCode(
+            boolean isAndroidStudioExport, String sc_id, boolean applyFormatting) {
         boolean isDialogFragment = projectFileBean.fileName.contains("_dialog_fragment");
-        boolean isBottomDialogFragment = projectFileBean.fileName.contains("_bottomdialog_fragment");
+        boolean isBottomDialogFragment =
+                projectFileBean.fileName.contains("_bottomdialog_fragment");
         boolean isFragment = projectFileBean.fileName.contains("_fragment");
 
         extraVariables();
@@ -211,8 +241,7 @@ public class ActivityCodeGenerator {
         addLocalLibraryImports();
 
         StringBuilder sb = new StringBuilder(8192);
-        sb.append("package ").append(packageName).append(";").append(EOL)
-                .append(EOL);
+        sb.append("package ").append(packageName).append(";").append(EOL).append(EOL);
         if (projectFileBean.getActivityName().equals("MainActivity")) {
             sb.append(getLauncherActivity(packageName));
         }
@@ -238,7 +267,10 @@ public class ActivityCodeGenerator {
             addImport("android.app.FragmentManager");
             addImport("android.app.DialogFragment");
         }
-        if (permissionManager.hasNewPermission() || buildConfig.getActivityPermissions(projectFileBean.getActivityName()).needsRuntimePermissions()) {
+        if (permissionManager.hasNewPermission()
+                || buildConfig
+                        .getActivityPermissions(projectFileBean.getActivityName())
+                        .needsRuntimePermissions()) {
             if (buildConfig.isAppCompatEnabled) {
                 addImport("androidx.core.content.ContextCompat");
                 addImport("androidx.core.app.ActivityCompat");
@@ -256,7 +288,8 @@ public class ActivityCodeGenerator {
             sb.append("import ").append(anImport).append(";").append(EOL);
         }
 
-        String importsAddedByImportBlocks = LogicHandler.imports(eventManager.generateActivityLifecycleEventCode());
+        String importsAddedByImportBlocks =
+                LogicHandler.imports(eventManager.generateActivityLifecycleEventCode());
         if (!importsAddedByImportBlocks.isEmpty()) {
             sb.append(importsAddedByImportBlocks).append(EOL);
         }
@@ -364,18 +397,28 @@ public class ActivityCodeGenerator {
             if (buildConfig.isAppCompatEnabled) {
                 sb.append("@NonNull").append(EOL);
                 sb.append("@Override").append(EOL);
-                sb.append("public View onCreateView(@NonNull LayoutInflater _inflater, " +
-                        "@Nullable ViewGroup _container, @Nullable Bundle _savedInstanceState) {").append(EOL);
+                sb.append(
+                                "public View onCreateView(@NonNull LayoutInflater _inflater, "
+                                        + "@Nullable ViewGroup _container, @Nullable Bundle _savedInstanceState) {")
+                        .append(EOL);
             } else {
                 sb.append("@Override").append(EOL);
-                sb.append("public View onCreateView(LayoutInflater _inflater, ViewGroup _container, " +
-                        "Bundle _savedInstanceState) {").append(EOL);
+                sb.append(
+                                "public View onCreateView(LayoutInflater _inflater, ViewGroup _container, "
+                                        + "Bundle _savedInstanceState) {")
+                        .append(EOL);
             }
             if (isViewBindingEnabled) {
-                sb.append("binding = ").append(bindingName).append(".inflate(_inflater, _container, false);").append(EOL);
+                sb.append("binding = ")
+                        .append(bindingName)
+                        .append(".inflate(_inflater, _container, false);")
+                        .append(EOL);
                 sb.append("initialize(_savedInstanceState, binding.getRoot());");
             } else {
-                sb.append("View _view = _inflater.inflate(R.layout.").append(projectFileBean.fileName).append(", _container, false);").append(EOL);
+                sb.append("View _view = _inflater.inflate(R.layout.")
+                        .append(projectFileBean.fileName)
+                        .append(", _container, false);")
+                        .append(EOL);
                 sb.append("initialize(_savedInstanceState, _view);");
             }
         } else {
@@ -384,10 +427,16 @@ public class ActivityCodeGenerator {
             sb.append("super.onCreate(_savedInstanceState);").append(EOL);
 
             if (isViewBindingEnabled) {
-                sb.append("binding = ").append(bindingName).append(".inflate(getLayoutInflater());").append(EOL);
+                sb.append("binding = ")
+                        .append(bindingName)
+                        .append(".inflate(getLayoutInflater());")
+                        .append(EOL);
                 sb.append("setContentView(binding.getRoot());").append(EOL);
             } else {
-                sb.append("setContentView(R.layout.").append(projectFileBean.fileName).append(");").append(EOL);
+                sb.append("setContentView(R.layout.")
+                        .append(projectFileBean.fileName)
+                        .append(");")
+                        .append(EOL);
             }
             sb.append("initialize(_savedInstanceState);");
         }
@@ -403,15 +452,28 @@ public class ActivityCodeGenerator {
             }
             sb.append("MobileAds.initialize(this);");
             sb.append(EOL);
-            if (fieldsWithStaticInitializers.contains(ComponentCodeGenerator.getComponentFieldCode("InterstitialAd"))) {
-                sb.append("_ad_unit_id = \"").append(buildConfig.isDebugBuild ? "ca-app-pub-3940256099942544/1033173712" : buildConfig.interstitialAdUnitId).append("\";");
+            if (fieldsWithStaticInitializers.contains(
+                    ComponentCodeGenerator.getComponentFieldCode("InterstitialAd"))) {
+                sb.append("_ad_unit_id = \"")
+                        .append(
+                                buildConfig.isDebugBuild
+                                        ? "ca-app-pub-3940256099942544/1033173712"
+                                        : buildConfig.interstitialAdUnitId)
+                        .append("\";");
             }
-            if (fieldsWithStaticInitializers.contains(ComponentCodeGenerator.getComponentFieldCode("RewardedVideoAd"))) {
-                sb.append("_reward_ad_unit_id = \"").append(buildConfig.isDebugBuild ? "ca-app-pub-3940256099942544/5224354917" : buildConfig.rewardAdUnitId).append("\";");
+            if (fieldsWithStaticInitializers.contains(
+                    ComponentCodeGenerator.getComponentFieldCode("RewardedVideoAd"))) {
+                sb.append("_reward_ad_unit_id = \"")
+                        .append(
+                                buildConfig.isDebugBuild
+                                        ? "ca-app-pub-3940256099942544/5224354917"
+                                        : buildConfig.rewardAdUnitId)
+                        .append("\";");
             }
 
             if (buildConfig.isDebugBuild) {
-                StringBuilder testDevicesListCode = new StringBuilder("List<String> testDeviceIds = Arrays.asList(");
+                StringBuilder testDevicesListCode =
+                        new StringBuilder("List<String> testDeviceIds = Arrays.asList(");
                 ArrayList<String> testDevices = buildConfig.testDeviceIds;
                 for (int j = 0, testDevicesSize = testDevices.size(); j < testDevicesSize; j++) {
                     String testDeviceId = testDevices.get(j);
@@ -425,7 +487,8 @@ public class ActivityCodeGenerator {
 
                 sb.append(EOL);
                 sb.append(testDevicesListCode);
-                sb.append("MobileAds.setRequestConfiguration(new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build());");
+                sb.append(
+                        "MobileAds.setRequestConfiguration(new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build());");
             }
 
             sb.append(EOL);
@@ -433,7 +496,11 @@ public class ActivityCodeGenerator {
 
         if (!isFragment) {
             // Adds initializeLogic() call too, don't worry
-            sb.append(permissionManager.writePermission(buildConfig.isAppCompatEnabled, buildConfig.getActivityPermissions(projectFileBean.getActivityName()).permissions));
+            sb.append(
+                    permissionManager.writePermission(
+                            buildConfig.isAppCompatEnabled,
+                            buildConfig.getActivityPermissions(projectFileBean.getActivityName())
+                                    .permissions));
         } else {
             sb.append("initializeLogic();").append(EOL);
             if (isViewBindingEnabled) {
@@ -447,9 +514,16 @@ public class ActivityCodeGenerator {
         if (permissionManager.hasPermission && !isFragment) {
             sb.append(EOL);
             sb.append("@Override").append(EOL);
-            sb.append("public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {").append(EOL);
-            sb.append("super.onRequestPermissionsResult(requestCode, permissions, grantResults);").append(EOL);
-            sb.append("if (requestCode == " + GeneratedPermissionRequestCodes.INITIALIZE_LOGIC + ") {").append(EOL);
+            sb.append(
+                            "public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {")
+                    .append(EOL);
+            sb.append("super.onRequestPermissionsResult(requestCode, permissions, grantResults);")
+                    .append(EOL);
+            sb.append(
+                            "if (requestCode == "
+                                    + GeneratedPermissionRequestCodes.INITIALIZE_LOGIC
+                                    + ") {")
+                    .append(EOL);
             sb.append("initializeLogic();").append(EOL);
             sb.append("}").append(EOL);
             sb.append("}").append(EOL);
@@ -518,10 +592,13 @@ public class ActivityCodeGenerator {
         }
         sb.append("}").append(EOL);
 
-        String agusComponentsOnActivityResultCode = getBillingResponseCode(buildConfig.constVarComponent);
+        String agusComponentsOnActivityResultCode =
+                getBillingResponseCode(buildConfig.constVarComponent);
         String onActivityResultLogic = activityResult();
         String onActivityResultSwitchLogic = eventManager.getOnActivityResultSwitchCases();
-        if (!agusComponentsOnActivityResultCode.isEmpty() || !onActivityResultLogic.isEmpty() || !onActivityResultSwitchLogic.isEmpty()) {
+        if (!agusComponentsOnActivityResultCode.isEmpty()
+                || !onActivityResultLogic.isEmpty()
+                || !onActivityResultSwitchLogic.isEmpty()) {
             sb.append(EOL);
             sb.append("@Override").append(EOL);
             if (isFragment) {
@@ -529,7 +606,8 @@ public class ActivityCodeGenerator {
             } else {
                 sb.append("protected");
             }
-            sb.append(" void onActivityResult(int _requestCode, int _resultCode, Intent _data) {").append(EOL);
+            sb.append(" void onActivityResult(int _requestCode, int _resultCode, Intent _data) {")
+                    .append(EOL);
             sb.append(agusComponentsOnActivityResultCode);
             sb.append("super.onActivityResult(_requestCode, _resultCode, _data);").append(EOL);
             sb.append(onActivityResultLogic).append(EOL);
@@ -542,13 +620,19 @@ public class ActivityCodeGenerator {
         }
 
         if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
-            String drawerId = isViewBindingEnabled ? "binding." + ViewBindingBuilder.generateParameterFromId("_drawer") : "_drawer";
+            String drawerId =
+                    isViewBindingEnabled
+                            ? "binding." + ViewBindingBuilder.generateParameterFromId("_drawer")
+                            : "_drawer";
             eventManager.addLifecycleEvent("onBackPressed", "DrawerLayout", drawerId);
         }
 
         ArrayList<ViewBean> beans = projectDataManager.getViews(projectFileBean.getXmlName());
         for (ViewBean next : beans) {
-            String resolvedId = isViewBindingEnabled ? "binding." + ViewBindingBuilder.generateParameterFromId(next.id) : next.id;
+            String resolvedId =
+                    isViewBindingEnabled
+                            ? "binding." + ViewBindingBuilder.generateParameterFromId(next.id)
+                            : next.id;
             if (next.type == ViewBean.VIEW_TYPE_WIDGET_MAPVIEW) {
                 eventManager.addLifecycleEvent("onStart", "MapView", resolvedId);
                 eventManager.addLifecycleEvent("onResume", "MapView", resolvedId);
@@ -599,23 +683,34 @@ public class ActivityCodeGenerator {
                     || !adapterCode.contains("return onTabLayoutNewTabAdded(pos);")) {
                 sb.append(adapterCode);
             } else {
-                sb.append(adapterCode.replace("return onTabLayoutNewTabAdded(pos);",
-                        "// Use the Activity Event (onTabLayoutNewTabAdded) in order to use this method" + EOL +
-                                "return \"page \" + String.valueOf(pos);"));
+                sb.append(
+                        adapterCode.replace(
+                                "return onTabLayoutNewTabAdded(pos);",
+                                "// Use the Activity Event (onTabLayoutNewTabAdded) in order to use this method"
+                                        + EOL
+                                        + "return \"page \" + String.valueOf(pos);"));
             }
             if (j != qSize - 1) {
                 sb.append(EOL);
             }
         }
-        if (!isFragment && !settings.getValue(ProjectSettings.SETTING_DISABLE_OLD_METHODS, BuildSettings.SETTING_GENERIC_VALUE_TRUE)
-                .equals(BuildSettings.SETTING_GENERIC_VALUE_TRUE)) {
+        if (!isFragment
+                && !settings.getValue(
+                                ProjectSettings.SETTING_DISABLE_OLD_METHODS,
+                                BuildSettings.SETTING_GENERIC_VALUE_TRUE)
+                        .equals(BuildSettings.SETTING_GENERIC_VALUE_TRUE)) {
             sb.append(getDeprecatedMethodsCode());
         }
         sb.append("}").append(EOL);
         String code = sb.toString();
 
-        code = code.replace("LinearLayoutManager(this)", "LinearLayoutManager(getApplicationContext())")
-                .replace("LinearLayoutManager(this,", "LinearLayoutManager(getApplicationContext(),");
+        code =
+                code.replace(
+                                "LinearLayoutManager(this)",
+                                "LinearLayoutManager(getApplicationContext())")
+                        .replace(
+                                "LinearLayoutManager(this,",
+                                "LinearLayoutManager(getApplicationContext(),");
 
         // Most Fragment-specific replacements are handled at generation time by CodeContext
         // in BlockCodeRegistry, ComponentCodeGenerator, etc. However, Extra Blocks (built-in
@@ -623,12 +718,20 @@ public class ActivityCodeGenerator {
         // so we keep a fallback safety net for patterns they may produce.
         if (isFragment) {
             // Use negative lookbehind to avoid double-transforming CodeContext-generated code
-            // (e.g., getContext().getApplicationContext() must NOT become getContext().getContext().getApplicationContext())
-            code = code.replaceAll("(?<!\\.)getApplicationContext\\(\\)", "getContext().getApplicationContext()")
-                    .replaceAll("(?<!\\.)getBaseContext\\(\\)", "getActivity().getBaseContext()")
-                    .replaceAll("(?<!\\.)getAssets\\(\\)", "getContext().getAssets()")
-                    .replaceAll("(?<!\\.)getSupportFragmentManager\\(\\)", "getActivity().getSupportFragmentManager()")
-                    .replace("CropImage(this,", "CropImage(getActivity(),");
+            // (e.g., getContext().getApplicationContext() must NOT become
+            // getContext().getContext().getApplicationContext())
+            code =
+                    code.replaceAll(
+                                    "(?<!\\.)getApplicationContext\\(\\)",
+                                    "getContext().getApplicationContext()")
+                            .replaceAll(
+                                    "(?<!\\.)getBaseContext\\(\\)",
+                                    "getActivity().getBaseContext()")
+                            .replaceAll("(?<!\\.)getAssets\\(\\)", "getContext().getAssets()")
+                            .replaceAll(
+                                    "(?<!\\.)getSupportFragmentManager\\(\\)",
+                                    "getActivity().getSupportFragmentManager()")
+                            .replace("CropImage(this,", "CropImage(getActivity(),");
         }
         if (!isFragment && buildConfig.isAppCompatEnabled) {
             code = code.replace("getFragmentManager", "getSupportFragmentManager");
@@ -642,8 +745,8 @@ public class ActivityCodeGenerator {
     }
 
     /**
-     * Phase 2 of parallel code generation: applies command blocks only.
-     * NOT thread-safe — must be called serially due to CommandBlock shared file I/O.
+     * Phase 2 of parallel code generation: applies command blocks only. NOT thread-safe — must be
+     * called serially due to CommandBlock shared file I/O.
      */
     public static String applyCommands(String formattedCode) {
         return CommandBlock.processCommandBlocks(formattedCode);
@@ -651,14 +754,25 @@ public class ActivityCodeGenerator {
 
     private String getListDeclarationAndAddImports(int listType, String listName) {
         String typeName = ComponentTypeMapper.getListInternalName(listType);
-        addImports(ComponentTypeMapper.getImportsByTypeName(projectDataManager.projectId, typeName, null));
-        return ComponentCodeGenerator.getFieldDeclaration(typeName, listName, ComponentCodeGenerator.AccessModifier.PRIVATE);
+        addImports(
+                ComponentTypeMapper.getImportsByTypeName(
+                        projectDataManager.projectId, typeName, null));
+        return ComponentCodeGenerator.getFieldDeclaration(
+                typeName, listName, ComponentCodeGenerator.AccessModifier.PRIVATE);
     }
 
     private String getComponentDeclarationAndAddImports(ComponentBean componentBean) {
         String typeName = ComponentTypeMapper.getComponentTypeName(componentBean.type);
-        addImports(ComponentTypeMapper.getImportsByTypeName(projectDataManager.projectId, typeName, null));
-        return ComponentCodeGenerator.getFieldDeclaration(typeName, componentBean.componentId, ComponentCodeGenerator.AccessModifier.PRIVATE, componentBean.param1, componentBean.param2, componentBean.param3);
+        addImports(
+                ComponentTypeMapper.getImportsByTypeName(
+                        projectDataManager.projectId, typeName, null));
+        return ComponentCodeGenerator.getFieldDeclaration(
+                typeName,
+                componentBean.componentId,
+                ComponentCodeGenerator.AccessModifier.PRIVATE,
+                componentBean.param1,
+                componentBean.param2,
+                componentBean.param3);
     }
 
     private String getDrawerViewDeclarationAndAddImports(ViewBean viewBean) {
@@ -666,8 +780,14 @@ public class ActivityCodeGenerator {
         if (viewType.isEmpty()) {
             viewType = viewBean.getClassInfo().getClassName();
         }
-        addImports(ComponentTypeMapper.getImportsByTypeName(projectDataManager.projectId, viewType, null));
-        return ComponentCodeGenerator.getFieldDeclaration(viewType, "_drawer_" + viewBean.id, ComponentCodeGenerator.AccessModifier.PRIVATE, isViewBindingEnabled);
+        addImports(
+                ComponentTypeMapper.getImportsByTypeName(
+                        projectDataManager.projectId, viewType, null));
+        return ComponentCodeGenerator.getFieldDeclaration(
+                viewType,
+                "_drawer_" + viewBean.id,
+                ComponentCodeGenerator.AccessModifier.PRIVATE,
+                isViewBindingEnabled);
     }
 
     /**
@@ -675,8 +795,11 @@ public class ActivityCodeGenerator {
      */
     private String getVariableDeclarationAndAddImports(int variableType, String name) {
         String variableTypeName = ComponentTypeMapper.getVariableTypeName(variableType);
-        addImports(ComponentTypeMapper.getImportsByTypeName(projectDataManager.projectId, variableTypeName, null));
-        return ComponentCodeGenerator.getFieldDeclaration(variableTypeName, name, ComponentCodeGenerator.AccessModifier.PRIVATE);
+        addImports(
+                ComponentTypeMapper.getImportsByTypeName(
+                        projectDataManager.projectId, variableTypeName, null));
+        return ComponentCodeGenerator.getFieldDeclaration(
+                variableTypeName, name, ComponentCodeGenerator.AccessModifier.PRIVATE);
     }
 
     private String getViewDeclarationAndAddImports(ViewBean viewBean) {
@@ -685,63 +808,112 @@ public class ActivityCodeGenerator {
             viewType = viewBean.getClassInfo().getClassName();
         }
         if (requireImports(viewBean)) {
-            addImports(ComponentTypeMapper.getImportsByTypeName(projectDataManager.projectId, viewType, viewBean.convert));
+            addImports(
+                    ComponentTypeMapper.getImportsByTypeName(
+                            projectDataManager.projectId, viewType, viewBean.convert));
         }
-        return ComponentCodeGenerator.getFieldDeclaration(viewType, viewBean.id, ComponentCodeGenerator.AccessModifier.PRIVATE, isViewBindingEnabled);
+        return ComponentCodeGenerator.getFieldDeclaration(
+                viewType,
+                viewBean.id,
+                ComponentCodeGenerator.AccessModifier.PRIVATE,
+                isViewBindingEnabled);
     }
 
     private String getDeprecatedMethodsCode() {
-        return EOL +
-                "@Deprecated" + EOL +
-                "public void showMessage(String _s) {" + EOL +
-                "Toast.makeText(getApplicationContext(), _s, Toast.LENGTH_SHORT).show();" + EOL +
-                "}" + EOL +
-                EOL +
-                "@Deprecated" + EOL +
-                "public int getLocationX(View _v) {" + EOL +
-                "int _location[] = new int[2];" + EOL +
-                "_v.getLocationInWindow(_location);" + EOL +
-                "return _location[0];" + EOL +
-                "}" + EOL +
-                EOL +
-                "@Deprecated" + EOL +
-                "public int getLocationY(View _v) {" + EOL +
-                "int _location[] = new int[2];" + EOL +
-                "_v.getLocationInWindow(_location);" + EOL +
-                "return _location[1];" + EOL +
-                "}" + EOL +
-                EOL +
-                "@Deprecated" + EOL +
-                "public int getRandom(int _min, int _max) {" + EOL +
-                "Random random = new Random();" + EOL +
-                "return random.nextInt(_max - _min + 1) + _min;" + EOL +
-                "}" + EOL +
-                EOL +
-                "@Deprecated" + EOL +
-                "public ArrayList<Double> getCheckedItemPositionsToArray(ListView _list) {" + EOL +
-                "ArrayList<Double> _result = new ArrayList<Double>();" + EOL +
-                "SparseBooleanArray _arr = _list.getCheckedItemPositions();" + EOL +
-                "for (int _iIdx = 0; _iIdx < _arr.size(); _iIdx++) {" + EOL +
-                "if (_arr.valueAt(_iIdx))" + EOL +
-                "_result.add((double)_arr.keyAt(_iIdx));" + EOL +
-                "}" + EOL +
-                "return _result;" + EOL +
-                "}" + EOL +
-                EOL +
-                "@Deprecated" + EOL +
-                "public float getDip(int _input) {" + EOL +
-                "return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, _input, getResources().getDisplayMetrics());" + EOL +
-                "}" + EOL +
-                EOL +
-                "@Deprecated" + EOL +
-                "public int getDisplayWidthPixels() {" + EOL +
-                "return getResources().getDisplayMetrics().widthPixels;" + EOL +
-                "}" + EOL +
-                EOL +
-                "@Deprecated" + EOL +
-                "public int getDisplayHeightPixels() {" + EOL +
-                "return getResources().getDisplayMetrics().heightPixels;" + EOL +
-                "}" + EOL;
+        return EOL
+                + "@Deprecated"
+                + EOL
+                + "public void showMessage(String _s) {"
+                + EOL
+                + "Toast.makeText(getApplicationContext(), _s, Toast.LENGTH_SHORT).show();"
+                + EOL
+                + "}"
+                + EOL
+                + EOL
+                + "@Deprecated"
+                + EOL
+                + "public int getLocationX(View _v) {"
+                + EOL
+                + "int _location[] = new int[2];"
+                + EOL
+                + "_v.getLocationInWindow(_location);"
+                + EOL
+                + "return _location[0];"
+                + EOL
+                + "}"
+                + EOL
+                + EOL
+                + "@Deprecated"
+                + EOL
+                + "public int getLocationY(View _v) {"
+                + EOL
+                + "int _location[] = new int[2];"
+                + EOL
+                + "_v.getLocationInWindow(_location);"
+                + EOL
+                + "return _location[1];"
+                + EOL
+                + "}"
+                + EOL
+                + EOL
+                + "@Deprecated"
+                + EOL
+                + "public int getRandom(int _min, int _max) {"
+                + EOL
+                + "Random random = new Random();"
+                + EOL
+                + "return random.nextInt(_max - _min + 1) + _min;"
+                + EOL
+                + "}"
+                + EOL
+                + EOL
+                + "@Deprecated"
+                + EOL
+                + "public ArrayList<Double> getCheckedItemPositionsToArray(ListView _list) {"
+                + EOL
+                + "ArrayList<Double> _result = new ArrayList<Double>();"
+                + EOL
+                + "SparseBooleanArray _arr = _list.getCheckedItemPositions();"
+                + EOL
+                + "for (int _iIdx = 0; _iIdx < _arr.size(); _iIdx++) {"
+                + EOL
+                + "if (_arr.valueAt(_iIdx))"
+                + EOL
+                + "_result.add((double)_arr.keyAt(_iIdx));"
+                + EOL
+                + "}"
+                + EOL
+                + "return _result;"
+                + EOL
+                + "}"
+                + EOL
+                + EOL
+                + "@Deprecated"
+                + EOL
+                + "public float getDip(int _input) {"
+                + EOL
+                + "return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, _input, getResources().getDisplayMetrics());"
+                + EOL
+                + "}"
+                + EOL
+                + EOL
+                + "@Deprecated"
+                + EOL
+                + "public int getDisplayWidthPixels() {"
+                + EOL
+                + "return getResources().getDisplayMetrics().widthPixels;"
+                + EOL
+                + "}"
+                + EOL
+                + EOL
+                + "@Deprecated"
+                + EOL
+                + "public int getDisplayHeightPixels() {"
+                + EOL
+                + "return getResources().getDisplayMetrics().heightPixels;"
+                + EOL
+                + "}"
+                + EOL;
     }
 
     private void addImport(String classToImport) {
@@ -762,7 +934,13 @@ public class ActivityCodeGenerator {
      * @see ComponentCodeGenerator#getComponentInitializerCode(String, String, String...)
      */
     private String getComponentBeanInitializer(ComponentBean componentBean) {
-        return ComponentCodeGenerator.getComponentInitializerCode(codeContext, ComponentTypeMapper.getComponentTypeName(componentBean.type), componentBean.componentId, componentBean.param1, componentBean.param2, componentBean.param3);
+        return ComponentCodeGenerator.getComponentInitializerCode(
+                codeContext,
+                ComponentTypeMapper.getComponentTypeName(componentBean.type),
+                componentBean.componentId,
+                componentBean.param1,
+                componentBean.param2,
+                componentBean.param3);
     }
 
     private void handleAppCompat() {
@@ -773,50 +951,75 @@ public class ActivityCodeGenerator {
             addImport("android.app.Activity");
         }
         if (isViewBindingEnabled) {
-            fields.add("private " + ViewBindingBuilder.generateFileNameForLayout(projectFileBean.fileName) + " binding;");
+            fields.add(
+                    "private "
+                            + ViewBindingBuilder.generateFileNameForLayout(projectFileBean.fileName)
+                            + " binding;");
         }
 
         if (buildConfig.isAppCompatEnabled) {
-            if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_TOOLBAR) && !projectFileBean.fileName.contains("_fragment")) {
+            if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_TOOLBAR)
+                    && !projectFileBean.fileName.contains("_fragment")) {
                 addImport(
-                        (materialLibraryManager.isMaterial3Enabled()) ? "com.google.android.material.appbar.MaterialToolbar" : "androidx.appcompat.widget.Toolbar"
-                );
+                        (materialLibraryManager.isMaterial3Enabled())
+                                ? "com.google.android.material.appbar.MaterialToolbar"
+                                : "androidx.appcompat.widget.Toolbar");
                 addImport("androidx.coordinatorlayout.widget.CoordinatorLayout");
                 addImport("com.google.android.material.appbar.AppBarLayout");
 
                 if (isViewBindingEnabled) {
                     initializeMethodCode.add(
-                            "setSupportActionBar(binding.Toolbar);" + EOL +
-                                    "getSupportActionBar().setDisplayHomeAsUpEnabled(true);" + EOL +
-                                    "getSupportActionBar().setHomeButtonEnabled(true);" + EOL +
-                                    "binding.Toolbar.setNavigationOnClickListener(new View.OnClickListener() {" + EOL +
-                                    "@Override" + EOL +
-                                    "public void onClick(View _v) {" + EOL +
-                                    "onBackPressed();" + EOL +
-                                    "}" + EOL +
-                                    "});"
-                    );
+                            "setSupportActionBar(binding.Toolbar);"
+                                    + EOL
+                                    + "getSupportActionBar().setDisplayHomeAsUpEnabled(true);"
+                                    + EOL
+                                    + "getSupportActionBar().setHomeButtonEnabled(true);"
+                                    + EOL
+                                    + "binding.Toolbar.setNavigationOnClickListener(new View.OnClickListener() {"
+                                    + EOL
+                                    + "@Override"
+                                    + EOL
+                                    + "public void onClick(View _v) {"
+                                    + EOL
+                                    + "onBackPressed();"
+                                    + EOL
+                                    + "}"
+                                    + EOL
+                                    + "});");
                 } else {
-                    fields.add("private " +
-                            (materialLibraryManager.isMaterial3Enabled() ? "MaterialToolbar" : "Toolbar") +
-                            " _toolbar;");
+                    fields.add(
+                            "private "
+                                    + (materialLibraryManager.isMaterial3Enabled()
+                                            ? "MaterialToolbar"
+                                            : "Toolbar")
+                                    + " _toolbar;");
                     fields.add("private AppBarLayout _app_bar;");
                     fields.add("private CoordinatorLayout _coordinator;");
 
                     initializeMethodCode.add(
-                            "_app_bar = findViewById(R.id._app_bar);" + EOL +
-                                    "_coordinator = findViewById(R.id._coordinator);" + EOL +
-                                    "_toolbar = findViewById(R.id._toolbar);" + EOL +
-                                    "setSupportActionBar(_toolbar);" + EOL +
-                                    "getSupportActionBar().setDisplayHomeAsUpEnabled(true);" + EOL +
-                                    "getSupportActionBar().setHomeButtonEnabled(true);" + EOL +
-                                    "_toolbar.setNavigationOnClickListener(new View.OnClickListener() {" + EOL +
-                                    "@Override" + EOL +
-                                    "public void onClick(View _v) {" + EOL +
-                                    "onBackPressed();" + EOL +
-                                    "}" + EOL +
-                                    "});"
-                    );
+                            "_app_bar = findViewById(R.id._app_bar);"
+                                    + EOL
+                                    + "_coordinator = findViewById(R.id._coordinator);"
+                                    + EOL
+                                    + "_toolbar = findViewById(R.id._toolbar);"
+                                    + EOL
+                                    + "setSupportActionBar(_toolbar);"
+                                    + EOL
+                                    + "getSupportActionBar().setDisplayHomeAsUpEnabled(true);"
+                                    + EOL
+                                    + "getSupportActionBar().setHomeButtonEnabled(true);"
+                                    + EOL
+                                    + "_toolbar.setNavigationOnClickListener(new View.OnClickListener() {"
+                                    + EOL
+                                    + "@Override"
+                                    + EOL
+                                    + "public void onClick(View _v) {"
+                                    + EOL
+                                    + "onBackPressed();"
+                                    + EOL
+                                    + "}"
+                                    + EOL
+                                    + "});");
                 }
             }
             if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
@@ -824,43 +1027,60 @@ public class ActivityCodeGenerator {
 
                 if (!isViewBindingEnabled) {
                     fields.add("private FloatingActionButton _fab;");
-                    initializeMethodCode.add("_fab = " +
-                            (projectFileBean.fileName.contains("_fragment") ? "_view." : "") +
-                            "findViewById(R.id._fab);");
+                    initializeMethodCode.add(
+                            "_fab = "
+                                    + (projectFileBean.fileName.contains("_fragment")
+                                            ? "_view."
+                                            : "")
+                                    + "findViewById(R.id._fab);");
                 }
             }
-            if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER) && !projectFileBean.fileName.contains("_fragment")) {
+            if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)
+                    && !projectFileBean.fileName.contains("_fragment")) {
                 addImport("androidx.core.view.GravityCompat");
                 addImport("androidx.drawerlayout.widget.DrawerLayout");
                 addImport("androidx.appcompat.app.ActionBarDrawerToggle");
 
-
                 if (isViewBindingEnabled) {
                     initializeMethodCode.add(
-                            "ActionBarDrawerToggle _toggle = new ActionBarDrawerToggle(" +
-                                    projectFileBean.getActivityName() + ".this, binding.Drawer, " +
-
-                                    (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_TOOLBAR) ?
-                                            "binding.Toolbar, " : "") +
-
-                                    "R.string.app_name, R.string.app_name);" + EOL +
-                                    "binding.Drawer.addDrawerListener(_toggle);" + EOL +
-                                    "_toggle.syncState();" + EOL
-                    );
+                            "ActionBarDrawerToggle _toggle = new ActionBarDrawerToggle("
+                                    + projectFileBean.getActivityName()
+                                    + ".this, binding.Drawer, "
+                                    + (projectFileBean.hasActivityOption(
+                                                    ProjectFileBean.OPTION_ACTIVITY_TOOLBAR)
+                                            ? "binding.Toolbar, "
+                                            : "")
+                                    + "R.string.app_name, R.string.app_name);"
+                                    + EOL
+                                    + "binding.Drawer.addDrawerListener(_toggle);"
+                                    + EOL
+                                    + "_toggle.syncState();"
+                                    + EOL);
                 } else {
                     fields.add("private DrawerLayout _drawer;");
-                    initializeMethodCode.add("_drawer = findViewById(R.id._drawer);" + EOL +
-                            "ActionBarDrawerToggle _toggle = new ActionBarDrawerToggle(" +
-                            projectFileBean.getActivityName() + ".this, _drawer, " +
-                            (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_TOOLBAR) ?
-                                    "_toolbar, " : "") +
-                            "R.string.app_name, R.string.app_name);" + EOL +
-                            "_drawer.addDrawerListener(_toggle);" + EOL +
-                            "_toggle.syncState();" + EOL + EOL +
-                            "LinearLayout _nav_view = findViewById(R.id._nav_view);" + EOL
-                    );
+                    initializeMethodCode.add(
+                            "_drawer = findViewById(R.id._drawer);"
+                                    + EOL
+                                    + "ActionBarDrawerToggle _toggle = new ActionBarDrawerToggle("
+                                    + projectFileBean.getActivityName()
+                                    + ".this, _drawer, "
+                                    + (projectFileBean.hasActivityOption(
+                                                    ProjectFileBean.OPTION_ACTIVITY_TOOLBAR)
+                                            ? "_toolbar, "
+                                            : "")
+                                    + "R.string.app_name, R.string.app_name);"
+                                    + EOL
+                                    + "_drawer.addDrawerListener(_toggle);"
+                                    + EOL
+                                    + "_toggle.syncState();"
+                                    + EOL
+                                    + EOL
+                                    + "LinearLayout _nav_view = findViewById(R.id._nav_view);"
+                                    + EOL);
                 }
-                addImports(ComponentTypeMapper.getImportsByTypeName(projectDataManager.projectId, "LinearLayout", null));
+                addImports(
+                        ComponentTypeMapper.getImportsByTypeName(
+                                projectDataManager.projectId, "LinearLayout", null));
             }
         }
         addImport("android.app.*");
@@ -885,7 +1105,15 @@ public class ActivityCodeGenerator {
         addImport("java.util.regex.*");
         addImport("java.text.*");
         addImport("org.json.*");
-        onCreateEventCode = new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, projectDataManager.getBlocks(projectFileBean.getJavaName(), "onCreate_initializeLogic"), isViewBindingEnabled, projectFileBean.getXmlName()).interpretBlocks();
+        onCreateEventCode =
+                new BlockInterpreter(
+                                projectFileBean.getActivityName(),
+                                buildConfig,
+                                projectDataManager.getBlocks(
+                                        projectFileBean.getJavaName(), "onCreate_initializeLogic"),
+                                isViewBindingEnabled,
+                                projectFileBean.getXmlName())
+                        .interpretBlocks();
     }
 
     private String getDrawerViewInitializer(ViewBean viewBean) {
@@ -893,24 +1121,58 @@ public class ActivityCodeGenerator {
         if (replaceAll.isEmpty()) {
             replaceAll = viewBean.getClassInfo().getClassName();
         }
-        return ComponentCodeGenerator.getDrawerViewInitializer(replaceAll, viewBean.id, "_nav_view");
+        return ComponentCodeGenerator.getDrawerViewInitializer(
+                replaceAll, viewBean.id, "_nav_view");
     }
 
     private void addAdapterCode() {
-        for (ViewBean viewBean : projectDataManager.getCustomViewBeans(projectFileBean.getXmlName())) {
+        for (ViewBean viewBean :
+                projectDataManager.getCustomViewBeans(projectFileBean.getXmlName())) {
             String xmlName = ProjectFileBean.getXmlName(viewBean.customView);
             projectFileBean.getJavaName();
             String eventName = viewBean.id + "_onBindCustomView";
-            String adapterLogic = new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, projectDataManager.getBlocks(projectFileBean.getJavaName(), eventName), isViewBindingEnabled, projectFileBean.getXmlName()).interpretBlocks();
+            String adapterLogic =
+                    new BlockInterpreter(
+                                    projectFileBean.getActivityName(),
+                                    buildConfig,
+                                    projectDataManager.getBlocks(
+                                            projectFileBean.getJavaName(), eventName),
+                                    isViewBindingEnabled,
+                                    projectFileBean.getXmlName())
+                            .interpretBlocks();
             String adapterCode;
             if (viewBean.type == ViewBeans.VIEW_TYPE_LAYOUT_VIEWPAGER) {
-                adapterCode = ComponentCodeGenerator.pagerAdapter(codeContext, layoutGenerator, viewBean.id, viewBean.customView, projectDataManager.getViews(xmlName), adapterLogic, isViewBindingEnabled);
+                adapterCode =
+                        ComponentCodeGenerator.pagerAdapter(
+                                codeContext,
+                                layoutGenerator,
+                                viewBean.id,
+                                viewBean.customView,
+                                projectDataManager.getViews(xmlName),
+                                adapterLogic,
+                                isViewBindingEnabled);
             } else if (viewBean.type == ViewBeans.VIEW_TYPE_WIDGET_RECYCLERVIEW) {
-                adapterCode = ComponentCodeGenerator.recyclerViewAdapter(codeContext, layoutGenerator, viewBean.id, viewBean.customView, projectDataManager.getViews(xmlName), adapterLogic, isViewBindingEnabled);
+                adapterCode =
+                        ComponentCodeGenerator.recyclerViewAdapter(
+                                codeContext,
+                                layoutGenerator,
+                                viewBean.id,
+                                viewBean.customView,
+                                projectDataManager.getViews(xmlName),
+                                adapterLogic,
+                                isViewBindingEnabled);
                 addImport("androidx.recyclerview.widget.LinearLayoutManager");
                 addImport("androidx.recyclerview.widget.RecyclerView");
             } else {
-                adapterCode = ComponentCodeGenerator.getListAdapterCode(codeContext, layoutGenerator, viewBean.id, viewBean.customView, projectDataManager.getViews(xmlName), adapterLogic, isViewBindingEnabled);
+                adapterCode =
+                        ComponentCodeGenerator.getListAdapterCode(
+                                codeContext,
+                                layoutGenerator,
+                                viewBean.id,
+                                viewBean.customView,
+                                projectDataManager.getViews(xmlName),
+                                adapterLogic,
+                                isViewBindingEnabled);
             }
             adapterClasses.add(adapterCode);
         }
@@ -922,9 +1184,11 @@ public class ActivityCodeGenerator {
             replaceAll = viewBean.getClassInfo().getClassName();
         }
         if (projectFileBean.fileName.contains("_fragment")) {
-            return ComponentCodeGenerator.getViewInitializer(replaceAll, viewBean.id, true, isViewBindingEnabled);
+            return ComponentCodeGenerator.getViewInitializer(
+                    replaceAll, viewBean.id, true, isViewBindingEnabled);
         }
-        return ComponentCodeGenerator.getViewInitializer(replaceAll, viewBean.id, false, isViewBindingEnabled);
+        return ComponentCodeGenerator.getViewInitializer(
+                replaceAll, viewBean.id, false, isViewBindingEnabled);
     }
 
     private void addMoreBlockCodes() {
@@ -933,7 +1197,17 @@ public class ActivityCodeGenerator {
         for (int index = 0, pairsSize = pairs.size(); index < pairsSize; index++) {
             Pair<String, String> next = pairs.get(index);
             String name = next.first + "_moreBlock";
-            String code = ComponentCodeGenerator.getMoreBlockCode(next.first, next.second, new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, projectDataManager.getBlocks(javaName, name), isViewBindingEnabled, projectFileBean.getXmlName()).interpretBlocks());
+            String code =
+                    ComponentCodeGenerator.getMoreBlockCode(
+                            next.first,
+                            next.second,
+                            new BlockInterpreter(
+                                            projectFileBean.getActivityName(),
+                                            buildConfig,
+                                            projectDataManager.getBlocks(javaName, name),
+                                            isViewBindingEnabled,
+                                            projectFileBean.getXmlName())
+                                    .interpretBlocks());
             if (index < (pairsSize - 1)) {
                 moreBlocks.add(code);
             } else {
@@ -944,15 +1218,16 @@ public class ActivityCodeGenerator {
     }
 
     private void initializeEventsCodeGenerator() {
-        eventManager = new EventCodeGenerator(buildConfig, projectFileBean, projectDataManager, codeContext);
+        eventManager =
+                new EventCodeGenerator(
+                        buildConfig, projectFileBean, projectDataManager, codeContext);
         addImports(eventManager.getImports());
     }
 
-    /**
-     * Adds imports for blocks used in the currently generated Activity.
-     */
+    /** Adds imports for blocks used in the currently generated Activity. */
     private void addImportsForBlocks() {
-        for (Map.Entry<String, ArrayList<BlockBean>> entry : projectDataManager.getBlockMap(projectFileBean.getJavaName()).entrySet()) {
+        for (Map.Entry<String, ArrayList<BlockBean>> entry :
+                projectDataManager.getBlockMap(projectFileBean.getJavaName()).entrySet()) {
             for (BlockBean blockBean : entry.getValue()) {
                 switch (blockBean.opCode) {
                     case "toStringWithDecimal":
@@ -1001,7 +1276,9 @@ public class ActivityCodeGenerator {
                     default:
                         ExtraBlockInfo block = BlockLoader.getBlockInfo(blockBean.opCode);
                         if (block.isMissing) {
-                            block = BlockLoader.getBlockFromProject(buildConfig.sc_id, blockBean.opCode);
+                            block =
+                                    BlockLoader.getBlockFromProject(
+                                            buildConfig.sc_id, blockBean.opCode);
                         }
                         // Imports must come from the same definition as BlockInterpreter's code.
                         for (String importCode : block.getImports().split("\n")) {
@@ -1013,9 +1290,7 @@ public class ActivityCodeGenerator {
         }
     }
 
-    /**
-     * Handles the Activity's Drawer Views and Components
-     */
+    /** Handles the Activity's Drawer Views and Components */
     private void addDrawerComponentInitializer() {
         ArrayList<ViewBean> viewBeans = projectDataManager.getViews(projectFileBean.getXmlName());
         for (ViewBean viewBean : viewBeans) {
@@ -1028,7 +1303,8 @@ public class ActivityCodeGenerator {
         }
         if (!isViewBindingEnabled) {
             if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
-                ArrayList<ViewBean> drawerBeans = projectDataManager.getViews(projectFileBean.getDrawerXmlName());
+                ArrayList<ViewBean> drawerBeans =
+                        projectDataManager.getViews(projectFileBean.getDrawerXmlName());
                 for (ViewBean viewBean : drawerBeans) {
                     if (!viewBean.convert.equals("include")) {
                         Set<String> toNotAdd = layoutGenerator.readAttributesToReplace(viewBean);
@@ -1039,15 +1315,14 @@ public class ActivityCodeGenerator {
                 }
             }
         }
-        ArrayList<ComponentBean> componentBeans = projectDataManager.getComponents(projectFileBean.getJavaName());
+        ArrayList<ComponentBean> componentBeans =
+                projectDataManager.getComponents(projectFileBean.getJavaName());
         for (ComponentBean componentBean : componentBeans) {
             componentInitializers.add(getComponentBeanInitializer(componentBean));
         }
     }
 
-    /**
-     * Handles the file's request code constants.
-     */
+    /** Handles the file's request code constants. */
     private void addRequestCodeConstants() {
         int startValue = 100;
         for (ComponentBean next : projectDataManager.getComponents(projectFileBean.getJavaName())) {
@@ -1056,7 +1331,9 @@ public class ActivityCodeGenerator {
                 case ComponentBean.COMPONENT_TYPE_FILE_PICKER:
                 case 31:
                     int incrementedValue = startValue + 1;
-                    filePickerRequestCodes.add(ComponentCodeGenerator.getRequestCodeConstant(next.componentId, incrementedValue));
+                    filePickerRequestCodes.add(
+                            ComponentCodeGenerator.getRequestCodeConstant(
+                                    next.componentId, incrementedValue));
                     startValue = incrementedValue;
                     break;
             }
@@ -1065,7 +1342,8 @@ public class ActivityCodeGenerator {
 
     private void addFieldsDeclaration() {
         String javaName = projectFileBean.getJavaName();
-        for (Pair<Integer, String> next : new ArrayList<>(projectDataManager.getVariables(javaName))) {
+        for (Pair<Integer, String> next :
+                new ArrayList<>(projectDataManager.getVariables(javaName))) {
             int variableId = next.first;
             String variableValue = next.second;
             if (variableId == 9) {
@@ -1092,11 +1370,13 @@ public class ActivityCodeGenerator {
         }
 
         if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
-            for (ViewBean viewBean : projectDataManager.getViews(projectFileBean.getDrawerXmlName())) {
+            for (ViewBean viewBean :
+                    projectDataManager.getViews(projectFileBean.getDrawerXmlName())) {
                 if (!viewBean.convert.equals("include")) {
                     Set<String> toNotAdd = layoutGenerator.readAttributesToReplace(viewBean);
                     if (!toNotAdd.contains("android:id")) {
-                        String drawerViewDeclarations = getDrawerViewDeclarationAndAddImports(viewBean);
+                        String drawerViewDeclarations =
+                                getDrawerViewDeclarationAndAddImports(viewBean);
                         if (!drawerViewDeclarations.isEmpty()) {
                             views.add(drawerViewDeclarations);
                         }
@@ -1141,16 +1421,20 @@ public class ActivityCodeGenerator {
             fieldsWithStaticInitializers.add(ComponentCodeGenerator.getComponentFieldCode("Timer"));
         }
         if (hasFirebaseDB) {
-            fieldsWithStaticInitializers.add(ComponentCodeGenerator.getComponentFieldCode("FirebaseDB"));
+            fieldsWithStaticInitializers.add(
+                    ComponentCodeGenerator.getComponentFieldCode("FirebaseDB"));
         }
         if (hasFirebaseStorage) {
-            fieldsWithStaticInitializers.add(ComponentCodeGenerator.getComponentFieldCode("FirebaseStorage"));
+            fieldsWithStaticInitializers.add(
+                    ComponentCodeGenerator.getComponentFieldCode("FirebaseStorage"));
         }
         if (hasInterstitialAd) {
-            fieldsWithStaticInitializers.add(ComponentCodeGenerator.getComponentFieldCode("InterstitialAd"));
+            fieldsWithStaticInitializers.add(
+                    ComponentCodeGenerator.getComponentFieldCode("InterstitialAd"));
         }
         if (hasRewardedVideoAd) {
-            fieldsWithStaticInitializers.add(ComponentCodeGenerator.getComponentFieldCode("RewardedVideoAd"));
+            fieldsWithStaticInitializers.add(
+                    ComponentCodeGenerator.getComponentFieldCode("RewardedVideoAd"));
         }
     }
 
@@ -1160,27 +1444,25 @@ public class ActivityCodeGenerator {
         }
         return switch (viewBean.type) {
             case ViewBean.VIEW_TYPE_WIDGET_LISTVIEW,
-                 ViewBeans.VIEW_TYPE_WIDGET_RECYCLERVIEW,
-                 ViewBeans.VIEW_TYPE_LAYOUT_BOTTOMNAVIGATIONVIEW,
-                 ViewBean.VIEW_TYPE_WIDGET_SPINNER,
-                 ViewBean.VIEW_TYPE_WIDGET_WEBVIEW,
-                 ViewBean.VIEW_TYPE_WIDGET_ADVIEW,
-                 ViewBean.VIEW_TYPE_WIDGET_MAPVIEW,
-                 ViewBeans.VIEW_TYPE_LAYOUT_SWIPEREFRESHLAYOUT,
-                 ViewBeans.VIEW_TYPE_WIDGET_PATTERNLOCKVIEW,
-                 ViewBeans.VIEW_TYPE_WIDGET_CODEVIEW,
-                 ViewBeans.VIEW_TYPE_WIDGET_LOTTIEANIMATIONVIEW,
-                 ViewBeans.VIEW_TYPE_WIDGET_YOUTUBEPLAYERVIEW,
-                 ViewBeans.VIEW_TYPE_LAYOUT_TABLAYOUT,
-                 ViewBeans.VIEW_TYPE_LAYOUT_VIEWPAGER ->
+                    ViewBeans.VIEW_TYPE_WIDGET_RECYCLERVIEW,
+                    ViewBeans.VIEW_TYPE_LAYOUT_BOTTOMNAVIGATIONVIEW,
+                    ViewBean.VIEW_TYPE_WIDGET_SPINNER,
+                    ViewBean.VIEW_TYPE_WIDGET_WEBVIEW,
+                    ViewBean.VIEW_TYPE_WIDGET_ADVIEW,
+                    ViewBean.VIEW_TYPE_WIDGET_MAPVIEW,
+                    ViewBeans.VIEW_TYPE_LAYOUT_SWIPEREFRESHLAYOUT,
+                    ViewBeans.VIEW_TYPE_WIDGET_PATTERNLOCKVIEW,
+                    ViewBeans.VIEW_TYPE_WIDGET_CODEVIEW,
+                    ViewBeans.VIEW_TYPE_WIDGET_LOTTIEANIMATIONVIEW,
+                    ViewBeans.VIEW_TYPE_WIDGET_YOUTUBEPLAYERVIEW,
+                    ViewBeans.VIEW_TYPE_LAYOUT_TABLAYOUT,
+                    ViewBeans.VIEW_TYPE_LAYOUT_VIEWPAGER ->
                     true; // it's necessary for the adapters, listeners...
             default -> false;
         };
     }
 
-    /**
-     * Adds Local libraries' imports
-     */
+    /** Adds Local libraries' imports */
     private void addLocalLibraryImports() {
         for (String value : mll.getImportLocalLibrary()) {
             addImport(value);

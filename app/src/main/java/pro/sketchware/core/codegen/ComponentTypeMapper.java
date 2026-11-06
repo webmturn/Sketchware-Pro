@@ -1,15 +1,12 @@
 package pro.sketchware.core.codegen;
-import pro.sketchware.core.project.ClassInfo;
-import pro.sketchware.util.format.FormatUtil;
-
-import pro.sketchware.beans.ComponentBean;
-import pro.sketchware.core.library.Material3LibraryManager;
 
 import java.util.ArrayList;
-
-import pro.sketchware.core.project.ComponentsHandler;
-import pro.sketchware.core.codegen.EventsHandler;
+import pro.sketchware.beans.ComponentBean;
 import pro.sketchware.core.block.BlockMenuNameMapper;
+import pro.sketchware.core.library.Material3LibraryManager;
+import pro.sketchware.core.project.ClassInfo;
+import pro.sketchware.core.project.ComponentsHandler;
+import pro.sketchware.util.format.FormatUtil;
 
 public class ComponentTypeMapper {
     /**
@@ -25,8 +22,10 @@ public class ComponentTypeMapper {
                 return new ClassInfo("double");
 
             case "s":
-                if (typeName != null && (typeName.equalsIgnoreCase("inputOnly") ||
-                        typeName.equals("inputCode") || typeName.equals("import"))) {
+                if (typeName != null
+                        && (typeName.equalsIgnoreCase("inputOnly")
+                                || typeName.equals("inputCode")
+                                || typeName.equals("import"))) {
                     return new ClassInfo("Input");
                 } else {
                     return new ClassInfo("String");
@@ -36,12 +35,13 @@ public class ComponentTypeMapper {
                 return new ClassInfo("Map");
 
             case "l":
-                return new ClassInfo(switch (typeName) {
-                    case "List Map" -> "ListMap";
-                    case "List String" -> "ListString";
-                    case "List Number" -> "ListInt";
-                    default -> typeName;
-                });
+                return new ClassInfo(
+                        switch (typeName) {
+                            case "List Map" -> "ListMap";
+                            case "List String" -> "ListString";
+                            case "List Number" -> "ListInt";
+                            default -> typeName;
+                        });
 
             case "v":
                 return new ClassInfo(typeName);
@@ -130,7 +130,8 @@ public class ComponentTypeMapper {
     }
 
     /**
-     * @return The internal type name of a variable(e.g. View, Component), from its type name(%m.typename), as displayed in the moreblock code.
+     * @return The internal type name of a variable(e.g. View, Component), from its type
+     *     name(%m.typename), as displayed in the moreblock code.
      */
     public static String getInternalTypeName(String name) {
         return switch (name) {
@@ -421,13 +422,15 @@ public class ComponentTypeMapper {
                 return importList;
 
             case "FloatingActionButton":
-                importList.add("com.google.android.material.floatingactionbutton.FloatingActionButton");
+                importList.add(
+                        "com.google.android.material.floatingactionbutton.FloatingActionButton");
                 return importList;
 
             case "Toolbar":
                 importList.add(
-                        materialLibraryManager.isMaterial3Enabled() ? "com.google.android.material.appbar.MaterialToolbar" : "androidx.appcompat.widget.Toolbar"
-                );
+                        materialLibraryManager.isMaterial3Enabled()
+                                ? "com.google.android.material.appbar.MaterialToolbar"
+                                : "androidx.appcompat.widget.Toolbar");
                 importList.add("androidx.annotation.NonNull");
                 return importList;
 
@@ -440,7 +443,8 @@ public class ComponentTypeMapper {
             case "InterstitialAd":
                 importList.add("com.google.android.gms.ads.AdRequest");
                 importList.add("com.google.android.gms.ads.interstitial.InterstitialAd");
-                importList.add("com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback");
+                importList.add(
+                        "com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback");
                 importList.add("com.google.android.gms.ads.AdError");
                 importList.add("com.google.android.gms.ads.FullScreenContentCallback");
                 importList.add("com.google.android.gms.ads.LoadAdError");
@@ -510,7 +514,8 @@ public class ComponentTypeMapper {
 
             case "SwipeRefreshLayout":
                 importList.add("androidx.swiperefreshlayout.widget.SwipeRefreshLayout");
-                importList.add("androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener");
+                importList.add(
+                        "androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener");
                 return importList;
 
             case "PatternLockView":
@@ -544,12 +549,18 @@ public class ComponentTypeMapper {
                 return importList;
 
             case "YouTubePlayerView":
-                importList.add("com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.*");
-                importList.add("com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener");
-                importList.add("com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerUtils");
-                importList.add("com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView");
-                importList.add("com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer");
-                importList.add("com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerFullScreenListener");
+                importList.add(
+                        "com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.*");
+                importList.add(
+                        "com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener");
+                importList.add(
+                        "com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerUtils");
+                importList.add(
+                        "com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView");
+                importList.add(
+                        "com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer");
+                importList.add(
+                        "com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerFullScreenListener");
                 return importList;
 
             case "OTPView":
@@ -570,7 +581,8 @@ public class ComponentTypeMapper {
 
             case "NavigationView":
                 importList.add("com.google.android.material.navigation.NavigationView");
-                importList.add("com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener");
+                importList.add(
+                        "com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener");
                 return importList;
 
             case "TabLayout":
@@ -600,7 +612,8 @@ public class ComponentTypeMapper {
 
             case "BottomNavigationView":
                 importList.add("com.google.android.material.bottomnavigation.BottomNavigationView");
-                importList.add("com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemSelectedListener");
+                importList.add(
+                        "com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemSelectedListener");
                 return importList;
 
             case "Notification":
@@ -774,7 +787,8 @@ public class ComponentTypeMapper {
     }
 
     /**
-     * @return The actual class info from its internal type name, as displayed in the generated code.
+     * @return The actual class info from its internal type name, as displayed in the generated
+     *     code.
      */
     public static String getActualTypeName(String typeName) {
         return switch (typeName) {
@@ -793,8 +807,17 @@ public class ComponentTypeMapper {
             case "SpeechToText" -> "SpeechRecognizer";
             case "FragmentAdapter" -> "FragmentStatePagerAdapter";
             case "Context" -> "Activity";
-            case "ResString", "ResStyle", "ResColor", "ResArray", "ResDimen", "ResBool",
-                 "ResInteger", "ResAttr", "ResXml", "Color" -> "int";
+            case "ResString",
+                    "ResStyle",
+                    "ResColor",
+                    "ResArray",
+                    "ResDimen",
+                    "ResBool",
+                    "ResInteger",
+                    "ResAttr",
+                    "ResXml",
+                    "Color" ->
+                    "int";
             default -> typeName;
         };
     }

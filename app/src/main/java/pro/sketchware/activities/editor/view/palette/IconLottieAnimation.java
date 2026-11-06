@@ -2,12 +2,9 @@ package pro.sketchware.activities.editor.view.palette;
 
 import android.content.Context;
 import android.view.ViewGroup;
-
-import pro.sketchware.beans.ViewBean;
-import pro.sketchware.activities.editor.view.palette.IconBase;
-
-import pro.sketchware.beans.ViewBeans;
 import pro.sketchware.R;
+import pro.sketchware.beans.ViewBean;
+import pro.sketchware.beans.ViewBeans;
 
 public class IconLottieAnimation extends IconBase {
 
@@ -28,7 +25,8 @@ public class IconLottieAnimation extends IconBase {
         viewBean.layout.paddingRight = 8;
         viewBean.layout.paddingBottom = 8;
         viewBean.convert = "com.airbnb.lottie.LottieAnimationView";
-        viewBean.inject = "android:scaleType=\"fitCenter\"\nandroid:layout_centerInParent=\"true\"\napp:lottie_fileName=\"your_file.json\"\napp:lottie_loop=\"true\" \napp:lottie_autoPlay=\"true\"";
+        viewBean.inject =
+                "android:scaleType=\"fitCenter\"\nandroid:layout_centerInParent=\"true\"\napp:lottie_fileName=\"your_file.json\"\napp:lottie_loop=\"true\" \napp:lottie_autoPlay=\"true\"";
         return viewBean;
     }
 }

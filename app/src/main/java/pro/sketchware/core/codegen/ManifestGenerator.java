@@ -1,56 +1,49 @@
 package pro.sketchware.core.codegen;
 
-import pro.sketchware.core.codegen.ActivityConfigConstants;
-import pro.sketchware.core.project.BuildConfig;
-import pro.sketchware.core.codegen.ComponentCodeGenerator;
-import pro.sketchware.core.codegen.LayoutGenerator;
-import pro.sketchware.core.project.SketchwarePaths;
-
 import static android.text.TextUtils.isEmpty;
 import static pro.sketchware.core.build.BuildDefaults.VAR_DEFAULT_TARGET_SDK_VERSION;
 
 import android.Manifest;
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.os.Build;
-import android.util.Log;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.os.Build;
+import android.util.Log;
 import android.util.Pair;
-
-import pro.sketchware.beans.ProjectFileBean;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-
-import pro.sketchware.core.codegen.EditorManifest;
+import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.core.build.BuildSettings;
 import pro.sketchware.core.build.ProjectFilePaths;
-import pro.sketchware.core.project.ProjectSettings;
-import pro.sketchware.util.Helper;
-import pro.sketchware.core.codegen.AndroidManifestInjector;
 import pro.sketchware.core.library.BuiltInLibraries;
 import pro.sketchware.core.library.BuiltInLibraryManager;
+import pro.sketchware.core.project.BuildConfig;
 import pro.sketchware.core.project.FileResConfig;
+import pro.sketchware.core.project.ProjectSettings;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.Helper;
 import pro.sketchware.util.xml.XmlBuilder;
 
 /**
  * Generates the {@code AndroidManifest.xml} for a Sketchware project.
- * <p>
- * Assembles the manifest from project configuration, producing:
+ *
+ * <p>Assembles the manifest from project configuration, producing:
+ *
  * <ul>
- *   <li>Package name, version code/name, min/target SDK</li>
- *   <li>{@code <uses-permission>} tags based on used components and features</li>
- *   <li>{@code <activity>} tags for each project file with theme, orientation, and keyboard settings</li>
- *   <li>Firebase provider/service metadata</li>
- *   <li>FileProvider for camera components</li>
- *   <li>AdMob application ID metadata</li>
- *   <li>User-injected manifest entries via {@link AndroidManifestInjector}</li>
+ *   <li>Package name, version code/name, min/target SDK
+ *   <li>{@code <uses-permission>} tags based on used components and features
+ *   <li>{@code <activity>} tags for each project file with theme, orientation, and keyboard
+ *       settings
+ *   <li>Firebase provider/service metadata
+ *   <li>FileProvider for camera components
+ *   <li>AdMob application ID metadata
+ *   <li>User-injected manifest entries via {@link AndroidManifestInjector}
  * </ul>
  *
  * @see pro.sketchware.core.build.ProjectBuilder
@@ -72,11 +65,14 @@ public class ManifestGenerator {
     /**
      * Creates a manifest generator for the given project configuration.
      *
-     * @param buildConfig             the project build configuration
-     * @param projectFileBeans        the list of project files (activities, fragments, etc.)
-     * @param builtInLibraryManager   the built-in library manager for dependency resolution
+     * @param buildConfig the project build configuration
+     * @param projectFileBeans the list of project files (activities, fragments, etc.)
+     * @param builtInLibraryManager the built-in library manager for dependency resolution
      */
-    public ManifestGenerator(BuildConfig buildConfig, ArrayList<ProjectFileBean> projectFileBeans, BuiltInLibraryManager builtInLibraryManager) {
+    public ManifestGenerator(
+            BuildConfig buildConfig,
+            ArrayList<ProjectFileBean> projectFileBeans,
+            BuiltInLibraryManager builtInLibraryManager) {
         this.buildConfig = buildConfig;
         projectFiles = projectFileBeans;
         this.builtInLibraryManager = builtInLibraryManager;
@@ -106,7 +102,7 @@ public class ManifestGenerator {
     /**
      * Adds a permission to AndroidManifest.
      *
-     * @param manifestTag    AndroidManifest {@link XmlBuilder} object
+     * @param manifestTag AndroidManifest {@link XmlBuilder} object
      * @param permissionName The {@code uses-permission} {@link XmlBuilder} tag
      */
     private void writePermission(XmlBuilder manifestTag, String permissionName) {
@@ -126,40 +122,63 @@ public class ManifestGenerator {
      */
     private void writeFirebaseMetaData(XmlBuilder applicationTag) {
         XmlBuilder providerTag = new XmlBuilder("provider");
-        providerTag.addAttribute("android", "name", "com.google.firebase.provider.FirebaseInitProvider");
-        providerTag.addAttribute("android", "authorities", buildConfig.packageName + ".firebaseinitprovider");
+        providerTag.addAttribute(
+                "android", "name", "com.google.firebase.provider.FirebaseInitProvider");
+        providerTag.addAttribute(
+                "android", "authorities", buildConfig.packageName + ".firebaseinitprovider");
         providerTag.addAttribute("android", "exported", "false");
         providerTag.addAttribute("android", "initOrder", "100");
         applicationTag.addChildNode(providerTag);
         XmlBuilder serviceTag = new XmlBuilder("service");
-        serviceTag.addAttribute("android", "name", "com.google.firebase.components.ComponentDiscoveryService");
+        serviceTag.addAttribute(
+                "android", "name", "com.google.firebase.components.ComponentDiscoveryService");
         serviceTag.addAttribute("android", "exported", "false");
         if (buildConfig.isFirebaseAuthUsed) {
             XmlBuilder metadataTag = new XmlBuilder("meta-data");
-            metadataTag.addAttribute("android", "name", "com.google.firebase.components:com.google.firebase.auth.FirebaseAuthRegistrar");
-            metadataTag.addAttribute("android", "value", "com.google.firebase.components.ComponentRegistrar");
+            metadataTag.addAttribute(
+                    "android",
+                    "name",
+                    "com.google.firebase.components:com.google.firebase.auth.FirebaseAuthRegistrar");
+            metadataTag.addAttribute(
+                    "android", "value", "com.google.firebase.components.ComponentRegistrar");
             serviceTag.addChildNode(metadataTag);
         }
         if (buildConfig.isFirebaseDatabaseUsed) {
             XmlBuilder metadataTag = new XmlBuilder("meta-data");
-            metadataTag.addAttribute("android", "name", "com.google.firebase.components:com.google.firebase.database.DatabaseRegistrar");
-            metadataTag.addAttribute("android", "value", "com.google.firebase.components.ComponentRegistrar");
+            metadataTag.addAttribute(
+                    "android",
+                    "name",
+                    "com.google.firebase.components:com.google.firebase.database.DatabaseRegistrar");
+            metadataTag.addAttribute(
+                    "android", "value", "com.google.firebase.components.ComponentRegistrar");
             serviceTag.addChildNode(metadataTag);
         }
         if (buildConfig.isFirebaseStorageUsed) {
             XmlBuilder metadataTag = new XmlBuilder("meta-data");
-            metadataTag.addAttribute("android", "name", "com.google.firebase.components:com.google.firebase.storage.StorageRegistrar");
-            metadataTag.addAttribute("android", "value", "com.google.firebase.components.ComponentRegistrar");
+            metadataTag.addAttribute(
+                    "android",
+                    "name",
+                    "com.google.firebase.components:com.google.firebase.storage.StorageRegistrar");
+            metadataTag.addAttribute(
+                    "android", "value", "com.google.firebase.components.ComponentRegistrar");
             serviceTag.addChildNode(metadataTag);
         }
         if (buildConfig.constVarComponent.isFCMUsed) {
             XmlBuilder metadataTag = new XmlBuilder("meta-data");
-            metadataTag.addAttribute("android", "name", "com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingRegistrar");
-            metadataTag.addAttribute("android", "value", "com.google.firebase.components.ComponentRegistrar");
+            metadataTag.addAttribute(
+                    "android",
+                    "name",
+                    "com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingRegistrar");
+            metadataTag.addAttribute(
+                    "android", "value", "com.google.firebase.components.ComponentRegistrar");
             serviceTag.addChildNode(metadataTag);
             XmlBuilder installationsMetadataTag = new XmlBuilder("meta-data");
-            installationsMetadataTag.addAttribute("android", "name", "com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar");
-            installationsMetadataTag.addAttribute("android", "value", "com.google.firebase.components.ComponentRegistrar");
+            installationsMetadataTag.addAttribute(
+                    "android",
+                    "name",
+                    "com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar");
+            installationsMetadataTag.addAttribute(
+                    "android", "value", "com.google.firebase.components.ComponentRegistrar");
             serviceTag.addChildNode(installationsMetadataTag);
         }
         applicationTag.addChildNode(serviceTag);
@@ -205,7 +224,7 @@ public class ManifestGenerator {
      * Registers a {@link BroadcastReceiver} in AndroidManifest.
      *
      * @param applicationTag AndroidManifest {@link XmlBuilder} object
-     * @param receiverName   The component name of the broadcast
+     * @param receiverName The component name of the broadcast
      * @see ComponentName
      */
     private void writeBroadcast(XmlBuilder applicationTag, String receiverName) {
@@ -233,7 +252,7 @@ public class ManifestGenerator {
      * Registers a {@link Service} in AndroidManifest.
      *
      * @param applicationTag AndroidManifest {@link XmlBuilder} object
-     * @param serviceName    The component name of the service
+     * @param serviceName The component name of the service
      */
     private void writeService(XmlBuilder applicationTag, String serviceName) {
         XmlBuilder serviceTag = new XmlBuilder("service");
@@ -244,23 +263,35 @@ public class ManifestGenerator {
 
     private void writeAndroidxRoomService(XmlBuilder application) {
         XmlBuilder invalidationService = new XmlBuilder("service");
-        invalidationService.addAttribute("android", "name", "androidx.room.MultiInstanceInvalidationService");
+        invalidationService.addAttribute(
+                "android", "name", "androidx.room.MultiInstanceInvalidationService");
         invalidationService.addAttribute("android", "directBootAware", "true");
         invalidationService.addAttribute("android", "exported", "false");
         application.addChildNode(invalidationService);
     }
 
     private void writeAndroidxStartupInitializationProvider(XmlBuilder application) {
-        var initializers = Set.of(
-                new Pair<>(builtInLibraryManager.containsLibrary(BuiltInLibraries.ANDROIDX_EMOJI2), "androidx.emoji2.text.EmojiCompatInitializer"),
-                new Pair<>(builtInLibraryManager.containsLibrary(BuiltInLibraries.ANDROIDX_LIFECYCLE_PROCESS), "androidx.lifecycle.ProcessLifecycleInitializer"),
-                new Pair<>(builtInLibraryManager.containsLibrary(BuiltInLibraries.ANDROIDX_WORK_RUNTIME), "androidx.work.WorkManagerInitializer")
-        );
+        var initializers =
+                Set.of(
+                        new Pair<>(
+                                builtInLibraryManager.containsLibrary(
+                                        BuiltInLibraries.ANDROIDX_EMOJI2),
+                                "androidx.emoji2.text.EmojiCompatInitializer"),
+                        new Pair<>(
+                                builtInLibraryManager.containsLibrary(
+                                        BuiltInLibraries.ANDROIDX_LIFECYCLE_PROCESS),
+                                "androidx.lifecycle.ProcessLifecycleInitializer"),
+                        new Pair<>(
+                                builtInLibraryManager.containsLibrary(
+                                        BuiltInLibraries.ANDROIDX_WORK_RUNTIME),
+                                "androidx.work.WorkManagerInitializer"));
 
         if (initializers.stream().anyMatch(initializer -> initializer.first)) {
             XmlBuilder initializationProvider = new XmlBuilder("provider");
-            initializationProvider.addAttribute("android", "name", "androidx.startup.InitializationProvider");
-            initializationProvider.addAttribute("android", "authorities", buildConfig.packageName + ".androidx-startup");
+            initializationProvider.addAttribute(
+                    "android", "name", "androidx.startup.InitializationProvider");
+            initializationProvider.addAttribute(
+                    "android", "authorities", buildConfig.packageName + ".androidx-startup");
             initializationProvider.addAttribute("android", "exported", "false");
             for (var pair : initializers) {
                 if (pair.first) {
@@ -276,14 +307,17 @@ public class ManifestGenerator {
 
     private void writeAndroidxWorkRuntimeTags(XmlBuilder application) {
         XmlBuilder alarmService = new XmlBuilder("service");
-        alarmService.addAttribute("android", "name", "androidx.work.impl.background.systemalarm.SystemAlarmService");
+        alarmService.addAttribute(
+                "android", "name", "androidx.work.impl.background.systemalarm.SystemAlarmService");
         alarmService.addAttribute("android", "directBootAware", "false");
-        alarmService.addAttribute("android", "enabled", "@bool/enable_system_alarm_service_default");
+        alarmService.addAttribute(
+                "android", "enabled", "@bool/enable_system_alarm_service_default");
         alarmService.addAttribute("android", "exported", "false");
         application.addChildNode(alarmService);
 
         XmlBuilder jobService = new XmlBuilder("service");
-        jobService.addAttribute("android", "name", "androidx.work.impl.background.systemjob.SystemJobService");
+        jobService.addAttribute(
+                "android", "name", "androidx.work.impl.background.systemjob.SystemJobService");
         jobService.addAttribute("android", "directBootAware", "false");
         jobService.addAttribute("android", "enabled", "@bool/enable_system_job_service_default");
         jobService.addAttribute("android", "exported", "true");
@@ -291,38 +325,49 @@ public class ManifestGenerator {
         application.addChildNode(jobService);
 
         XmlBuilder foregroundService = new XmlBuilder("service");
-        foregroundService.addAttribute("android", "name", "androidx.work.impl.foreground.SystemForegroundService");
+        foregroundService.addAttribute(
+                "android", "name", "androidx.work.impl.foreground.SystemForegroundService");
         foregroundService.addAttribute("android", "directBootAware", "false");
-        foregroundService.addAttribute("android", "enabled", "@bool/enable_system_foreground_service_default");
+        foregroundService.addAttribute(
+                "android", "enabled", "@bool/enable_system_foreground_service_default");
         foregroundService.addAttribute("android", "exported", "false");
         application.addChildNode(foregroundService);
 
         XmlBuilder forceStopRunnableReceiver = new XmlBuilder("receiver");
-        forceStopRunnableReceiver.addAttribute("android", "name", "androidx.work.impl.utils.ForceStopRunnable$BroadcastReceiver");
+        forceStopRunnableReceiver.addAttribute(
+                "android", "name", "androidx.work.impl.utils.ForceStopRunnable$BroadcastReceiver");
         forceStopRunnableReceiver.addAttribute("android", "directBootAware", "false");
         forceStopRunnableReceiver.addAttribute("android", "enabled", "true");
         forceStopRunnableReceiver.addAttribute("android", "exported", "false");
         application.addChildNode(forceStopRunnableReceiver);
 
         XmlBuilder batteryChargingReceiver = new XmlBuilder("receiver");
-        batteryChargingReceiver.addAttribute("android", "name", "androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryChargingProxy");
+        batteryChargingReceiver.addAttribute(
+                "android",
+                "name",
+                "androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryChargingProxy");
         batteryChargingReceiver.addAttribute("android", "directBootAware", "false");
         batteryChargingReceiver.addAttribute("android", "enabled", "false");
         batteryChargingReceiver.addAttribute("android", "exported", "false");
         {
             XmlBuilder intentFilter = new XmlBuilder("intent-filter");
             XmlBuilder connectedAction = new XmlBuilder("action");
-            connectedAction.addAttribute("android", "name", "android.intent.action.ACTION_POWER_CONNECTED");
+            connectedAction.addAttribute(
+                    "android", "name", "android.intent.action.ACTION_POWER_CONNECTED");
             intentFilter.addChildNode(connectedAction);
             XmlBuilder disconnectedAction = new XmlBuilder("action");
-            disconnectedAction.addAttribute("android", "name", "android.intent.action.ACTION_POWER_DISCONNECTED");
+            disconnectedAction.addAttribute(
+                    "android", "name", "android.intent.action.ACTION_POWER_DISCONNECTED");
             intentFilter.addChildNode(disconnectedAction);
             batteryChargingReceiver.addChildNode(intentFilter);
         }
         application.addChildNode(batteryChargingReceiver);
 
         XmlBuilder batteryNotLowReceiver = new XmlBuilder("receiver");
-        batteryNotLowReceiver.addAttribute("android", "name", "androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryNotLowProxy");
+        batteryNotLowReceiver.addAttribute(
+                "android",
+                "name",
+                "androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryNotLowProxy");
         batteryNotLowReceiver.addAttribute("android", "directBootAware", "false");
         batteryNotLowReceiver.addAttribute("android", "enabled", "false");
         batteryNotLowReceiver.addAttribute("android", "exported", "false");
@@ -339,7 +384,10 @@ public class ManifestGenerator {
         application.addChildNode(batteryNotLowReceiver);
 
         XmlBuilder storageNotLowReceiver = new XmlBuilder("receiver");
-        storageNotLowReceiver.addAttribute("android", "name", "androidx.work.impl.background.systemalarm.ConstraintProxy$StorageNotLowProxy");
+        storageNotLowReceiver.addAttribute(
+                "android",
+                "name",
+                "androidx.work.impl.background.systemalarm.ConstraintProxy$StorageNotLowProxy");
         storageNotLowReceiver.addAttribute("android", "directBootAware", "false");
         storageNotLowReceiver.addAttribute("android", "enabled", "false");
         storageNotLowReceiver.addAttribute("android", "exported", "false");
@@ -356,7 +404,10 @@ public class ManifestGenerator {
         application.addChildNode(storageNotLowReceiver);
 
         XmlBuilder networkStateReceiver = new XmlBuilder("receiver");
-        networkStateReceiver.addAttribute("android", "name", "androidx.work.impl.background.systemalarm.ConstraintProxy$NetworkStateProxy");
+        networkStateReceiver.addAttribute(
+                "android",
+                "name",
+                "androidx.work.impl.background.systemalarm.ConstraintProxy$NetworkStateProxy");
         networkStateReceiver.addAttribute("android", "directBootAware", "false");
         networkStateReceiver.addAttribute("android", "enabled", "false");
         networkStateReceiver.addAttribute("android", "exported", "false");
@@ -370,41 +421,50 @@ public class ManifestGenerator {
         application.addChildNode(networkStateReceiver);
 
         XmlBuilder rescheduleReceiver = new XmlBuilder("receiver");
-        rescheduleReceiver.addAttribute("android", "name", "androidx.work.impl.background.systemalarm.RescheduleReceiver");
+        rescheduleReceiver.addAttribute(
+                "android", "name", "androidx.work.impl.background.systemalarm.RescheduleReceiver");
         rescheduleReceiver.addAttribute("android", "directBootAware", "false");
         rescheduleReceiver.addAttribute("android", "enabled", "false");
         rescheduleReceiver.addAttribute("android", "exported", "false");
         {
             XmlBuilder intentFilter = new XmlBuilder("intent-filter");
             XmlBuilder bootCompletedAction = new XmlBuilder("action");
-            bootCompletedAction.addAttribute("android", "name", "android.intent.action.BOOT_COMPLETED");
+            bootCompletedAction.addAttribute(
+                    "android", "name", "android.intent.action.BOOT_COMPLETED");
             intentFilter.addChildNode(bootCompletedAction);
             XmlBuilder timeSetAction = new XmlBuilder("action");
             timeSetAction.addAttribute("android", "name", "android.intent.action.TIME_SET");
             intentFilter.addChildNode(timeSetAction);
             XmlBuilder timezoneChangedAction = new XmlBuilder("action");
-            timezoneChangedAction.addAttribute("android", "name", "android.intent.action.TIMEZONE_CHANGED");
+            timezoneChangedAction.addAttribute(
+                    "android", "name", "android.intent.action.TIMEZONE_CHANGED");
             intentFilter.addChildNode(timezoneChangedAction);
             rescheduleReceiver.addChildNode(intentFilter);
         }
         application.addChildNode(rescheduleReceiver);
 
         XmlBuilder proxyUpdateReceiver = new XmlBuilder("receiver");
-        proxyUpdateReceiver.addAttribute("android", "name", "androidx.work.impl.background.systemalarm.ConstraintProxyUpdateReceiver");
+        proxyUpdateReceiver.addAttribute(
+                "android",
+                "name",
+                "androidx.work.impl.background.systemalarm.ConstraintProxyUpdateReceiver");
         proxyUpdateReceiver.addAttribute("android", "directBootAware", "false");
-        proxyUpdateReceiver.addAttribute("android", "enabled", "@bool/enable_system_alarm_service_default");
+        proxyUpdateReceiver.addAttribute(
+                "android", "enabled", "@bool/enable_system_alarm_service_default");
         proxyUpdateReceiver.addAttribute("android", "exported", "false");
         {
             XmlBuilder intentFilter = new XmlBuilder("intent-filter");
             XmlBuilder action = new XmlBuilder("action");
-            action.addAttribute("android", "name", "androidx.work.impl.background.systemalarm.UpdateProxies");
+            action.addAttribute(
+                    "android", "name", "androidx.work.impl.background.systemalarm.UpdateProxies");
             intentFilter.addChildNode(action);
             proxyUpdateReceiver.addChildNode(intentFilter);
         }
         application.addChildNode(proxyUpdateReceiver);
 
         XmlBuilder diagnosticsReceiver = new XmlBuilder("receiver");
-        diagnosticsReceiver.addAttribute("android", "name", "androidx.work.impl.diagnostics.DiagnosticsReceiver");
+        diagnosticsReceiver.addAttribute(
+                "android", "name", "androidx.work.impl.diagnostics.DiagnosticsReceiver");
         diagnosticsReceiver.addAttribute("android", "directBootAware", "false");
         diagnosticsReceiver.addAttribute("android", "enabled", "true");
         diagnosticsReceiver.addAttribute("android", "exported", "true");
@@ -420,8 +480,8 @@ public class ManifestGenerator {
     }
 
     /**
-     * Initializes project settings and package name from the project file paths.
-     * Must be called before {@link #generateManifest()}.
+     * Initializes project settings and package name from the project file paths. Must be called
+     * before {@link #generateManifest()}.
      *
      * @param projectFilePaths the project file paths configuration
      */
@@ -429,7 +489,11 @@ public class ManifestGenerator {
         settings = new ProjectSettings(projectFilePaths.sc_id);
         int targetSdkVersion;
         try {
-            targetSdkVersion = Integer.parseInt(settings.getValue(ProjectSettings.SETTING_TARGET_SDK_VERSION, String.valueOf(VAR_DEFAULT_TARGET_SDK_VERSION)));
+            targetSdkVersion =
+                    Integer.parseInt(
+                            settings.getValue(
+                                    ProjectSettings.SETTING_TARGET_SDK_VERSION,
+                                    String.valueOf(VAR_DEFAULT_TARGET_SDK_VERSION)));
         } catch (NumberFormatException ignored) {
             targetSdkVersion = VAR_DEFAULT_TARGET_SDK_VERSION;
         }
@@ -445,7 +509,11 @@ public class ManifestGenerator {
     public String generateManifest() {
         int targetSdkVersion;
         try {
-            targetSdkVersion = Integer.parseInt(settings.getValue(ProjectSettings.SETTING_TARGET_SDK_VERSION, String.valueOf(VAR_DEFAULT_TARGET_SDK_VERSION)));
+            targetSdkVersion =
+                    Integer.parseInt(
+                            settings.getValue(
+                                    ProjectSettings.SETTING_TARGET_SDK_VERSION,
+                                    String.valueOf(VAR_DEFAULT_TARGET_SDK_VERSION)));
         } catch (NumberFormatException ignored) {
             targetSdkVersion = VAR_DEFAULT_TARGET_SDK_VERSION;
         }
@@ -523,7 +591,9 @@ public class ManifestGenerator {
         }
         AndroidManifestInjector.injectManifestPermissions(manifestXml, buildConfig.sc_id);
 
-        if (buildConfig.isAdMobEnabled || buildConfig.isTextToSpeechUsed || buildConfig.isSpeechToTextUsed) {
+        if (buildConfig.isAdMobEnabled
+                || buildConfig.isTextToSpeechUsed
+                || buildConfig.isSpeechToTextUsed) {
             XmlBuilder queries = new XmlBuilder("queries");
             if (buildConfig.isAdMobEnabled) {
                 XmlBuilder forBrowserContent = new XmlBuilder("intent");
@@ -542,7 +612,10 @@ public class ManifestGenerator {
                 XmlBuilder forCustomTabsService = new XmlBuilder("intent");
                 {
                     XmlBuilder action = new XmlBuilder("action");
-                    action.addAttribute("android", "name", "android.support.customtabs.action.CustomTabsService");
+                    action.addAttribute(
+                            "android",
+                            "name",
+                            "android.support.customtabs.action.CustomTabsService");
                     forCustomTabsService.addChildNode(action);
                 }
                 queries.addChildNode(forCustomTabsService);
@@ -574,7 +647,10 @@ public class ManifestGenerator {
         if (addRequestLegacyExternalStorage) {
             applicationTag.addAttribute("android", "requestLegacyExternalStorage", "true");
         }
-        if (!buildSettings.getValue(BuildSettings.SETTING_NO_HTTP_LEGACY, BuildSettings.SETTING_GENERIC_VALUE_FALSE)
+        if (!buildSettings
+                .getValue(
+                        BuildSettings.SETTING_NO_HTTP_LEGACY,
+                        BuildSettings.SETTING_GENERIC_VALUE_FALSE)
                 .equals(BuildSettings.SETTING_GENERIC_VALUE_TRUE)) {
             applicationTag.addAttribute("android", "usesCleartextTraffic", "true");
         }
@@ -587,29 +663,41 @@ public class ManifestGenerator {
                 XmlBuilder activityTag = new XmlBuilder("activity");
 
                 String javaName = projectFileBean.getJavaName();
-                activityTag.addAttribute("android", "name", "." + javaName.substring(0, javaName.indexOf(".java")));
+                activityTag.addAttribute(
+                        "android", "name", "." + javaName.substring(0, javaName.indexOf(".java")));
 
-                if (!AndroidManifestInjector.injectActivityAttributes(activityTag, buildConfig.sc_id, projectFileBean.getJavaName())) {
-                    activityTag.addAttribute("android", "configChanges", "orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout");
+                if (!AndroidManifestInjector.injectActivityAttributes(
+                        activityTag, buildConfig.sc_id, projectFileBean.getJavaName())) {
+                    activityTag.addAttribute(
+                            "android",
+                            "configChanges",
+                            "orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout");
                     activityTag.addAttribute("android", "hardwareAccelerated", "true");
                     activityTag.addAttribute("android", "supportsPictureInPicture", "true");
                 }
-                if (!AndroidManifestInjector.isActivityThemeUsed(buildConfig.sc_id, projectFileBean.getJavaName())) {
+                if (!AndroidManifestInjector.isActivityThemeUsed(
+                        buildConfig.sc_id, projectFileBean.getJavaName())) {
                     if (buildConfig.isAppCompatEnabled) {
-                        if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FULLSCREEN)) {
-                            activityTag.addAttribute("android", "theme", "@style/AppTheme.FullScreen");
+                        if (projectFileBean.hasActivityOption(
+                                ProjectFileBean.OPTION_ACTIVITY_FULLSCREEN)) {
+                            activityTag.addAttribute(
+                                    "android", "theme", "@style/AppTheme.FullScreen");
                         }
-                    } else if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FULLSCREEN)) {
-                        if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_TOOLBAR)) {
+                    } else if (projectFileBean.hasActivityOption(
+                            ProjectFileBean.OPTION_ACTIVITY_FULLSCREEN)) {
+                        if (projectFileBean.hasActivityOption(
+                                ProjectFileBean.OPTION_ACTIVITY_TOOLBAR)) {
                             activityTag.addAttribute("android", "theme", "@style/NoStatusBar");
                         } else {
                             activityTag.addAttribute("android", "theme", "@style/FullScreen");
                         }
-                    } else if (!projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_TOOLBAR)) {
+                    } else if (!projectFileBean.hasActivityOption(
+                            ProjectFileBean.OPTION_ACTIVITY_TOOLBAR)) {
                         activityTag.addAttribute("android", "theme", "@style/NoActionBar");
                     }
                 }
-                if (!AndroidManifestInjector.isActivityOrientationUsed(buildConfig.sc_id, projectFileBean.getJavaName())) {
+                if (!AndroidManifestInjector.isActivityOrientationUsed(
+                        buildConfig.sc_id, projectFileBean.getJavaName())) {
                     int orientation = projectFileBean.orientation;
                     if (orientation == ProjectFileBean.ORIENTATION_PORTRAIT) {
                         activityTag.addAttribute("android", "screenOrientation", "portrait");
@@ -617,13 +705,17 @@ public class ManifestGenerator {
                         activityTag.addAttribute("android", "screenOrientation", "landscape");
                     }
                 }
-                if (!AndroidManifestInjector.isActivityKeyboardUsed(buildConfig.sc_id, projectFileBean.getJavaName())) {
-                    String keyboardSetting = ActivityConfigConstants.getKeyboardSettingName(projectFileBean.keyboardSetting);
+                if (!AndroidManifestInjector.isActivityKeyboardUsed(
+                        buildConfig.sc_id, projectFileBean.getJavaName())) {
+                    String keyboardSetting =
+                            ActivityConfigConstants.getKeyboardSettingName(
+                                    projectFileBean.keyboardSetting);
                     if (!keyboardSetting.isEmpty()) {
                         activityTag.addAttribute("android", "windowSoftInputMode", keyboardSetting);
                     }
                 }
-                if (projectFileBean.fileName.equals(AndroidManifestInjector.getLauncherActivity(buildConfig.sc_id))) {
+                if (projectFileBean.fileName.equals(
+                        AndroidManifestInjector.getLauncherActivity(buildConfig.sc_id))) {
                     XmlBuilder intentFilterTag = new XmlBuilder("intent-filter");
                     XmlBuilder actionTag = new XmlBuilder("action");
                     actionTag.addAttribute("android", "name", Intent.ACTION_MAIN);
@@ -631,7 +723,9 @@ public class ManifestGenerator {
                     XmlBuilder categoryTag = new XmlBuilder("category");
                     categoryTag.addAttribute("android", "name", Intent.CATEGORY_LAUNCHER);
                     intentFilterTag.addChildNode(categoryTag);
-                    if (targetsSdkVersion31OrHigher && !AndroidManifestInjector.isActivityExportedUsed(buildConfig.sc_id, javaName)) {
+                    if (targetsSdkVersion31OrHigher
+                            && !AndroidManifestInjector.isActivityExportedUsed(
+                                    buildConfig.sc_id, javaName)) {
                         activityTag.addAttribute("android", "exported", "true");
                     }
                     activityTag.addChildNode(intentFilterTag);
@@ -653,14 +747,19 @@ public class ManifestGenerator {
         if (buildConfig.isAdMobEnabled) {
             XmlBuilder activityTag = new XmlBuilder("activity");
             activityTag.addAttribute("android", "name", "com.google.android.gms.ads.AdActivity");
-            activityTag.addAttribute("android", "configChanges", "keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize");
+            activityTag.addAttribute(
+                    "android",
+                    "configChanges",
+                    "keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize");
             activityTag.addAttribute("android", "exported", "false");
             activityTag.addAttribute("android", "theme", "@android:style/Theme.Translucent");
             applicationTag.addChildNode(activityTag);
 
             XmlBuilder initProvider = new XmlBuilder("provider");
-            initProvider.addAttribute("android", "name", "com.google.android.gms.ads.MobileAdsInitProvider");
-            initProvider.addAttribute("android", "authorities", buildConfig.packageName + ".mobileadsinitprovider");
+            initProvider.addAttribute(
+                    "android", "name", "com.google.android.gms.ads.MobileAdsInitProvider");
+            initProvider.addAttribute(
+                    "android", "authorities", buildConfig.packageName + ".mobileadsinitprovider");
             initProvider.addAttribute("android", "exported", "false");
             initProvider.addAttribute("android", "initOrder", "100");
             applicationTag.addChildNode(initProvider);
@@ -672,8 +771,12 @@ public class ManifestGenerator {
             applicationTag.addChildNode(adService);
 
             XmlBuilder testingActivity = new XmlBuilder("activity");
-            testingActivity.addAttribute("android", "name", "com.google.android.gms.ads.OutOfContextTestingActivity");
-            testingActivity.addAttribute("android", "configChanges", "keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize");
+            testingActivity.addAttribute(
+                    "android", "name", "com.google.android.gms.ads.OutOfContextTestingActivity");
+            testingActivity.addAttribute(
+                    "android",
+                    "configChanges",
+                    "keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize");
             testingActivity.addAttribute("android", "exported", "false");
             applicationTag.addChildNode(testingActivity);
         }
@@ -711,27 +814,36 @@ public class ManifestGenerator {
                 writeJava(applicationTag, activityName, activityAttrs);
             }
         }
-        if (buildSettings.getValue(BuildSettings.SETTING_NO_HTTP_LEGACY, BuildSettings.SETTING_GENERIC_VALUE_FALSE)
+        if (buildSettings
+                .getValue(
+                        BuildSettings.SETTING_NO_HTTP_LEGACY,
+                        BuildSettings.SETTING_GENERIC_VALUE_FALSE)
                 .equals(BuildSettings.SETTING_GENERIC_VALUE_FALSE)) {
             writeLegacyLibrary(applicationTag);
         }
-        if (FileUtil.isExistFile(SketchwarePaths.getProjectServiceManifestPath(buildConfig.sc_id))) {
+        if (FileUtil.isExistFile(
+                SketchwarePaths.getProjectServiceManifestPath(buildConfig.sc_id))) {
             for (String serviceName : fileResConfig.getServiceManifestList()) {
                 writeService(applicationTag, serviceName);
             }
         }
-        if (FileUtil.isExistFile(SketchwarePaths.getProjectBroadcastManifestPath(buildConfig.sc_id))) {
+        if (FileUtil.isExistFile(
+                SketchwarePaths.getProjectBroadcastManifestPath(buildConfig.sc_id))) {
             for (String receiverName : fileResConfig.getBroadcastManifestList()) {
                 writeBroadcast(applicationTag, receiverName);
             }
         }
         manifestXml.addChildNode(applicationTag);
-        // Needed, as crashing on my SM-A526B with Android 12 / One UI 4.1 / firmware build A526BFXXS1CVD1 otherwise
+        // Needed, as crashing on my SM-A526B with Android 12 / One UI 4.1 / firmware build
+        // A526BFXXS1CVD1 otherwise
         //noinspection RegExpRedundantEscape
         return manifestXml.toCode().replace("${applicationId}", packageName);
     }
 
-    private void writeJava(XmlBuilder applicationTag, String activityName, ArrayList<HashMap<String, Object>> activityAttrs) {
+    private void writeJava(
+            XmlBuilder applicationTag,
+            String activityName,
+            ArrayList<HashMap<String, Object>> activityAttrs) {
         XmlBuilder activityTag = new XmlBuilder("activity");
         boolean specifiedActivityName = false;
         boolean specifiedConfigChanges = false;
@@ -763,12 +875,17 @@ public class ManifestGenerator {
     }
 
     private ArrayList<HashMap<String, Object>> getActivityAttrs() {
-        String activityAttributesPath = SketchwarePaths.getAndroidManifestAttributesPath(buildConfig.sc_id);
+        String activityAttributesPath =
+                SketchwarePaths.getAndroidManifestAttributesPath(buildConfig.sc_id);
         if (FileUtil.isExistFile(activityAttributesPath)) {
             try {
-                return new Gson().fromJson(FileUtil.readFile(activityAttributesPath), Helper.TYPE_MAP_LIST);
+                return new Gson()
+                        .fromJson(FileUtil.readFile(activityAttributesPath), Helper.TYPE_MAP_LIST);
             } catch (JsonSyntaxException e) {
-                Log.w("ManifestGenerator", "Failed to parse activity attributes from: " + activityAttributesPath, e);
+                Log.w(
+                        "ManifestGenerator",
+                        "Failed to parse activity attributes from: " + activityAttributesPath,
+                        e);
             }
         }
         return new ArrayList<>();

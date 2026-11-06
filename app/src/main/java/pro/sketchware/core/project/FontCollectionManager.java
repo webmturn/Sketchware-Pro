@@ -1,15 +1,12 @@
 package pro.sketchware.core.project;
 
-import pro.sketchware.core.exception.CompileException;
-import pro.sketchware.core.project.SketchwarePaths;
-
-import pro.sketchware.beans.CollectionBean;
-import pro.sketchware.beans.ProjectResourceBean;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import pro.sketchware.beans.CollectionBean;
+import pro.sketchware.beans.ProjectResourceBean;
+import pro.sketchware.core.exception.CompileException;
 
 public class FontCollectionManager extends BaseCollectionManager {
     private static volatile FontCollectionManager instance;
@@ -43,11 +40,13 @@ public class FontCollectionManager extends BaseCollectionManager {
         if (save) saveCollections();
     }
 
-    public void addResource(String sourcePath, ProjectResourceBean resourceBean) throws CompileException {
+    public void addResource(String sourcePath, ProjectResourceBean resourceBean)
+            throws CompileException {
         addResource(sourcePath, resourceBean, true);
     }
 
-    public void addResource(String sourcePath, ProjectResourceBean resourceBean, boolean save) throws CompileException {
+    public void addResource(String sourcePath, ProjectResourceBean resourceBean, boolean save)
+            throws CompileException {
         if (collections == null) initialize();
         for (CollectionBean collection : collections) {
             if (collection.name.equals(resourceBean.resName)) {
@@ -56,7 +55,8 @@ public class FontCollectionManager extends BaseCollectionManager {
         }
         String dataName = resourceBean.resName;
         if (resourceBean.resFullName.contains(".")) {
-            String ext = resourceBean.resFullName.substring(resourceBean.resFullName.lastIndexOf('.'));
+            String ext =
+                    resourceBean.resFullName.substring(resourceBean.resFullName.lastIndexOf('.'));
             dataName = dataName + ext;
         }
         String destPath = dataDirPath + File.separator + dataName;
@@ -64,7 +64,12 @@ public class FontCollectionManager extends BaseCollectionManager {
         if (resourceBean.savedPos == 1) {
             srcPath = resourceBean.resFullName;
         } else {
-            srcPath = SketchwarePaths.getFontsResourcePath() + File.separator + sourcePath + File.separator + resourceBean.resFullName;
+            srcPath =
+                    SketchwarePaths.getFontsResourcePath()
+                            + File.separator
+                            + sourcePath
+                            + File.separator
+                            + resourceBean.resFullName;
         }
         if (!fileUtil.exists(srcPath)) {
             throw new CompileException("file_no_exist");
@@ -93,7 +98,8 @@ public class FontCollectionManager extends BaseCollectionManager {
     }
 
     public void initializePaths() {
-        String basePath = SketchwarePaths.getCollectionPath() + File.separator + "font" + File.separator;
+        String basePath =
+                SketchwarePaths.getCollectionPath() + File.separator + "font" + File.separator;
         collectionFilePath = basePath + "list";
         dataDirPath = basePath + "data";
     }
@@ -114,7 +120,11 @@ public class FontCollectionManager extends BaseCollectionManager {
         if (collections == null) initialize();
         ArrayList<ProjectResourceBean> resources = new ArrayList<>();
         for (CollectionBean collection : collections) {
-            resources.add(new ProjectResourceBean(ProjectResourceBean.PROJECT_RES_TYPE_FILE, collection.name, collection.data));
+            resources.add(
+                    new ProjectResourceBean(
+                            ProjectResourceBean.PROJECT_RES_TYPE_FILE,
+                            collection.name,
+                            collection.data));
         }
         return resources;
     }

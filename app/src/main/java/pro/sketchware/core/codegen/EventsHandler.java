@@ -1,36 +1,32 @@
 package pro.sketchware.core.codegen;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import pro.sketchware.core.project.ClassInfo;
-import pro.sketchware.core.codegen.EventRegistry;
-import pro.sketchware.util.Helper;
-import pro.sketchware.util.LogUtil;
-import pro.sketchware.core.project.OldResourceIdMapper;
 import pro.sketchware.R;
-import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.beans.CustomEvent;
 import pro.sketchware.beans.CustomListener;
+import pro.sketchware.core.project.ClassInfo;
+import pro.sketchware.core.project.OldResourceIdMapper;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.CustomEventsStore;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.LogUtil;
 import pro.sketchware.util.SketchwareUtil;
 
 public class EventsHandler {
 
     private static final String TAG = "EventsHandler";
 
-    public static final String CUSTOM_EVENTS_FILE_PATH = SketchwarePaths.getAbsolutePathOf(SketchwarePaths.CUSTOM_EVENTS_FILE);
-    public static final String CUSTOM_LISTENER_FILE_PATH = SketchwarePaths.getAbsolutePathOf(SketchwarePaths.CUSTOM_LISTENERS_FILE);
+    public static final String CUSTOM_EVENTS_FILE_PATH =
+            SketchwarePaths.getAbsolutePathOf(SketchwarePaths.CUSTOM_EVENTS_FILE);
+    public static final String CUSTOM_LISTENER_FILE_PATH =
+            SketchwarePaths.getAbsolutePathOf(SketchwarePaths.CUSTOM_LISTENERS_FILE);
 
     private static ArrayList<CustomEvent> cachedCustomEvents = readCustomEvents();
     private static ArrayList<CustomListener> cachedCustomListeners = readCustomListeners();
 
-    /**
-     * This is a utility class, don't instantiate it.
-     */
-    private EventsHandler() {
-    }
+    /** This is a utility class, don't instantiate it. */
+    private EventsHandler() {}
 
     private static final class EventMatch {
 
@@ -55,15 +51,19 @@ public class EventsHandler {
     }
 
     private static void reportNullCustomEvent(int index) {
-        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_null), index));
+        SketchwareUtil.toastError(
+                String.format(Helper.getResString(R.string.event_error_null), index));
     }
 
     private static void reportNullCustomListener(int index) {
-        SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_null), index));
+        SketchwareUtil.toastError(
+                String.format(Helper.getResString(R.string.event_error_null), index));
     }
 
     private static EventMatch findCustomEventByName(String name) {
-        for (int i = 0, cachedCustomEventsSize = cachedCustomEvents.size(); i < cachedCustomEventsSize; i++) {
+        for (int i = 0, cachedCustomEventsSize = cachedCustomEvents.size();
+                i < cachedCustomEventsSize;
+                i++) {
             CustomEvent customEvent = cachedCustomEvents.get(i);
             if (customEvent == null) {
                 reportNullCustomEvent(i);
@@ -77,7 +77,9 @@ public class EventsHandler {
     }
 
     private static ListenerMatch findCustomListenerByName(String name) {
-        for (int i = 0, cachedCustomListenersSize = cachedCustomListeners.size(); i < cachedCustomListenersSize; i++) {
+        for (int i = 0, cachedCustomListenersSize = cachedCustomListeners.size();
+                i < cachedCustomListenersSize;
+                i++) {
             CustomListener customListener = cachedCustomListeners.get(i);
             if (customListener == null) {
                 reportNullCustomListener(i);
@@ -91,7 +93,9 @@ public class EventsHandler {
     }
 
     private static void addCustomEventsForType(ClassInfo classInfo, ArrayList<String> list) {
-        for (int i = 0, cachedCustomEventsSize = cachedCustomEvents.size(); i < cachedCustomEventsSize; i++) {
+        for (int i = 0, cachedCustomEventsSize = cachedCustomEvents.size();
+                i < cachedCustomEventsSize;
+                i++) {
             CustomEvent customEvent = cachedCustomEvents.get(i);
             if (customEvent == null) {
                 reportNullCustomEvent(i);
@@ -104,7 +108,9 @@ public class EventsHandler {
     }
 
     private static void addCustomListenersForType(ClassInfo classInfo, ArrayList<String> list) {
-        for (int i = 0, cachedCustomEventsSize = cachedCustomEvents.size(); i < cachedCustomEventsSize; i++) {
+        for (int i = 0, cachedCustomEventsSize = cachedCustomEvents.size();
+                i < cachedCustomEventsSize;
+                i++) {
             CustomEvent customEvent = cachedCustomEvents.get(i);
             if (customEvent == null) {
                 reportNullCustomEvent(i);
@@ -120,7 +126,9 @@ public class EventsHandler {
     }
 
     private static void addCustomEventsForListener(String listenerName, ArrayList<String> list) {
-        for (int i = 0, cachedCustomEventsSize = cachedCustomEvents.size(); i < cachedCustomEventsSize; i++) {
+        for (int i = 0, cachedCustomEventsSize = cachedCustomEvents.size();
+                i < cachedCustomEventsSize;
+                i++) {
             CustomEvent customEvent = cachedCustomEvents.get(i);
             if (customEvent == null) {
                 reportNullCustomEvent(i);
@@ -142,8 +150,8 @@ public class EventsHandler {
      * Used in {@link EventRegistry#getAllActivityEvents()}
      *
      * @return Array of Activity Events.
-     * @apiNote Custom Activity Events can be added by writing to the file
-     * defined by {@link #CUSTOM_EVENTS_FILE_PATH} and specifying an empty string for "var"
+     * @apiNote Custom Activity Events can be added by writing to the file defined by {@link
+     *     #CUSTOM_EVENTS_FILE_PATH} and specifying an empty string for "var"
      */
     public static String[] getActivityEvents() {
         ArrayList<String> array = new ArrayList<>();
@@ -181,8 +189,8 @@ public class EventsHandler {
     }
 
     /**
-     * Used in {@link pro.sketchware.activities.editor.ManageEvent#addExtraEvents(ClassInfo, ArrayList)} to retrieve extra
-     * Events for Components, such as custom ones.
+     * Used in {@link pro.sketchware.activities.editor.ManageEvent#addExtraEvents(ClassInfo,
+     * ArrayList)} to retrieve extra Events for Components, such as custom ones.
      */
     public static void addEvents(ClassInfo classInfo, ArrayList<String> list) {
         if (classInfo.matchesType("Clickable")) {
@@ -202,8 +210,8 @@ public class EventsHandler {
     }
 
     /**
-     * Used in {@link pro.sketchware.activities.editor.ManageEvent#addExtraListeners(ClassInfo, ArrayList)} to get extra
-     * listeners for Components and Widgets, such as custom ones.
+     * Used in {@link pro.sketchware.activities.editor.ManageEvent#addExtraListeners(ClassInfo,
+     * ArrayList)} to get extra listeners for Components and Widgets, such as custom ones.
      */
     public static void addListeners(ClassInfo classInfo, ArrayList<String> list) {
         if (classInfo.matchesType("Clickable")) {
@@ -220,8 +228,8 @@ public class EventsHandler {
     }
 
     /**
-     * Used in {@link pro.sketchware.activities.editor.ManageEvent#addEventsForListener(String, ArrayList)} to get extra
-     * listeners' Events, such as custom ones.
+     * Used in {@link pro.sketchware.activities.editor.ManageEvent#addEventsForListener(String,
+     * ArrayList)} to get extra listeners' Events, such as custom ones.
      */
     public static void addEventsToListener(String name, ArrayList<String> list) {
         switch (name) {
@@ -248,9 +256,18 @@ public class EventsHandler {
 
     public static int getIcon(String name) {
         return switch (name) {
-            case "Import", "onActivityResult", "initializeLogic", "onBackPressed", "onPostCreate",
-                 "onStart", "onResume", "onPause", "onStop", "onDestroy",
-                 "onTabLayoutNewTabAdded" -> R.drawable.ic_mtrl_code;
+            case "Import",
+                    "onActivityResult",
+                    "initializeLogic",
+                    "onBackPressed",
+                    "onPostCreate",
+                    "onStart",
+                    "onResume",
+                    "onPause",
+                    "onStop",
+                    "onDestroy",
+                    "onTabLayoutNewTabAdded" ->
+                    R.drawable.ic_mtrl_code;
             case " onLongClick" -> R.drawable.ic_mtrl_touch_long;
             case "onSwipeRefreshLayout" -> R.drawable.ic_mtrl_refresh;
             case "onPreExecute" -> R.drawable.ic_mtrl_track_started;
@@ -263,9 +280,13 @@ public class EventsHandler {
                     yield R.drawable.android_icon;
                 }
                 try {
-                    yield OldResourceIdMapper.getDrawableFromOldResourceId(Integer.parseInt(match.event.getIcon()));
+                    yield OldResourceIdMapper.getDrawableFromOldResourceId(
+                            Integer.parseInt(match.event.getIcon()));
                 } catch (NumberFormatException e) {
-                    SketchwareUtil.toastError(String.format(Helper.getResString(R.string.event_error_invalid_icon), match.index + 1));
+                    SketchwareUtil.toastError(
+                            String.format(
+                                    Helper.getResString(R.string.event_error_invalid_icon),
+                                    match.index + 1));
                     yield R.drawable.android_icon;
                 }
             }
@@ -280,14 +301,10 @@ public class EventsHandler {
             case "onSwipeRefreshLayout" -> Helper.getResString(R.string.event_desc_swipe_refresh);
             case " onLongClick" -> Helper.getResString(R.string.event_onlongclick);
             case "onTabLayoutNewTabAdded" -> Helper.getResString(R.string.event_desc_tab_new_tab);
-            case "onPreExecute" ->
-                    Helper.getResString(R.string.event_desc_pre_execute);
-            case "doInBackground" ->
-                    Helper.getResString(R.string.event_desc_do_in_background);
-            case "onProgressUpdate" ->
-                    Helper.getResString(R.string.event_desc_progress_update);
-            case "onPostExecute" ->
-                    Helper.getResString(R.string.event_desc_post_execute);
+            case "onPreExecute" -> Helper.getResString(R.string.event_desc_pre_execute);
+            case "doInBackground" -> Helper.getResString(R.string.event_desc_do_in_background);
+            case "onProgressUpdate" -> Helper.getResString(R.string.event_desc_progress_update);
+            case "onPostExecute" -> Helper.getResString(R.string.event_desc_post_execute);
             default -> {
                 EventMatch match = findCustomEventByName(name);
                 if (match == null) {
@@ -305,55 +322,63 @@ public class EventsHandler {
     public static String getEventCode(String targetId, String name, String param) {
         return switch (name) {
             case "Import" ->
-                    "//Ul5kmZqmO867OV0QTGOpjwX7MXmgzxzQBSZTf0Y16PnDXkhLsZfvF\r\n" +
-                            param + "\r\n" +
-                            "//3b5IqsVG57gNqLi7FBO2MeOW6iI7tOustUGwcA7HKXm0o7lovZ";
+                    "//Ul5kmZqmO867OV0QTGOpjwX7MXmgzxzQBSZTf0Y16PnDXkhLsZfvF\r\n"
+                            + param
+                            + "\r\n"
+                            + "//3b5IqsVG57gNqLi7FBO2MeOW6iI7tOustUGwcA7HKXm0o7lovZ";
             case "onActivityResult", "initializeLogic" -> "";
             case "onSwipeRefreshLayout" ->
-                    "@Override\r\n" +
-                            "public void onRefresh() {\n" +
-                            param + "\r\n" +
-                            "}";
+                    "@Override\r\n" + "public void onRefresh() {\n" + param + "\r\n" + "}";
             case " onLongClick" ->
-                    "@Override\r\n" +
-                            "public boolean onLongClick(View _view) {\r\n" +
-                            param + "\r\n" +
-                            "return true;\r\n" +
-                            "}";
+                    "@Override\r\n"
+                            + "public boolean onLongClick(View _view) {\r\n"
+                            + param
+                            + "\r\n"
+                            + "return true;\r\n"
+                            + "}";
             case "onTabLayoutNewTabAdded" ->
-                    "public CharSequence onTabLayoutNewTabAdded(int _position) {\r\n" +
-                            (param.isEmpty() ? "return \"\";\r\n" :
-                                    param + "\r\n"
-                            ) + "}";
-            case "onPreExecute" -> "@Override\r\n" +
-                    "protected void onPreExecute() {\r\n" +
-                    param + "\r\n" +
-                    "}";
-            case "doInBackground" -> "@Override\r\n" +
-                    "protected String doInBackground(String... params) {\r\n" +
-                    "String _param = params[0];\r\n" +
-                    param + "\r\n" +
-                    "}";
-            case "onProgressUpdate" -> "@Override\r\n" +
-                    "protected void onProgressUpdate(Integer... values) {\r\n" +
-                    "int _value = values[0];\r\n" +
-                    param + "\r\n" +
-                    "}";
-            case "onPostExecute" -> "@Override\r\n" +
-                    "protected void onPostExecute(String _result) {\r\n" +
-                    param + "\r\n" +
-                    "}";
+                    "public CharSequence onTabLayoutNewTabAdded(int _position) {\r\n"
+                            + (param.isEmpty() ? "return \"\";\r\n" : param + "\r\n")
+                            + "}";
+            case "onPreExecute" ->
+                    "@Override\r\n" + "protected void onPreExecute() {\r\n" + param + "\r\n" + "}";
+            case "doInBackground" ->
+                    "@Override\r\n"
+                            + "protected String doInBackground(String... params) {\r\n"
+                            + "String _param = params[0];\r\n"
+                            + param
+                            + "\r\n"
+                            + "}";
+            case "onProgressUpdate" ->
+                    "@Override\r\n"
+                            + "protected void onProgressUpdate(Integer... values) {\r\n"
+                            + "int _value = values[0];\r\n"
+                            + param
+                            + "\r\n"
+                            + "}";
+            case "onPostExecute" ->
+                    "@Override\r\n"
+                            + "protected void onPostExecute(String _result) {\r\n"
+                            + param
+                            + "\r\n"
+                            + "}";
             default -> {
                 EventMatch match = findCustomEventByName(name);
-                yield match != null ? String.format(match.event.getCode().replace("###", targetId), param) : "//no code";
+                yield match != null
+                        ? String.format(match.event.getCode().replace("###", targetId), param)
+                        : "//no code";
             }
         };
     }
 
     public static String getBlocks(String name) {
         return switch (name) {
-            case "Import", "initializeLogic", "onSwipeRefreshLayout", " onLongClick",
-                 "onPreExecute" -> "";
+            case "Import",
+                    "initializeLogic",
+                    "onSwipeRefreshLayout",
+                    " onLongClick",
+                    "onPreExecute" ->
+                    "";
             case "onActivityResult" -> "%d.requestCode %d.resultCode %m.intent";
             case "onTabLayoutNewTabAdded", "onProgressUpdate" -> "%d";
             case "doInBackground", "onPostExecute" -> "%s";
@@ -367,19 +392,27 @@ public class EventsHandler {
     public static String getSpec(String name, String event) {
         return switch (event) {
             case "Import" -> Helper.getResString(R.string.event_create_import);
-            case "onActivityResult" ->
-                    Helper.getResString(R.string.event_activity_result);
+            case "onActivityResult" -> Helper.getResString(R.string.event_activity_result);
             case "initializeLogic" -> "initializeLogic";
-            case "onSwipeRefreshLayout" -> Helper.getResString(R.string.event_when_prefix) + name + Helper.getResString(R.string.event_refresh_suffix);
-            case " onLongClick" -> Helper.getResString(R.string.event_when_prefix) + name + Helper.getResString(R.string.event_long_click_suffix);
-            case "onTabLayoutNewTabAdded" -> name + Helper.getResString(R.string.event_tab_title_suffix);
+            case "onSwipeRefreshLayout" ->
+                    Helper.getResString(R.string.event_when_prefix)
+                            + name
+                            + Helper.getResString(R.string.event_refresh_suffix);
+            case " onLongClick" ->
+                    Helper.getResString(R.string.event_when_prefix)
+                            + name
+                            + Helper.getResString(R.string.event_long_click_suffix);
+            case "onTabLayoutNewTabAdded" ->
+                    name + Helper.getResString(R.string.event_tab_title_suffix);
             case "onPreExecute" -> name + Helper.getResString(R.string.event_pre_execute_suffix);
             case "doInBackground" -> name + Helper.getResString(R.string.event_background_suffix);
             case "onProgressUpdate" -> name + Helper.getResString(R.string.event_progress_suffix);
             case "onPostExecute" -> name + Helper.getResString(R.string.event_post_execute_suffix);
             default -> {
                 EventMatch match = findCustomEventByName(event);
-                yield match != null ? match.event.getHeaderSpec().replace("###", name) : Helper.getResString(R.string.event_no_spec);
+                yield match != null
+                        ? match.event.getHeaderSpec().replace("###", name)
+                        : Helper.getResString(R.string.event_no_spec);
             }
         };
     }
@@ -387,26 +420,37 @@ public class EventsHandler {
     public static String getListenerCode(String name, String var, String param) {
         return switch (name) {
             case " onLongClickListener" ->
-                    var + ".setOnLongClickListener(new View.OnLongClickListener() {\r\n" +
-                            param + "\r\n" +
-                            "});";
+                    var
+                            + ".setOnLongClickListener(new View.OnLongClickListener() {\r\n"
+                            + param
+                            + "\r\n"
+                            + "});";
             case "onSwipeRefreshLayoutListener" ->
-                    var + ".setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {\r\n" +
-                            param + "\r\n" +
-                            "});";
+                    var
+                            + ".setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {\r\n"
+                            + param
+                            + "\r\n"
+                            + "});";
             case "AsyncTaskClass" ->
-                    "private class " + var + " extends AsyncTask<String, Integer, String> {\r\n" +
-                            param + "\r\n" +
-                            "}";
+                    "private class "
+                            + var
+                            + " extends AsyncTask<String, Integer, String> {\r\n"
+                            + param
+                            + "\r\n"
+                            + "}";
             default -> {
                 ListenerMatch match = findCustomListenerByName(name);
-                yield match != null ? String.format(match.listener.getCode().replace("###", var), param) : "//no listener code";
+                yield match != null
+                        ? String.format(match.listener.getCode().replace("###", var), param)
+                        : "//no listener code";
             }
         };
     }
 
     public static void getImports(ArrayList<String> list, String name) {
-        for (int i = 0, cachedCustomListenersSize = cachedCustomListeners.size(); i < cachedCustomListenersSize; i++) {
+        for (int i = 0, cachedCustomListenersSize = cachedCustomListeners.size();
+                i < cachedCustomListenersSize;
+                i++) {
             CustomListener customListener = cachedCustomListeners.get(i);
             if (customListener == null) {
                 reportNullCustomListener(i);

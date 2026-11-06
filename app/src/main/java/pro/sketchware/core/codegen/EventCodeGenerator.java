@@ -1,24 +1,18 @@
 package pro.sketchware.core.codegen;
-import pro.sketchware.core.project.BuildConfig;
-import pro.sketchware.core.project.ClassInfo;
-import pro.sketchware.core.project.ProjectDataStore;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import pro.sketchware.beans.BlockBean;
 import pro.sketchware.beans.ComponentBean;
 import pro.sketchware.beans.EventBean;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ViewBean;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import pro.sketchware.core.project.ProjectSettings;
-import pro.sketchware.core.codegen.ComponentExtraCode;
 import pro.sketchware.core.build.ViewBindingBuilder;
-import pro.sketchware.core.codegen.BlockInterpreter;
-import pro.sketchware.core.codegen.CodeContext;
-import pro.sketchware.core.codegen.EventRegistry;
+import pro.sketchware.core.project.BuildConfig;
+import pro.sketchware.core.project.ClassInfo;
+import pro.sketchware.core.project.ProjectDataStore;
+import pro.sketchware.core.project.ProjectSettings;
 
 public class EventCodeGenerator {
 
@@ -37,41 +31,81 @@ public class EventCodeGenerator {
     public String eventLogic = "";
     public String eventListenerCode = "";
 
-    public EventCodeGenerator(BuildConfig logicHolder, ProjectFileBean projectFileBean, ProjectDataStore projectDataStore, CodeContext codeContext) {
+    public EventCodeGenerator(
+            BuildConfig logicHolder,
+            ProjectFileBean projectFileBean,
+            ProjectDataStore projectDataStore,
+            CodeContext codeContext) {
         buildConfig = logicHolder;
         this.projectFileBean = projectFileBean;
         this.codeContext = codeContext;
 
         ProjectSettings projectSettings = new ProjectSettings(logicHolder.sc_id);
-        isViewBindingEnabled = projectSettings.getValue(ProjectSettings.SETTING_ENABLE_VIEWBINDING, "false").equals("true");
+        isViewBindingEnabled =
+                projectSettings
+                        .getValue(ProjectSettings.SETTING_ENABLE_VIEWBINDING, "false")
+                        .equals("true");
 
-        ArrayList<ViewBean> views = new ArrayList<>(projectDataStore.getViews(projectFileBean.getXmlName()));
+        ArrayList<ViewBean> views =
+                new ArrayList<>(projectDataStore.getViews(projectFileBean.getXmlName()));
         if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
             ViewBean fab = projectDataStore.getFabView(projectFileBean.getXmlName());
             views.add(fab);
         }
         for (ViewBean view : views) {
-            viewEvents.add(new Event(this, isViewBindingEnabled ? "binding." + ViewBindingBuilder.generateParameterFromId(view.id) : view.id, view.getClassInfo(), isViewBindingEnabled));
+            viewEvents.add(
+                    new Event(
+                            this,
+                            isViewBindingEnabled
+                                    ? "binding."
+                                            + ViewBindingBuilder.generateParameterFromId(view.id)
+                                    : view.id,
+                            view.getClassInfo(),
+                            isViewBindingEnabled));
         }
 
-        ArrayList<ComponentBean> components = projectDataStore.getComponents(projectFileBean.getJavaName());
+        ArrayList<ComponentBean> components =
+                projectDataStore.getComponents(projectFileBean.getJavaName());
         for (ComponentBean componentBean : components) {
             int type = componentBean.type;
-            if (type == ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH || type == ComponentBean.COMPONENT_TYPE_INTERSTITIAL_AD) {
-                authEvents.add(new Event(this, componentBean.componentId, componentBean.getClassInfo(), isViewBindingEnabled));
+            if (type == ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH
+                    || type == ComponentBean.COMPONENT_TYPE_INTERSTITIAL_AD) {
+                authEvents.add(
+                        new Event(
+                                this,
+                                componentBean.componentId,
+                                componentBean.getClassInfo(),
+                                isViewBindingEnabled));
             } else {
-                componentEvents.add(new Event(this, componentBean.componentId, componentBean.getClassInfo(), isViewBindingEnabled));
+                componentEvents.add(
+                        new Event(
+                                this,
+                                componentBean.componentId,
+                                componentBean.getClassInfo(),
+                                isViewBindingEnabled));
             }
         }
 
         if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
-            ArrayList<ViewBean> drawerViews = projectDataStore.getViews(projectFileBean.getDrawerXmlName());
+            ArrayList<ViewBean> drawerViews =
+                    projectDataStore.getViews(projectFileBean.getDrawerXmlName());
             for (ViewBean view : drawerViews) {
-                drawerViewEvents.add(new Event(this, isViewBindingEnabled ? "binding.drawer." + ViewBindingBuilder.generateParameterFromId(view.id) : "_drawer_" + view.id, view.getClassInfo(), isViewBindingEnabled));
+                drawerViewEvents.add(
+                        new Event(
+                                this,
+                                isViewBindingEnabled
+                                        ? "binding.drawer."
+                                                + ViewBindingBuilder.generateParameterFromId(
+                                                        view.id)
+                                        : "_drawer_" + view.id,
+                                view.getClassInfo(),
+                                isViewBindingEnabled));
             }
         }
 
-        processEvents(projectDataStore.getEvents(projectFileBean.getJavaName()), projectDataStore.getBlockMap(projectFileBean.getJavaName()));
+        processEvents(
+                projectDataStore.getEvents(projectFileBean.getJavaName()),
+                projectDataStore.getBlockMap(projectFileBean.getJavaName()));
     }
 
     public String getOnActivityResultSwitchCases() {
@@ -87,9 +121,16 @@ public class EventCodeGenerator {
         return sb.toString();
     }
 
-    private void addCallbackEvents(int targetType, String targetId, String eventName, String eventLogic) {
-        boolean hasOnSuccessLogic = eventName.equals("onPictureTaken") || eventName.equals("onAccountPicker") || eventName.equals("onFilesPicked");
-        boolean hasOnCancelledLogic = eventName.equals("onPictureTakenCancel") || eventName.equals("onFilesPickedCancel") || eventName.equals("onAccountPickerCancelled");
+    private void addCallbackEvents(
+            int targetType, String targetId, String eventName, String eventLogic) {
+        boolean hasOnSuccessLogic =
+                eventName.equals("onPictureTaken")
+                        || eventName.equals("onAccountPicker")
+                        || eventName.equals("onFilesPicked");
+        boolean hasOnCancelledLogic =
+                eventName.equals("onPictureTakenCancel")
+                        || eventName.equals("onFilesPickedCancel")
+                        || eventName.equals("onAccountPickerCancelled");
 
         boolean alreadyRegistered = false;
         for (ComponentCallback next : callbackEvents) {
@@ -134,17 +175,29 @@ public class EventCodeGenerator {
     }
 
     public void addLifecycleEvent(String eventName, String viewType, String viewId) {
-        String code = ComponentCodeGenerator.getDefaultActivityLifecycleCode(eventName, viewType, viewId);
+        String code =
+                ComponentCodeGenerator.getDefaultActivityLifecycleCode(eventName, viewType, viewId);
         if (!code.isEmpty()) {
-            activityLifecycleEvents.merge(eventName, code, (existing, newCode) -> existing + "\r\n" + newCode);
+            activityLifecycleEvents.merge(
+                    eventName, code, (existing, newCode) -> existing + "\r\n" + newCode);
         }
     }
 
-    private void processEvents(ArrayList<EventBean> events, HashMap<String, ArrayList<BlockBean>> logicBlocks) {
+    private void processEvents(
+            ArrayList<EventBean> events, HashMap<String, ArrayList<BlockBean>> logicBlocks) {
         for (EventBean eventBean : events) {
-            ArrayList<BlockBean> eventLogicBlocks = logicBlocks.get(eventBean.targetId + "_" + eventBean.eventName);
-            String eventLogic = (eventLogicBlocks == null || eventLogicBlocks.isEmpty()) ? "" :
-                    new BlockInterpreter(projectFileBean.getActivityName(), buildConfig, eventLogicBlocks, isViewBindingEnabled, projectFileBean.getXmlName()).interpretBlocks();
+            ArrayList<BlockBean> eventLogicBlocks =
+                    logicBlocks.get(eventBean.targetId + "_" + eventBean.eventName);
+            String eventLogic =
+                    (eventLogicBlocks == null || eventLogicBlocks.isEmpty())
+                            ? ""
+                            : new BlockInterpreter(
+                                            projectFileBean.getActivityName(),
+                                            buildConfig,
+                                            eventLogicBlocks,
+                                            isViewBindingEnabled,
+                                            projectFileBean.getXmlName())
+                                    .interpretBlocks();
 
             switch (eventBean.eventType) {
                 case EventBean.EVENT_TYPE_VIEW:
@@ -161,7 +214,11 @@ public class EventCodeGenerator {
                         case ComponentBean.COMPONENT_TYPE_CAMERA:
                         case ComponentBean.COMPONENT_TYPE_FILE_PICKER:
                         case ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN:
-                            addCallbackEvents(eventBean.targetType, eventBean.targetId, eventBean.eventName, eventLogic);
+                            addCallbackEvents(
+                                    eventBean.targetType,
+                                    eventBean.targetId,
+                                    eventBean.eventName,
+                                    eventLogic);
                             break;
 
                         default:
@@ -235,7 +292,11 @@ public class EventCodeGenerator {
 
     private void addDrawerEvents(String targetId, String eventName, String eventLogic) {
         for (Event next : drawerViewEvents) {
-            if (next.id.equals(isViewBindingEnabled ? "binding.drawer." + ViewBindingBuilder.generateParameterFromId(targetId) : "_drawer_" + targetId)) {
+            if (next.id.equals(
+                    isViewBindingEnabled
+                            ? "binding.drawer."
+                                    + ViewBindingBuilder.generateParameterFromId(targetId)
+                            : "_drawer_" + targetId)) {
                 next.addEvent(targetId, eventName, eventLogic);
                 return;
             }
@@ -273,7 +334,10 @@ public class EventCodeGenerator {
 
     private void addViewListeners(String targetId, String eventName, String eventLogic) {
         for (Event next : viewEvents) {
-            if (next.id.equals(isViewBindingEnabled ? "binding." + ViewBindingBuilder.generateParameterFromId(targetId) : targetId)) {
+            if (next.id.equals(
+                    isViewBindingEnabled
+                            ? "binding." + ViewBindingBuilder.generateParameterFromId(targetId)
+                            : targetId)) {
                 next.addEvent(targetId, eventName, eventLogic);
                 return;
             }
@@ -352,7 +416,8 @@ public class EventCodeGenerator {
         }
 
         private String getCode() {
-            return ComponentCodeGenerator.getOnActivityResultCode(codeContext, componentId, componentName, onSuccessCode, onCancelledCode);
+            return ComponentCodeGenerator.getOnActivityResultCode(
+                    codeContext, componentId, componentName, onSuccessCode, onCancelledCode);
         }
     }
 
@@ -361,7 +426,11 @@ public class EventCodeGenerator {
         private final String id;
         private final ArrayList<ComponentEvents> listeners = new ArrayList<>();
 
-        private Event(EventCodeGenerator eventCodeGenerator, String id, ClassInfo classInfo, boolean isViewBindingEnabled) {
+        private Event(
+                EventCodeGenerator eventCodeGenerator,
+                String id,
+                ClassInfo classInfo,
+                boolean isViewBindingEnabled) {
             this.eventCodeGenerator = eventCodeGenerator;
             this.id = id;
 
@@ -421,20 +490,19 @@ public class EventCodeGenerator {
                 }
 
                 if (listener.isInitialized) {
-                    eventCodeGenerator.imports.addAll(ComponentTypeMapper.getListenerImports(listener.listenerName));
+                    eventCodeGenerator.imports.addAll(
+                            ComponentTypeMapper.getListenerImports(listener.listenerName));
                 }
             }
         }
-
     }
 
     private static class ComponentEvents {
 
         private final String listenerName;
         private final ArrayList<ActivityEvent> activityEvents;
-        /**
-         * Probably "if associated to a Component"/"got its code added"
-         */
+
+        /** Probably "if associated to a Component"/"got its code added" */
         private boolean isInitialized = false;
 
         private ComponentEvents(String listenerName) {
@@ -458,7 +526,8 @@ public class EventCodeGenerator {
                 }
                 eventsCode.append(code);
             }
-            return ComponentCodeGenerator.getListenerCode(listenerName, componentName, eventsCode.toString());
+            return ComponentCodeGenerator.getListenerCode(
+                    listenerName, componentName, eventsCode.toString());
         }
     }
 }
