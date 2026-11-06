@@ -1,18 +1,8 @@
 package pro.sketchware.activities.main.fragments.projects;
 
-import pro.sketchware.core.settings.ApplicationSettings;
-import pro.sketchware.util.BackupFilenameFormatter;
-
 import android.content.Context;
-
 import android.util.Log;
-
-import pro.sketchware.beans.BlockBean;
 import com.google.gson.Gson;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -30,27 +20,29 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import pro.sketchware.core.project.ProjectListManager;
-import pro.sketchware.core.project.BackupArchiveInspector;
-import pro.sketchware.util.MapValueHelper;
-import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.core.library.LocalLibrariesUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import pro.sketchware.R;
+import pro.sketchware.activities.design.CustomBlocksManager;
+import pro.sketchware.beans.BlockBean;
 import pro.sketchware.core.block.ExtraBlockInfo;
 import pro.sketchware.core.codegen.BlockLoader;
-import pro.sketchware.activities.design.CustomBlocksManager;
-import pro.sketchware.util.Helper;
-import pro.sketchware.R;
+import pro.sketchware.core.library.LocalLibrariesUtil;
+import pro.sketchware.core.project.BackupArchiveInspector;
+import pro.sketchware.core.project.ProjectListManager;
+import pro.sketchware.core.project.SketchwarePaths;
+import pro.sketchware.core.settings.ApplicationSettings;
+import pro.sketchware.util.BackupFilenameFormatter;
 import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.MapValueHelper;
 import pro.sketchware.util.SketchwareUtil;
 
 public class BackupFactory {
@@ -62,11 +54,10 @@ public class BackupFactory {
     // and backups, as well as compatibility with other Sketchware variants.
     // The key == IV pattern is a known weakness but is required for format compatibility.
     private static final String CIPHER_ALGORITHM = "AES/CBC/PKCS5Padding";
-    private static final byte[] LEGACY_KEY = "sketchwaresecure".getBytes(java.nio.charset.StandardCharsets.UTF_8);
+    private static final byte[] LEGACY_KEY =
+            "sketchwaresecure".getBytes(java.nio.charset.StandardCharsets.UTF_8);
 
-    private static final String[] resSubfolders = {
-            "fonts", "icons", "images", "sounds"
-    };
+    private static final String[] resSubfolders = {"fonts", "icons", "images", "sounds"};
 
     final String sc_id;
     File outPath;
@@ -76,15 +67,15 @@ public class BackupFactory {
     boolean restoreSuccess = true;
 
     /**
-     * @param sc_id For backing up, the target project's ID,
-     *              for restoring, the new project ID
+     * @param sc_id For backing up, the target project's ID, for restoring, the new project ID
      */
     public BackupFactory(String sc_id) {
         this.sc_id = sc_id;
     }
 
     public static String getBackupDir() {
-        return SketchwarePaths.resolveExternalStorageRelativePath(ApplicationSettings.getBackupPath());
+        return SketchwarePaths.resolveExternalStorageRelativePath(
+                ApplicationSettings.getBackupPath());
     }
 
     private static File getAllLocalLibsDir() {
@@ -100,12 +91,22 @@ public class BackupFactory {
             }
             try {
                 Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
-                cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(LEGACY_KEY, "AES"), new IvParameterSpec(LEGACY_KEY));
+                cipher.init(
+                        Cipher.DECRYPT_MODE,
+                        new SecretKeySpec(LEGACY_KEY, "AES"),
+                        new IvParameterSpec(LEGACY_KEY));
                 byte[] decrypted = cipher.doFinal(data);
-                return new Gson().fromJson(new String(decrypted, java.nio.charset.StandardCharsets.UTF_8).trim(), Helper.TYPE_MAP);
+                return new Gson()
+                        .fromJson(
+                                new String(decrypted, java.nio.charset.StandardCharsets.UTF_8)
+                                        .trim(),
+                                Helper.TYPE_MAP);
             } catch (Exception e) {
                 // Decryption failed — project file is stored as plaintext
-                return new Gson().fromJson(new String(data, java.nio.charset.StandardCharsets.UTF_8).trim(), Helper.TYPE_MAP);
+                return new Gson()
+                        .fromJson(
+                                new String(data, java.nio.charset.StandardCharsets.UTF_8).trim(),
+                                Helper.TYPE_MAP);
             }
         } catch (Exception e) {
             return null;
@@ -120,8 +121,13 @@ public class BackupFactory {
             if (ApplicationSettings.isSettingEnabled(
                     ApplicationSettings.SETTING_PROJECT_DATA_ENCRYPTION)) {
                 Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
-                cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(LEGACY_KEY, "AES"), new IvParameterSpec(LEGACY_KEY));
-                data = cipher.doFinal((string.trim()).getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                cipher.init(
+                        Cipher.ENCRYPT_MODE,
+                        new SecretKeySpec(LEGACY_KEY, "AES"),
+                        new IvParameterSpec(LEGACY_KEY));
+                data =
+                        cipher.doFinal(
+                                (string.trim()).getBytes(java.nio.charset.StandardCharsets.UTF_8));
             } else {
                 data = string.trim().getBytes(java.nio.charset.StandardCharsets.UTF_8);
             }
@@ -174,12 +180,15 @@ public class BackupFactory {
                     destinationParent.mkdirs();
                 }
                 if (!entry.isDirectory()) {
-                    try (BufferedInputStream is = new BufferedInputStream(zip.getInputStream(entry))) {
+                    try (BufferedInputStream is =
+                            new BufferedInputStream(zip.getInputStream(entry))) {
                         int currentByte;
                         byte[] data = new byte[DEFAULT_BUFFER];
                         try (FileOutputStream fos = new FileOutputStream(destFile)) {
-                            try (BufferedOutputStream dest = new BufferedOutputStream(fos, DEFAULT_BUFFER)) {
-                                while ((currentByte = is.read(data, 0, DEFAULT_BUFFER)) != -1 /*EOF*/) {
+                            try (BufferedOutputStream dest =
+                                    new BufferedOutputStream(fos, DEFAULT_BUFFER)) {
+                                while ((currentByte = is.read(data, 0, DEFAULT_BUFFER))
+                                        != -1 /*EOF*/) {
                                     dest.write(data, 0, currentByte);
                                 }
                                 dest.flush();
@@ -203,7 +212,8 @@ public class BackupFactory {
         }
     }
 
-    private static void addFileToZip(File rootPath, File srcFile, ZipOutputStream zip) throws Exception {
+    private static void addFileToZip(File rootPath, File srcFile, ZipOutputStream zip)
+            throws Exception {
 
         if (srcFile.isDirectory()) {
             addFolderToZip(rootPath, srcFile, zip);
@@ -221,7 +231,8 @@ public class BackupFactory {
         }
     }
 
-    private static void addFolderToZip(File rootPath, File srcFolder, ZipOutputStream zip) throws Exception {
+    private static void addFolderToZip(File rootPath, File srcFolder, ZipOutputStream zip)
+            throws Exception {
         File[] srcFolderFiles = srcFolder.listFiles();
         if (srcFolderFiles != null) {
             for (File fileName : srcFolderFiles) {
@@ -230,12 +241,12 @@ public class BackupFactory {
         }
     }
 
-    //6.3.0 fix1
+    // 6.3.0 fix1
     public static void createNomediaFileIn(File dir) {
         FileUtil.writeFile(new File(dir, ".nomedia").getAbsolutePath(), "");
     }
 
-    //6.3.0 fix1
+    // 6.3.0 fix1
     public static void copySafe(File source, File destination) {
         if (!source.exists()) {
             destination.mkdirs();
@@ -260,11 +271,11 @@ public class BackupFactory {
                 }
             }
         } else {
-            //skip .nomedia files
+            // skip .nomedia files
             if (source.getName().equals(".nomedia")) return;
 
             try (InputStream in = new FileInputStream(source);
-                 OutputStream out = new FileOutputStream(destination)) {
+                    OutputStream out = new FileOutputStream(destination)) {
                 byte[] buffer = new byte[1024];
                 int length;
                 while ((length = in.read(buffer)) > 0) {
@@ -290,49 +301,77 @@ public class BackupFactory {
     public void backup(Context context, String project_name) {
         String customFileName = ApplicationSettings.getBackupFileName();
 
-        String versionName = MapValueHelper.getString(ProjectListManager.getProjectById(sc_id), "sc_ver_name");
-        String versionCode = MapValueHelper.getString(ProjectListManager.getProjectById(sc_id), "sc_ver_code");
-        String pkgName = MapValueHelper.getString(ProjectListManager.getProjectById(sc_id), "my_sc_pkg_name");
+        String versionName =
+                MapValueHelper.getString(ProjectListManager.getProjectById(sc_id), "sc_ver_name");
+        String versionCode =
+                MapValueHelper.getString(ProjectListManager.getProjectById(sc_id), "sc_ver_code");
+        String pkgName =
+                MapValueHelper.getString(
+                        ProjectListManager.getProjectById(sc_id), "my_sc_pkg_name");
         String projectNameOnly = project_name.replace("_d", "").replace(File.separator, "");
         String finalFileName;
 
         try {
-            finalFileName = BackupFilenameFormatter.format(customFileName, projectNameOnly,
-                    versionName, versionCode, pkgName, System.currentTimeMillis());
+            finalFileName =
+                    BackupFilenameFormatter.format(
+                            customFileName,
+                            projectNameOnly,
+                            versionName,
+                            versionCode,
+                            pkgName,
+                            System.currentTimeMillis());
         } catch (Exception ignored) {
             SketchwareUtil.toastError(Helper.getResString(R.string.error_parse_backup_filename));
             // Example name: InternalDemo v1.0 (com.jbk.internal.demo, 1) 2021-12-31T125827
-            finalFileName = projectNameOnly + " v" + versionName + " (" + pkgName + ", " + versionCode + ") " + getFormattedDateFrom("yyyy-M-dd'T'HHmmss");
+            finalFileName =
+                    projectNameOnly
+                            + " v"
+                            + versionName
+                            + " ("
+                            + pkgName
+                            + ", "
+                            + versionCode
+                            + ") "
+                            + getFormattedDateFrom("yyyy-M-dd'T'HHmmss");
         }
         createBackupsFolder();
 
         // Init temporary backup folder
-        File outFolder = new File(getBackupDir(),
-                project_name + "_temp");
+        File outFolder = new File(getBackupDir(), project_name + "_temp");
 
         // Init output zip file
-        File outZip = new File(getBackupDir() + File.separator + projectNameOnly, finalFileName +
-                //Adds all the _d if exists. Otherwise its possible that there'll be an infinite loop
-                (project_name.contains("_d") ? project_name.replace(projectNameOnly, "") : "") + "." + EXTENSION);
+        File outZip =
+                new File(
+                        getBackupDir() + File.separator + projectNameOnly,
+                        finalFileName
+                                +
+                                // Adds all the _d if exists. Otherwise its possible that there'll
+                                // be an infinite loop
+                                (project_name.contains("_d")
+                                        ? project_name.replace(projectNameOnly, "")
+                                        : "")
+                                + "."
+                                + EXTENSION);
 
         // Create a duplicate if already exists (impossible now :3)
         if (outZip.exists()) {
             backup(context, project_name + "_d");
             return;
         }
-        //delete temp dir if exist
+        // delete temp dir if exist
         if (outFolder.exists()) {
             FileUtil.deleteFile(outFolder.getAbsolutePath());
         }
 
         // Create necessary folders
         FileUtil.makeDir(outFolder.getAbsolutePath());
-        FileUtil.makeDir(new File(getBackupDir() + File.separator + projectNameOnly).getAbsolutePath());
+        FileUtil.makeDir(
+                new File(getBackupDir() + File.separator + projectNameOnly).getAbsolutePath());
 
         // Copy data
         File dataF = new File(outFolder, "data");
         FileUtil.makeDir(dataF.getAbsolutePath());
-        //6.3.0 fix1
+        // 6.3.0 fix1
         copySafe(getDataDir(), dataF);
 
         // Copy res
@@ -343,14 +382,14 @@ public class BackupFactory {
             File resSubf = new File(resF, subfolder);
             FileUtil.makeDir(resSubf.getAbsolutePath());
 
-            //6.3.0 fix1
+            // 6.3.0 fix1
             copySafe(getResDir(subfolder), resSubf);
 
             // Write an empty file inside each folder (except icons)
             if (!subfolder.equals("icons")) {
-                //6.3.0 fix1
+                // 6.3.0 fix1
                 createNomediaFileIn(resSubf);
-                //FileUtil.writeFile(new File(resSubf, ".nomedia").getAbsolutePath(), "");
+                // FileUtil.writeFile(new File(resSubf, ".nomedia").getAbsolutePath(), "");
             }
         }
 
@@ -398,7 +437,8 @@ public class BackupFactory {
             for (BlockBean bean : cbm.getUsedBlocks()) {
                 if (!block_names.contains(bean.opCode)) {
                     block_names.add(bean.opCode);
-                    // Match BlockInterpreter: global definition first, project definition as fallback.
+                    // Match BlockInterpreter: global definition first, project definition as
+                    // fallback.
                     ExtraBlockInfo block = BlockLoader.getBlockInfo(bean.opCode);
                     if (block.isMissing) {
                         block = BlockLoader.getBlockFromProject(sc_id, bean.opCode);
@@ -437,7 +477,8 @@ public class BackupFactory {
     }
 
     private String getFormattedDateFrom(String format) {
-        return new SimpleDateFormat(format, Locale.ENGLISH).format(Calendar.getInstance().getTime());
+        return new SimpleDateFormat(format, Locale.ENGLISH)
+                .format(Calendar.getInstance().getTime());
     }
 
     public File getOutFile() {
@@ -468,8 +509,7 @@ public class BackupFactory {
         createBackupsFolder();
 
         // Init temporary restore folder for unzipping
-        File outFolder = new File(getBackupDir(),
-                name);
+        File outFolder = new File(getBackupDir(), name);
 
         // Create a duplicate if already exists
         if (outFolder.exists()) {
@@ -537,7 +577,10 @@ public class BackupFactory {
                     for (File local_lib : local_libs_content) {
 
                         File primaryPath = new File(getAllLocalLibsDir(), local_lib.getName());
-                        File fallbackPath = new File(SketchwarePaths.getLocalLibsFallbackDir(), local_lib.getName());
+                        File fallbackPath =
+                                new File(
+                                        SketchwarePaths.getLocalLibsFallbackDir(),
+                                        local_lib.getName());
 
                         if (!primaryPath.exists() && !fallbackPath.exists()) {
                             try {
@@ -574,7 +617,9 @@ public class BackupFactory {
             String name = MapValueHelper.getString(lib, "name");
             if (name == null || name.isEmpty()) continue;
             String dependency = MapValueHelper.getString(lib, "dependency");
-            rebuilt.add(LocalLibrariesUtil.createLibraryMap(name, dependency.isEmpty() ? null : dependency));
+            rebuilt.add(
+                    LocalLibrariesUtil.createLibraryMap(
+                            name, dependency.isEmpty() ? null : dependency));
         }
         LocalLibrariesUtil.rewriteLocalLibFile(sc_id, new Gson().toJson(rebuilt));
     }
@@ -601,13 +646,16 @@ public class BackupFactory {
     }
 
     private File getResDir(String subfolder) {
-        String resourcePath = switch (subfolder) {
-            case "fonts" -> SketchwarePaths.getFontsResourcePath();
-            case "icons" -> SketchwarePaths.getIconsPath();
-            case "images" -> SketchwarePaths.getImagesPath();
-            case "sounds" -> SketchwarePaths.getSoundsPath();
-            default -> SketchwarePaths.getAbsolutePathOf(SketchwarePaths.RESOURCES_PATH + File.separator + subfolder);
-        };
+        String resourcePath =
+                switch (subfolder) {
+                    case "fonts" -> SketchwarePaths.getFontsResourcePath();
+                    case "icons" -> SketchwarePaths.getIconsPath();
+                    case "images" -> SketchwarePaths.getImagesPath();
+                    case "sounds" -> SketchwarePaths.getSoundsPath();
+                    default ->
+                            SketchwarePaths.getAbsolutePathOf(
+                                    SketchwarePaths.RESOURCES_PATH + File.separator + subfolder);
+                };
         return new File(resourcePath, sc_id);
     }
 
