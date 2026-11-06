@@ -13,6 +13,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 import java.util.zip.ZipFile;
@@ -41,6 +42,7 @@ public class BackupFailureTest {
             assertTrue(source.fixture.data.delete());
             try {
                 File archive = backup(source.id());
+                String[] entries = backupEntries(scope.backups);
                 try (ZipFile zip = new ZipFile(archive)) {
                     assertNotNull(zip.getEntry("data/.nomedia"));
                 }
@@ -54,6 +56,7 @@ public class BackupFailureTest {
                 assertTrue(destination.fixture.data.isDirectory());
                 assertEquals(0, destination.fixture.data.list().length);
                 assertFalse(source.fixture.data.exists());
+                assertArrayEquals(entries, backupEntries(scope.backups));
             } finally {
                 Files.createDirectories(source.fixture.data.toPath());
             }
@@ -108,6 +111,7 @@ public class BackupFailureTest {
                     new File(SketchwarePaths.getFontsResourcePath(), destination.id() + "/blocked");
             Files.write(blocked.toPath(), new byte[] {9});
             File archive = backup(source.id());
+            String[] entries = backupEntries(scope.backups);
             byte[] archiveBytes = Files.readAllBytes(archive.toPath());
             BackupFactory restore = new BackupFactory(destination.id());
 
@@ -121,12 +125,7 @@ public class BackupFailureTest {
             assertTrue(new File(destination.fixture.data, "logic").isFile());
             assertArrayEquals(new byte[] {9}, Files.readAllBytes(blocked.toPath()));
             assertArrayEquals(archiveBytes, Files.readAllBytes(archive.toPath()));
-            assertTrue(
-                    Stream.of(scope.backups.listFiles())
-                            .anyMatch(
-                                    directory ->
-                                            new File(directory, "project").isFile()
-                                                    && new File(directory, "data").isDirectory()));
+            assertArrayEquals(entries, backupEntries(scope.backups));
 
             Files.delete(blocked.toPath());
             restore.restore(archive);
@@ -139,6 +138,7 @@ public class BackupFailureTest {
             ProjectDataManager.reloadProjectFromData(destination.id());
             assertTrue(ProjectDataManager.canSaveProject(destination.id()));
             assertArrayEquals(archiveBytes, Files.readAllBytes(archive.toPath()));
+            assertArrayEquals(entries, backupEntries(scope.backups));
         }
     }
 
@@ -164,6 +164,87 @@ public class BackupFailureTest {
             assertFalse(restore.getError().isEmpty());
             destination.fixture.assertUnchanged(original);
         }
+    }
+
+    @Test
+    public void malformedArchiveLeavesNoRestoreDirectory() throws Exception {
+        try (CustomBlockBackupTest.Scope scope = new CustomBlockBackupTest.Scope();
+                CustomBlockBackupTest.OwnedProject destination =
+                        new CustomBlockBackupTest.OwnedProject()) {
+            File archive = new File(scope.backups, "broken.swb");
+            Files.write(archive.toPath(), new byte[] {1, 2, 3});
+            String[] entries = backupEntries(scope.backups);
+            var original = destination.fixture.snapshot();
+
+            BackupFactory restore = new BackupFactory(destination.id());
+            restore.restore(archive);
+
+            assertFalse(restore.isRestoreSuccess());
+            assertFalse(restore.getError().isEmpty());
+            assertArrayEquals(entries, backupEntries(scope.backups));
+            assertArrayEquals(new byte[] {1, 2, 3}, Files.readAllBytes(archive.toPath()));
+            destination.fixture.assertUnchanged(original);
+        }
+    }
+
+    @Test
+    public void runtimeBackupFailureClearsPreviousSuccessAndReportsTheError() throws Exception {
+        try (CustomBlockBackupTest.Scope scope = new CustomBlockBackupTest.Scope();
+                CustomBlockBackupTest.OwnedProject source =
+                        new CustomBlockBackupTest.OwnedProject()) {
+            source.fixture.seed(false, false);
+            BackupFactory backup = new BackupFactory(source.id());
+            backup.backup(CONTEXT, "runtime-failure");
+            File archive = backup.getOutFile();
+            assertNotNull(backup.getError(), archive);
+            byte[] bytes = Files.readAllBytes(archive.toPath());
+            String[] entries = backupEntries(scope.backups);
+
+            backup.backup(CONTEXT, null);
+
+            assertNull(backup.getOutFile());
+            assertFalse(backup.getError().isEmpty());
+            assertArrayEquals(bytes, Files.readAllBytes(archive.toPath()));
+            assertArrayEquals(entries, backupEntries(scope.backups));
+        }
+    }
+
+    @Test
+    public void runtimeRestoreFailureCleansItsDirectoryAndReportsTheError() throws Exception {
+        try (CustomBlockBackupTest.Scope scope = new CustomBlockBackupTest.Scope();
+                CustomBlockBackupTest.OwnedProject source =
+                        new CustomBlockBackupTest.OwnedProject();
+                CustomBlockBackupTest.OwnedProject destination =
+                        new CustomBlockBackupTest.OwnedProject()) {
+            source.fixture.seed(false, false);
+            File archive = backup(source.id());
+            byte[] bytes = Files.readAllBytes(archive.toPath());
+            String[] entries = backupEntries(scope.backups);
+            var original = destination.fixture.snapshot();
+            File denied =
+                    new File(archive.getAbsolutePath()) {
+                        @Override
+                        public String getPath() {
+                            throw new SecurityException("Archive read denied");
+                        }
+                    };
+
+            BackupFactory restore = new BackupFactory(destination.id());
+            restore.restore(denied);
+
+            assertFalse(restore.isRestoreSuccess());
+            assertTrue(restore.getError().contains("Archive read denied"));
+            assertArrayEquals(entries, backupEntries(scope.backups));
+            assertArrayEquals(bytes, Files.readAllBytes(archive.toPath()));
+            destination.fixture.assertUnchanged(original);
+        }
+    }
+
+    private static String[] backupEntries(File directory) {
+        String[] entries = directory.list();
+        assertNotNull(entries);
+        Arrays.sort(entries);
+        return entries;
     }
 
     private static File backup(String id) {

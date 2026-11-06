@@ -11,6 +11,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -276,13 +278,63 @@ public class BackupFactory {
             Path pending = Files.createTempFile(target.getParent(), ".backup-copy-", ".tmp");
             try {
                 Files.copy(source.toPath(), pending, StandardCopyOption.REPLACE_EXISTING);
-                Files.move(
-                        pending,
-                        target,
-                        StandardCopyOption.ATOMIC_MOVE,
-                        StandardCopyOption.REPLACE_EXISTING);
+                replaceFile(pending, target, Files::move);
             } finally {
                 Files.deleteIfExists(pending);
+            }
+        }
+    }
+
+    @FunctionalInterface
+    interface FileMove {
+        void move(Path source, Path target, CopyOption... options) throws IOException;
+    }
+
+    static void replaceFile(Path pending, Path target, FileMove move) throws IOException {
+        try {
+            move.move(
+                    pending,
+                    target,
+                    StandardCopyOption.ATOMIC_MOVE,
+                    StandardCopyOption.REPLACE_EXISTING);
+            return;
+        } catch (AtomicMoveNotSupportedException unsupported) {
+            // A non-atomic move may damage the target before it throws.
+        }
+
+        Path previous = null;
+        try {
+            if (Files.exists(target)) {
+                if (!Files.isRegularFile(target)) {
+                    throw new IOException("Copy target is not a regular file: " + target);
+                }
+                previous = Files.createTempFile(target.getParent(), ".backup-previous-", ".tmp");
+                Files.copy(target, previous, StandardCopyOption.REPLACE_EXISTING);
+            }
+            try {
+                move.move(pending, target, StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException | RuntimeException failure) {
+                try {
+                    if (previous != null) {
+                        Files.copy(previous, target, StandardCopyOption.REPLACE_EXISTING);
+                    } else {
+                        Files.deleteIfExists(target);
+                    }
+                } catch (IOException | RuntimeException recoveryFailure) {
+                    if (previous != null) {
+                        failure.addSuppressed(
+                                new IOException(
+                                        "Previous file preserved at " + previous, recoveryFailure));
+                        previous = null;
+                    } else {
+                        failure.addSuppressed(recoveryFailure);
+                    }
+                }
+                throw failure;
+            }
+        } finally {
+            if (previous != null) {
+                Files.deleteIfExists(previous);
             }
         }
     }
@@ -303,7 +355,8 @@ public class BackupFactory {
         error = "";
         try {
             backupProject(context, project_name);
-        } catch (IOException e) {
+        } catch (IOException | RuntimeException e) {
+            outPath = null;
             error = Log.getStackTraceString(e);
             Log.e("BackupFactory", "Failed to back up project " + sc_id, e);
         }
@@ -496,41 +549,33 @@ public class BackupFactory {
     public void restore(File swbPath) {
         restoreSuccess = false;
         error = "";
-        String name = swbPath.getName();
-        if (name.contains(".")) {
-            name = name.substring(0, name.lastIndexOf("."));
-        }
-
         try {
             if (getProjectPath().exists()) {
                 throw new IOException("Project already exists: " + sc_id);
             }
-            restore(swbPath, name);
-        } catch (IOException e) {
+            restoreSuccess = restoreProject(swbPath);
+        } catch (IOException | RuntimeException e) {
             error = Log.getStackTraceString(e);
             Log.e("BackupFactory", "Failed to restore project " + sc_id, e);
         }
     }
 
-    private void restore(File swbPath, String name) throws IOException {
-
+    private boolean restoreProject(File swbPath) throws IOException {
         createBackupsFolder();
-
-        // Init temporary restore folder for unzipping
-        File outFolder = new File(getBackupDir(), name);
-
-        // Create a duplicate if already exists
-        if (outFolder.exists()) {
-            restore(swbPath, name + "_d");
-            return;
+        File outFolder =
+                Files.createTempDirectory(new File(getBackupDir()).toPath(), ".restore-").toFile();
+        try {
+            return restoreContents(swbPath, outFolder);
+        } finally {
+            FileUtil.deleteFile(outFolder.getAbsolutePath());
         }
+    }
 
+    private boolean restoreContents(File swbPath, File outFolder) throws IOException {
         // Unzip
         if (!unzip(swbPath, outFolder)) {
             error = Helper.getResString(R.string.backup_unzip_failed);
-            restoreSuccess = false;
-            FileUtil.deleteFile(outFolder.getAbsolutePath());
-            return;
+            return false;
         }
 
         // Init files
@@ -542,9 +587,7 @@ public class BackupFactory {
 
         if (map == null) {
             error = Helper.getResString(R.string.backup_read_project_failed);
-            restoreSuccess = false;
-            FileUtil.deleteFile(outFolder.getAbsolutePath());
-            return;
+            return false;
         }
 
         // Put new sc_id
@@ -553,9 +596,7 @@ public class BackupFactory {
         // Write new file
         if (!writeEncrypted(project, new Gson().toJson(map))) {
             error = Helper.getResString(R.string.backup_write_project_failed);
-            restoreSuccess = false;
-            FileUtil.deleteFile(outFolder.getAbsolutePath());
-            return;
+            return false;
         }
 
         // Copy data
@@ -614,10 +655,7 @@ public class BackupFactory {
         Files.createDirectories(getProjectPath().toPath().getParent());
         copy(project, getProjectPath());
 
-        // Delete temp folder
-        FileUtil.deleteFile(outFolder.getAbsolutePath());
-
-        restoreSuccess = true;
+        return true;
     }
 
     private void rebuildLocalLibraryPaths() throws IOException {
