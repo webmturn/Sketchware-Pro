@@ -3877,6 +3877,7 @@ Please try again later"</string>
     <string name="editor_preview_statusbar">StatusBar</string>
     <string name="editor_preview_toolbar">Toolbar</string>
     <string name="editor_preview_drawer">Drawer</string>
+    <string name="create_view_drawer_without_toolbar">Swipe from the start edge to open the drawer. For a custom menu button, add the Open drawer block to its click event.</string>
     <string name="editor_preview_fab">FAB</string>
     <string name="editor_preview_tab1">Tab 1</string>
     <string name="editor_preview_tab2">Tab 2</string>

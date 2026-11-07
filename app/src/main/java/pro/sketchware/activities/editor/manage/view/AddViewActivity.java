@@ -140,26 +140,16 @@ public class AddViewActivity extends BaseAppCompatActivity {
         view.animate().translationY((float) -view.getMeasuredHeight()).start();
     }
 
-    private void disableDrawer() {
-        for (int i = 0; i < featureItems.size(); i++) {
-            FeatureItem item = featureItems.get(i);
-            if (item.type == FEATURE_TYPE_DRAWER) {
-                item.isEnabled = false;
-                featuresAdapter.notifyItemChanged(i);
-                break;
-            }
+    private void updateFeatureTip() {
+        int visibility = featureFab || featureDrawer ? View.VISIBLE : View.GONE;
+        if (binding.fabDrawerTipView.getVisibility() != visibility) {
+            makeTransitionAnimation(binding.parentLayout);
+            binding.fabDrawerTipView.setVisibility(visibility);
         }
-    }
-
-    private void enableToolbar() {
-        for (int i = 0; i < featureItems.size(); i++) {
-            FeatureItem item = featureItems.get(i);
-            if (item.type == FEATURE_TYPE_TOOLBAR) {
-                item.isEnabled = true;
-                featuresAdapter.notifyItemChanged(i);
-                break;
-            }
-        }
+        binding.featureTipMessage.setText(
+                featureDrawer && !featureToolbar
+                        ? R.string.create_view_drawer_without_toolbar
+                        : R.string.design_manager_view_message_slow_down);
     }
 
     private void resetTranslationX(View view) {
@@ -216,6 +206,7 @@ public class AddViewActivity extends BaseAppCompatActivity {
                         Helper.getResString(R.string.editor_preview_fab),
                         featureFab));
         featuresAdapter.notifyDataSetChanged();
+        updateFeatureTip();
     }
 
     @Override
@@ -482,7 +473,6 @@ public class AddViewActivity extends BaseAppCompatActivity {
     }
 
     public class FeaturesAdapter extends RecyclerView.Adapter<FeaturesAdapter.ViewHolder> {
-        public int layoutPosition = -1;
         public boolean isUpdatingAdapter;
 
         public FeaturesAdapter() {}
@@ -499,18 +489,6 @@ public class AddViewActivity extends BaseAppCompatActivity {
             viewHolder.iconImageView.setImageResource(featureItem.previewImg);
             viewHolder.nameTextView.setText(featureItem.name);
             viewHolder.featureCheckBox.setChecked(featureItem.isEnabled);
-
-            switch (featureItem.type) {
-                case FEATURE_TYPE_STATUS_BAR -> featureStatusBar = featureItem.isEnabled;
-                case FEATURE_TYPE_TOOLBAR -> featureToolbar = featureItem.isEnabled;
-                case FEATURE_TYPE_DRAWER -> featureDrawer = featureItem.isEnabled;
-                case FEATURE_TYPE_FAB -> featureFab = featureItem.isEnabled;
-            }
-
-            if (featureFab || featureDrawer) {
-                makeTransitionAnimation(binding.parentLayout);
-                binding.fabDrawerTipView.setVisibility(View.VISIBLE);
-            }
 
             handleFeatureAnimation(featureItem);
             isUpdatingAdapter = false;
@@ -543,20 +521,18 @@ public class AddViewActivity extends BaseAppCompatActivity {
                 featureCheckBox.setOnCheckedChangeListener(
                         (buttonView, isChecked) -> {
                             if (!isUpdatingAdapter) {
-                                layoutPosition = getLayoutPosition();
+                                int layoutPosition = getBindingAdapterPosition();
                                 if (layoutPosition == RecyclerView.NO_POSITION) return;
                                 FeatureItem item = featureItems.get(layoutPosition);
                                 item.isEnabled = isChecked;
-                                if (item.type == FEATURE_TYPE_DRAWER) {
-                                    if (item.isEnabled) {
-                                        enableToolbar();
-                                    }
-                                } else if (item.type == FEATURE_TYPE_TOOLBAR) {
-                                    if (!item.isEnabled) {
-                                        disableDrawer();
-                                    }
+                                switch (item.type) {
+                                    case FEATURE_TYPE_STATUS_BAR -> featureStatusBar = isChecked;
+                                    case FEATURE_TYPE_TOOLBAR -> featureToolbar = isChecked;
+                                    case FEATURE_TYPE_DRAWER -> featureDrawer = isChecked;
+                                    case FEATURE_TYPE_FAB -> featureFab = isChecked;
                                 }
-                                notifyItemChanged(layoutPosition);
+                                updateFeatureTip();
+                                handleFeatureAnimation(item);
                             }
                         });
             }
