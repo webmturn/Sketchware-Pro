@@ -405,6 +405,10 @@
     <string name="error_get_selector_failed">获取选择器时发生错误</string>
     <string name="error_import_file">无法导入文件！[%s]</string>
     <string name="error_import_moreblocks">无法导入: %s</string>
+    <string name="moreblock_import_file_exists">工程中已存在资源文件：%s</string>
+    <string name="moreblock_import_file_missing">收藏中的资源文件不存在：%s</string>
+    <string name="moreblock_import_invalid_filename">资源文件名无效：%s</string>
+    <string name="moreblock_import_resource_failed">资源文件读写失败，请检查存储权限和可用空间。</string>
     <string name="error_import_resource">无法导入资源！[%s]</string>
     <string name="error_incorrect_parentheses">你的代码中包含不正确的嵌套括号</string>
     <string name="error_invalid_dependency_format">无效的依赖项格式</string>

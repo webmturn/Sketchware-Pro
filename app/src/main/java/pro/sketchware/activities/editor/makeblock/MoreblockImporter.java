@@ -8,22 +8,38 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.InvalidPathException;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.atomic.AtomicBoolean;
 import pro.sketchware.R;
 import pro.sketchware.beans.BlockBean;
 import pro.sketchware.beans.MoreBlockCollectionBean;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ProjectResourceBean;
+import pro.sketchware.core.async.BackgroundTasks;
+import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.project.BlockConstants;
 import pro.sketchware.core.project.ClassInfo;
 import pro.sketchware.core.project.FontCollectionManager;
 import pro.sketchware.core.project.ImageCollectionManager;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.ProjectDataStore;
+import pro.sketchware.core.project.ResourceManager;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.core.project.SoundCollectionManager;
 import pro.sketchware.core.validation.IdentifierValidator;
@@ -31,7 +47,6 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.util.SketchToast;
 import pro.sketchware.util.UIHelper;
 import pro.sketchware.util.ViewUtil;
-import pro.sketchware.util.io.EncryptedFileUtil;
 
 public class MoreblockImporter {
     private final Activity activity;
@@ -39,13 +54,12 @@ public class MoreblockImporter {
     private final ProjectFileBean projectActivity;
     private final String activityJavaName;
 
-    private final EncryptedFileUtil fileUtil = new EncryptedFileUtil();
-
     private ArrayList<Pair<Integer, String>> toBeAddedVariables;
     private ArrayList<Pair<Integer, String>> toBeAddedLists;
     private ArrayList<ProjectResourceBean> toBeAddedImages;
     private ArrayList<ProjectResourceBean> toBeAddedSounds;
     private ArrayList<ProjectResourceBean> toBeAddedFonts;
+    private Set<String> missingResources;
 
     private Callback callback;
 
@@ -58,9 +72,15 @@ public class MoreblockImporter {
 
     public void importMoreblock(MoreBlockCollectionBean moreblock, Callback callback) {
         this.callback = callback;
+        ArrayList<BlockBean> blocks = new ArrayList<>(moreblock.blocks.size());
+        for (BlockBean block : moreblock.blocks) {
+            blocks.add(block.clone());
+        }
+        MoreBlockCollectionBean imported =
+                new MoreBlockCollectionBean(moreblock.name, moreblock.spec, blocks);
         String blockName =
                 ReturnMoreblockManager.getMbName(
-                        ReturnMoreblockManager.getMbNameWithTypeFromSpec(moreblock.spec));
+                        ReturnMoreblockManager.getMbNameWithTypeFromSpec(imported.spec));
 
         boolean duplicateNameFound = false;
         for (Pair<String, String> projectMoreBlock :
@@ -71,9 +91,9 @@ public class MoreblockImporter {
             }
         }
         if (!duplicateNameFound) {
-            handleVariables(moreblock);
+            handleVariables(imported);
         } else {
-            showEditMoreBlockNameDialog(moreblock);
+            showEditMoreBlockNameDialog(imported);
         }
     }
 
@@ -83,6 +103,7 @@ public class MoreblockImporter {
         toBeAddedImages = new ArrayList<>();
         toBeAddedSounds = new ArrayList<>();
         toBeAddedFonts = new ArrayList<>();
+        missingResources = new LinkedHashSet<>();
         for (BlockBean next : moreBlock.blocks) {
             if (next.opCode.equals("getVar")) {
                 switch (next.type) {
@@ -127,75 +148,194 @@ public class MoreblockImporter {
                             maybeAddList(2, paramValue);
                         } else if (classInfo.isExactType("ListMap")) {
                             maybeAddList(3, paramValue);
-                        } else if (!classInfo.isExactType("resource_bg")
-                                && !classInfo.isExactType("resource")) {
-                            if (classInfo.isExactType("sound")) {
-                                maybeAddSound(paramValue);
-                            } else if (classInfo.isExactType("font")) {
-                                maybeAddFont(paramValue);
-                            }
-                        } else {
+                        } else if (classInfo.isExactType("Image")
+                                || classInfo.isExactType("BackgroundImage")) {
                             maybeAddImage(paramValue);
+                        } else if (classInfo.isExactType("sound")) {
+                            maybeAddSound(paramValue);
+                        } else if (classInfo.isExactType("font")) {
+                            maybeAddFont(paramValue);
                         }
                     }
                 }
             }
+        }
+        if (!missingResources.isEmpty()) {
+            showImportError(
+                    Helper.getResString(
+                            R.string.moreblock_import_file_missing,
+                            String.join(", ", missingResources)));
+            return;
         }
         if (toBeAddedVariables.isEmpty()
                 && toBeAddedLists.isEmpty()
                 && toBeAddedImages.isEmpty()
                 && toBeAddedSounds.isEmpty()
                 && toBeAddedFonts.isEmpty()) {
-            createEvent(moreBlock);
+            addMoreBlock(moreBlock, ProjectDataManager.getProjectDataManager(sc_id));
+            notifyImportComplete();
         } else {
             showAutoAddDialog(moreBlock);
         }
     }
 
-    private void createEvent(MoreBlockCollectionBean moreBlock) {
+    private void addMoreBlock(MoreBlockCollectionBean moreBlock, ProjectDataStore data) {
         String moreBlockName = ReturnMoreblockManager.getMbNameWithTypeFromSpec(moreBlock.spec);
+        data.addMoreBlock(activityJavaName, moreBlockName, moreBlock.spec);
+        data.putBlocks(activityJavaName, moreBlockName + "_moreBlock", moreBlock.blocks);
+    }
 
-        ProjectDataManager.getProjectDataManager(sc_id)
-                .addMoreBlock(activityJavaName, moreBlockName, moreBlock.spec);
-        ProjectDataManager.getProjectDataManager(sc_id)
-                .putBlocks(activityJavaName, moreBlockName + "_moreBlock", moreBlock.blocks);
+    private void notifyImportComplete() {
         SketchToast.toast(activity, Helper.getResString(R.string.common_message_complete_save), 0)
                 .show();
         callback.onImportComplete();
     }
 
     private void showAutoAddDialog(MoreBlockCollectionBean moreBlock) {
-        MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(activity);
-        dialog.setTitle(R.string.logic_more_block_title_add_variable_resource);
-        dialog.setIcon(R.drawable.break_warning_96_red);
-        dialog.setMessage(R.string.logic_more_block_desc_add_variable_resource);
-        dialog.setPositiveButton(
-                R.string.common_word_continue,
-                (v, which) -> {
-                    for (Pair<Integer, String> pair : toBeAddedVariables) {
-                        ProjectDataStore projectDataStore =
-                                ProjectDataManager.getProjectDataManager(sc_id);
-                        projectDataStore.addVariable(activityJavaName, pair.first, pair.second);
-                    }
-                    for (Pair<Integer, String> pair : toBeAddedLists) {
-                        ProjectDataStore projectDataStore =
-                                ProjectDataManager.getProjectDataManager(sc_id);
-                        projectDataStore.addListVariable(activityJavaName, pair.first, pair.second);
-                    }
-                    for (ProjectResourceBean bean : toBeAddedImages) {
-                        copyImageFromCollectionsToProject(bean.resName);
-                    }
-                    for (ProjectResourceBean bean : toBeAddedSounds) {
-                        copySoundFromCollectionsToProject(bean.resName);
-                    }
-                    for (ProjectResourceBean bean : toBeAddedFonts) {
-                        copyFontFromCollectionsToProject(bean.resName);
-                    }
-                    createEvent(moreBlock);
-                    v.dismiss();
-                });
-        dialog.setNegativeButton(R.string.common_word_cancel, null);
-        dialog.show();
+        new ImportTask(moreBlock).show();
+    }
+
+    private final class ImportTask implements DefaultLifecycleObserver {
+        private final MoreBlockCollectionBean moreBlock;
+        private final ProjectDataStore data = ProjectDataManager.getProjectDataManager(sc_id);
+        private final ResourceManager resources = ProjectDataManager.getResourceManager(sc_id);
+        private final TaskHost host = TaskHost.of(activity);
+        private final LifecycleOwner owner =
+                activity instanceof LifecycleOwner value ? value : null;
+        private final AtomicBoolean cancelled = new AtomicBoolean();
+        private final AlertDialog popup;
+        private boolean completed;
+
+        ImportTask(MoreBlockCollectionBean moreBlock) {
+            this.moreBlock = moreBlock;
+            popup =
+                    new MaterialAlertDialogBuilder(activity)
+                            .setTitle(R.string.logic_more_block_title_add_variable_resource)
+                            .setIcon(R.drawable.break_warning_96_red)
+                            .setMessage(R.string.logic_more_block_desc_add_variable_resource)
+                            .setPositiveButton(R.string.common_word_continue, null)
+                            .setNegativeButton(R.string.common_word_cancel, null)
+                            .create();
+        }
+
+        void show() {
+            if (owner != null) owner.getLifecycle().addObserver(this);
+            popup.setOnDismissListener(
+                    ignored -> {
+                        if (!completed) cancelled.set(true);
+                        if (owner != null) owner.getLifecycle().removeObserver(this);
+                    });
+            popup.show();
+            popup.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(ignored -> start());
+            popup.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(ignored -> cancel());
+        }
+
+        @Override
+        public void onStop(LifecycleOwner ignored) {
+            cancel();
+        }
+
+        private void cancel() {
+            if (!completed) cancelled.set(true);
+            popup.dismiss();
+        }
+
+        private boolean canContinue() {
+            return !cancelled.get()
+                    && !activity.isFinishing()
+                    && !activity.isDestroyed()
+                    && popup.isShowing();
+        }
+
+        private void start() {
+            popup.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+            popup.getButton(AlertDialog.BUTTON_POSITIVE).setText(R.string.common_word_please_wait);
+            BackgroundTasks.runSerial(
+                    host, "MoreblockImporter", this::copyResources, null, this::showError);
+        }
+
+        private void copyResources() throws IOException {
+            List<Path> created;
+            try {
+                created = MoreblockResourceFiles.copyAll(resourceCopies(resources), cancelled::get);
+            } catch (CancellationException cancellation) {
+                if (cancellation.getSuppressed().length > 0) {
+                    Log.e("MoreblockImporter", "Failed to clean cancelled import", cancellation);
+                }
+                return;
+            }
+            // Finalization must run even if TaskHost would drop a callback for a closed activity.
+            BackgroundTasks.postMain(() -> finish(created));
+        }
+
+        private void finish(List<Path> created) {
+            if (!canContinue()) {
+                rollback(created, null);
+                return;
+            }
+            try {
+                for (Pair<Integer, String> variable : toBeAddedVariables) {
+                    data.addVariable(activityJavaName, variable.first, variable.second);
+                }
+                for (Pair<Integer, String> list : toBeAddedLists) {
+                    data.addListVariable(activityJavaName, list.first, list.second);
+                }
+                resources.images.addAll(toBeAddedImages);
+                resources.sounds.addAll(toBeAddedSounds);
+                resources.fonts.addAll(toBeAddedFonts);
+                addMoreBlock(moreBlock, data);
+            } catch (RuntimeException failure) {
+                rollback(created, failure);
+                return;
+            }
+            completed = true;
+            popup.dismiss();
+            notifyImportComplete();
+        }
+
+        private void rollback(List<Path> created, Exception failure) {
+            BackgroundTasks.runSerial(
+                    host,
+                    "MoreblockImporter",
+                    () -> {
+                        try {
+                            MoreblockResourceFiles.rollback(created);
+                        } catch (IOException cleanupFailure) {
+                            if (failure == null) throw cleanupFailure;
+                            failure.addSuppressed(cleanupFailure);
+                        }
+                        if (failure != null) throw failure;
+                    },
+                    null,
+                    this::showError);
+        }
+
+        private void showError(Throwable error) {
+            if (!canContinue()) return;
+            popup.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+            popup.getButton(AlertDialog.BUTTON_POSITIVE).setText(R.string.common_word_continue);
+            showImportError(resourceErrorMessage(error));
+        }
+    }
+
+    private String resourceErrorMessage(Throwable error) {
+        if (error instanceof FileAlreadyExistsException existing) {
+            return Helper.getResString(
+                    R.string.moreblock_import_file_exists, new File(existing.getFile()).getName());
+        }
+        if (error instanceof NoSuchFileException missing) {
+            return Helper.getResString(
+                    R.string.moreblock_import_file_missing, new File(missing.getFile()).getName());
+        }
+        if (error instanceof InvalidPathException invalid) {
+            return Helper.getResString(
+                    R.string.moreblock_import_invalid_filename,
+                    new File(invalid.getInput()).getName());
+        }
+        return Helper.getResString(
+                error instanceof IOException
+                        ? R.string.moreblock_import_resource_failed
+                        : R.string.common_error_an_error_occurred);
     }
 
     private void showEditMoreBlockNameDialog(MoreBlockCollectionBean moreBlock) {
@@ -254,79 +394,44 @@ public class MoreblockImporter {
         dialog.show();
     }
 
-    private void copyImageFromCollectionsToProject(String imageName) {
-        if (ImageCollectionManager.getInstance().hasResource(imageName)) {
-            ProjectResourceBean image =
-                    ImageCollectionManager.getInstance().getResourceByName(imageName);
-            try {
-                fileUtil.copyFile(
-                        SketchwarePaths.getCollectionPath()
-                                + File.separator
-                                + "image"
-                                + File.separator
-                                + "data"
-                                + File.separator
-                                + image.resFullName,
-                        SketchwarePaths.getImagesPath()
-                                + File.separator
-                                + sc_id
-                                + File.separator
-                                + image.resFullName);
-                ProjectDataManager.getResourceManager(sc_id).images.add(image);
-            } catch (Exception e) {
-                Log.e("MoreblockImporter", e.getMessage(), e);
+    private List<MoreblockResourceFiles.Copy> resourceCopies(ResourceManager resources)
+            throws IOException {
+        ArrayList<MoreblockResourceFiles.Copy> copies = new ArrayList<>();
+        addResourceCopies(copies, toBeAddedImages, "image", resources.getImageDirPath());
+        addResourceCopies(copies, toBeAddedSounds, "sound", resources.getSoundDirPath());
+        addResourceCopies(copies, toBeAddedFonts, "font", resources.getFontDirPath());
+        return copies;
+    }
+
+    private void addResourceCopies(
+            List<MoreblockResourceFiles.Copy> copies,
+            List<ProjectResourceBean> resources,
+            String collection,
+            String directory)
+            throws IOException {
+        for (ProjectResourceBean resource : resources) {
+            String name = resource.resFullName;
+            if (name == null
+                    || name.isEmpty()
+                    || name.equals(".")
+                    || name.equals("..")
+                    || !new File(name).getName().equals(name)) {
+                throw new InvalidPathException(resource.resName, "Invalid resource file name");
             }
+            Path source =
+                    new File(SketchwarePaths.getCollectionPath(), collection + "/data/" + name)
+                            .toPath();
+            Path target = new File(directory, name).toPath();
+            copies.add(new MoreblockResourceFiles.Copy(source, target));
         }
     }
 
-    private void copySoundFromCollectionsToProject(String soundName) {
-        if (SoundCollectionManager.getInstance().hasResource(soundName)) {
-            ProjectResourceBean soundResource =
-                    SoundCollectionManager.getInstance().getResourceByName(soundName);
-            try {
-                fileUtil.copyFile(
-                        SketchwarePaths.getCollectionPath()
-                                + File.separator
-                                + "sound"
-                                + File.separator
-                                + "data"
-                                + File.separator
-                                + soundResource.resFullName,
-                        SketchwarePaths.getSoundsPath()
-                                + File.separator
-                                + sc_id
-                                + File.separator
-                                + soundResource.resFullName);
-                ProjectDataManager.getResourceManager(sc_id).sounds.add(soundResource);
-            } catch (Exception e) {
-                Log.e("MoreblockImporter", e.getMessage(), e);
-            }
-        }
-    }
-
-    private void copyFontFromCollectionsToProject(String fontName) {
-        if (FontCollectionManager.getInstance().hasResource(fontName)) {
-            ProjectResourceBean font =
-                    FontCollectionManager.getInstance().getResourceByName(fontName);
-            try {
-                fileUtil.copyFile(
-                        SketchwarePaths.getCollectionPath()
-                                + File.separator
-                                + "font"
-                                + File.separator
-                                + "data"
-                                + File.separator
-                                + font.resFullName,
-                        SketchwarePaths.getFontsResourcePath()
-                                + File.separator
-                                + sc_id
-                                + File.separator
-                                + font.resFullName);
-                ProjectDataManager.getResourceManager(sc_id).fonts.add(font);
-            } catch (Exception e) {
-                Log.e("MoreblockImporter", e.getMessage(), e);
-            }
-        }
+    private void showImportError(String reason) {
+        SketchToast.warning(
+                        activity,
+                        Helper.getResString(R.string.error_import_moreblocks, reason),
+                        Toast.LENGTH_LONG)
+                .show();
     }
 
     private void maybeAddVariable(int variableType, String variableName) {
@@ -399,10 +504,13 @@ public class MoreblockImporter {
             if (!alreadyToBeAdded) {
                 toBeAddedSounds.add(sound);
             }
+        } else {
+            missingResources.add(soundName);
         }
     }
 
     private void maybeAddFont(String fontName) {
+        if (fontName.equals("default_font")) return;
         if (toBeAddedFonts == null) {
             toBeAddedFonts = new ArrayList<>();
         }
@@ -424,10 +532,15 @@ public class MoreblockImporter {
             if (!alreadyToBeAdded) {
                 toBeAddedFonts.add(font);
             }
+        } else {
+            missingResources.add(fontName);
         }
     }
 
     private void maybeAddImage(String imageName) {
+        if (imageName.equals("app_icon")
+                || imageName.equals("default_image")
+                || imageName.equals("NONE")) return;
         if (toBeAddedImages == null) {
             toBeAddedImages = new ArrayList<>();
         }
@@ -450,6 +563,8 @@ public class MoreblockImporter {
             if (!alreadyToBeAdded) {
                 toBeAddedImages.add(image);
             }
+        } else {
+            missingResources.add(imageName);
         }
     }
 

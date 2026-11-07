@@ -1578,6 +1578,10 @@ Please click on Settings to allow permission for Storage. Without this permissio
     <string name="error_get_selector_failed">An error occurred while trying to get the selector</string>
     <string name="error_import_file">Couldn\'t import file! [%s]</string>
     <string name="error_import_moreblocks">Couldn\'t import: %s</string>
+    <string name="moreblock_import_file_exists">A project resource file already exists: %s</string>
+    <string name="moreblock_import_file_missing">Collection resource file is missing: %s</string>
+    <string name="moreblock_import_invalid_filename">Invalid resource file name: %s</string>
+    <string name="moreblock_import_resource_failed">Could not read or write resource files. Check storage access and available space.</string>
     <string name="error_import_resource">Couldn\'t import resource! [%s]</string>
     <string name="error_incorrect_parentheses">Your code contains incorrectly nested parentheses</string>
     <string name="error_invalid_block_params">Invalid block params</string>
