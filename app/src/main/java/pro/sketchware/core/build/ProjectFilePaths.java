@@ -2,7 +2,6 @@ package pro.sketchware.core.build;
 
 import static pro.sketchware.core.build.BuildDefaults.VAR_DEFAULT_MIN_SDK_VERSION;
 import static pro.sketchware.core.build.BuildDefaults.VAR_DEFAULT_TARGET_SDK_VERSION;
-import static pro.sketchware.core.project.ProjectThemeColors.getDefaultColor;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -116,11 +115,7 @@ public class ProjectFilePaths {
     public final String projectName;
     public final String packageName;
     public final String applicationName;
-    public final int colorAccent;
-    public final int colorPrimary;
-    public final int colorPrimaryDark;
-    public final int colorControlHighlight;
-    public final int colorControlNormal;
+    private final Map<String, Integer> generatedColors;
     public final String versionCode;
     public final String versionName;
 
@@ -248,31 +243,7 @@ public class ProjectFilePaths {
         versionCode = MapValueHelper.getString(metadata, "sc_ver_code");
         versionName = MapValueHelper.getString(metadata, "sc_ver_name");
 
-        colorAccent =
-                MapValueHelper.get(
-                        metadata,
-                        ProjectThemeColors.COLOR_ACCENT,
-                        getDefaultColor(ProjectThemeColors.COLOR_ACCENT));
-        colorPrimary =
-                MapValueHelper.get(
-                        metadata,
-                        ProjectThemeColors.COLOR_PRIMARY,
-                        getDefaultColor(ProjectThemeColors.COLOR_PRIMARY));
-        colorPrimaryDark =
-                MapValueHelper.get(
-                        metadata,
-                        ProjectThemeColors.COLOR_PRIMARY_DARK,
-                        getDefaultColor(ProjectThemeColors.COLOR_PRIMARY_DARK));
-        colorControlHighlight =
-                MapValueHelper.get(
-                        metadata,
-                        ProjectThemeColors.COLOR_CONTROL_HIGHLIGHT,
-                        getDefaultColor(ProjectThemeColors.COLOR_CONTROL_HIGHLIGHT));
-        colorControlNormal =
-                MapValueHelper.get(
-                        metadata,
-                        ProjectThemeColors.COLOR_CONTROL_NORMAL,
-                        getDefaultColor(ProjectThemeColors.COLOR_CONTROL_NORMAL));
+        generatedColors = ProjectThemeColors.generatedColors(metadata);
 
         projectSettings = new ProjectSettings(sc_id);
         fileUtil = new EncryptedFileUtil(true);
@@ -1640,14 +1611,9 @@ public class ProjectFilePaths {
             return FileUtil.readFile(filePath);
         }
         XmlBuilderHelper colorsFileBuilder = new XmlBuilderHelper();
-        colorsFileBuilder.addColor("colorPrimary", String.format("#%06X", colorPrimary & 0xffffff));
-        colorsFileBuilder.addColor(
-                "colorPrimaryDark", String.format("#%06X", colorPrimaryDark & 0xffffff));
-        colorsFileBuilder.addColor("colorAccent", String.format("#%06X", colorAccent & 0xffffff));
-        colorsFileBuilder.addColor(
-                "colorControlHighlight", String.format("#%06X", colorControlHighlight & 0xffffff));
-        colorsFileBuilder.addColor(
-                "colorControlNormal", String.format("#%06X", colorControlNormal & 0xffffff));
+        generatedColors.forEach(
+                (name, color) ->
+                        colorsFileBuilder.addColor(name, String.format("#%06X", color & 0xffffff)));
         return applyStoredXmlCommandsIfNeeded("colors.xml", colorsFileBuilder.toCode());
     }
 

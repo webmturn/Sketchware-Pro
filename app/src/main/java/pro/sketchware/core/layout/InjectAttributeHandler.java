@@ -77,8 +77,12 @@ public class InjectAttributeHandler {
 
     /** Uses canonical prefixes so Android and tools attributes retain their namespace. */
     public Map<String, String> getNamespacedAttributes() {
+        return parseNamespacedAttributes(viewBean.inject);
+    }
+
+    public static Map<String, String> parseNamespacedAttributes(String xml) {
         Map<String, String> attributes = new LinkedHashMap<>();
-        if (viewBean.inject == null || viewBean.inject.isEmpty()) return attributes;
+        if (xml == null || xml.isEmpty()) return attributes;
 
         try {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
@@ -89,7 +93,8 @@ public class InjectAttributeHandler {
                             "<tag xmlns:android=\"http://schemas.android.com/apk/res/android\" "
                                     + "xmlns:app=\"http://schemas.android.com/apk/res-auto\" "
                                     + "xmlns:tools=\"http://schemas.android.com/tools\""
-                                    + viewBean.inject
+                                    + " "
+                                    + xml
                                     + "></tag>"));
 
             int eventType = parser.getEventType();
@@ -114,10 +119,7 @@ public class InjectAttributeHandler {
                 eventType = parser.next();
             }
         } catch (XmlPullParserException | IOException | RuntimeException e) {
-            LogUtil.e(
-                    "InjectAttributeHandler",
-                    "Failed to parse inject property of View " + viewBean.id,
-                    e);
+            LogUtil.e("InjectAttributeHandler", "Failed to parse injected attributes", e);
         }
 
         return attributes;

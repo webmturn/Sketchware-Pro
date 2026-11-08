@@ -3,13 +3,12 @@ package pro.sketchware.core.codegen;
 import com.google.gson.Gson;
 import java.io.File;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.StringJoiner;
+import java.util.function.Consumer;
 import pro.sketchware.beans.ProjectFileBean;
-import pro.sketchware.core.project.BuildConfig;
+import pro.sketchware.core.layout.InjectAttributeHandler;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.Helper;
@@ -24,8 +23,8 @@ public class AppCompatInjection {
     private final String sc_id;
     private final ProjectFileBean projectFile;
 
-    public AppCompatInjection(BuildConfig buildConfig, ProjectFileBean projectFileBean) {
-        sc_id = buildConfig.sc_id;
+    public AppCompatInjection(String projectId, ProjectFileBean projectFileBean) {
+        sc_id = projectId;
         projectFile = projectFileBean;
     }
 
@@ -54,56 +53,41 @@ public class AppCompatInjection {
         }
     }
 
-    public static void refreshInjections() {
-        for (Map.Entry<String, Map<String, List<? extends Map<String, Object>>>> project :
-                INJECTIONS.entrySet()) {
-            Map<String, List<? extends Map<String, Object>>> projectInjections = project.getValue();
+    public static synchronized void invalidate(String projectId, String activityName) {
+        var project = INJECTIONS.get(projectId);
+        if (project != null) project.remove(activityName);
+    }
 
-            List<String> activityFilenames = new LinkedList<>();
-            for (Iterator<String> iterator =
-                            Objects.requireNonNull(projectInjections).keySet().iterator();
-                    iterator.hasNext();
-                    iterator.remove()) {
-                activityFilenames.add(iterator.next());
-            }
-
-            for (String activityFilename : activityFilenames) {
-                projectInjections.put(
-                        activityFilename,
-                        readAppCompatInjections(project.getKey(), activityFilename));
-            }
-        }
+    private static synchronized List<? extends Map<String, Object>> getInjections(
+            String projectId, String activityName) {
+        return INJECTIONS
+                .computeIfAbsent(projectId, key -> new HashMap<>())
+                .computeIfAbsent(activityName, name -> readAppCompatInjections(projectId, name));
     }
 
     public void inject(XmlBuilder xmlBuilder, String injectionType) {
-        if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_TOOLBAR)
-                || projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)
-                || projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
-            if (!INJECTIONS.containsKey(sc_id)) {
-                INJECTIONS.put(sc_id, new HashMap<>());
-            }
-            Map<String, List<? extends Map<String, Object>>> projectInjections =
-                    INJECTIONS.get(sc_id);
-            if (projectInjections == null) {
-                return;
-            }
-            if (!projectInjections.containsKey(projectFile.fileName)) {
-                projectInjections.put(
-                        projectFile.fileName, readAppCompatInjections(sc_id, projectFile.fileName));
-            }
+        forEachAttribute(injectionType, xmlBuilder::addAttributeValue);
+    }
 
-            List<? extends Map<String, Object>> injections =
-                    projectInjections.get(projectFile.fileName);
-            if (injections == null) {
-                return;
-            }
-            for (Map<String, Object> injection : injections) {
-                Object value;
-                if (injectionType != null
-                        && injectionType.equalsIgnoreCase(String.valueOf(injection.get("type")))
-                        && (value = injection.get("value")) instanceof String) {
-                    xmlBuilder.addAttributeValue((String) value);
-                }
+    public Map<String, String> getAttributes(String injectionType) {
+        var xml = new StringJoiner(" ");
+        forEachAttribute(injectionType, xml::add);
+        return InjectAttributeHandler.parseNamespacedAttributes(xml.toString());
+    }
+
+    private void forEachAttribute(String injectionType, Consumer<String> useAttribute) {
+        if (injectionType == null
+                || !(projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_TOOLBAR)
+                        || projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)
+                        || projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB))) {
+            return;
+        }
+        var injections = getInjections(sc_id, projectFile.fileName);
+        if (injections == null) return;
+        for (Map<String, Object> injection : injections) {
+            if (injectionType.equalsIgnoreCase(String.valueOf(injection.get("type")))
+                    && injection.get("value") instanceof String value) {
+                useAttribute.accept(value);
             }
         }
     }

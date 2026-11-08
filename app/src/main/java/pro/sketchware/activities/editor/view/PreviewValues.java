@@ -2,12 +2,15 @@ package pro.sketchware.activities.editor.view;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Build;
 import android.util.TypedValue;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Element;
@@ -42,6 +45,34 @@ public final class PreviewValues {
 
     public Integer color(String value) {
         return colors.resolveColorInt(context, value, 3, night != null);
+    }
+
+    void removeAttributesOverriddenBy(Map<String, String> attributes, int style) {
+        if (style == 0) return;
+        Resources resources = context.getResources();
+        Resources.Theme overlay = resources.newTheme();
+        overlay.applyStyle(style, true);
+        var value = new TypedValue();
+        attributes
+                .keySet()
+                .removeIf(
+                        name -> {
+                            int attr =
+                                    resources.getIdentifier(name, "attr", context.getPackageName());
+                            return attr != 0 && overlay.resolveAttribute(attr, value, false);
+                        });
+    }
+
+    String resolveColor(String value, Map<String, String> theme) {
+        String color = resolve(value);
+        var seen = new HashSet<String>();
+        while (color != null && color.startsWith("?") && seen.add(color)) {
+            String attr = color.startsWith("?attr/") ? color.substring(6) : color.substring(1);
+            String next = theme.get(attr);
+            if (next == null) break;
+            color = resolve(next);
+        }
+        return color;
     }
 
     private String resolve(String value) {
@@ -108,23 +139,45 @@ public final class PreviewValues {
         if (defaults == null && night == null) return;
         try {
             DocumentBuilder parser = XmlUtil.newSecureDocumentBuilderFactory().newDocumentBuilder();
-            readDirectory(defaults, parser, false);
-            readDirectory(night, parser, true);
+            readVariants(defaults, parser, false);
+            readVariants(night, parser, true);
         } catch (ParserConfigurationException error) {
             LogUtil.w("PreviewValues", "Could not create resource XML parser", error);
         }
     }
 
-    private void readDirectory(File directory, DocumentBuilder parser, boolean nightVariant) {
+    private void readVariants(File directory, DocumentBuilder parser, boolean nightVariant) {
         if (directory == null) return;
-        File colorFile = new File(directory, "colors.xml");
-        Element colorsXml = colors.loadColorsXmlIfChanged(colorFile, nightVariant);
+        readDirectory(
+                directory,
+                parser,
+                colors.loadColorsXmlIfChanged(new File(directory, "colors.xml"), nightVariant));
+
+        File parent = directory.getParentFile();
+        File[] siblings = parent == null ? null : parent.listFiles(File::isDirectory);
+        if (siblings == null) return;
+        Pattern version = Pattern.compile(Pattern.quote(directory.getName()) + "-v([0-9]+)");
+        var compatible = new TreeMap<Integer, File>();
+        for (File sibling : siblings) {
+            var match = version.matcher(sibling.getName());
+            if (!match.matches()) continue;
+            try {
+                int sdk = Integer.parseInt(match.group(1));
+                if (sdk > 0 && sdk <= Build.VERSION.SDK_INT) compatible.put(sdk, sibling);
+            } catch (NumberFormatException ignored) {
+                // This directory does not name an Android API level.
+            }
+        }
+        for (File variant : compatible.values()) readDirectory(variant, parser, null);
+    }
+
+    private void readDirectory(File directory, DocumentBuilder parser, Element colorsXml) {
         File[] files = directory.listFiles((dir, name) -> name.endsWith(".xml"));
         if (files == null) return;
         for (File file : files) {
             try {
                 Element root =
-                        colorFile.equals(file)
+                        colorsXml != null && file.getName().equals("colors.xml")
                                 ? colorsXml
                                 : parser.parse(file).getDocumentElement();
                 if (root == null) continue;

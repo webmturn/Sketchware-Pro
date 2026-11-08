@@ -132,6 +132,12 @@ public class ColorResourceResolver {
                     colorValue.startsWith("?attr/")
                             ? colorValue.substring(6)
                             : colorValue.substring(1);
+            if (referencingLimit <= 1) return null;
+            if (material3LibraryManager != null && material3LibraryManager.isMaterial3Enabled()) {
+                return resolveThemeColor(
+                        material3LibraryManager.createPreviewContext(context, isNightVariant),
+                        attrName);
+            }
             return getColorIntFromAttrs(context, attrName, referencingLimit - 1, isNightVariant);
         }
         if (colorValue.startsWith("@color/")) {
@@ -152,47 +158,26 @@ public class ColorResourceResolver {
 
     public Integer getColorIntFromAttrs(
             Context context, String attrName, int referencingLimit, boolean isNightVariant) {
-        if (material3LibraryManager == null) {
-            return null;
-        }
+        if (material3LibraryManager == null || referencingLimit <= 0) return null;
+        Context themedContext =
+                material3LibraryManager.isMaterial3Enabled()
+                        ? material3LibraryManager.createColorSampleContext(context, isNightVariant)
+                        : new ContextThemeWrapper(
+                                context,
+                                isNightVariant
+                                        ? R.style
+                                                .ThemeOverlay_SketchwarePro_ViewEditor_Material3_NON_DYNAMIC_Dark
+                                        : R.style
+                                                .ThemeOverlay_SketchwarePro_ViewEditor_Material3_NON_DYNAMIC_Light);
+        return resolveThemeColor(themedContext, attrName);
+    }
+
+    private Integer resolveThemeColor(Context context, String attrName) {
         try {
             int attrId =
                     context.getResources()
                             .getIdentifier(attrName, "attr", context.getPackageName());
-
-            if (attrId != 0 && referencingLimit > 0) {
-                Context themedContext;
-                if (isNightVariant) {
-                    if (material3LibraryManager.isDynamicColorsEnabled()) {
-                        themedContext =
-                                new ContextThemeWrapper(
-                                        context,
-                                        R.style
-                                                .ThemeOverlay_SketchwarePro_ViewEditor_Material3_Dark);
-                    } else {
-                        themedContext =
-                                new ContextThemeWrapper(
-                                        context,
-                                        R.style
-                                                .ThemeOverlay_SketchwarePro_ViewEditor_Material3_NON_DYNAMIC_Dark);
-                    }
-                } else {
-                    if (material3LibraryManager.isDynamicColorsEnabled()) {
-                        themedContext =
-                                new ContextThemeWrapper(
-                                        context,
-                                        R.style
-                                                .ThemeOverlay_SketchwarePro_ViewEditor_Material3_Light);
-                    } else {
-                        themedContext =
-                                new ContextThemeWrapper(
-                                        context,
-                                        R.style
-                                                .ThemeOverlay_SketchwarePro_ViewEditor_Material3_NON_DYNAMIC_Light);
-                    }
-                }
-                return MaterialColors.getColor(themedContext, attrId, "getColorValue");
-            }
+            if (attrId != 0) return MaterialColors.getColor(context, attrId, "getColorValue");
         } catch (Exception e) {
             Log.w(
                     "ColorResourceResolver",

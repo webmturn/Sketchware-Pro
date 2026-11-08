@@ -122,8 +122,7 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
                                 } else {
                                     if (originalPosition != -1) {
                                         activityInjections.remove(originalPosition);
-                                        FileUtil.writeFile(
-                                                path, new Gson().toJson(activityInjections));
+                                        saveInjections();
                                         adapter.submitList(filterInjections(tabSelected));
                                     }
                                 }
@@ -241,12 +240,6 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        AppCompatInjection.refreshInjections();
-    }
-
     private void initializeProjectBean() {
         projectFile = ProjectDataManager.getFileManager(sc_id).getFileByXmlName(filename);
         projectLibrary = ProjectDataManager.getLibraryManager(sc_id).getCompat();
@@ -255,7 +248,13 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
     private void resetData() {
         var defInjections = AppCompatInjection.getDefaultActivityInjections();
         activityInjections = new Gson().fromJson(defInjections, Helper.TYPE_MAP_LIST);
-        FileUtil.writeFile(path, defInjections);
+        saveInjections();
+    }
+
+    private void saveInjections() {
+        FileUtil.writeFile(path, new Gson().toJson(activityInjections));
+        AppCompatInjection.invalidate(sc_id, projectFile.fileName);
+        setResult(RESULT_OK);
     }
 
     private void setNote(String title, String message) {
@@ -319,7 +318,7 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
                             SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));
                         }
                         dialog1.dismiss();
-                        FileUtil.writeFile(path, new Gson().toJson(activityInjections));
+                        saveInjections();
                         adapter.submitList(filterInjections(tabSelected));
                     }
                 });

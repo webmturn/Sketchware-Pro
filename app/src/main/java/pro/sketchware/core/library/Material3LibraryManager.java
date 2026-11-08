@@ -1,37 +1,28 @@
 package pro.sketchware.core.library;
 
-import static pro.sketchware.SketchApplication.getContext;
-
 import android.content.Context;
-import androidx.annotation.StyleRes;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
+import android.view.ContextThemeWrapper;
+import com.google.android.material.color.DynamicColors;
 import pro.sketchware.R;
 import pro.sketchware.beans.ProjectLibraryBean;
 import pro.sketchware.core.project.ProjectDataManager;
-import pro.sketchware.util.ThemeUtils;
 
 public class Material3LibraryManager {
 
     private final boolean isEditingState;
     private final boolean isAppCompatEnabled;
     private final ProjectLibraryBean appCombatLibraryBean;
-    private final Context context;
 
     public Material3LibraryManager(String sc_id) {
-        isEditingState = false;
-        appCombatLibraryBean = ProjectDataManager.getLibraryManager(sc_id).getCompat();
-        isAppCompatEnabled = appCombatLibraryBean.isEnabled();
-        context = getContext();
-    }
-
-    public Material3LibraryManager(Context context, String sc_id) {
-        this.context = context;
         isEditingState = false;
         appCombatLibraryBean = ProjectDataManager.getLibraryManager(sc_id).getCompat();
         isAppCompatEnabled = appCombatLibraryBean.isEnabled();
     }
 
     public Material3LibraryManager(ProjectLibraryBean projectLibraryBean) {
-        context = getContext();
         isEditingState = true;
         appCombatLibraryBean = projectLibraryBean;
         isAppCompatEnabled = projectLibraryBean.isEnabled();
@@ -71,31 +62,72 @@ public class Material3LibraryManager {
         return false;
     }
 
-    @StyleRes
-    public int getViewEditorThemeOverlay() {
-        if (!isMaterial3Enabled()) {
-            return R.style.ThemeOverlay_SketchwarePro_ViewEditor;
-        }
-        boolean isDark = canUseNightVariantColors();
-
-        if (isDynamicColorsEnabled()) {
-            return isDark
-                    ? R.style.ThemeOverlay_SketchwarePro_ViewEditor_Material3_Dark
-                    : R.style.ThemeOverlay_SketchwarePro_ViewEditor_Material3_Light;
-        } else {
-            return isDark
-                    ? R.style.ThemeOverlay_SketchwarePro_ViewEditor_Material3_NON_DYNAMIC_Dark
-                    : R.style.ThemeOverlay_SketchwarePro_ViewEditor_Material3_NON_DYNAMIC_Light;
-        }
+    public Context createPreviewContext(Context base) {
+        return createPreviewContext(base, usesNightResources());
     }
 
-    public boolean canUseNightVariantColors() {
+    public Context createPreviewContext(Context base, boolean night) {
         if (!isMaterial3Enabled()) {
-            return false;
+            return new ContextThemeWrapper(base, R.style.ThemeOverlay_SketchwarePro_ViewEditor);
         }
+        int style =
+                switch (getTheme()) {
+                    case "Light" ->
+                            com.google.android.material.R.style.Theme_Material3_Light_NoActionBar;
+                    case "Dark" ->
+                            com.google.android.material.R.style.Theme_Material3_Dark_NoActionBar;
+                    default ->
+                            com.google.android.material.R.style
+                                    .Theme_Material3_DayNight_NoActionBar;
+                };
+        return createMaterial3Context(base, style, night);
+    }
 
-        return getTheme().equals("Dark")
-                || !getTheme().equals("Light") && ThemeUtils.isDarkThemeEnabled(context);
+    public Context createColorSampleContext(Context base, boolean dark) {
+        int style =
+                dark
+                        ? com.google.android.material.R.style.Theme_Material3_Dark_NoActionBar
+                        : com.google.android.material.R.style.Theme_Material3_Light_NoActionBar;
+        return createMaterial3Context(base, style, dark);
+    }
+
+    private Context createMaterial3Context(Context base, int style, boolean night) {
+        Configuration override = new Configuration();
+        override.uiMode =
+                (base.getResources().getConfiguration().uiMode & ~Configuration.UI_MODE_NIGHT_MASK)
+                        | (night
+                                ? Configuration.UI_MODE_NIGHT_YES
+                                : Configuration.UI_MODE_NIGHT_NO);
+        Context configured = base.createConfigurationContext(override);
+        Resources.Theme theme = configured.getResources().newTheme();
+        theme.applyStyle(style, true);
+        Context preview = new ContextThemeWrapper(configured, theme);
+        return isDynamicColorsEnabled() ? DynamicColors.wrapContextIfAvailable(preview) : preview;
+    }
+
+    public boolean usesNightResources() {
+        int systemNight =
+                Resources.getSystem().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        return isMaterial3Enabled() && systemNight == Configuration.UI_MODE_NIGHT_YES;
+    }
+
+    // The color picker selects a theme sample. Resource qualifiers use usesNightResources().
+    public boolean canUseNightVariantColors() {
+        return isMaterial3Enabled()
+                && (getTheme().equals("Dark")
+                        || !getTheme().equals("Light") && usesNightResources());
+    }
+
+    public int getDynamicColorOverlay(Context themedContext) {
+        if (!isDynamicColorsEnabled() || !DynamicColors.isDynamicColorAvailable()) return 0;
+        TypedArray attributes =
+                themedContext.obtainStyledAttributes(
+                        new int[] {com.google.android.material.R.attr.dynamicColorThemeOverlay});
+        try {
+            return attributes.getResourceId(0, 0);
+        } finally {
+            attributes.recycle();
+        }
     }
 
     public ProjectLibraryBean getAppCombatLibraryBean() {

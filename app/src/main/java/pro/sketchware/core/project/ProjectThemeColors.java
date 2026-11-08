@@ -2,6 +2,8 @@ package pro.sketchware.core.project;
 
 import android.graphics.Color;
 import android.os.Build;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import pro.sketchware.SketchApplication;
 import pro.sketchware.util.MapValueHelper;
 
@@ -15,6 +17,20 @@ public class ProjectThemeColors {
     public static int getColor(String sc_id, String color) {
         return MapValueHelper.get(
                 ProjectListManager.getProjectById(sc_id), color, getDefaultColor(color));
+    }
+
+    public static Map<String, Integer> generatedColors(Map<String, Object> metadata) {
+        Map<String, Integer> colors = new LinkedHashMap<>();
+        colors.put("colorPrimary", generatedColor(metadata, COLOR_PRIMARY));
+        colors.put("colorPrimaryDark", generatedColor(metadata, COLOR_PRIMARY_DARK));
+        colors.put("colorAccent", generatedColor(metadata, COLOR_ACCENT));
+        colors.put("colorControlHighlight", generatedColor(metadata, COLOR_CONTROL_HIGHLIGHT));
+        colors.put("colorControlNormal", generatedColor(metadata, COLOR_CONTROL_NORMAL));
+        return colors;
+    }
+
+    private static int generatedColor(Map<String, Object> metadata, String key) {
+        return MapValueHelper.get(metadata, key, getDefaultColor(key)) | 0xff000000;
     }
 
     public static int getDefaultColor(String color) {

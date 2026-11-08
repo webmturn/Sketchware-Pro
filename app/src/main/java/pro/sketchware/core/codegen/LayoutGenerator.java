@@ -74,7 +74,7 @@ public class LayoutGenerator {
         this.buildConfig = buildConfig;
         projectFile = projectFileBean;
         rootManager = new InjectRootLayoutManager(buildConfig.sc_id);
-        aci = new AppCompatInjection(buildConfig, projectFileBean);
+        aci = new AppCompatInjection(buildConfig.sc_id, projectFileBean);
     }
 
     public static String formatColor(int color) {

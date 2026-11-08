@@ -3,6 +3,7 @@ package pro.sketchware.activities.editor.view;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -29,6 +30,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.OneShotPreDrawListener;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.resources.MaterialAttributes;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -106,6 +108,7 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
     private TextView fileName;
     private ImageView imgPhoneTopBg;
     private LinearLayout toolbar;
+    private TextView toolbarTitle;
     private ViewPane viewPane;
     private Vibrator vibrator;
     private View currentTouchedView = null;
@@ -629,17 +632,17 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
         toolbar.setGravity(Gravity.CENTER_VERTICAL);
         toolbar.setLayoutParams(new FrameLayout.LayoutParams(displayWidth, (int) (dip * 48f)));
 
-        TextView tvToolbar = new TextView(context);
-        tvToolbar.setTextColor(Color.WHITE);
-        tvToolbar.setLayoutParams(
+        toolbarTitle = new TextView(context);
+        toolbarTitle.setTextColor(Color.WHITE);
+        toolbarTitle.setLayoutParams(
                 new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        tvToolbar.setPadding((int) (dip * 16f), 0, 0, 0);
-        tvToolbar.setGravity(Gravity.CENTER_VERTICAL);
-        tvToolbar.setTextSize(15f);
-        tvToolbar.setText(Helper.getResString(R.string.editor_preview_toolbar));
-        tvToolbar.setTypeface(null, Typeface.BOLD);
-        toolbar.addView(tvToolbar);
+        toolbarTitle.setPadding((int) (dip * 16f), 0, 0, 0);
+        toolbarTitle.setGravity(Gravity.CENTER_VERTICAL);
+        toolbarTitle.setTextSize(15f);
+        toolbarTitle.setText(Helper.getResString(R.string.editor_preview_toolbar));
+        toolbarTitle.setTypeface(null, Typeface.BOLD);
+        toolbar.addView(toolbarTitle);
         shape.addView(toolbar);
 
         viewPane = new ViewPane(getContext());
@@ -928,12 +931,35 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
     }
 
     private void setPreviewColors(String scId) {
-        bgStatus.setBackgroundColor(
-                ProjectThemeColors.getColor(scId, ProjectThemeColors.COLOR_PRIMARY_DARK));
-        imgPhoneTopBg.setBackgroundColor(
-                ProjectThemeColors.getColor(scId, ProjectThemeColors.COLOR_PRIMARY_DARK));
-        toolbar.setBackgroundColor(
-                ProjectThemeColors.getColor(scId, ProjectThemeColors.COLOR_PRIMARY));
+        boolean material3 = viewPane != null && viewPane.isMaterial3Preview();
+        int statusColor;
+        int toolbarColor;
+        int statusText = Color.WHITE;
+        int toolbarText = Color.WHITE;
+        if (material3) {
+            Context preview = viewPane.getPreviewContext();
+            statusColor = ThemeUtils.getColor(preview, android.R.attr.colorBackground);
+            toolbarColor = Color.TRANSPARENT;
+            if (hasToolbar) {
+                var colors = viewPane.getPreviewToolbarColors(projectFileBean);
+                toolbarColor = colors.background();
+                toolbarText = colors.title();
+            }
+            statusText =
+                    MaterialAttributes.resolveBoolean(
+                                    preview, androidx.appcompat.R.attr.isLightTheme, true)
+                            ? Color.BLACK
+                            : Color.WHITE;
+        } else {
+            statusColor = ProjectThemeColors.getColor(scId, ProjectThemeColors.COLOR_PRIMARY_DARK);
+            toolbarColor = ProjectThemeColors.getColor(scId, ProjectThemeColors.COLOR_PRIMARY);
+        }
+        bgStatus.setBackgroundColor(statusColor);
+        imgPhoneTopBg.setBackgroundColor(statusColor);
+        imgPhoneTopBg.setImageTintList(material3 ? ColorStateList.valueOf(statusText) : null);
+        fileName.setTextColor(statusText);
+        toolbar.setBackgroundColor(toolbarColor);
+        toolbarTitle.setTextColor(toolbarText);
     }
 
     private void showDeleteView(boolean show, boolean isCustomWidget) {
@@ -963,7 +989,6 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
 
     public void initialize(String projectId, ProjectFileBean projectFileBean) {
         scId = projectId;
-        setPreviewColors(projectId);
         if (viewPane != null) {
             viewPane.initialize(projectId, false);
         }
@@ -991,6 +1016,7 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
             hasToolbar = false;
             isFullscreen = false;
         }
+        setPreviewColors(projectId);
         isLayoutChanged = true;
     }
 

@@ -147,10 +147,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
                     new ActivityResultContracts.StartActivityForResult(),
                     result -> {
                         if (result.getResultCode() == RESULT_OK) {
-                            if (viewTabAdapter != null && viewPager.getCurrentItem() == 0) {
-                                viewTabAdapter.refreshAllViews();
-                                editorViewModel.refreshActiveProjectFile();
-                            }
+                            editorViewModel.refreshActiveProjectFile();
                         }
                     });
     private final ActivityResultLauncher<Intent> openViewCodeEditor =
@@ -1276,7 +1273,7 @@ public class DesignActivity extends BaseAppCompatActivity implements View.OnClic
         if (projectFile == null) return;
         launchActivity(
                 ManageAppCompatActivity.class,
-                null,
+                openResourcesManager,
                 new Pair<>("file_name", projectFile.getXmlName()));
     }
 

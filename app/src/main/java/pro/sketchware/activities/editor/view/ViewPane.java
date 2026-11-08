@@ -15,7 +15,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +39,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import pro.sketchware.R;
@@ -90,9 +90,11 @@ import pro.sketchware.activities.editor.view.item.ItemWebView;
 import pro.sketchware.activities.editor.view.item.ItemYoutubePlayer;
 import pro.sketchware.beans.ImageBean;
 import pro.sketchware.beans.LayoutBean;
+import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ProjectResourceBean;
 import pro.sketchware.beans.ViewBean;
 import pro.sketchware.beans.ViewBeans;
+import pro.sketchware.core.codegen.AppCompatInjection;
 import pro.sketchware.core.layout.InjectAttributeHandler;
 import pro.sketchware.core.layout.RootLayoutConverter;
 import pro.sketchware.core.library.Material3LibraryManager;
@@ -130,10 +132,6 @@ public class ViewPane extends RelativeLayout {
     private SvgUtils svgUtils;
     private ColorResourceResolver colorResourceResolver;
     private PreviewValues previewValues;
-    private int defaultTextColor =
-            0; // need to save the original color before changes, cause using getDefaultColor()
-    // returns the current text color
-    private int defaultHintColor = 0;
     private Material3LibraryManager material3LibraryManager;
     private HashMap<String, String> xmlStringCache = null;
     private String xmlStringCacheScId = null;
@@ -247,22 +245,88 @@ public class ViewPane extends RelativeLayout {
         if (importedFontPathCacheScId == null || !importedFontPathCacheScId.equals(sc_id)) {
             invalidateImportedFontPathCache();
         }
-        material3LibraryManager = new Material3LibraryManager(getContext(), sc_id);
+        material3LibraryManager = new Material3LibraryManager(sc_id);
         colorResourceResolver = new ColorResourceResolver(sc_id);
         previewValues = null;
-        int viewEditorThemeOverlay = material3LibraryManager.getViewEditorThemeOverlay();
-        context = new ContextThemeWrapper(getContext(), viewEditorThemeOverlay);
+        context = material3LibraryManager.createPreviewContext(getContext());
+        if (rootLayout != null) {
+            removeView(rootLayout);
+            rootLayout = null;
+        }
         svgUtils = new SvgUtils(context);
         svgUtils.initImageLoader();
-        if (viewEditorThemeOverlay == R.style.ThemeOverlay_SketchwarePro_ViewEditor) {
+        if (!isMaterial3Preview()) {
             setBackgroundColor(Color.WHITE);
         } else if (isPreviewMode) {
-            setBackgroundColor(ThemeUtils.getColor(context, R.attr.colorSurface));
+            setBackgroundColor(ThemeUtils.getColor(context, android.R.attr.colorBackground));
         } else {
             setBackground(AppCompatResources.getDrawable(context, R.drawable.bg_view_pane));
         }
         // addRootLayout();
         initTextView();
+    }
+
+    boolean isMaterial3Preview() {
+        return material3LibraryManager != null && material3LibraryManager.isMaterial3Enabled();
+    }
+
+    Context getPreviewContext() {
+        return context;
+    }
+
+    record ToolbarColors(int background, int title) {}
+
+    ToolbarColors getPreviewToolbarColors(ProjectFileBean file) {
+        var injection = new AppCompatInjection(sc_id, file);
+        Map<String, String> appBar = injection.getAttributes("AppBarLayout");
+        Map<String, String> toolbar = injection.getAttributes("Toolbar");
+        PreviewValues resources = previewValues();
+
+        Map<String, String> theme = resources.resolveStyle("@style/AppTheme").attributes();
+        resources.removeAttributesOverriddenBy(
+                theme, material3LibraryManager.getDynamicColorOverlay(context));
+        theme.putAll(resources.resolveStyle(viewTheme(appBar)).attributes());
+        theme.putAll(resources.resolveStyle(viewTheme(toolbar)).attributes());
+
+        Map<String, String> style = resources.resolveStyle(theme.get("toolbarStyle")).attributes();
+        style.putAll(resources.resolveStyle(toolbar.get("style")).attributes());
+        String background =
+                toolbar.getOrDefault("android:background", style.get("android:background"));
+        int backgroundColor =
+                background == null || background.equals("@null")
+                        ? Color.TRANSPARENT
+                        : resolveToolbarColor(resources, background, theme, R.attr.colorPrimary);
+
+        String title = toolbar.getOrDefault("app:titleTextColor", style.get("titleTextColor"));
+        if (title == null || title.equals("@null")) {
+            String appearance =
+                    toolbar.getOrDefault(
+                            "app:titleTextAppearance", style.get("titleTextAppearance"));
+            title =
+                    resources
+                            .resolveStyle(appearance)
+                            .attributes()
+                            .getOrDefault("android:textColor", "?attr/colorOnSurface");
+        }
+        return new ToolbarColors(
+                backgroundColor,
+                resolveToolbarColor(resources, title, theme, R.attr.colorOnSurface));
+    }
+
+    private int resolveToolbarColor(
+            PreviewValues resources, String raw, Map<String, String> theme, int fallback) {
+        String value = resources.resolveColor(raw, theme);
+        Integer color = resources.color(value);
+        if (color == null && value.startsWith("@color/")) {
+            color =
+                    ProjectThemeColors.generatedColors(ProjectListManager.getProjectById(sc_id))
+                            .get(value.substring(7));
+        }
+        return color != null ? color : ThemeUtils.getColor(context, fallback);
+    }
+
+    private static String viewTheme(Map<String, String> attributes) {
+        return attributes.getOrDefault("android:theme", attributes.get("app:theme"));
     }
 
     public void addRootLayout(ViewBean viewBean) {
@@ -301,7 +365,10 @@ public class ViewPane extends RelativeLayout {
                     case ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW -> new ItemCardView(context);
                     case ViewBean.VIEW_TYPE_LAYOUT_HSCROLLVIEW ->
                             new ItemHorizontalScrollView(context);
-                    case ViewBean.VIEW_TYPE_WIDGET_BUTTON -> new ItemButton(context);
+                    case ViewBean.VIEW_TYPE_WIDGET_BUTTON ->
+                            isMaterial3Preview()
+                                    ? new ItemMaterialButton(context)
+                                    : new ItemButton(context);
                     case ViewBean.VIEW_TYPE_WIDGET_TEXTVIEW -> new ItemTextView(context);
                     case ViewBean.VIEW_TYPE_WIDGET_EDITTEXT -> new ItemEditText(context);
                     case ViewBean.VIEW_TYPE_WIDGET_IMAGEVIEW -> new ItemImageView(context);
@@ -354,6 +421,12 @@ public class ViewPane extends RelativeLayout {
                 };
         item.setId(++viewIdCounter);
         item.setTag(viewBean.id);
+        if (item instanceof TextView textView) {
+            textView.setTag(R.id.preview_default_text_colors, textView.getTextColors());
+        }
+        if (item instanceof EditText editText) {
+            editText.setTag(R.id.preview_default_hint_colors, editText.getHintTextColors());
+        }
         ((ItemView) item).setBean(viewBean);
         updateItemView(item, viewBean);
         return item;
@@ -379,13 +452,9 @@ public class ViewPane extends RelativeLayout {
         }
         if (rootLayout != null) {
             removeView(rootLayout);
-        } else {
-            rootLayout = (ViewGroup) rootView;
         }
-        if (rootLayout instanceof ItemView sy) {
-            if (!currentBean.isEqual(sy.getBean())) {
-                rootLayout = (ViewGroup) rootView;
-            }
+        if (!(rootLayout instanceof ItemView sy) || !currentBean.isEqual(sy.getBean())) {
+            rootLayout = (ViewGroup) rootView;
         }
         addView(rootLayout);
     }
@@ -763,7 +832,7 @@ public class ViewPane extends RelativeLayout {
                             ? null
                             : new File(SketchwarePaths.getProjectResourceValuesPath(sc_id));
             File night =
-                    defaults != null && material3LibraryManager.canUseNightVariantColors()
+                    defaults != null && material3LibraryManager.usesNightResources()
                             ? new File(
                                     SketchwarePaths.getProjectResourceValuesPath(sc_id, "-night"))
                             : null;
@@ -870,8 +939,10 @@ public class ViewPane extends RelativeLayout {
         itemFloatingActionButton.setLayoutParams(
                 new LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        itemFloatingActionButton.setMainColor(
-                ProjectThemeColors.getColor(sc_id, ProjectThemeColors.COLOR_ACCENT));
+        if (!isMaterial3Preview()) {
+            itemFloatingActionButton.setMainColor(
+                    ProjectThemeColors.getColor(sc_id, ProjectThemeColors.COLOR_ACCENT));
+        }
         itemFloatingActionButton.setFixed(true);
         if (viewBean == null) {
             ViewBean defaultFabBean = new ViewBean("_fab", ViewBean.VIEW_TYPE_WIDGET_FAB);
@@ -1269,7 +1340,7 @@ public class ViewPane extends RelativeLayout {
                                     context,
                                     viewBean.layout.backgroundResColor,
                                     3,
-                                    material3LibraryManager.canUseNightVariantColors())));
+                                    material3LibraryManager.usesNightResources())));
         }
         // Attached children must use their real parent's parameters, even if stored metadata is
         // stale.
@@ -1547,14 +1618,13 @@ public class ViewPane extends RelativeLayout {
         } else {
             textView.setTypeface(null, viewBean.text.textType);
         }
-        if (defaultTextColor == 0) {
-            defaultTextColor = textView.getTextColors().getDefaultColor();
-        }
         if (viewBean.text.resTextColor == null) {
-            textView.setTextColor(
-                    viewBean.text.textColor == 0xffffff
-                            ? defaultTextColor
-                            : viewBean.text.textColor);
+            if (viewBean.text.textColor == 0xffffff) {
+                textView.setTextColor(
+                        (ColorStateList) textView.getTag(R.id.preview_default_text_colors));
+            } else {
+                textView.setTextColor(viewBean.text.textColor);
+            }
         } else {
             textView.setTextColor(
                     PropertiesUtil.parseColor(
@@ -1562,7 +1632,7 @@ public class ViewPane extends RelativeLayout {
                                     context,
                                     viewBean.text.resTextColor,
                                     3,
-                                    material3LibraryManager.canUseNightVariantColors())));
+                                    material3LibraryManager.usesNightResources())));
         }
         textView.setTextSize(viewBean.text.textSize);
         textView.setLines(viewBean.text.line);
@@ -1606,14 +1676,13 @@ public class ViewPane extends RelativeLayout {
     private void updateEditText(EditText editText, ViewBean viewBean) {
         String hintText = viewBean.text.hint;
         editText.setHint(hintText.startsWith(stringsStart) ? getXmlString(hintText) : hintText);
-        if (defaultHintColor == 0) {
-            defaultHintColor = editText.getHintTextColors().getDefaultColor();
-        }
         if (viewBean.text.resHintColor == null) {
-            editText.setHintTextColor(
-                    viewBean.text.hintColor == 0xffffff
-                            ? defaultHintColor
-                            : viewBean.text.hintColor);
+            if (viewBean.text.hintColor == 0xffffff) {
+                editText.setHintTextColor(
+                        (ColorStateList) editText.getTag(R.id.preview_default_hint_colors));
+            } else {
+                editText.setHintTextColor(viewBean.text.hintColor);
+            }
         } else {
             editText.setHintTextColor(
                     PropertiesUtil.parseColor(
@@ -1621,7 +1690,7 @@ public class ViewPane extends RelativeLayout {
                                     context,
                                     viewBean.text.resHintColor,
                                     3,
-                                    material3LibraryManager.canUseNightVariantColors())));
+                                    material3LibraryManager.usesNightResources())));
         }
     }
 
@@ -1644,7 +1713,7 @@ public class ViewPane extends RelativeLayout {
                                         context,
                                         bean.layout.backgroundResColor,
                                         3,
-                                        material3LibraryManager.canUseNightVariantColors())));
+                                        material3LibraryManager.usesNightResources())));
             }
         } else {
             cardView.setCardBackgroundColor(
@@ -1653,7 +1722,7 @@ public class ViewPane extends RelativeLayout {
                                     context,
                                     cardBackgroundColor,
                                     3,
-                                    material3LibraryManager.canUseNightVariantColors())));
+                                    material3LibraryManager.usesNightResources())));
         }
 
         int fallbackElevation = bean.layout.elevation > 0 ? bean.layout.elevation : 4;
@@ -1735,7 +1804,7 @@ public class ViewPane extends RelativeLayout {
                             context,
                             backgroundTint,
                             3,
-                            material3LibraryManager.canUseNightVariantColors());
+                            material3LibraryManager.usesNightResources());
             if (tintColor != null) {
                 materialButton.setBackgroundTintList(ColorStateList.valueOf(tintColor));
             }
