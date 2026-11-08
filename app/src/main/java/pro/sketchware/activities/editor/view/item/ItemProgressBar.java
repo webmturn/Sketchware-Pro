@@ -8,8 +8,12 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import pro.sketchware.R;
 import pro.sketchware.activities.editor.view.ItemView;
 import pro.sketchware.activities.editor.view.PreviewValues;
 import pro.sketchware.beans.ViewBean;
@@ -28,6 +32,7 @@ public class ItemProgressBar extends LinearLayout implements ItemView {
     private boolean horizontal;
     private int styleAttr;
     private int styleRes;
+    private boolean overrideIndeterminateOnly;
     private ColorStateList progressTint;
     private ColorStateList backgroundTint;
     private ColorStateList secondaryTint;
@@ -44,7 +49,7 @@ public class ItemProgressBar extends LinearLayout implements ItemView {
         paint.setColor(0x9599d5d0);
         setWillNotDraw(false);
         setGravity(Gravity.CENTER);
-        updateStyle(false, android.R.attr.progressBarStyle, 0);
+        updateStyle(false, android.R.attr.progressBarStyle, 0, false);
     }
 
     @Override
@@ -109,11 +114,14 @@ public class ItemProgressBar extends LinearLayout implements ItemView {
         xmlAttributes.putAll(injected);
         String styleName = xmlAttributes.get("style");
         PreviewValues.Style style = values.resolveStyle(styleName);
-        applyStyle(style.base(), styleName == null ? null : bean.progressStyle);
 
         Map<String, String> effectiveAttributes = new HashMap<>(style.attributes());
         effectiveAttributes.putAll(xmlAttributes);
         Map<String, String> resolvedAttributes = values.resolveAttributes(effectiveAttributes);
+        applyStyle(
+                style.base(),
+                styleName == null ? null : bean.progressStyle,
+                "false".equals(resolvedAttributes.get("android:indeterminateOnly")));
         applyProgress(resolvedAttributes, bean.max);
         applyTints(resolvedAttributes, values);
     }
@@ -164,7 +172,7 @@ public class ItemProgressBar extends LinearLayout implements ItemView {
         return color == null ? fallback : ColorStateList.valueOf(color);
     }
 
-    private void applyStyle(String style, String fallback) {
+    private void applyStyle(String style, String fallback, boolean overrideIndeterminateOnly) {
         int attr = 0;
         int res = 0;
         if (style.startsWith("?android:")) {
@@ -182,29 +190,36 @@ public class ItemProgressBar extends LinearLayout implements ItemView {
                     horizontal
                             ? android.R.attr.progressBarStyleHorizontal
                             : android.R.attr.progressBarStyle,
-                    0);
+                    0,
+                    overrideIndeterminateOnly);
         } else {
             updateStyle(
                     attr == android.R.attr.progressBarStyleHorizontal
                             || style.endsWith(".Horizontal"),
                     attr,
-                    res);
+                    res,
+                    overrideIndeterminateOnly);
         }
     }
 
-    private void updateStyle(boolean horizontal, int styleAttr, int styleRes) {
+    private void updateStyle(
+            boolean horizontal, int styleAttr, int styleRes, boolean overrideIndeterminateOnly) {
+        if (progressBar != null
+                && this.horizontal == horizontal
+                && this.styleAttr == styleAttr
+                && this.styleRes == styleRes
+                && this.overrideIndeterminateOnly == overrideIndeterminateOnly) {
+            return;
+        }
+        ProgressBar updatedBar = createProgressBar(styleAttr, styleRes, overrideIndeterminateOnly);
         if (progressBar != null) {
-            if (this.horizontal == horizontal
-                    && this.styleAttr == styleAttr
-                    && this.styleRes == styleRes) {
-                return;
-            }
             removeView(progressBar);
         }
         this.horizontal = horizontal;
         this.styleAttr = styleAttr;
         this.styleRes = styleRes;
-        progressBar = new ProgressBar(getContext(), null, styleAttr, styleRes);
+        this.overrideIndeterminateOnly = overrideIndeterminateOnly;
+        progressBar = updatedBar;
         progressTint = progressBar.getProgressTintList();
         backgroundTint = progressBar.getProgressBackgroundTintList();
         secondaryTint = progressBar.getSecondaryProgressTintList();
@@ -216,5 +231,25 @@ public class ItemProgressBar extends LinearLayout implements ItemView {
                                 ? ViewGroup.LayoutParams.MATCH_PARENT
                                 : ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT));
+    }
+
+    private ProgressBar createProgressBar(
+            int styleAttr, int styleRes, boolean overrideIndeterminateOnly) {
+        if (!overrideIndeterminateOnly) {
+            return new ProgressBar(getContext(), null, styleAttr, styleRes);
+        }
+        // Android reads indeterminateOnly when the widget is constructed.
+        try (var attributes = getResources().getXml(R.xml.preview_progress_bar_determinate)) {
+            int event;
+            do {
+                event = attributes.next();
+            } while (event != XmlPullParser.START_TAG && event != XmlPullParser.END_DOCUMENT);
+            if (event == XmlPullParser.END_DOCUMENT) {
+                throw new IllegalStateException("Missing ProgressBar preview attributes");
+            }
+            return new ProgressBar(getContext(), attributes, styleAttr, styleRes);
+        } catch (IOException | XmlPullParserException error) {
+            throw new IllegalStateException("Invalid ProgressBar preview attributes", error);
+        }
     }
 }

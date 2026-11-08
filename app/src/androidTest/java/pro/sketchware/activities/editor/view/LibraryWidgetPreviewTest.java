@@ -296,6 +296,39 @@ public class LibraryWidgetPreviewTest {
     }
 
     @Test
+    public void circularProgressHonorsAnExplicitIndeterminateOnlyOverride() throws Exception {
+        Context context = themed(R.style.ThemeOverlay_SketchwarePro_ViewEditor);
+        withPreviewValues(
+                context,
+                "<resources><bool name=\"loading_only\">false</bool></resources>",
+                values -> {
+                    var preview = new ItemProgressBar(context);
+                    var bean = new ViewBean("progress", ViewBean.VIEW_TYPE_WIDGET_PROGRESSBAR);
+                    bean.progressStyle = "@android:style/Widget.ProgressBar";
+                    bean.progress = 30;
+                    bean.indeterminate = "false";
+                    preview.applyPreviewAttributes(bean, Map.of(), values);
+                    assertTrue(((ProgressBar) preview.getChildAt(0)).isIndeterminate());
+
+                    preview.applyPreviewAttributes(
+                            bean, Map.of("android:indeterminateOnly", "false"), values);
+                    ProgressBar bar = (ProgressBar) preview.getChildAt(0);
+                    assertFalse(bar.isIndeterminate());
+                    assertEquals(30, bar.getProgress());
+
+                    preview.applyPreviewAttributes(
+                            bean,
+                            Map.of("android:indeterminateOnly", "@bool/loading_only"),
+                            values);
+                    assertSame(bar, preview.getChildAt(0));
+                    assertFalse(bar.isIndeterminate());
+
+                    preview.applyPreviewAttributes(bean, Map.of(), values);
+                    assertTrue(((ProgressBar) preview.getChildAt(0)).isIndeterminate());
+                });
+    }
+
+    @Test
     public void codePreviewResolvesProjectFontSize() throws Exception {
         Context context = themed(R.style.ThemeOverlay_SketchwarePro_ViewEditor);
         withPreviewValues(
