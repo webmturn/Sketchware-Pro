@@ -6,34 +6,30 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.PopupMenu;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
-
-import pro.sketchware.beans.ProjectFileBean;
-import pro.sketchware.beans.ProjectLibraryBean;
-import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-
-import pro.sketchware.core.project.ProjectDataManager;
-import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.util.UIHelper;
-import pro.sketchware.core.codegen.AppCompatInjection;
-import pro.sketchware.util.Helper;
 import pro.sketchware.R;
 import pro.sketchware.activities.appcompat.adapters.AppCompatAdapter;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
+import pro.sketchware.beans.ProjectFileBean;
+import pro.sketchware.beans.ProjectLibraryBean;
+import pro.sketchware.core.codegen.AppCompatInjection;
+import pro.sketchware.core.project.ProjectDataManager;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.databinding.CustomDialogAttributeBinding;
 import pro.sketchware.databinding.ManageAppCompatBinding;
 import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.Helper;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.UI;
+import pro.sketchware.util.UIHelper;
 
 public class ManageAppCompatActivity extends BaseAppCompatActivity {
 
@@ -89,18 +85,34 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
                                     Helper.TYPE_MAP_LIST);
         } else {
             try {
-                activityInjections = new Gson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
+                activityInjections =
+                        new Gson().fromJson(FileUtil.readFile(path), Helper.TYPE_MAP_LIST);
             } catch (com.google.gson.JsonSyntaxException e) {
-                activityInjections = new Gson().fromJson(
-                        AppCompatInjection.getDefaultActivityInjections(), Helper.TYPE_MAP_LIST);
+                activityInjections =
+                        new Gson()
+                                .fromJson(
+                                        AppCompatInjection.getDefaultActivityInjections(),
+                                        Helper.TYPE_MAP_LIST);
             }
         }
         adapter = new AppCompatAdapter();
         adapter.setOnItemClickListener(
                 item -> {
                     PopupMenu popupMenu = new PopupMenu(this, item.first);
-                    popupMenu.getMenu().add(Menu.NONE, 0, Menu.NONE, Helper.getResString(R.string.common_word_edit));
-                    popupMenu.getMenu().add(Menu.NONE, 1, Menu.NONE, Helper.getResString(R.string.common_word_delete));
+                    popupMenu
+                            .getMenu()
+                            .add(
+                                    Menu.NONE,
+                                    0,
+                                    Menu.NONE,
+                                    Helper.getResString(R.string.common_word_edit));
+                    popupMenu
+                            .getMenu()
+                            .add(
+                                    Menu.NONE,
+                                    1,
+                                    Menu.NONE,
+                                    Helper.getResString(R.string.common_word_delete));
                     popupMenu.setOnMenuItemClickListener(
                             itemMenu -> {
                                 int position = adapter.getCurrentList().indexOf(item.second);
@@ -131,12 +143,10 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
                     }
 
                     @Override
-                    public void onTabReselected(TabLayout.Tab tab) {
-                    }
+                    public void onTabReselected(TabLayout.Tab tab) {}
 
                     @Override
-                    public void onTabUnselected(TabLayout.Tab tab) {
-                    }
+                    public void onTabUnselected(TabLayout.Tab tab) {}
                 });
         List<String> appCompats = new ArrayList<>();
         initializeProjectBean();
@@ -158,7 +168,9 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
                     appCompats.add("NavigationDrawer");
                 }
                 if (appCompats.isEmpty()) {
-                    setNote(Helper.getResString(R.string.appcompat_no_options_title), Helper.getResString(R.string.appcompat_no_options_msg));
+                    setNote(
+                            Helper.getResString(R.string.appcompat_no_options_title),
+                            Helper.getResString(R.string.appcompat_no_options_msg));
                 } else {
                     for (int i = 0; i < appCompats.size(); i++) {
                         TabLayout.Tab tab = binding.tabLayout.newTab();
@@ -172,10 +184,13 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
                 }
             } else {
                 setNote(
-                        Helper.getResString(R.string.appcompat_disabled_title), Helper.getResString(R.string.appcompat_disabled_msg));
+                        Helper.getResString(R.string.appcompat_disabled_title),
+                        Helper.getResString(R.string.appcompat_disabled_msg));
             }
         } else {
-            setNote(Helper.getResString(R.string.appcompat_not_available_title), Helper.getResString(R.string.appcompat_not_available_msg));
+            setNote(
+                    Helper.getResString(R.string.appcompat_not_available_title),
+                    Helper.getResString(R.string.appcompat_not_available_msg));
         }
     }
 
@@ -201,7 +216,9 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
                 MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
                 dialog.setTitle(R.string.common_word_reset);
                 dialog.setMessage(
-                        String.format(Helper.getResString(R.string.appcompat_reset_confirm_msg), filename));
+                        String.format(
+                                Helper.getResString(R.string.appcompat_reset_confirm_msg),
+                                filename));
                 dialog.setPositiveButton(
                         R.string.common_word_yes,
                         (d, w) -> {
@@ -253,7 +270,10 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
 
     private void dialog(String type, int position) {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
-        dialog.setTitle(type.equals("create") ? Helper.getResString(R.string.appcompat_add_attr) : Helper.getResString(R.string.appcompat_edit_attr));
+        dialog.setTitle(
+                type.equals("create")
+                        ? Helper.getResString(R.string.appcompat_add_attr)
+                        : Helper.getResString(R.string.appcompat_edit_attr));
         CustomDialogAttributeBinding attributeBinding =
                 CustomDialogAttributeBinding.inflate(getLayoutInflater());
         dialog.setView(attributeBinding.getRoot());
@@ -278,8 +298,7 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
                 (dialog1, which) -> {
                     String nameInput = Helper.getText(attributeBinding.inputAttr);
                     String valueInput = Helper.getText(attributeBinding.inputValue);
-                    if (!nameInput.trim().isEmpty()
-                            && !valueInput.trim().isEmpty()) {
+                    if (!nameInput.trim().isEmpty() && !valueInput.trim().isEmpty()) {
                         String newValue = nameInput + "=\"" + valueInput + "\"";
                         HashMap<String, Object> map = new HashMap<>();
                         map.put("type", tabSelected);
@@ -292,7 +311,9 @@ public class ManageAppCompatActivity extends BaseAppCompatActivity {
                                 activityInjections.remove(position);
                                 activityInjections.add(position, map);
                             } else {
-                                SketchwareUtil.toastError(Helper.getResString(R.string.common_error_an_error_occurred));
+                                SketchwareUtil.toastError(
+                                        Helper.getResString(
+                                                R.string.common_error_an_error_occurred));
                                 return;
                             }
                             SketchwareUtil.toast(Helper.getResString(R.string.common_word_saved));

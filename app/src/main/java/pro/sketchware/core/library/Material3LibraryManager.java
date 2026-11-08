@@ -3,13 +3,10 @@ package pro.sketchware.core.library;
 import static pro.sketchware.SketchApplication.getContext;
 
 import android.content.Context;
-
 import androidx.annotation.StyleRes;
-
-import pro.sketchware.beans.ProjectLibraryBean;
-
-import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.R;
+import pro.sketchware.beans.ProjectLibraryBean;
+import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.util.ThemeUtils;
 
 public class Material3LibraryManager {
@@ -57,18 +54,18 @@ public class Material3LibraryManager {
     }
 
     private String safeGetString(String key) {
-        if (appCombatLibraryBean.configurations != null &&
-                appCombatLibraryBean.configurations.containsKey(key) &&
-                appCombatLibraryBean.configurations.get(key) instanceof String keyValue) {
+        if (appCombatLibraryBean.configurations != null
+                && appCombatLibraryBean.configurations.containsKey(key)
+                && appCombatLibraryBean.configurations.get(key) instanceof String keyValue) {
             return keyValue;
         }
         return "";
     }
 
     private boolean safeGetBoolean(String key) {
-        if (appCombatLibraryBean.configurations != null &&
-                appCombatLibraryBean.configurations.containsKey(key) &&
-                appCombatLibraryBean.configurations.get(key) instanceof Boolean keyValue) {
+        if (appCombatLibraryBean.configurations != null
+                && appCombatLibraryBean.configurations.containsKey(key)
+                && appCombatLibraryBean.configurations.get(key) instanceof Boolean keyValue) {
             return keyValue;
         }
         return false;
@@ -97,12 +94,11 @@ public class Material3LibraryManager {
             return false;
         }
 
-        return getTheme().equals("Dark") ||
-                !getTheme().equals("Light") && ThemeUtils.isDarkThemeEnabled(context);
+        return getTheme().equals("Dark")
+                || !getTheme().equals("Light") && ThemeUtils.isDarkThemeEnabled(context);
     }
 
     public ProjectLibraryBean getAppCombatLibraryBean() {
         return appCombatLibraryBean;
     }
-
 }

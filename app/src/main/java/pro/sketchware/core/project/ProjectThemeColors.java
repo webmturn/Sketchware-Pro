@@ -2,9 +2,8 @@ package pro.sketchware.core.project;
 
 import android.graphics.Color;
 import android.os.Build;
-
-import pro.sketchware.util.MapValueHelper;
 import pro.sketchware.SketchApplication;
+import pro.sketchware.util.MapValueHelper;
 
 public class ProjectThemeColors {
     public static final String COLOR_ACCENT = "color_accent";
@@ -14,7 +13,8 @@ public class ProjectThemeColors {
     public static final String COLOR_CONTROL_NORMAL = "color_control_normal";
 
     public static int getColor(String sc_id, String color) {
-        return MapValueHelper.get(ProjectListManager.getProjectById(sc_id), color, getDefaultColor(color));
+        return MapValueHelper.get(
+                ProjectListManager.getProjectById(sc_id), color, getDefaultColor(color));
     }
 
     public static int getDefaultColor(String color) {

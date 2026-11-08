@@ -1,8 +1,6 @@
 package pro.sketchware.core.codegen;
 
-import pro.sketchware.beans.ProjectFileBean;
 import com.google.gson.Gson;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,17 +8,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
+import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.core.project.BuildConfig;
 import pro.sketchware.core.project.SketchwarePaths;
-import pro.sketchware.util.Helper;
 import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.Helper;
 import pro.sketchware.util.xml.XmlBuilder;
 
 public class AppCompatInjection {
 
     // maps sc_id to (activity filename mapped to (list of injections))
-    private static final Map<String, Map<String, List<? extends Map<String, Object>>>> INJECTIONS = new HashMap<>();
+    private static final Map<String, Map<String, List<? extends Map<String, Object>>>> INJECTIONS =
+            new HashMap<>();
 
     private final String sc_id;
     private final ProjectFileBean projectFile;
@@ -34,12 +33,15 @@ public class AppCompatInjection {
         return "[{\"type\":\"toolbar\",\"value\":\"android:layout_width=\\\"match_parent\\\"\"},{\"type\":\"toolbar\",\"value\":\"android:layout_height=\\\"?attr/actionBarSize\\\"\"},{\"type\":\"toolbar\",\"value\":\"android:background=\\\"?attr/colorPrimary\\\"\"},{\"type\":\"toolbar\",\"value\":\"app:popupTheme=\\\"@style/AppTheme.PopupOverlay\\\"\"},{\"type\":\"appbarlayout\",\"value\":\"android:layout_width=\\\"match_parent\\\"\"},{\"type\":\"appbarlayout\",\"value\":\"android:layout_height=\\\"wrap_content\\\"\"},{\"type\":\"appbarlayout\",\"value\":\"android:theme=\\\"@style/AppTheme.AppBarOverlay\\\"\"},{\"type\":\"coordinatorlayout\",\"value\":\"android:layout_width=\\\"match_parent\\\"\"},{\"type\":\"coordinatorlayout\",\"value\":\"android:layout_height=\\\"match_parent\\\"\"},{\"type\":\"drawerlayout\",\"value\":\"android:layout_width=\\\"match_parent\\\"\"},{\"type\":\"drawerlayout\",\"value\":\"android:layout_height=\\\"match_parent\\\"\"},{\"type\":\"drawerlayout\",\"value\":\"tools:openDrawer=\\\"start\\\"\"},{\"type\":\"navigationdrawer\",\"value\":\"android:layout_width=\\\"320dp\\\"\"},{\"type\":\"navigationdrawer\",\"value\":\"android:layout_height=\\\"match_parent\\\"\"},{\"type\":\"navigationdrawer\",\"value\":\"android:layout_gravity=\\\"start\\\"\"},{\"type\":\"navigationdrawer\",\"value\":\"android:background=\\\"#EEEEEE\\\"\"}]";
     }
 
-    private static List<? extends Map<String, Object>> readAppCompatInjections(String sc_id, String activityFilename) {
+    private static List<? extends Map<String, Object>> readAppCompatInjections(
+            String sc_id, String activityFilename) {
         String toParse;
 
-        File injectionFile = new File(SketchwarePaths.getAppCompatInjectionPath(sc_id, activityFilename));
+        File injectionFile =
+                new File(SketchwarePaths.getAppCompatInjectionPath(sc_id, activityFilename));
         String fileContent;
-        if (injectionFile.exists() && !(fileContent = FileUtil.readFile(injectionFile.getAbsolutePath())).isEmpty()) {
+        if (injectionFile.exists()
+                && !(fileContent = FileUtil.readFile(injectionFile.getAbsolutePath())).isEmpty()) {
             toParse = fileContent;
         } else {
             toParse = getDefaultActivityInjections();
@@ -53,42 +55,53 @@ public class AppCompatInjection {
     }
 
     public static void refreshInjections() {
-        for (Map.Entry<String, Map<String, List<? extends Map<String, Object>>>> project : INJECTIONS.entrySet()) {
+        for (Map.Entry<String, Map<String, List<? extends Map<String, Object>>>> project :
+                INJECTIONS.entrySet()) {
             Map<String, List<? extends Map<String, Object>>> projectInjections = project.getValue();
 
             List<String> activityFilenames = new LinkedList<>();
-            for (Iterator<String> iterator = Objects.requireNonNull(projectInjections).keySet().iterator(); iterator.hasNext(); iterator.remove()) {
+            for (Iterator<String> iterator =
+                            Objects.requireNonNull(projectInjections).keySet().iterator();
+                    iterator.hasNext();
+                    iterator.remove()) {
                 activityFilenames.add(iterator.next());
             }
 
             for (String activityFilename : activityFilenames) {
-                projectInjections.put(activityFilename, readAppCompatInjections(project.getKey(), activityFilename));
+                projectInjections.put(
+                        activityFilename,
+                        readAppCompatInjections(project.getKey(), activityFilename));
             }
         }
     }
 
     public void inject(XmlBuilder xmlBuilder, String injectionType) {
-        if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_TOOLBAR) ||
-                projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER) ||
-                projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
+        if (projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_TOOLBAR)
+                || projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)
+                || projectFile.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_FAB)) {
             if (!INJECTIONS.containsKey(sc_id)) {
                 INJECTIONS.put(sc_id, new HashMap<>());
             }
-            Map<String, List<? extends Map<String, Object>>> projectInjections = INJECTIONS.get(sc_id);
+            Map<String, List<? extends Map<String, Object>>> projectInjections =
+                    INJECTIONS.get(sc_id);
             if (projectInjections == null) {
                 return;
             }
             if (!projectInjections.containsKey(projectFile.fileName)) {
-                projectInjections.put(projectFile.fileName, readAppCompatInjections(sc_id, projectFile.fileName));
+                projectInjections.put(
+                        projectFile.fileName, readAppCompatInjections(sc_id, projectFile.fileName));
             }
 
-            List<? extends Map<String, Object>> injections = projectInjections.get(projectFile.fileName);
+            List<? extends Map<String, Object>> injections =
+                    projectInjections.get(projectFile.fileName);
             if (injections == null) {
                 return;
             }
             for (Map<String, Object> injection : injections) {
                 Object value;
-                if (injectionType != null && injectionType.equalsIgnoreCase(String.valueOf(injection.get("type"))) && (value = injection.get("value")) instanceof String) {
+                if (injectionType != null
+                        && injectionType.equalsIgnoreCase(String.valueOf(injection.get("type")))
+                        && (value = injection.get("value")) instanceof String) {
                     xmlBuilder.addAttributeValue((String) value);
                 }
             }

@@ -3,14 +3,11 @@ package pro.sketchware.activities.editor.view.item;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Canvas;
-
 import androidx.core.content.ContextCompat;
-
-import pro.sketchware.beans.ViewBean;
-import pro.sketchware.activities.editor.view.ItemView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import pro.sketchware.R;
+import pro.sketchware.activities.editor.view.ItemView;
+import pro.sketchware.beans.ViewBean;
 
 public class ItemFloatingActionButton extends FloatingActionButton implements ItemView {
 
@@ -60,7 +57,9 @@ public class ItemFloatingActionButton extends FloatingActionButton implements It
         if (isSelected) {
             setBackgroundTintList(ColorStateList.valueOf(0x9599d5d0));
         } else {
-            ColorStateList colorStateList = ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.color_accent));
+            ColorStateList colorStateList =
+                    ColorStateList.valueOf(
+                            ContextCompat.getColor(getContext(), R.color.color_accent));
             if (maincolor != 0) {
                 colorStateList = ColorStateList.valueOf(maincolor);
             }
