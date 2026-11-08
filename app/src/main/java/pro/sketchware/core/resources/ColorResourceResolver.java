@@ -5,32 +5,29 @@ import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
-
 import androidx.core.content.ContextCompat;
-
 import com.google.android.material.color.MaterialColors;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-
+import java.io.File;
 import java.io.StringReader;
 import java.util.ArrayList;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
+import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
 import pro.sketchware.R;
+import pro.sketchware.core.library.Material3LibraryManager;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.util.FileUtil;
 import pro.sketchware.util.PropertiesUtil;
 import pro.sketchware.util.XmlUtil;
-import pro.sketchware.core.library.Material3LibraryManager;
 
 @SuppressLint("DiscouragedApi")
 public class ColorResourceResolver {
+    private record ColorFile(File path, long modified, long size, Element root) {
+        boolean matches(File file) {
+            return path.equals(file) && modified == file.lastModified() && size == file.length();
+        }
+    }
 
     public final String defaultHexColor = "#00000000";
 
@@ -38,10 +35,15 @@ public class ColorResourceResolver {
     private final ArrayList<ColorModel> resColorsNightList = new ArrayList<>();
     private final String projectId;
     private final Material3LibraryManager material3LibraryManager;
+    private ColorFile defaultColors;
+    private ColorFile nightColors;
 
     public ColorResourceResolver(String projectId) {
         this.projectId = projectId;
-        material3LibraryManager = projectId == null || projectId.isEmpty() ? null : new Material3LibraryManager(projectId);
+        material3LibraryManager =
+                projectId == null || projectId.isEmpty()
+                        ? null
+                        : new Material3LibraryManager(projectId);
         loadProjectColors();
     }
 
@@ -51,19 +53,48 @@ public class ColorResourceResolver {
 
     private void loadProjectColors() {
         if (projectId == null || projectId.isEmpty()) {
-            resColorsList.clear();
-            resColorsNightList.clear();
+            loadColors(null, false);
+            loadColors(null, true);
             return;
         }
-        loadColorsFromPath(SketchwarePaths.getProjectResourceValuesFilePath(projectId, "colors.xml"), false);
-        loadColorsFromPath(SketchwarePaths.getProjectResourceValuesFilePath(projectId, "-night", "colors.xml"), true);
+        loadColorsFromPath(
+                SketchwarePaths.getProjectResourceValuesFilePath(projectId, "colors.xml"), false);
+        loadColorsFromPath(
+                SketchwarePaths.getProjectResourceValuesFilePath(projectId, "-night", "colors.xml"),
+                true);
     }
 
     public void loadColorsFromPath(String filePath, boolean isNightVariant) {
-        parseColorElements(
+        loadColors(
+                filePath == null || filePath.isEmpty() ? null : new File(filePath), isNightVariant);
+    }
+
+    /** Refreshes the selected variant when its file changes and returns its parsed resources. */
+    public Element loadColorsXmlIfChanged(File file, boolean isNightVariant) {
+        ColorFile colors = isNightVariant ? nightColors : defaultColors;
+        if (colors == null || !colors.matches(file)) {
+            colors = loadColors(file, isNightVariant);
+        }
+        return colors.root();
+    }
+
+    private ColorFile loadColors(File file, boolean isNightVariant) {
+        ColorFile colors = null;
+        if (file != null) {
+            long modified = file.lastModified();
+            long size = file.length();
+            Element root = readColorsXml(FileUtil.readFileIfExist(file.getPath()));
+            colors = new ColorFile(file, modified, size, root);
+        }
+        if (isNightVariant) {
+            nightColors = colors;
+        } else {
+            defaultColors = colors;
+        }
+        readColorEntries(
                 isNightVariant ? resColorsNightList : resColorsList,
-                FileUtil.readFileIfExist(filePath)
-        );
+                colors == null ? null : colors.root());
+        return colors;
     }
 
     public ArrayList<ColorModel> getResColorsList() {
@@ -74,8 +105,10 @@ public class ColorResourceResolver {
         return getColorValue(context, colorValue, referencingLimit, false);
     }
 
-    public String getColorValue(Context context, String colorValue, int referencingLimit, boolean isNightVariant) {
-        Integer resolvedColor = resolveColorInt(context, colorValue, referencingLimit, isNightVariant);
+    public String getColorValue(
+            Context context, String colorValue, int referencingLimit, boolean isNightVariant) {
+        Integer resolvedColor =
+                resolveColorInt(context, colorValue, referencingLimit, isNightVariant);
         return resolvedColor != null ? formatColor(resolvedColor) : defaultHexColor;
     }
 
@@ -83,88 +116,118 @@ public class ColorResourceResolver {
         return resolveColorInt(context, colorValue, referencingLimit, false);
     }
 
-    public Integer resolveColorInt(Context context, String colorValue, int referencingLimit, boolean isNightVariant) {
+    public Integer resolveColorInt(
+            Context context, String colorValue, int referencingLimit, boolean isNightVariant) {
         if (colorValue == null || referencingLimit <= 0) {
             return null;
         }
 
         if (colorValue.startsWith("#")) {
-            return PropertiesUtil.isHexColor(colorValue) ? PropertiesUtil.parseColor(colorValue) : null;
+            return PropertiesUtil.isXmlHexColor(colorValue)
+                    ? PropertiesUtil.parseColor(colorValue)
+                    : null;
         }
         if (colorValue.startsWith("?attr/") || colorValue.startsWith("?")) {
-            String attrName = colorValue.startsWith("?attr/") ? colorValue.substring(6) : colorValue.substring(1);
+            String attrName =
+                    colorValue.startsWith("?attr/")
+                            ? colorValue.substring(6)
+                            : colorValue.substring(1);
             return getColorIntFromAttrs(context, attrName, referencingLimit - 1, isNightVariant);
         }
         if (colorValue.startsWith("@color/")) {
-            return getColorIntFromXml(context, colorValue.substring(7), referencingLimit - 1, isNightVariant);
+            return getColorIntFromXml(
+                    context, colorValue.substring(7), referencingLimit - 1, isNightVariant);
         } else if (colorValue.startsWith("@android:color/")) {
             return getColorIntFromSystem(colorValue, context);
         }
         return null;
     }
 
-    public String getColorValueFromAttrs(Context context, String attrName, int referencingLimit, boolean isNightVariant) {
-        Integer resolvedColor = getColorIntFromAttrs(context, attrName, referencingLimit, isNightVariant);
+    public String getColorValueFromAttrs(
+            Context context, String attrName, int referencingLimit, boolean isNightVariant) {
+        Integer resolvedColor =
+                getColorIntFromAttrs(context, attrName, referencingLimit, isNightVariant);
         return resolvedColor != null ? formatColor(resolvedColor) : defaultHexColor;
     }
 
-    public Integer getColorIntFromAttrs(Context context, String attrName, int referencingLimit, boolean isNightVariant) {
+    public Integer getColorIntFromAttrs(
+            Context context, String attrName, int referencingLimit, boolean isNightVariant) {
         if (material3LibraryManager == null) {
             return null;
         }
         try {
-            int attrId = context.getResources().getIdentifier(attrName, "attr", context.getPackageName());
+            int attrId =
+                    context.getResources()
+                            .getIdentifier(attrName, "attr", context.getPackageName());
 
             if (attrId != 0 && referencingLimit > 0) {
                 Context themedContext;
                 if (isNightVariant) {
                     if (material3LibraryManager.isDynamicColorsEnabled()) {
-                        themedContext = new ContextThemeWrapper(context, R.style.ThemeOverlay_SketchwarePro_ViewEditor_Material3_Dark);
+                        themedContext =
+                                new ContextThemeWrapper(
+                                        context,
+                                        R.style
+                                                .ThemeOverlay_SketchwarePro_ViewEditor_Material3_Dark);
                     } else {
-                        themedContext = new ContextThemeWrapper(context, R.style.ThemeOverlay_SketchwarePro_ViewEditor_Material3_NON_DYNAMIC_Dark);
+                        themedContext =
+                                new ContextThemeWrapper(
+                                        context,
+                                        R.style
+                                                .ThemeOverlay_SketchwarePro_ViewEditor_Material3_NON_DYNAMIC_Dark);
                     }
                 } else {
                     if (material3LibraryManager.isDynamicColorsEnabled()) {
-                        themedContext = new ContextThemeWrapper(context, R.style.ThemeOverlay_SketchwarePro_ViewEditor_Material3_Light);
+                        themedContext =
+                                new ContextThemeWrapper(
+                                        context,
+                                        R.style
+                                                .ThemeOverlay_SketchwarePro_ViewEditor_Material3_Light);
                     } else {
-                        themedContext = new ContextThemeWrapper(context, R.style.ThemeOverlay_SketchwarePro_ViewEditor_Material3_NON_DYNAMIC_Light);
+                        themedContext =
+                                new ContextThemeWrapper(
+                                        context,
+                                        R.style
+                                                .ThemeOverlay_SketchwarePro_ViewEditor_Material3_NON_DYNAMIC_Light);
                     }
                 }
                 return MaterialColors.getColor(themedContext, attrId, "getColorValue");
             }
         } catch (Exception e) {
-            Log.w("ColorResourceResolver", "Failed to get Material color for attribute: " + attrName, e);
+            Log.w(
+                    "ColorResourceResolver",
+                    "Failed to get Material color for attribute: " + attrName,
+                    e);
         }
         return null;
     }
 
     public void parseColorsXML(ArrayList<ColorModel> colorList, String colorXml) {
-        parseColorElements(colorList, colorXml);
+        readColorEntries(colorList, readColorsXml(colorXml));
     }
 
-    private void parseColorElements(ArrayList<ColorModel> colorList, String colorXml) {
+    private static Element readColorsXml(String colorXml) {
+        if (colorXml == null || colorXml.isEmpty()) return null;
         try {
-            colorList.clear();
             DocumentBuilderFactory factory = XmlUtil.newSecureDocumentBuilderFactory();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new InputSource(new StringReader(colorXml)));
-            document.getDocumentElement().normalize();
-
-            NodeList childNodes = document.getDocumentElement().getChildNodes();
-
-            for (int i = 0; i < childNodes.getLength(); i++) {
-                Node node = childNodes.item(i);
-
-                if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals("color")) {
-                    Element element = (Element) node;
-                    colorList.add(new ColorModel(
-                            element.getAttribute("name"),
-                            element.getTextContent().trim()
-                    ));
-                }
-            }
+            Element root =
+                    builder.parse(new InputSource(new StringReader(colorXml))).getDocumentElement();
+            root.normalize();
+            return root;
         } catch (Exception ignored) {
-            colorList.clear();
+            return null;
+        }
+    }
+
+    private static void readColorEntries(ArrayList<ColorModel> colorList, Element root) {
+        colorList.clear();
+        if (root == null) return;
+        for (var child = root.getFirstChild(); child != null; child = child.getNextSibling()) {
+            if (child instanceof Element color && color.getTagName().equals("color")) {
+                colorList.add(
+                        new ColorModel(color.getAttribute("name"), color.getTextContent().trim()));
+            }
         }
     }
 
@@ -191,23 +254,27 @@ public class ColorResourceResolver {
         }
     }
 
-    private Integer getColorIntFromXml(Context context, String colorName, int referencingLimit, boolean isNightVariant) {
+    private Integer getColorIntFromXml(
+            Context context, String colorName, int referencingLimit, boolean isNightVariant) {
         if (isNightVariant) {
             for (ColorModel colorModel : resColorsNightList) {
                 if (colorModel.getColorName().equals(colorName)) {
-                    return resolveColorInt(context, colorModel.getColorValue(), referencingLimit, true);
+                    return resolveColorInt(
+                            context, colorModel.getColorValue(), referencingLimit, true);
                 }
             }
 
             for (ColorModel colorModel : resColorsList) {
                 if (colorModel.getColorName().equals(colorName)) {
-                    return resolveColorInt(context, colorModel.getColorValue(), referencingLimit, true);
+                    return resolveColorInt(
+                            context, colorModel.getColorValue(), referencingLimit, true);
                 }
             }
         } else {
             for (ColorModel colorModel : resColorsList) {
                 if (colorModel.getColorName().equals(colorName)) {
-                    return resolveColorInt(context, colorModel.getColorValue(), referencingLimit, false);
+                    return resolveColorInt(
+                            context, colorModel.getColorValue(), referencingLimit, false);
                 }
             }
         }

@@ -24,6 +24,7 @@ import pro.sketchware.beans.ViewBean;
 import pro.sketchware.beans.ViewBeans;
 import pro.sketchware.core.layout.InjectAttributeHandler;
 import pro.sketchware.core.layout.PaddingAttributes;
+import pro.sketchware.core.layout.ProgressBarAttributes;
 import pro.sketchware.core.library.Material3LibraryManager;
 import pro.sketchware.core.project.BuildConfig;
 import pro.sketchware.core.project.ClassInfo;
@@ -916,19 +917,21 @@ public class LayoutGenerator {
      * @see View#getPaddingBottom()
      */
     private void writeCardViewPadding(XmlBuilder xmlTag, ViewBean viewBean) {
-        writePadding(xmlTag, PaddingAttributes.generated(viewBean, true));
+        writeAttributes(xmlTag, PaddingAttributes.generated(viewBean, true));
     }
 
     private void writeViewPadding(XmlBuilder xmlTag, ViewBean viewBean) {
-        writePadding(xmlTag, PaddingAttributes.generated(viewBean, false));
+        writeAttributes(xmlTag, PaddingAttributes.generated(viewBean, false));
     }
 
-    private void writePadding(XmlBuilder xmlTag, Map<String, String> attributes) {
+    private void writeAttributes(XmlBuilder xmlTag, Map<String, String> attributes) {
         attributes.forEach(
                 (name, value) -> {
                     int separator = name.indexOf(':');
                     xmlTag.addAttribute(
-                            name.substring(0, separator), name.substring(separator + 1), value);
+                            separator < 0 ? null : name.substring(0, separator),
+                            name.substring(separator + 1),
+                            value);
                 });
     }
 
@@ -1222,34 +1225,10 @@ public class LayoutGenerator {
                 break;
 
             case ViewBean.VIEW_TYPE_WIDGET_PROGRESSBAR:
-                progress = viewBean.progress;
-                if (progress > ViewBean.DEFAULT_PROGRESS
-                        && !toNotAdd.contains("android:progress")
-                        && !injectHandler.contains("progress")) {
-                    xmlTag.addAttribute("android", "progress", String.valueOf(progress));
-                }
-
-                max = viewBean.max;
-                if (max != ViewBean.DEFAULT_MAX
-                        && !toNotAdd.contains("android:max")
-                        && !injectHandler.contains("max")) {
-                    xmlTag.addAttribute("android", "max", String.valueOf(max));
-                }
-
-                String indeterminate = viewBean.indeterminate;
-                if (indeterminate != null
-                        && !indeterminate.isEmpty()
-                        && !toNotAdd.contains("android:indeterminate")
-                        && !injectHandler.contains("indeterminate")) {
-                    xmlTag.addAttribute("android", "indeterminate", indeterminate);
-                }
-                String progressStyle = viewBean.progressStyle;
-                if (progressStyle != null
-                        && !progressStyle.isEmpty()
-                        && !toNotAdd.contains("style")
-                        && !injectHandler.contains("style")) {
-                    xmlTag.addAttribute(null, "style", progressStyle);
-                }
+                writeAttributes(
+                        xmlTag,
+                        ProgressBarAttributes.generated(
+                                viewBean, injectHandler.getNamespacedAttributes()));
                 break;
         }
     }

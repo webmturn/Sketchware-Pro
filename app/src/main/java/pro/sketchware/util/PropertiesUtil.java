@@ -3,7 +3,6 @@ package pro.sketchware.util;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.Pair;
-
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,9 +11,13 @@ import java.util.stream.IntStream;
 
 public class PropertiesUtil {
 
-    public static final Pattern COLOR_PATTERN = Pattern.compile("(#)([A-Fa-f0-9]{8}|[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})");
-    public static final Pattern HEX_COLOR_PATTERN = Pattern.compile("^#([A-Fa-f0-9]{8}|[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$");
-    public static final Pattern UNIT_PATTERN = Pattern.compile("(-?\\d+(?:\\.\\d+)?)(dp|sp|px|mm|pt|in)$");
+    public static final Pattern COLOR_PATTERN =
+            Pattern.compile("(#)([A-Fa-f0-9]{8}|[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})");
+    public static final Pattern HEX_COLOR_PATTERN =
+            Pattern.compile("^#([A-Fa-f0-9]{8}|[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$");
+    private static final Pattern SHORT_ARGB_PATTERN = Pattern.compile("#[A-Fa-f0-9]{4}");
+    public static final Pattern UNIT_PATTERN =
+            Pattern.compile("(-?\\d+(?:\\.\\d+)?)(dp|sp|px|mm|pt|in)$");
     public static final Pattern PREFIX_PATTERN = Pattern.compile("([@?][^/]+/)(.*)");
 
     public static boolean isHexColor(String color) {
@@ -25,11 +28,23 @@ public class PropertiesUtil {
         return matcher.matches();
     }
 
+    public static boolean isXmlHexColor(String color) {
+        return isHexColor(color) || (color != null && SHORT_ARGB_PATTERN.matcher(color).matches());
+    }
+
     public static int parseColor(String color) {
         if (color == null) {
             color = "#FFFFFFFF";
         }
         String hexColor = color.replaceFirst("#", "");
+        if (color.startsWith("#") && (hexColor.length() == 3 || hexColor.length() == 4)) {
+            StringBuilder expanded = new StringBuilder(8);
+            for (int i = 0; i < hexColor.length(); i++) {
+                char digit = hexColor.charAt(i);
+                expanded.append(digit).append(digit);
+            }
+            hexColor = expanded.toString();
+        }
         String formattedColor = String.format("#%8s", hexColor).replace(" ", "F");
         try {
             return Color.parseColor(formattedColor);
@@ -76,7 +91,8 @@ public class PropertiesUtil {
     }
 
     public static boolean isColorLight(int color) {
-        return Color.red(color) * 0.299 + Color.green(color) * 0.587 + Color.blue(color) * 0.114 > 186;
+        return Color.red(color) * 0.299 + Color.green(color) * 0.587 + Color.blue(color) * 0.114
+                > 186;
     }
 
     public static int getContrastTextColor(int backgroundColor) {

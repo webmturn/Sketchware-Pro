@@ -2,14 +2,13 @@ package pro.sketchware.core.layout;
 
 import static pro.sketchware.util.PropertiesUtil.parseReferName;
 
-import pro.sketchware.beans.LayoutBean;
-import pro.sketchware.beans.TextBean;
-import pro.sketchware.beans.ViewBean;
-
+import android.util.Log;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
-import android.util.Log;
+import pro.sketchware.beans.LayoutBean;
+import pro.sketchware.beans.TextBean;
+import pro.sketchware.beans.ViewBean;
 import pro.sketchware.beans.ViewBeans;
 import pro.sketchware.util.PropertiesUtil;
 
@@ -23,7 +22,7 @@ public class ViewBeanFactory {
 
     public static int getConsideredTypeViewByName(String name, int def) {
         return switch (name) {
-            //Add more here
+            // Add more here
             case "MaterialSwitch" -> ViewBean.VIEW_TYPE_WIDGET_SWITCH;
             case "MaterialCardView", "CardView" -> ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW;
             case "TextInputEditText" -> ViewBean.VIEW_TYPE_WIDGET_EDITTEXT;
@@ -44,7 +43,8 @@ public class ViewBeanFactory {
             for (Map.Entry<String, String> entry : attributes.entrySet()) {
                 var attrName = entry.getKey();
                 var attrValue = entry.getValue();
-                // Skip this because ViewBeanParser has already handled it as the ID of the include for ViewBean.
+                // Skip this because ViewBeanParser has already handled it as the ID of the include
+                // for ViewBean.
                 if (attrName.equals("layout")) {
                     continue;
                 }
@@ -191,13 +191,14 @@ public class ViewBeanFactory {
         }
 
         StringBuilder injectProperty = new StringBuilder();
-        injectAttributes
-                .forEach((key, value) -> injectProperty
-                        .append(key)
-                        .append("=\"")
-                        .append(value)
-                        .append("\"")
-                        .append("\n"));
+        injectAttributes.forEach(
+                (key, value) ->
+                        injectProperty
+                                .append(key)
+                                .append("=\"")
+                                .append(value)
+                                .append("\"")
+                                .append("\n"));
         bean.inject = injectProperty.toString().trim();
     }
 
@@ -276,8 +277,8 @@ public class ViewBeanFactory {
 
         switch (bean.type) {
             case ViewBean.VIEW_TYPE_WIDGET_CHECKBOX,
-                 ViewBean.VIEW_TYPE_WIDGET_SWITCH,
-                 ViewBeans.VIEW_TYPE_WIDGET_RADIOBUTTON -> {
+                    ViewBean.VIEW_TYPE_WIDGET_SWITCH,
+                    ViewBeans.VIEW_TYPE_WIDGET_RADIOBUTTON -> {
                 var checked = attributes.getOrDefault("android:checked", null);
                 if (checked != null) {
                     if (!checked.startsWith("@bool/")) {
@@ -316,7 +317,7 @@ public class ViewBeanFactory {
                         } else if (style.equals(ViewBean.PROGRESSBAR_STYLE_CIRCLE)) {
                             bean.progressStyle = ViewBean.PROGRESSBAR_STYLE_CIRCLE;
                         } else {
-                            injectAttributes.put("style", ViewBean.PROGRESSBAR_STYLE_HORIZONTAL);
+                            injectAttributes.put("style", style);
                         }
                     }
 
@@ -356,8 +357,7 @@ public class ViewBeanFactory {
                 }
             }
             case ViewBean.VIEW_TYPE_WIDGET_LISTVIEW -> {
-                var dividerHeight =
-                        getDimen("android:dividerHeight", attributes, injectAttributes);
+                var dividerHeight = getDimen("android:dividerHeight", attributes, injectAttributes);
                 if (dividerHeight > 1) {
                     bean.dividerHeight = dividerHeight;
                 }
@@ -436,8 +436,7 @@ public class ViewBeanFactory {
             int paddingLeft = getDimen("app:contentPaddingLeft", attributes, injectAttributes);
             int paddingTop = getDimen("app:contentPaddingTop", attributes, injectAttributes);
             int paddingRight = getDimen("app:contentPaddingRight", attributes, injectAttributes);
-            int paddingBottom =
-                    getDimen("app:contentPaddingBottom", attributes, injectAttributes);
+            int paddingBottom = getDimen("app:contentPaddingBottom", attributes, injectAttributes);
 
             if (paddingLeft > -1) {
                 bean.paddingLeft = paddingLeft;
@@ -468,8 +467,7 @@ public class ViewBeanFactory {
         } else {
             int marginLeft = getDimen("android:layout_marginLeft", attributes, injectAttributes);
             int marginTop = getDimen("android:layout_marginTop", attributes, injectAttributes);
-            int marginRight =
-                    getDimen("android:layout_marginRight", attributes, injectAttributes);
+            int marginRight = getDimen("android:layout_marginRight", attributes, injectAttributes);
             int marginBottom =
                     getDimen("android:layout_marginBottom", attributes, injectAttributes);
 
@@ -551,8 +549,8 @@ public class ViewBeanFactory {
         }
         switch (this.bean.type) {
             case ViewBean.VIEW_TYPE_WIDGET_EDITTEXT,
-                 ViewBeans.VIEW_TYPE_WIDGET_AUTOCOMPLETETEXTVIEW,
-                 ViewBeans.VIEW_TYPE_WIDGET_MULTIAUTOCOMPLETETEXTVIEW -> {
+                    ViewBeans.VIEW_TYPE_WIDGET_AUTOCOMPLETETEXTVIEW,
+                    ViewBeans.VIEW_TYPE_WIDGET_MULTIAUTOCOMPLETETEXTVIEW -> {
                 var hint = attributes.getOrDefault("android:hint", null);
                 if (hint != null) {
                     bean.hint = hint;

@@ -129,9 +129,10 @@ public class ViewPane extends RelativeLayout {
     private String sc_id;
     private SvgUtils svgUtils;
     private ColorResourceResolver colorResourceResolver;
+    private PreviewValues previewValues;
     private int defaultTextColor =
             0; // need to save the original color before changes, cause using getDefaultColor()
-               // returns the current text color
+    // returns the current text color
     private int defaultHintColor = 0;
     private Material3LibraryManager material3LibraryManager;
     private HashMap<String, String> xmlStringCache = null;
@@ -148,6 +149,7 @@ public class ViewPane extends RelativeLayout {
     }
 
     public void clearViews() {
+        previewValues = null;
         resetView(true);
         viewInfos = new ArrayList<>();
         draggedViewId = null;
@@ -158,6 +160,7 @@ public class ViewPane extends RelativeLayout {
 
     public void setResourceManager(ResourceManager resourcesManager) {
         this.resourcesManager = resourcesManager;
+        previewValues = null;
         invalidateImportedFontPathCache();
     }
 
@@ -246,6 +249,7 @@ public class ViewPane extends RelativeLayout {
         }
         material3LibraryManager = new Material3LibraryManager(getContext(), sc_id);
         colorResourceResolver = new ColorResourceResolver(sc_id);
+        previewValues = null;
         int viewEditorThemeOverlay = material3LibraryManager.getViewEditorThemeOverlay();
         context = new ContextThemeWrapper(getContext(), viewEditorThemeOverlay);
         svgUtils = new SvgUtils(context);
@@ -657,9 +661,6 @@ public class ViewPane extends RelativeLayout {
             seekBar.setProgress(viewBean.progress);
             seekBar.setMax(viewBean.max);
         }
-        if (classInfo.isExactType("ProgressBar")) {
-            ((ItemProgressBar) view).setProgressBarStyle(viewBean.progressStyle);
-        }
         if (classInfo.isExactType("CalendarView")) {
             ((CalendarView) view).setFirstDayOfWeek(viewBean.firstDayOfWeek);
         }
@@ -723,6 +724,18 @@ public class ViewPane extends RelativeLayout {
             applyElevation(view, resolvePreviewElevation(injectHandler, viewBean.layout.elevation));
         }
         PreviewPadding.apply(view, viewBean);
+        if (view instanceof ItemCodeView codeView) {
+            codeView.applyPreviewAttributes(
+                    previewValues().resolveAttributes(injectHandler.getNamespacedAttributes()));
+        } else if (view instanceof ItemProgressBar progressBar) {
+            progressBar.applyPreviewAttributes(
+                    viewBean, injectHandler.getNamespacedAttributes(), previewValues());
+        } else if (view instanceof ItemPatternLockView patternLockView) {
+            PreviewValues values = previewValues();
+            patternLockView.applyPreviewAttributes(
+                    values.resolveAttributes(injectHandler.getNamespacedAttributes()),
+                    values::color);
+        }
         if (view instanceof EditorListItem listItem) {
             String listitem = injectHandler.getAttributeValueOf("listitem");
             String itemCount = injectHandler.getAttributeValueOf("itemCount");
@@ -741,6 +754,22 @@ public class ViewPane extends RelativeLayout {
                 }
             }
         }
+    }
+
+    private PreviewValues previewValues() {
+        if (previewValues == null) {
+            File defaults =
+                    sc_id == null || sc_id.isEmpty()
+                            ? null
+                            : new File(SketchwarePaths.getProjectResourceValuesPath(sc_id));
+            File night =
+                    defaults != null && material3LibraryManager.canUseNightVariantColors()
+                            ? new File(
+                                    SketchwarePaths.getProjectResourceValuesPath(sc_id, "-night"))
+                            : null;
+            previewValues = new PreviewValues(context, defaults, night, colorResourceResolver);
+        }
+        return previewValues;
     }
 
     private void updateVisibility(View view, InjectAttributeHandler injectHandler) {
