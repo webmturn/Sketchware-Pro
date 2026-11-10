@@ -23,6 +23,7 @@ import pro.sketchware.beans.TextBean;
 import pro.sketchware.beans.ViewBean;
 import pro.sketchware.beans.ViewBeans;
 import pro.sketchware.core.layout.InjectAttributeHandler;
+import pro.sketchware.core.layout.MaterialButtonAttributes;
 import pro.sketchware.core.layout.PaddingAttributes;
 import pro.sketchware.core.layout.ProgressBarAttributes;
 import pro.sketchware.core.library.Material3LibraryManager;
@@ -33,6 +34,7 @@ import pro.sketchware.core.project.SketchwareConstants;
 import pro.sketchware.core.resources.ColorResourceResolver;
 import pro.sketchware.util.LogUtil;
 import pro.sketchware.util.PropertiesUtil;
+import pro.sketchware.util.XmlUtil;
 import pro.sketchware.util.xml.XmlBuilder;
 
 /**
@@ -78,13 +80,7 @@ public class LayoutGenerator {
     }
 
     public static String formatColor(int color) {
-        int alpha = (color >> 24) & 0xff;
-
-        if (alpha != 0xff) {
-            return String.format("#%08X", color);
-        } else {
-            return String.format("#%06X", color & 0xFFFFFF);
-        }
+        return XmlUtil.formatColor(color);
     }
 
     /**
@@ -229,6 +225,16 @@ public class LayoutGenerator {
         int type = viewBean.type;
 
         if (backgroundResource == null || "NONE".equalsIgnoreCase(backgroundResource)) {
+            if (type != ViewBeans.VIEW_TYPE_LAYOUT_CARDVIEW
+                    && xmlTag.getCleanRootElementName().equals("MaterialButton")) {
+                String tint =
+                        MaterialButtonAttributes.generatedBackgroundTint(
+                                viewBean.layout, injectHandler.getNamespacedAttributes());
+                if (tint != null) {
+                    xmlTag.addAttribute("app", "backgroundTint", tint);
+                }
+                return;
+            }
             int backgroundColor = viewBean.layout.backgroundColor;
             String backgroundResColor = viewBean.layout.backgroundResColor;
 
@@ -267,21 +273,6 @@ public class LayoutGenerator {
                         } else if (!toNotAdd.contains("app:cardBackgroundColor")
                                 && !injectHandler.contains("cardBackgroundColor")) {
                             xmlTag.addAttribute("app", "cardBackgroundColor", formatColor(color));
-                        }
-                    } else if (xmlTag.getCleanRootElementName().equals("MaterialButton")) {
-                        if (!toNotAdd.contains("app:backgroundTint")
-                                && !injectHandler.contains("backgroundTint")
-                                && backgroundResColor != null) {
-                            if (backgroundResColor.startsWith("?")
-                                    || backgroundResColor.startsWith("@color/")) {
-                                xmlTag.addAttribute("app", "backgroundTint", backgroundResColor);
-                            } else {
-                                xmlTag.addAttribute(
-                                        "app", "backgroundTint", "@color/" + backgroundResColor);
-                            }
-                        } else if (!toNotAdd.contains("app:backgroundTint")
-                                && !injectHandler.contains("backgroundTint")) {
-                            xmlTag.addAttribute("app", "backgroundTint", formatColor(color));
                         }
                     } else if (xmlTag.getCleanRootElementName().equals("CollapsingToolbarLayout")) {
                         if (!toNotAdd.contains("app:contentScrim")
@@ -366,22 +357,6 @@ public class LayoutGenerator {
                                     "app", "cardBackgroundColor", "@android:color/transparent");
                         }
                     }
-                } else if (xmlTag.getCleanRootElementName().equals("MaterialButton")) {
-                    if (!toNotAdd.contains("app:backgroundTint")
-                            && !injectHandler.contains("backgroundTint")) {
-                        if (backgroundResColor != null) {
-                            if (backgroundResColor.startsWith("?")
-                                    || backgroundResColor.startsWith("@color/")) {
-                                xmlTag.addAttribute("app", "backgroundTint", backgroundResColor);
-                            } else {
-                                xmlTag.addAttribute(
-                                        "app", "backgroundTint", "@color/" + backgroundResColor);
-                            }
-                        } else {
-                            xmlTag.addAttribute(
-                                    "app", "backgroundTint", "@android:color/transparent");
-                        }
-                    }
                 } else {
                     if (!hasAttr("background", viewBean)
                             && !toNotAdd.contains("android:background")
@@ -402,9 +377,7 @@ public class LayoutGenerator {
                 }
             }
         } else {
-            if (!hasAttr("background", viewBean)
-                    && !toNotAdd.contains("android:background")
-                    && !injectHandler.contains("background")) {
+            if (!toNotAdd.contains("android:background") && !injectHandler.contains("background")) {
                 boolean isNinePatchBackground = backgroundResource.endsWith(".9");
                 xmlTag.addAttribute(
                         "android",

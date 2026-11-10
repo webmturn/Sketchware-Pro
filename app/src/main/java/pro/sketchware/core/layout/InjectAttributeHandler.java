@@ -71,7 +71,7 @@ public class InjectAttributeHandler {
                         name -> replaced.contains(name) || injectedNames.contains(localName(name)));
     }
 
-    private static String localName(String name) {
+    static String localName(String name) {
         return name.substring(name.indexOf(':') + 1);
     }
 

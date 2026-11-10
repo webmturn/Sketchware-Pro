@@ -7,6 +7,12 @@ import javax.xml.parsers.ParserConfigurationException;
 public class XmlUtil {
     private static final String TAG = "XmlUtil";
 
+    public static String formatColor(int color) {
+        return (color >>> 24) == 0xff
+                ? String.format("#%06X", color & 0xffffff)
+                : String.format("#%08X", color);
+    }
+
     public static String escapeXml(String text) {
         if (text == null) return "";
         return text.replace("&", "&amp;")
@@ -21,10 +27,14 @@ public class XmlUtil {
     public static DocumentBuilderFactory newSecureDocumentBuilderFactory() {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         setFeatureIfSupported(factory, XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        setFeatureIfSupported(factory, "http://apache.org/xml/features/disallow-doctype-decl", true);
-        setFeatureIfSupported(factory, "http://xml.org/sax/features/external-general-entities", false);
-        setFeatureIfSupported(factory, "http://xml.org/sax/features/external-parameter-entities", false);
-        setFeatureIfSupported(factory, "http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+        setFeatureIfSupported(
+                factory, "http://apache.org/xml/features/disallow-doctype-decl", true);
+        setFeatureIfSupported(
+                factory, "http://xml.org/sax/features/external-general-entities", false);
+        setFeatureIfSupported(
+                factory, "http://xml.org/sax/features/external-parameter-entities", false);
+        setFeatureIfSupported(
+                factory, "http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
         factory.setExpandEntityReferences(false);
         try {
             factory.setXIncludeAware(false);
@@ -34,7 +44,8 @@ public class XmlUtil {
         return factory;
     }
 
-    private static void setFeatureIfSupported(DocumentBuilderFactory factory, String feature, boolean value) {
+    private static void setFeatureIfSupported(
+            DocumentBuilderFactory factory, String feature, boolean value) {
         try {
             factory.setFeature(feature, value);
         } catch (ParserConfigurationException e) {
@@ -54,5 +65,4 @@ public class XmlUtil {
     public static void saveXml(String path, String xml) {
         FileUtil.writeFile(path, xml);
     }
-
 }
