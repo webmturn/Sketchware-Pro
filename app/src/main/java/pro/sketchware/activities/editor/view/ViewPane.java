@@ -2,6 +2,7 @@ package pro.sketchware.activities.editor.view;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -34,7 +35,12 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.resources.MaterialResources;
+import com.google.android.material.shape.ShapeAppearance;
+import com.google.android.material.shape.ShapeAppearanceModel;
+import com.google.android.material.shape.StateListShapeAppearanceModel;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.theme.overlay.MaterialThemeOverlay;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import java.io.File;
 import java.util.ArrayList;
@@ -96,6 +102,7 @@ import pro.sketchware.beans.ViewBean;
 import pro.sketchware.beans.ViewBeans;
 import pro.sketchware.core.codegen.AppCompatInjection;
 import pro.sketchware.core.layout.InjectAttributeHandler;
+import pro.sketchware.core.layout.MaterialButtonAttributes;
 import pro.sketchware.core.layout.RootLayoutConverter;
 import pro.sketchware.core.library.Material3LibraryManager;
 import pro.sketchware.core.project.ClassInfo;
@@ -327,7 +334,7 @@ public class ViewPane extends RelativeLayout {
 
     private int resolvePreviewColor(
             PreviewValues resources, String raw, Map<String, String> theme, int fallback) {
-        Integer color = projectColor(resources, resources.resolveColor(raw, theme));
+        Integer color = projectColor(resources, resources.resolveThemeValue(raw, theme));
         return color != null ? color : ThemeUtils.getColor(context, fallback);
     }
 
@@ -594,52 +601,15 @@ public class ViewPane extends RelativeLayout {
             applyElevation(view, resolvePreviewElevation(injectHandler, viewBean.layout.elevation));
             return;
         }
-        updateLayout(view, viewBean);
+        updatePreviewBackgroundColor(view, injectHandler);
+        updateLayoutParams(view, viewBean);
         view.setRotation(viewBean.image.rotate);
         view.setAlpha(viewBean.alpha);
         view.setTranslationX(ViewUtil.dpToPx(getContext(), viewBean.translationX));
         view.setTranslationY(ViewUtil.dpToPx(getContext(), viewBean.translationY));
         view.setScaleX(viewBean.scaleX);
         view.setScaleY(viewBean.scaleY);
-        String backgroundResource = viewBean.layout.backgroundResource;
-        if (backgroundResource != null) {
-            try {
-                if (resourcesManager.getImageResType(backgroundResource)
-                        == ProjectResourceBean.PROJECT_RES_TYPE_RESOURCE) {
-                    int bgResId =
-                            getContext()
-                                    .getResources()
-                                    .getIdentifier(
-                                            viewBean.layout.backgroundResource,
-                                            "drawable",
-                                            getContext().getPackageName());
-                    if (bgResId != 0) {
-                        view.setBackgroundResource(bgResId);
-                    }
-                } else {
-                    String backgroundRes =
-                            resourcesManager.getImagePath(viewBean.layout.backgroundResource);
-                    if (backgroundRes != null && new File(backgroundRes).exists()) {
-                        if (backgroundRes.endsWith(".9.png")) {
-                            Drawable background =
-                                    NinePatchDecoder.decodeDrawable(
-                                            getResources(),
-                                            backgroundRes,
-                                            android.util.DisplayMetrics.DENSITY_XHIGH);
-                            if (background != null) view.setBackground(background);
-                        } else {
-                            Bitmap bgBitmap =
-                                    FileUtil.decodeSampleBitmapFromPath(backgroundRes, 512, 512);
-                            if (bgBitmap != null) {
-                                view.setBackground(new BitmapDrawable(getResources(), bgBitmap));
-                            }
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                Log.e("ViewPane", e.getMessage(), e);
-            }
-        }
+        updatePreviewBackgroundImage(view, viewBean.layout.backgroundResource);
         ClassInfo classInfo = viewBean.getClassInfo();
         if (classInfo.matchesType("LinearLayout")) {
             LinearLayout linearLayout = (LinearLayout) view;
@@ -752,15 +722,15 @@ public class ViewPane extends RelativeLayout {
         if (classInfo.isExactType("AdView")) {
             ((ItemAdView) view).setAdSize(viewBean.adSize);
         }
-        if (classInfo.isExactType("CardView")) {
-            var cardView = (ItemCardView) view;
-            updateCardView(cardView, injectHandler);
-        }
         if (classInfo.isExactType("TabLayout")) {
             updateTabLayout((ItemTabLayout) view, injectHandler);
         }
-        if (classInfo.isExactType("MaterialButton")) {
-            updateMaterialButton((ItemMaterialButton) view, injectHandler);
+        if (view instanceof ItemMaterialButton materialButton) {
+            if (isMaterial3Preview()) {
+                updateMaterial3Button(materialButton, injectHandler);
+            } else {
+                updateMaterialButton(materialButton, injectHandler);
+            }
         }
         if (classInfo.isExactType("SignInButton")) {
             ItemSignInButton button = (ItemSignInButton) view;
@@ -838,6 +808,52 @@ public class ViewPane extends RelativeLayout {
                     }
                 }
             }
+        }
+    }
+
+    private void updatePreviewBackgroundImage(View view, String resource) {
+        if (resource == null) return;
+        try {
+            if (resourcesManager.getImageResType(resource)
+                    == ProjectResourceBean.PROJECT_RES_TYPE_RESOURCE) {
+                int id =
+                        getResources()
+                                .getIdentifier(resource, "drawable", getContext().getPackageName());
+                if (id == 0) return;
+                if (view instanceof ItemCardView || view instanceof ItemMaterialButton) {
+                    setPreviewBackground(
+                            view, AppCompatResources.getDrawable(view.getContext(), id));
+                } else {
+                    view.setBackgroundResource(id);
+                }
+                return;
+            }
+
+            String path = resourcesManager.getImagePath(resource);
+            if (path == null || !new File(path).exists()) return;
+            if (path.endsWith(".9.png")) {
+                Drawable background =
+                        NinePatchDecoder.decodeDrawable(
+                                getResources(), path, android.util.DisplayMetrics.DENSITY_XHIGH);
+                if (background != null) setPreviewBackground(view, background);
+            } else {
+                Bitmap bitmap = FileUtil.decodeSampleBitmapFromPath(path, 512, 512);
+                if (bitmap != null) {
+                    setPreviewBackground(view, new BitmapDrawable(getResources(), bitmap));
+                }
+            }
+        } catch (Exception e) {
+            Log.e("ViewPane", e.getMessage(), e);
+        }
+    }
+
+    private void setPreviewBackground(View view, Drawable drawable) {
+        if (view instanceof ItemCardView card) {
+            card.setPreviewBackgroundImage(drawable);
+        } else if (view instanceof ItemMaterialButton button) {
+            button.setPreviewBackgroundImage(drawable);
+        } else {
+            view.setBackground(drawable);
         }
     }
 
@@ -1307,57 +1323,48 @@ public class ViewPane extends RelativeLayout {
         return Math.max(1, (int) (pixels + 0.5f));
     }
 
-    private void updateLayout(View view, ViewBean viewBean) {
-        if (crashlytics != null) crashlytics.log("ViewPane: Updating layout");
-        LayoutBean layoutBean = viewBean.layout;
-        int width = layoutBean.width;
-        int height = layoutBean.height;
-        if (width > 0) {
-            width = layoutDpToPixels(viewBean.layout.width);
+    private void updatePreviewBackgroundColor(View view, InjectAttributeHandler handler) {
+        LayoutBean layout = handler.getBean().layout;
+        boolean material3Button = view instanceof ItemMaterialButton && isMaterial3Preview();
+        // Clear the old image before restoring the color or loading a new image.
+        if (view instanceof ItemMaterialButton button) {
+            button.setPreviewBackgroundImage(null);
         }
-        if (height > 0) {
-            height = layoutDpToPixels(viewBean.layout.height);
-        }
-
-        int leftMargin = layoutDpToPixels(viewBean.layout.marginLeft);
-        int topMargin = layoutDpToPixels(viewBean.layout.marginTop);
-        int rightMargin = layoutDpToPixels(viewBean.layout.marginRight);
-        int bottomMargin = layoutDpToPixels(viewBean.layout.marginBottom);
-
-        if (viewBean.layout.backgroundResColor == null) {
-            int bg = viewBean.layout.backgroundColor;
-            // 0xffffff = LayoutBean default «unset» — LayoutGenerator omits android:background; do
-            // not apply
-            // 0x00FFFFFF as setBackgroundColor would be fully transparent (alpha 0) and breaks
-            // preview.
-            if (bg == 0xffffff) {
-                if (view instanceof ItemButton
-                        || view instanceof ItemEditText
-                        || view instanceof ItemMaterialButton) {
-                    view.setBackgroundColor(bg);
-                } else {
-                    view.setBackground(null);
-                }
-            } else if (bg == 0) {
-                if (view instanceof ItemButton
-                        || view instanceof ItemEditText
-                        || view instanceof ItemMaterialButton) {
-                    view.setBackgroundColor(bg);
-                } else {
-                    view.setBackground(null);
-                }
+        if (view instanceof ItemCardView card) {
+            card.setPreviewBackgroundImage(null);
+            updateCardView(card, handler);
+        } else if (!material3Button && layout.backgroundResColor == null) {
+            int color = layout.backgroundColor;
+            boolean keepsWidgetBackground =
+                    view instanceof ItemButton
+                            || view instanceof ItemEditText
+                            || view instanceof ItemMaterialButton;
+            if ((color == 0xffffff || color == 0) && !keepsWidgetBackground) {
+                view.setBackground(null);
             } else {
-                view.setBackgroundColor(bg);
+                view.setBackgroundColor(color);
             }
-        } else {
+        } else if (!material3Button) {
             view.setBackgroundColor(
                     PropertiesUtil.parseColor(
                             colorResourceResolver.getColorValue(
                                     context,
-                                    viewBean.layout.backgroundResColor,
+                                    layout.backgroundResColor,
                                     3,
                                     material3LibraryManager.usesNightResources())));
         }
+    }
+
+    private void updateLayoutParams(View view, ViewBean viewBean) {
+        if (crashlytics != null) crashlytics.log("ViewPane: Updating layout");
+        LayoutBean layout = viewBean.layout;
+        int width = layout.width > 0 ? layoutDpToPixels(layout.width) : layout.width;
+        int height = layout.height > 0 ? layoutDpToPixels(layout.height) : layout.height;
+        int leftMargin = layoutDpToPixels(layout.marginLeft);
+        int topMargin = layoutDpToPixels(layout.marginTop);
+        int rightMargin = layoutDpToPixels(layout.marginRight);
+        int bottomMargin = layoutDpToPixels(layout.marginBottom);
+
         // Attached children must use their real parent's parameters, even if stored metadata is
         // stale.
         int effectiveParentType = getActualParentType(view, viewBean.parentType);
@@ -1721,7 +1728,11 @@ public class ViewPane extends RelativeLayout {
 
         if (cardBackgroundColor.isEmpty()) {
             if (bean.layout.backgroundResColor == null) {
-                cardView.setCardBackgroundColor(bean.layout.backgroundColor);
+                if (bean.layout.backgroundColor == 0xffffff) {
+                    cardView.restoreDefaultCardColor();
+                } else {
+                    cardView.setCardBackgroundColor(bean.layout.backgroundColor);
+                }
             } else {
                 cardView.setCardBackgroundColor(
                         PropertiesUtil.parseColor(
@@ -1742,11 +1753,18 @@ public class ViewPane extends RelativeLayout {
         }
 
         int fallbackElevation = bean.layout.elevation > 0 ? bean.layout.elevation : 4;
-        cardView.setCardElevation(PropertiesUtil.resolveSize(cardElevation, fallbackElevation));
-        cardView.setRadius(PropertiesUtil.resolveSize(cardCornerRadius, 8));
+        int elevation =
+                layoutDpToPixels(PropertiesUtil.resolveSize(cardElevation, fallbackElevation));
+        int maxElevation =
+                layoutDpToPixels(
+                        PropertiesUtil.resolveSize(
+                                handler.getAttributeValueOf("cardMaxElevation"), 0));
+        cardView.setMaxCardElevation(Math.max(elevation, maxElevation));
+        cardView.setCardElevation(elevation);
+        cardView.setRadius(layoutDpToPixels(PropertiesUtil.resolveSize(cardCornerRadius, 8)));
         cardView.setUseCompatPadding(
                 Boolean.parseBoolean(TextUtils.isEmpty(compatPadding) ? "false" : compatPadding));
-        cardView.setStrokeWidth(PropertiesUtil.resolveSize(strokeWidth, 0));
+        cardView.setStrokeWidth(layoutDpToPixels(PropertiesUtil.resolveSize(strokeWidth, 0)));
         cardView.setStrokeColor(
                 PropertiesUtil.isHexColor(strokeColor)
                         ? PropertiesUtil.parseColor(strokeColor)
@@ -1827,6 +1845,171 @@ public class ViewPane extends RelativeLayout {
         }
         materialButton.setStrokeWidth(PropertiesUtil.resolveSize(stroke, 0));
         materialButton.setCornerRadius(PropertiesUtil.resolveSize(radius, 8));
+    }
+
+    private void updateMaterial3Button(ItemMaterialButton button, InjectAttributeHandler handler) {
+        Map<String, String> injected = handler.getNamespacedAttributes();
+        PreviewValues values = previewValues();
+        Map<String, String> theme = previewProjectTheme();
+        String styleValue = injected.getOrDefault("style", theme.get("materialButtonStyle"));
+        PreviewValues.Style style =
+                values.resolveStyle(values.resolveThemeValue(styleValue, theme));
+        int styleRes = values.styleResource(style.base());
+        int styleAttr = styleRes == 0 ? R.attr.materialButtonStyle : 0;
+        Context buttonContext =
+                MaterialThemeOverlay.wrap(
+                        context, null, styleAttr, styleRes, new int[] {R.attr.materialSizeOverlay});
+        String styleName =
+                styleRes == 0
+                        ? "Widget.Material3.Button"
+                        : getResources().getResourceEntryName(styleRes);
+        ButtonColorRoles roles = buttonColorRoles(styleName);
+        Map<String, String> merged = new HashMap<>(style.attributes());
+        merged.putAll(injected);
+        Map<String, String> attributes = values.resolveAttributes(merged);
+        var bean = handler.getBean();
+
+        TypedArray defaults =
+                buttonContext.obtainStyledAttributes(
+                        null, R.styleable.MaterialButton, styleAttr, styleRes);
+        try {
+            ShapeAppearance shape =
+                    StateListShapeAppearanceModel.create(
+                            buttonContext, defaults, R.styleable.MaterialButton_shapeAppearance);
+            if (shape == null) {
+                shape =
+                        ShapeAppearanceModel.builder(buttonContext, null, styleAttr, styleRes)
+                                .build();
+            }
+            int radius =
+                    resolveButtonDimension(
+                            attributes,
+                            "cornerRadius",
+                            defaults.getDimensionPixelSize(
+                                    R.styleable.MaterialButton_cornerRadius, -1));
+            button.setShapeAppearance(radius < 0 ? shape : shape.withCornerSize(radius));
+            button.setStrokeWidth(
+                    resolveButtonDimension(
+                            attributes,
+                            "strokeWidth",
+                            defaults.getDimensionPixelSize(
+                                    R.styleable.MaterialButton_strokeWidth, 0)));
+            ColorStateList stroke =
+                    MaterialResources.getColorStateList(
+                            buttonContext, defaults, R.styleable.MaterialButton_strokeColor);
+            String strokeColor =
+                    attributes.getOrDefault("app:strokeColor", attributes.get("strokeColor"));
+            button.setStrokeColor(
+                    previewButtonColors(stroke, strokeColor, roles.stroke(), values, theme));
+
+            String tint = buttonBackgroundTint(bean, injected, style.attributes());
+            ColorStateList defaultTint =
+                    MaterialResources.getColorStateList(
+                            buttonContext, defaults, R.styleable.MaterialButton_backgroundTint);
+            ColorStateList backgroundTint =
+                    "@null".equals(tint)
+                            ? null
+                            : previewButtonColors(
+                                    defaultTint, tint, roles.background(), values, theme);
+            button.setBackgroundTintList(backgroundTint);
+        } finally {
+            defaults.recycle();
+        }
+
+        if (injected.containsKey("android:textColor")
+                || (bean.text.resTextColor == null && bean.text.textColor == 0xffffff)) {
+            ColorStateList textColors =
+                    buttonTextColors(button, buttonContext, styleAttr, styleRes);
+            button.setTextColor(
+                    previewButtonColors(
+                            textColors,
+                            attributes.get("android:textColor"),
+                            roles.text(),
+                            values,
+                            theme));
+        }
+    }
+
+    private record ButtonColorRoles(String background, String stroke, String text) {}
+
+    private static ButtonColorRoles buttonColorRoles(String styleName) {
+        boolean expressive = styleName.startsWith("Widget.Material3Expressive.");
+        String base = expressive ? "Widget.Material3Expressive.Button" : "Widget.Material3.Button";
+        if (styleName.equals(base) || styleName.equals(base + ".Icon")) {
+            return new ButtonColorRoles("colorPrimary", null, "colorOnPrimary");
+        }
+        if (styleName.startsWith(base + ".OutlinedButton")) {
+            return expressive
+                    ? new ButtonColorRoles(null, "colorOutlineVariant", "colorOnSurfaceVariant")
+                    : new ButtonColorRoles(null, "colorOutline", "colorPrimary");
+        }
+        String text = styleName.startsWith(base + ".TextButton") ? "colorPrimary" : null;
+        return new ButtonColorRoles(null, null, text);
+    }
+
+    private static ColorStateList buttonTextColors(
+            ItemMaterialButton button, Context context, int styleAttr, int styleRes) {
+        TypedArray textStyle =
+                context.obtainStyledAttributes(
+                        null, new int[] {android.R.attr.textColor}, styleAttr, styleRes);
+        try {
+            ColorStateList colors = MaterialResources.getColorStateList(context, textStyle, 0);
+            return colors != null
+                    ? colors
+                    : (ColorStateList) button.getTag(R.id.preview_default_text_colors);
+        } finally {
+            textStyle.recycle();
+        }
+    }
+
+    private static String buttonBackgroundTint(
+            ViewBean bean, Map<String, String> injected, Map<String, String> style) {
+        String tint = backgroundTintAttribute(injected);
+        if (tint != null) return tint;
+
+        tint = MaterialButtonAttributes.generatedBackgroundTint(bean.layout, injected);
+        return tint != null ? tint : backgroundTintAttribute(style);
+    }
+
+    private static String backgroundTintAttribute(Map<String, String> attributes) {
+        return attributes.getOrDefault(
+                "app:backgroundTint",
+                attributes.getOrDefault(
+                        "android:backgroundTint", attributes.get("backgroundTint")));
+    }
+
+    private int resolveButtonDimension(Map<String, String> attributes, String name, int fallback) {
+        String raw = attributes.getOrDefault("app:" + name, attributes.get(name));
+        int dp = raw == null ? -1 : PropertiesUtil.resolveSize(raw, -1);
+        return dp < 0 ? fallback : layoutDpToPixels(dp);
+    }
+
+    private ColorStateList previewButtonColors(
+            ColorStateList defaults,
+            String explicit,
+            String themeRole,
+            PreviewValues values,
+            Map<String, String> theme) {
+        String value = explicit;
+        if (value == null) {
+            if (themeRole == null || !theme.containsKey(themeRole)) return defaults;
+            value = "?attr/" + themeRole;
+        }
+        String reference = values.resolveThemeValue(value, theme);
+        ColorStateList selector =
+                values.colorSelector(reference, theme, resolved -> projectColor(values, resolved));
+        if (selector != null) return selector;
+
+        Integer color = projectColor(values, reference);
+        if (color == null) return defaults;
+        if (explicit != null || defaults == null || !defaults.isStateful()) {
+            return ColorStateList.valueOf(color);
+        }
+        // A plain theme color replaces the enabled color while keeping the library's disabled tint.
+        int[] disabled = {-android.R.attr.state_enabled};
+        return new ColorStateList(
+                new int[][] {disabled, new int[0]},
+                new int[] {defaults.getColorForState(disabled, defaults.getDefaultColor()), color});
     }
 
     private String extractAttrValue(String line, String attribute) {

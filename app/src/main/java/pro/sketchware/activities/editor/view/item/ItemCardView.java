@@ -1,23 +1,25 @@
 package pro.sketchware.activities.editor.view.item;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.view.View;
-
 import androidx.annotation.NonNull;
-
-import pro.sketchware.beans.ViewBean;
+import com.google.android.material.card.MaterialCardView;
 import pro.sketchware.activities.editor.view.ItemView;
 import pro.sketchware.activities.editor.view.ScrollContainer;
-import com.google.android.material.card.MaterialCardView;
-
+import pro.sketchware.beans.ViewBean;
 import pro.sketchware.util.ViewUtil;
 
 public class ItemCardView extends MaterialCardView implements ItemView, ScrollContainer {
 
     private final Rect rect = new Rect();
+    private final ColorStateList defaultCardColor;
+    private Drawable previewBackgroundImage;
     private ViewBean viewBean;
     private boolean isSelected;
     private boolean isFixed;
@@ -25,6 +27,7 @@ public class ItemCardView extends MaterialCardView implements ItemView, ScrollCo
 
     public ItemCardView(Context context) {
         super(context);
+        defaultCardColor = getCardBackgroundColor();
         initialize(context);
     }
 
@@ -84,6 +87,10 @@ public class ItemCardView extends MaterialCardView implements ItemView, ScrollCo
 
     @Override
     public void onDraw(@NonNull Canvas canvas) {
+        if (previewBackgroundImage != null) {
+            previewBackgroundImage.setBounds(0, 0, getWidth(), getHeight());
+            previewBackgroundImage.draw(canvas);
+        }
         if (isSelected) {
             paint.setColor(0x9599D5D0);
             rect.set(0, 0, getMeasuredWidth(), getMeasuredHeight());
@@ -95,6 +102,16 @@ public class ItemCardView extends MaterialCardView implements ItemView, ScrollCo
     @Override
     public void setBackgroundColor(int color) {
         super.setCardBackgroundColor(color == 0x00FFFFFF ? 0xFFFFFFFF : color);
+    }
+
+    public void setPreviewBackgroundImage(Drawable image) {
+        previewBackgroundImage = image;
+        if (image != null) setCardBackgroundColor(Color.TRANSPARENT);
+        invalidate();
+    }
+
+    public void restoreDefaultCardColor() {
+        setCardBackgroundColor(defaultCardColor);
     }
 
     @Override
@@ -116,7 +133,8 @@ public class ItemCardView extends MaterialCardView implements ItemView, ScrollCo
 
     @Override
     public void setContentPadding(int left, int top, int right, int bottom) {
-        super.setContentPadding((int) ViewUtil.dpToPx(getContext(), (float) left),
+        super.setContentPadding(
+                (int) ViewUtil.dpToPx(getContext(), (float) left),
                 (int) ViewUtil.dpToPx(getContext(), (float) top),
                 (int) ViewUtil.dpToPx(getContext(), (float) right),
                 (int) ViewUtil.dpToPx(getContext(), (float) bottom));

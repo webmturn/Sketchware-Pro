@@ -6,11 +6,9 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.view.View;
 import android.widget.LinearLayout;
-
-import pro.sketchware.beans.ViewBean;
 import pro.sketchware.activities.editor.view.ItemView;
 import pro.sketchware.activities.editor.view.ScrollContainer;
-
+import pro.sketchware.beans.ViewBean;
 import pro.sketchware.util.ViewUtil;
 
 public class ItemLinearLayout extends LinearLayout implements ItemView, ScrollContainer {
@@ -43,7 +41,6 @@ public class ItemLinearLayout extends LinearLayout implements ItemView, ScrollCo
 
             ++childIdx;
         }
-
     }
 
     private void initialize(Context context) {
@@ -65,7 +62,8 @@ public class ItemLinearLayout extends LinearLayout implements ItemView, ScrollCo
     @Override
     public void onRtlPropertiesChanged(int layoutDirection) {
         super.onRtlPropertiesChanged(layoutDirection);
-        pro.sketchware.activities.editor.view.PreviewPadding.onLayoutDirectionChanged(this, layoutDirection);
+        pro.sketchware.activities.editor.view.PreviewPadding.onLayoutDirectionChanged(
+                this, layoutDirection);
     }
 
     @Override
@@ -115,18 +113,29 @@ public class ItemLinearLayout extends LinearLayout implements ItemView, ScrollCo
                 rect.set(0, 0, getMeasuredWidth(), getMeasuredHeight());
                 canvas.drawRect(rect, paint);
             }
-            paint.setColor(0x60000000);
-
-            int measuredWidth = getMeasuredWidth();
-            int measuredHeight = getMeasuredHeight();
-
-            canvas.drawLine(0.0F, 0.0F, (float) measuredWidth, 0.0F, paint);
-            canvas.drawLine(0.0F, 0.0F, 0.0F, (float) measuredHeight, paint);
-            canvas.drawLine((float) measuredWidth, 0.0F, (float) measuredWidth, (float) measuredHeight, paint);
-            canvas.drawLine(0.0F, (float) measuredHeight, (float) measuredWidth, (float) measuredHeight, paint);
+            // A full-size child would draw square guides across the card's rounded corners.
+            if (!fillsRoundedCard()) {
+                paint.setColor(0x60000000);
+                int width = getMeasuredWidth();
+                int height = getMeasuredHeight();
+                canvas.drawLine(0, 0, width, 0, paint);
+                canvas.drawLine(0, 0, 0, height, paint);
+                canvas.drawLine(width, 0, width, height, paint);
+                canvas.drawLine(0, height, width, height, paint);
+            }
         }
 
         super.onDraw(canvas);
+    }
+
+    private boolean fillsRoundedCard() {
+        return getParent() instanceof ItemCardView card
+                && card.getRadius() > 0
+                && getLeft() == 0
+                && getTop() == 0
+                && getRight() == card.getWidth()
+                && getBottom() == card.getHeight()
+                && getMatrix().isIdentity();
     }
 
     @Override
@@ -154,6 +163,10 @@ public class ItemLinearLayout extends LinearLayout implements ItemView, ScrollCo
 
     @Override
     public void setPadding(int left, int top, int right, int bottom) {
-        super.setPadding((int) ViewUtil.dpToPx(getContext(), (float) left), (int) ViewUtil.dpToPx(getContext(), (float) top), (int) ViewUtil.dpToPx(getContext(), (float) right), (int) ViewUtil.dpToPx(getContext(), (float) bottom));
+        super.setPadding(
+                (int) ViewUtil.dpToPx(getContext(), (float) left),
+                (int) ViewUtil.dpToPx(getContext(), (float) top),
+                (int) ViewUtil.dpToPx(getContext(), (float) right),
+                (int) ViewUtil.dpToPx(getContext(), (float) bottom));
     }
 }

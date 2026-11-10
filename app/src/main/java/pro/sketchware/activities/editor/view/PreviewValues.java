@@ -1,18 +1,25 @@
 package pro.sketchware.activities.editor.view;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Build;
 import android.util.TypedValue;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 import pro.sketchware.core.resources.ColorResourceResolver;
@@ -20,6 +27,8 @@ import pro.sketchware.util.LogUtil;
 import pro.sketchware.util.XmlUtil;
 
 public final class PreviewValues {
+    private static final String ANDROID_NS = "http://schemas.android.com/apk/res/android";
+
     public record Style(String base, Map<String, String> attributes) {}
 
     private final Context context;
@@ -28,6 +37,7 @@ public final class PreviewValues {
     private final ColorResourceResolver colors;
     private final Map<String, String> values = new HashMap<>();
     private final Map<String, Style> styles = new HashMap<>();
+    private final Map<String, Element> selectors = new HashMap<>();
     private boolean loaded;
 
     public PreviewValues(Context context, File defaults, File night, ColorResourceResolver colors) {
@@ -63,16 +73,40 @@ public final class PreviewValues {
                         });
     }
 
-    String resolveColor(String value, Map<String, String> theme) {
-        String color = resolve(value);
+    String resolveThemeValue(String value, Map<String, String> theme) {
+        String resolved = resolve(value);
         var seen = new HashSet<String>();
-        while (color != null && color.startsWith("?") && seen.add(color)) {
-            String attr = color.startsWith("?attr/") ? color.substring(6) : color.substring(1);
-            String next = theme.get(attr);
+        while (resolved != null && resolved.startsWith("?") && seen.add(resolved)) {
+            String next = theme.get(attributeName(resolved));
             if (next == null) break;
-            color = resolve(next);
+            resolved = resolve(next);
         }
-        return color;
+        return resolved;
+    }
+
+    private static String attributeName(String reference) {
+        return reference.substring(reference.startsWith("?attr/") ? 6 : 1);
+    }
+
+    int styleResource(String reference) {
+        Resources resources = context.getResources();
+        if (reference.startsWith("@style/")) {
+            return resources.getIdentifier(
+                    reference.substring(7), "style", context.getPackageName());
+        }
+        if (reference.startsWith("?")) {
+            int attribute =
+                    resources.getIdentifier(
+                            attributeName(reference), "attr", context.getPackageName());
+            var value = new TypedValue();
+            if (attribute != 0
+                    && context.getTheme().resolveAttribute(attribute, value, true)
+                    && value.resourceId != 0
+                    && resources.getResourceTypeName(value.resourceId).equals("style")) {
+                return value.resourceId;
+            }
+        }
+        return 0;
     }
 
     private String resolve(String value) {
@@ -116,6 +150,116 @@ public final class PreviewValues {
         return new Style(base, attributes);
     }
 
+    ColorStateList colorSelector(
+            String reference,
+            Map<String, String> theme,
+            Function<String, Integer> colorForReference) {
+        return colorSelector(reference, theme, colorForReference, new HashSet<>());
+    }
+
+    private ColorStateList colorSelector(
+            String reference,
+            Map<String, String> theme,
+            Function<String, Integer> colorForReference,
+            Set<String> seen) {
+        if (defaults == null
+                || reference == null
+                || !reference.matches("@color/[a-z0-9_]+")
+                || !seen.add(reference)) {
+            return null;
+        }
+        try {
+            String name = reference.substring(7);
+            if (!selectors.containsKey(name)) selectors.put(name, readSelector(name));
+            Element selector = selectors.get(name);
+            if (selector == null) return null;
+
+            var stateSpecs = new ArrayList<int[]>();
+            var itemColors = new ArrayList<Integer>();
+            // ColorStateList uses the first matching item, so keep the XML order.
+            for (var child = selector.getFirstChild();
+                    child != null;
+                    child = child.getNextSibling()) {
+                if (!(child instanceof Element item) || !item.getTagName().equals("item")) continue;
+                String colorReference =
+                        resolveThemeValue(item.getAttributeNS(ANDROID_NS, "color"), theme);
+                Integer color = colorForReference.apply(colorReference);
+                if (color == null) {
+                    ColorStateList nested =
+                            colorSelector(colorReference, theme, colorForReference, seen);
+                    if (nested == null) continue;
+                    // A selector item uses one color. A nested selector supplies its default.
+                    color = nested.getDefaultColor();
+                }
+                stateSpecs.add(selectorStates(item, theme));
+                itemColors.add(applySelectorAlpha(color, item, theme));
+            }
+            if (itemColors.isEmpty()) return null;
+            return new ColorStateList(
+                    stateSpecs.toArray(new int[0][]),
+                    itemColors.stream().mapToInt(Integer::intValue).toArray());
+        } finally {
+            seen.remove(reference);
+        }
+    }
+
+    private int[] selectorStates(Element item, Map<String, String> theme) {
+        var attributes = item.getAttributes();
+        int[] states = new int[attributes.getLength()];
+        int count = 0;
+        for (int i = 0; i < attributes.getLength(); i++) {
+            Attr attribute = (Attr) attributes.item(i);
+            if (!ANDROID_NS.equals(attribute.getNamespaceURI())
+                    || !attribute.getLocalName().startsWith("state_")) continue;
+            int id =
+                    context.getResources()
+                            .getIdentifier(attribute.getLocalName(), "attr", "android");
+            if (id != 0) {
+                String value = resolveThemeValue(attribute.getValue(), theme);
+                states[count++] = Boolean.parseBoolean(value) ? id : -id;
+            }
+        }
+        return Arrays.copyOf(states, count);
+    }
+
+    private int applySelectorAlpha(int color, Element item, Map<String, String> theme) {
+        String alpha = item.getAttributeNS(ANDROID_NS, "alpha");
+        if (alpha.isEmpty()) return color;
+        try {
+            float multiplier = Float.parseFloat(resolveThemeValue(alpha, theme));
+            int opacity = Math.max(0, Math.min(255, Math.round(Color.alpha(color) * multiplier)));
+            return (color & 0x00ffffff) | (opacity << 24);
+        } catch (NumberFormatException ignored) {
+            return color;
+        }
+    }
+
+    private Element readSelector(String name) {
+        File root = defaults.getParentFile();
+        File file = night == null ? null : colorFile(new File(root, "color-night"), name);
+        if (file == null) file = colorFile(new File(root, "color"), name);
+        if (file == null) return null;
+        try {
+            var factory = XmlUtil.newSecureDocumentBuilderFactory();
+            factory.setNamespaceAware(true);
+            Element element = factory.newDocumentBuilder().parse(file).getDocumentElement();
+            return element != null && element.getTagName().equals("selector") ? element : null;
+        } catch (IOException | SAXException | ParserConfigurationException error) {
+            LogUtil.w("PreviewValues", "Could not read " + file, error);
+            return null;
+        }
+    }
+
+    private static File colorFile(File directory, String name) {
+        String filename = name + ".xml";
+        for (File variant : versionedDirectories(directory).descendingMap().values()) {
+            File file = new File(variant, filename);
+            if (file.isFile()) return file;
+        }
+        File file = new File(directory, filename);
+        return file.isFile() ? file : null;
+    }
+
     private String frameworkValue(String reference) {
         int id = context.getResources().getIdentifier(reference.substring(1), null, null);
         if (id == 0) return reference;
@@ -152,12 +296,17 @@ public final class PreviewValues {
                 directory,
                 parser,
                 colors.loadColorsXmlIfChanged(new File(directory, "colors.xml"), nightVariant));
+        for (File variant : versionedDirectories(directory).values()) {
+            readDirectory(variant, parser, null);
+        }
+    }
 
+    private static TreeMap<Integer, File> versionedDirectories(File directory) {
+        var compatible = new TreeMap<Integer, File>();
         File parent = directory.getParentFile();
         File[] siblings = parent == null ? null : parent.listFiles(File::isDirectory);
-        if (siblings == null) return;
+        if (siblings == null) return compatible;
         Pattern version = Pattern.compile(Pattern.quote(directory.getName()) + "-v([0-9]+)");
-        var compatible = new TreeMap<Integer, File>();
         for (File sibling : siblings) {
             var match = version.matcher(sibling.getName());
             if (!match.matches()) continue;
@@ -168,7 +317,7 @@ public final class PreviewValues {
                 // This directory does not name an Android API level.
             }
         }
-        for (File variant : compatible.values()) readDirectory(variant, parser, null);
+        return compatible;
     }
 
     private void readDirectory(File directory, DocumentBuilder parser, Element colorsXml) {

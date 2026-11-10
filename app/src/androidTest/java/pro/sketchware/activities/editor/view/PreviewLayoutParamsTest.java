@@ -11,6 +11,9 @@ import static org.junit.Assume.assumeTrue;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -45,6 +48,8 @@ import java.util.stream.Stream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import pro.sketchware.R;
+import pro.sketchware.activities.editor.view.item.ItemCardView;
+import pro.sketchware.activities.editor.view.item.ItemLinearLayout;
 import pro.sketchware.beans.ComponentBean;
 import pro.sketchware.beans.LayoutBean;
 import pro.sketchware.beans.ProjectFileBean;
@@ -74,6 +79,49 @@ public class PreviewLayoutParamsTest {
         ViewBean.VIEW_TYPE_LAYOUT_VSCROLLVIEW
     };
     private static String projectId;
+
+    @Test
+    public void roundedCardKeepsOnlyDistinctLayoutGuides() {
+        onMain(
+                () -> {
+                    var card = new ItemCardView(new Environment(320).preview);
+                    card.setRadius(24f);
+                    var content = new ItemLinearLayout(card.getContext());
+                    var params =
+                            new FrameLayout.LayoutParams(
+                                    ViewGroup.LayoutParams.MATCH_PARENT,
+                                    ViewGroup.LayoutParams.MATCH_PARENT);
+                    card.addView(content, params);
+                    int exact = View.MeasureSpec.makeMeasureSpec(120, View.MeasureSpec.EXACTLY);
+                    card.measure(exact, exact);
+                    card.layout(0, 0, 120, 120);
+                    assertEquals(120, content.getWidth());
+                    assertEquals(120, content.getHeight());
+
+                    var bitmap = Bitmap.createBitmap(120, 120, Bitmap.Config.ARGB_8888);
+                    var canvas = new Canvas(bitmap);
+                    try {
+                        content.onDraw(canvas);
+                        assertEquals(Color.TRANSPARENT, bitmap.getPixel(60, 0));
+
+                        content.setSelection(true);
+                        content.onDraw(canvas);
+                        assertNotEquals(Color.TRANSPARENT, bitmap.getPixel(60, 60));
+
+                        content.setSelection(false);
+                        bitmap.eraseColor(Color.TRANSPARENT);
+                        params.setMargins(8, 8, 8, 8);
+                        content.setLayoutParams(params);
+                        card.measure(exact, exact);
+                        card.layout(0, 0, 120, 120);
+                        assertEquals(8, content.getLeft());
+                        content.onDraw(canvas);
+                        assertNotEquals(Color.TRANSPARENT, bitmap.getPixel(60, 0));
+                    } finally {
+                        bitmap.recycle();
+                    }
+                });
+    }
 
     @Test
     public void toolbarNavigationFollowsTheActiveLayoutOptions() {
