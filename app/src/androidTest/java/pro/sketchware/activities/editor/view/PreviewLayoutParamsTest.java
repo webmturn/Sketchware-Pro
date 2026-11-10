@@ -4,6 +4,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
@@ -18,9 +19,11 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import com.google.android.material.button.MaterialButton;
@@ -42,6 +45,7 @@ import java.util.stream.Stream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import pro.sketchware.R;
+import pro.sketchware.beans.ComponentBean;
 import pro.sketchware.beans.LayoutBean;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ProjectLibraryBean;
@@ -70,6 +74,67 @@ public class PreviewLayoutParamsTest {
         ViewBean.VIEW_TYPE_LAYOUT_VSCROLLVIEW
     };
     private static String projectId;
+
+    @Test
+    public void toolbarNavigationFollowsTheActiveLayoutOptions() {
+        onMain(
+                () -> {
+                    ProjectLibraryBean compat =
+                            ProjectDataManager.getLibraryManager(projectId).getCompat();
+                    compat.useYn = ProjectLibraryBean.LIB_USE_Y;
+                    compat.configurations.put("material3", true);
+                    compat.configurations.put("theme", "Light");
+                    var editor = new ViewEditor(new Environment(320).preview);
+                    var file =
+                            new ProjectFileBean(ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY, "main");
+                    file.setActivityOptions(
+                            ProjectFileBean.OPTION_ACTIVITY_TOOLBAR
+                                    | ProjectFileBean.OPTION_ACTIVITY_DRAWER);
+                    editor.initialize(projectId, file);
+                    var navigation = toolbarNavigation(editor);
+                    assertEquals(View.VISIBLE, navigation.getVisibility());
+                    assertTrue(navigation.getDrawable() instanceof DrawerArrowDrawable);
+                    var drawer = (DrawerArrowDrawable) navigation.getDrawable();
+                    assertEquals(0f, drawer.getProgress(), 0f);
+
+                    file.setActivityOptions(ProjectFileBean.OPTION_ACTIVITY_TOOLBAR);
+                    editor.initialize(projectId, file);
+                    assertEquals(View.VISIBLE, navigation.getVisibility());
+                    assertNotNull(navigation.getDrawable());
+                    assertFalse(navigation.getDrawable() instanceof DrawerArrowDrawable);
+
+                    file.setActivityOptions(ProjectFileBean.OPTION_ACTIVITY_DRAWER);
+                    editor.initialize(projectId, file);
+                    assertEquals(View.GONE, navigation.getVisibility());
+
+                    var custom =
+                            new ProjectFileBean(
+                                    ProjectFileBean.PROJECT_FILE_TYPE_CUSTOM_VIEW, "row");
+                    editor.initialize(projectId, custom);
+                    assertEquals(View.GONE, navigation.getVisibility());
+
+                    compat.useYn = ProjectLibraryBean.LIB_USE_N;
+                    file.setActivityOptions(
+                            ProjectFileBean.OPTION_ACTIVITY_TOOLBAR
+                                    | ProjectFileBean.OPTION_ACTIVITY_DRAWER);
+                    editor.initialize(projectId, file);
+                    assertEquals(View.GONE, navigation.getVisibility());
+
+                    var cameraPage =
+                            new ProjectFileBean(
+                                    ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY, "camera_page");
+                    ProjectDataManager.getFileManager(projectId)
+                            .addFile(cameraPage.fileType, cameraPage.fileName);
+                    ProjectDataManager.getProjectDataManager(projectId)
+                            .addComponent(
+                                    cameraPage.getJavaName(),
+                                    ComponentBean.COMPONENT_TYPE_CAMERA,
+                                    "camera");
+                    editor.initialize(projectId, file);
+                    assertEquals(View.VISIBLE, navigation.getVisibility());
+                    assertTrue(navigation.getDrawable() instanceof DrawerArrowDrawable);
+                });
+    }
 
     @Test
     public void material3ToolbarPreviewMatchesTheGeneratedBackground() {
@@ -184,6 +249,10 @@ public class PreviewLayoutParamsTest {
                                     <item name="colorPrimary">?attr/colorSecondary</item>
                                     <item name="colorSecondary">@color/bar</item>
                                     <item name="colorOnSurface">#332244</item>
+                                    <item name="toolbarStyle">@style/ProjectToolbar</item>
+                                </style>
+                                <style name="ProjectToolbar" parent="Widget.Material3.Toolbar">
+                                    <item name="navigationIconTint">#164B53</item>
                                 </style>
                             </resources>
                             """);
@@ -195,13 +264,19 @@ public class PreviewLayoutParamsTest {
 
                     var file =
                             new ProjectFileBean(ProjectFileBean.PROJECT_FILE_TYPE_ACTIVITY, "main");
-                    file.setActivityOptions(ProjectFileBean.OPTION_ACTIVITY_TOOLBAR);
+                    file.setActivityOptions(
+                            ProjectFileBean.OPTION_ACTIVITY_TOOLBAR
+                                    | ProjectFileBean.OPTION_ACTIVITY_DRAWER);
                     var editor = new ViewEditor(new Environment(320).preview);
                     try {
                         editor.initialize(projectId, file);
                         int expected = systemNight() ? 0xfff2da78 : 0xff007fac;
                         assertEquals(expected, toolbarColor(editor));
                         assertEquals(0xff332244, toolbarTitle(editor).getCurrentTextColor());
+                        var navigation = toolbarNavigation(editor);
+                        assertEquals(
+                                0xff164b53,
+                                ((DrawerArrowDrawable) navigation.getDrawable()).getColor());
 
                         compat.configurations.put("theme", "Dark");
                         editor.initialize(projectId, file);
@@ -221,11 +296,23 @@ public class PreviewLayoutParamsTest {
                                                                 "type",
                                                                 "Toolbar",
                                                                 "value",
-                                                                "app:titleTextColor=\"@color/bar\""))));
+                                                                "app:titleTextColor=\"@color/bar\""),
+                                                        Map.of(
+                                                                "type",
+                                                                "Toolbar",
+                                                                "value",
+                                                                "app:navigationIconTint=\"#82191D\""))));
                         AppCompatInjection.invalidate(projectId, file.fileName);
                         editor.initialize(projectId, file);
                         assertEquals(0xff006a60, toolbarColor(editor));
                         assertEquals(expected, toolbarTitle(editor).getCurrentTextColor());
+                        assertEquals(
+                                0xff82191d,
+                                ((DrawerArrowDrawable) navigation.getDrawable()).getColor());
+
+                        file.setActivityOptions(ProjectFileBean.OPTION_ACTIVITY_TOOLBAR);
+                        editor.initialize(projectId, file);
+                        assertEquals(0xff82191d, navigation.getImageTintList().getDefaultColor());
                     } finally {
                         AppCompatInjection.invalidate(projectId, file.fileName);
                     }
@@ -242,6 +329,10 @@ public class PreviewLayoutParamsTest {
     private static int toolbarColor(ViewEditor editor) {
         View toolbar = (View) toolbarTitle(editor).getParent();
         return ((ColorDrawable) toolbar.getBackground()).getColor();
+    }
+
+    private static ImageView toolbarNavigation(ViewEditor editor) {
+        return editor.findViewById(R.id.preview_toolbar_navigation);
     }
 
     private static TextView toolbarTitle(ViewEditor editor) {

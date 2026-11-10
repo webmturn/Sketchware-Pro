@@ -274,7 +274,7 @@ public class ViewPane extends RelativeLayout {
         return context;
     }
 
-    record ToolbarColors(int background, int title) {}
+    record ToolbarColors(int background, int title, int navigation) {}
 
     ToolbarColors getPreviewToolbarColors(ProjectFileBean file) {
         var injection = new AppCompatInjection(sc_id, file);
@@ -282,9 +282,7 @@ public class ViewPane extends RelativeLayout {
         Map<String, String> toolbar = injection.getAttributes("Toolbar");
         PreviewValues resources = previewValues();
 
-        Map<String, String> theme = resources.resolveStyle("@style/AppTheme").attributes();
-        resources.removeAttributesOverriddenBy(
-                theme, material3LibraryManager.getDynamicColorOverlay(context));
+        Map<String, String> theme = previewProjectTheme();
         theme.putAll(resources.resolveStyle(viewTheme(appBar)).attributes());
         theme.putAll(resources.resolveStyle(viewTheme(toolbar)).attributes());
 
@@ -295,7 +293,7 @@ public class ViewPane extends RelativeLayout {
         int backgroundColor =
                 background == null || background.equals("@null")
                         ? Color.TRANSPARENT
-                        : resolveToolbarColor(resources, background, theme, R.attr.colorPrimary);
+                        : resolvePreviewColor(resources, background, theme, R.attr.colorPrimary);
 
         String title = toolbar.getOrDefault("app:titleTextColor", style.get("titleTextColor"));
         if (title == null || title.equals("@null")) {
@@ -308,21 +306,39 @@ public class ViewPane extends RelativeLayout {
                             .attributes()
                             .getOrDefault("android:textColor", "?attr/colorOnSurface");
         }
+        String navigation =
+                toolbar.getOrDefault("app:navigationIconTint", style.get("navigationIconTint"));
+        if (navigation == null || navigation.equals("@null")) {
+            navigation = "?attr/colorControlNormal";
+        }
         return new ToolbarColors(
                 backgroundColor,
-                resolveToolbarColor(resources, title, theme, R.attr.colorOnSurface));
+                resolvePreviewColor(resources, title, theme, R.attr.colorOnSurface),
+                resolvePreviewColor(resources, navigation, theme, R.attr.colorControlNormal));
     }
 
-    private int resolveToolbarColor(
+    private Map<String, String> previewProjectTheme() {
+        PreviewValues values = previewValues();
+        Map<String, String> theme = values.resolveStyle("@style/AppTheme").attributes();
+        values.removeAttributesOverriddenBy(
+                theme, material3LibraryManager.getDynamicColorOverlay(context));
+        return theme;
+    }
+
+    private int resolvePreviewColor(
             PreviewValues resources, String raw, Map<String, String> theme, int fallback) {
-        String value = resources.resolveColor(raw, theme);
-        Integer color = resources.color(value);
-        if (color == null && value.startsWith("@color/")) {
+        Integer color = projectColor(resources, resources.resolveColor(raw, theme));
+        return color != null ? color : ThemeUtils.getColor(context, fallback);
+    }
+
+    private Integer projectColor(PreviewValues resources, String reference) {
+        Integer color = resources.color(reference);
+        if (color == null && reference != null && reference.startsWith("@color/")) {
             color =
                     ProjectThemeColors.generatedColors(ProjectListManager.getProjectById(sc_id))
-                            .get(value.substring(7));
+                            .get(reference.substring(7));
         }
-        return color != null ? color : ThemeUtils.getColor(context, fallback);
+        return color;
     }
 
     private static String viewTheme(Map<String, String> attributes) {

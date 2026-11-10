@@ -656,6 +656,20 @@ public class ProjectFilePaths {
                 ExportType.DEBUG_APP);
     }
 
+    public static boolean usesAppCompat(
+            LibraryManager libraries, ProjectFileManager files, ProjectDataStore data) {
+        if (libraries.getCompat().isEnabled()) return true;
+        for (ProjectFileBean activity : files.getActivities()) {
+            for (ComponentBean component : data.getComponents(activity.getJavaName())) {
+                if (component.type == ComponentBean.COMPONENT_TYPE_CAMERA
+                        || component.type == ComponentBean.COMPONENT_TYPE_CAMERA_LEGACY) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     private void addImageReadPermissions(String activityName) {
         buildConfig.addPermission(activityName, BuildConfig.PERMISSION_READ_EXTERNAL_STORAGE);
         buildConfig.addPermission(activityName, BuildConfig.PERMISSION_READ_MEDIA_IMAGES);
@@ -674,7 +688,6 @@ public class ProjectFilePaths {
             ProjectDataStore projectDataManager,
             ExportType exportingType) {
         ProjectLibraryBean adMob = projectLibraryManager.getAdmob();
-        ProjectLibraryBean appCompat = projectLibraryManager.getCompat();
         ProjectLibraryBean firebase = projectLibraryManager.getFirebaseDB();
         ProjectLibraryBean googleMaps = projectLibraryManager.getGoogleMap();
         this.exportingType = exportingType;
@@ -694,9 +707,8 @@ public class ProjectFilePaths {
             buildConfig.addPermission(BuildConfig.PERMISSION_INTERNET);
             buildConfig.addPermission(BuildConfig.PERMISSION_ACCESS_NETWORK_STATE);
         }
-        if (appCompat.useYn.equals(ProjectLibraryBean.LIB_USE_Y)) {
-            buildConfig.isAppCompatEnabled = true;
-        }
+        buildConfig.isAppCompatEnabled =
+                usesAppCompat(projectLibraryManager, projectFileManager, projectDataManager);
         if (adMob.useYn.equals(ProjectLibraryBean.LIB_USE_Y)) {
             buildConfig.isAdMobEnabled = true;
             buildConfig.addPermission(BuildConfig.PERMISSION_INTERNET);
@@ -740,7 +752,6 @@ public class ProjectFilePaths {
                 switch (component.type) {
                     case ComponentBean.COMPONENT_TYPE_CAMERA,
                             ComponentBean.COMPONENT_TYPE_CAMERA_LEGACY -> {
-                        buildConfig.isAppCompatEnabled = true;
                         buildConfig.isFileProviderUsed = true;
                         buildConfig.addPermission(
                                 activity.getActivityName(), BuildConfig.PERMISSION_CAMERA);

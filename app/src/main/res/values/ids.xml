@@ -4,6 +4,7 @@
     <item name="layout_height_animator" type="id" />
     <item name="preview_default_text_colors" type="id" />
     <item name="preview_default_hint_colors" type="id" />
+    <item name="preview_toolbar_navigation" type="id" />
 
     <!-- Ids for design right drawer -->
     <item name="item_library_manager" type="id" />

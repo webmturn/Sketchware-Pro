@@ -26,6 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.annotation.StringRes;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.OneShotPreDrawListener;
 import com.google.android.material.card.MaterialCardView;
@@ -53,6 +54,7 @@ import pro.sketchware.beans.ProjectResourceBean;
 import pro.sketchware.beans.ViewBean;
 import pro.sketchware.beans.ViewBeans;
 import pro.sketchware.beans.WidgetCollectionBean;
+import pro.sketchware.core.build.ProjectFilePaths;
 import pro.sketchware.core.callback.BuildCallback;
 import pro.sketchware.core.callback.SimpleCallback;
 import pro.sketchware.core.layout.ViewTypeNames;
@@ -108,6 +110,7 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
     private TextView fileName;
     private ImageView imgPhoneTopBg;
     private LinearLayout toolbar;
+    private ImageView toolbarNavigation;
     private TextView toolbarTitle;
     private ViewPane viewPane;
     private Vibrator vibrator;
@@ -632,12 +635,22 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
         toolbar.setGravity(Gravity.CENTER_VERTICAL);
         toolbar.setLayoutParams(new FrameLayout.LayoutParams(displayWidth, (int) (dip * 48f)));
 
+        toolbarNavigation = new ImageView(context);
+        toolbarNavigation.setId(R.id.preview_toolbar_navigation);
+        toolbarNavigation.setLayoutParams(
+                new LinearLayout.LayoutParams(
+                        (int) (dip * 48f), ViewGroup.LayoutParams.MATCH_PARENT));
+        toolbarNavigation.setScaleType(ImageView.ScaleType.CENTER);
+        toolbarNavigation.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        toolbarNavigation.setVisibility(View.GONE);
+        toolbar.addView(toolbarNavigation);
+
         toolbarTitle = new TextView(context);
         toolbarTitle.setTextColor(Color.WHITE);
         toolbarTitle.setLayoutParams(
                 new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        toolbarTitle.setPadding((int) (dip * 16f), 0, 0, 0);
+        toolbarTitle.setPaddingRelative((int) (dip * 16f), 0, 0, 0);
         toolbarTitle.setGravity(Gravity.CENTER_VERTICAL);
         toolbarTitle.setTextSize(15f);
         toolbarTitle.setText(Helper.getResString(R.string.editor_preview_toolbar));
@@ -936,6 +949,7 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
         int toolbarColor;
         int statusText = Color.WHITE;
         int toolbarText = Color.WHITE;
+        int navigationColor = Color.WHITE;
         if (material3) {
             Context preview = viewPane.getPreviewContext();
             statusColor = ThemeUtils.getColor(preview, android.R.attr.colorBackground);
@@ -944,6 +958,7 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
                 var colors = viewPane.getPreviewToolbarColors(projectFileBean);
                 toolbarColor = colors.background();
                 toolbarText = colors.title();
+                navigationColor = colors.navigation();
             }
             statusText =
                     MaterialAttributes.resolveBoolean(
@@ -960,6 +975,32 @@ public class ViewEditor extends RelativeLayout implements View.OnTouchListener {
         fileName.setTextColor(statusText);
         toolbar.setBackgroundColor(toolbarColor);
         toolbarTitle.setTextColor(toolbarText);
+        updateToolbarNavigation(navigationColor);
+    }
+
+    private void updateToolbarNavigation(int color) {
+        if (!hasToolbar
+                || projectFileBean.fileName.contains("_fragment")
+                || !ProjectFilePaths.usesAppCompat(
+                        ProjectDataManager.getLibraryManager(scId),
+                        ProjectDataManager.getFileManager(scId),
+                        ProjectDataManager.getProjectDataManager(scId))) {
+            toolbarNavigation.setVisibility(View.GONE);
+            return;
+        }
+
+        if (projectFileBean.hasActivityOption(ProjectFileBean.OPTION_ACTIVITY_DRAWER)) {
+            var icon = new DrawerArrowDrawable(viewPane.getPreviewContext());
+            icon.setColor(color);
+            // Drop the ImageView tint from the back arrow before installing the drawer icon.
+            toolbarNavigation.setImageTintList(null);
+            toolbarNavigation.setImageDrawable(icon);
+        } else {
+            toolbarNavigation.setImageResource(
+                    androidx.appcompat.R.drawable.abc_ic_ab_back_material);
+            toolbarNavigation.setImageTintList(ColorStateList.valueOf(color));
+        }
+        toolbarNavigation.setVisibility(View.VISIBLE);
     }
 
     private void showDeleteView(boolean show, boolean isCustomWidget) {
