@@ -2,6 +2,7 @@ package pro.sketchware.activities.main.fragments.projects;
 
 import android.content.Context;
 import android.util.Log;
+import androidx.annotation.VisibleForTesting;
 import com.google.gson.Gson;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -13,17 +14,22 @@ import java.io.RandomAccessFile;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.CopyOption;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -63,6 +69,11 @@ public class BackupFactory {
             "sketchwaresecure".getBytes(java.nio.charset.StandardCharsets.UTF_8);
 
     private static final String[] resSubfolders = {"fonts", "icons", "images", "sounds"};
+
+    private enum RestoreTarget {
+        CREATED,
+        PREEXISTING
+    }
 
     final String sc_id;
     File outPath;
@@ -564,14 +575,23 @@ public class BackupFactory {
         createBackupsFolder();
         File outFolder =
                 Files.createTempDirectory(new File(getBackupDir()).toPath(), ".restore-").toFile();
+        Map<Path, RestoreTarget> restoreDirectories = new LinkedHashMap<>();
+        boolean restored = false;
         try {
-            return restoreContents(swbPath, outFolder);
+            restored = restoreContents(swbPath, outFolder, restoreDirectories);
+            return restored;
         } finally {
+            // Once published, the files belong to the project.
+            if (!restored && !getProjectPath().exists()) {
+                discardRestoreDirectories(restoreDirectories);
+            }
             FileUtil.deleteFile(outFolder.getAbsolutePath());
         }
     }
 
-    private boolean restoreContents(File swbPath, File outFolder) throws IOException {
+    private boolean restoreContents(
+            File swbPath, File outFolder, Map<Path, RestoreTarget> restoreDirectories)
+            throws IOException {
         // Unzip
         if (!unzip(swbPath, outFolder)) {
             error = Helper.getResString(R.string.backup_unzip_failed);
@@ -600,13 +620,15 @@ public class BackupFactory {
         }
 
         // Copy data
-        copy(data, getDataDir());
+        prepareRestoreDirectory(getDataDir(), restoreDirectories);
+        copyRestoreData(data, getDataDir());
 
         // Copy res
         for (String subfolder : resSubfolders) {
             File subf = new File(res, subfolder);
-
-            copySafe(subf, getResDir(subfolder));
+            File destination = getResDir(subfolder);
+            prepareRestoreDirectory(destination, restoreDirectories);
+            copySafe(subf, destination);
         }
 
         // Copy local libs if they do not exist
@@ -652,10 +674,52 @@ public class BackupFactory {
         rebuildLocalLibraryPaths();
 
         // Publish the project only after its data, resources, and libraries are ready.
-        Files.createDirectories(getProjectPath().toPath().getParent());
+        prepareRestoreDirectory(getProjectPath().getParentFile(), restoreDirectories);
         copy(project, getProjectPath());
 
         return true;
+    }
+
+    @VisibleForTesting
+    protected void copyRestoreData(File source, File destination) throws IOException {
+        copy(source, destination);
+    }
+
+    /** Claims a new or empty directory so restore never merges with existing files. */
+    private static void prepareRestoreDirectory(
+            File directory, Map<Path, RestoreTarget> restoreDirectories) throws IOException {
+        Path path = directory.toPath();
+        Files.createDirectories(path.getParent());
+        try {
+            Files.createDirectory(path);
+            restoreDirectories.put(path, RestoreTarget.CREATED);
+        } catch (FileAlreadyExistsException existing) {
+            if (!Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)) throw existing;
+            try (var contents = Files.list(path)) {
+                if (contents.findAny().isPresent()) {
+                    throw new IOException("Restore target is not empty: " + path, existing);
+                }
+            }
+            // Roll back copied contents while keeping directories that were already empty.
+            restoreDirectories.put(path, RestoreTarget.PREEXISTING);
+        }
+    }
+
+    private static void discardRestoreDirectories(Map<Path, RestoreTarget> restoreDirectories) {
+        for (var directory : restoreDirectories.entrySet()) {
+            Path root = directory.getKey();
+            try (var contents = Files.walk(root)) {
+                var paths = contents.sorted(Comparator.reverseOrder()).iterator();
+                while (paths.hasNext()) {
+                    Path path = paths.next();
+                    if (directory.getValue() == RestoreTarget.CREATED || !path.equals(root)) {
+                        Files.deleteIfExists(path);
+                    }
+                }
+            } catch (IOException | RuntimeException e) {
+                Log.e("BackupFactory", "Failed to discard restore directory " + root, e);
+            }
+        }
     }
 
     private void rebuildLocalLibraryPaths() throws IOException {

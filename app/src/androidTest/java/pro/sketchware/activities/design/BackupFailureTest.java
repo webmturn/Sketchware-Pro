@@ -5,14 +5,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import android.content.Context;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -21,6 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import pro.sketchware.activities.main.fragments.projects.BackupFactory;
 import pro.sketchware.core.project.ProjectDataManager;
+import pro.sketchware.core.project.ProjectListManager;
 import pro.sketchware.core.project.SketchwarePaths;
 
 @RunWith(AndroidJUnit4.class)
@@ -96,49 +100,121 @@ public class BackupFailureTest {
     }
 
     @Test
-    public void failedResourceCopyDoesNotPublishProjectAndCanBeRetried() throws Exception {
+    public void failedRestoreDoesNotLeaveFilesForTheNextArchive() throws Exception {
+        try (CustomBlockBackupTest.Scope scope = new CustomBlockBackupTest.Scope();
+                CustomBlockBackupTest.OwnedProject source =
+                        new CustomBlockBackupTest.OwnedProject();
+                CustomBlockBackupTest.OwnedProject nextSource =
+                        new CustomBlockBackupTest.OwnedProject();
+                CustomBlockBackupTest.OwnedProject destination =
+                        new CustomBlockBackupTest.OwnedProject()) {
+            source.fixture.seed(false, false);
+            nextSource.fixture.seed(false, false);
+            Files.write(
+                    new File(source.fixture.data, "custom_blocks").toPath(),
+                    "[]".getBytes(StandardCharsets.UTF_8));
+            Files.write(
+                    new File(SketchwarePaths.getFontsResourcePath(), source.id() + "/first.ttf")
+                            .toPath(),
+                    new byte[] {1});
+            File sourceFolder = new File(SketchwarePaths.getSoundsPath(), source.id() + "/samples");
+            assertTrue(sourceFolder.mkdir());
+            Files.write(new File(sourceFolder, "sound.wav").toPath(), new byte[] {1, 2, 3});
+            File existingEntry =
+                    new File(SketchwarePaths.getSoundsPath(), destination.id() + "/samples");
+            File destinationFonts =
+                    new File(SketchwarePaths.getFontsResourcePath(), destination.id());
+            Files.write(existingEntry.toPath(), new byte[] {9});
+            File archive = backup(source.id());
+            File nextArchive = backup(nextSource.id());
+            String[] entries = backupEntries(scope.backups);
+            byte[] archiveBytes = Files.readAllBytes(archive.toPath());
+            BackupFactory restore = new BackupFactory(destination.id());
+            try {
+                Files.delete(destination.fixture.data.toPath());
+                restore.restore(archive);
+
+                assertFalse(restore.isRestoreSuccess());
+                assertFalse(
+                        new File(SketchwarePaths.getProjectListPath(destination.id()), "project")
+                                .exists());
+                assertFalse(destination.fixture.data.exists());
+                assertTrue(destinationFonts.isDirectory());
+                assertFalse(new File(destinationFonts, "first.ttf").exists());
+                assertArrayEquals(new byte[] {9}, Files.readAllBytes(existingEntry.toPath()));
+                assertArrayEquals(archiveBytes, Files.readAllBytes(archive.toPath()));
+                assertArrayEquals(entries, backupEntries(scope.backups));
+
+                Files.delete(existingEntry.toPath());
+                restore.restore(nextArchive);
+
+                assertTrue(restore.getError(), restore.isRestoreSuccess());
+                assertFalse(new File(destination.fixture.data, "custom_blocks").exists());
+                assertFalse(new File(destinationFonts, "first.ttf").exists());
+                assertFalse(existingEntry.exists());
+                ProjectDataManager.reloadProjectFromData(destination.id());
+                assertTrue(ProjectDataManager.canSaveProject(destination.id()));
+                assertArrayEquals(entries, backupEntries(scope.backups));
+            } finally {
+                Files.createDirectories(destination.fixture.data.toPath());
+            }
+        }
+    }
+
+    @Test
+    public void failedDataCopyRemovesFilesAlreadyCopied() throws Exception {
         try (CustomBlockBackupTest.Scope scope = new CustomBlockBackupTest.Scope();
                 CustomBlockBackupTest.OwnedProject source =
                         new CustomBlockBackupTest.OwnedProject();
                 CustomBlockBackupTest.OwnedProject destination =
                         new CustomBlockBackupTest.OwnedProject()) {
             source.fixture.seed(false, false);
-            File sourceFolder =
-                    new File(SketchwarePaths.getFontsResourcePath(), source.id() + "/blocked");
-            assertTrue(sourceFolder.mkdir());
-            Files.write(new File(sourceFolder, "font.ttf").toPath(), new byte[] {1, 2, 3});
-            File blocked =
-                    new File(SketchwarePaths.getFontsResourcePath(), destination.id() + "/blocked");
-            Files.write(blocked.toPath(), new byte[] {9});
             File archive = backup(source.id());
             String[] entries = backupEntries(scope.backups);
-            byte[] archiveBytes = Files.readAllBytes(archive.toPath());
-            BackupFactory restore = new BackupFactory(destination.id());
+            BackupFactory restore =
+                    new BackupFactory(destination.id()) {
+                        @Override
+                        protected void copyRestoreData(File source, File destination)
+                                throws IOException {
+                            File withMissingEntry =
+                                    new File(source.getPath()) {
+                                        @Override
+                                        public String[] list() {
+                                            return new String[] {"logic", "missing-during-copy"};
+                                        }
+                                    };
+                            var failure =
+                                    assertThrows(
+                                            NoSuchFileException.class,
+                                            () ->
+                                                    super.copyRestoreData(
+                                                            withMissingEntry, destination));
+                            assertTrue(new File(destination, "logic").isFile());
+                            throw failure;
+                        }
+                    };
 
             restore.restore(archive);
 
             assertFalse(restore.isRestoreSuccess());
-            assertFalse(restore.getError().isEmpty());
             assertFalse(
                     new File(SketchwarePaths.getProjectListPath(destination.id()), "project")
                             .exists());
-            assertTrue(new File(destination.fixture.data, "logic").isFile());
-            assertArrayEquals(new byte[] {9}, Files.readAllBytes(blocked.toPath()));
-            assertArrayEquals(archiveBytes, Files.readAllBytes(archive.toPath()));
+            assertArrayEquals(new String[0], backupEntries(destination.fixture.data));
             assertArrayEquals(entries, backupEntries(scope.backups));
+        }
+    }
 
-            Files.delete(blocked.toPath());
-            restore.restore(archive);
-
-            assertTrue(restore.getError(), restore.isRestoreSuccess());
-            assertTrue(restore.getError().isEmpty());
-            assertArrayEquals(
-                    new byte[] {1, 2, 3},
-                    Files.readAllBytes(new File(blocked, "font.ttf").toPath()));
-            ProjectDataManager.reloadProjectFromData(destination.id());
-            assertTrue(ProjectDataManager.canSaveProject(destination.id()));
-            assertArrayEquals(archiveBytes, Files.readAllBytes(archive.toPath()));
-            assertArrayEquals(entries, backupEntries(scope.backups));
+    @Test
+    public void nextProjectIdSkipsAnUnpublishedDataDirectory() throws Exception {
+        String id = ProjectListManager.getNextProjectId();
+        var data = new File(SketchwarePaths.getDataPath(id)).toPath();
+        Files.createDirectories(data.getParent());
+        Files.createDirectory(data);
+        try {
+            assertFalse(id.equals(ProjectListManager.getNextProjectId()));
+        } finally {
+            Files.delete(data);
         }
     }
 
