@@ -33,8 +33,45 @@ tasks.named("clean", Delete) {
     delete rootProject.layout.buildDirectory
 }
 
-// Ignore package and import text inside comments and literals.
-def nonCode = ~/(?s)""".*?"""|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\/\*.*?\*\/|\/\/[^\r\n]*/
+// Kotlin string templates with nested quotes require a full Kotlin lexer.
+@groovy.transform.CompileStatic
+String maskCommentsAndLiterals(String source, boolean javaSource) {
+    char[] code = source.toCharArray()
+    int end = 0
+    while (end < code.length) {
+        int start = end
+        char first = code[end]
+        if (first == (char) '/' && source.startsWith('//', end)) {
+            end += 2
+            while (end < code.length && code[end] != (char) '\r' && code[end] != (char) '\n') end++
+        } else if (first == (char) '/' && source.startsWith('/*', end)) {
+            int close = source.indexOf('*/', end + 2)
+            end = close < 0 ? code.length : close + 2
+        } else if (first == (char) '"' || first == (char) "'") {
+            boolean textBlock = source.startsWith('"""', end)
+            String delimiter = textBlock ? '"""' : String.valueOf(first)
+            end += delimiter.length()
+            while (end < code.length) {
+                if (code[end] == (char) '\\' && (javaSource || !textBlock)) {
+                    end = Math.min(end + 2, code.length)
+                } else if (source.startsWith(delimiter, end)) {
+                    end += delimiter.length()
+                    break
+                } else {
+                    end++
+                }
+            }
+        } else {
+            end++
+            continue
+        }
+
+        for (int i = start; i < end; i++) {
+            if (code[i] != (char) '\r' && code[i] != (char) '\n') code[i] = (char) ' '
+        }
+    }
+    return new String(code)
+}
 
 tasks.register("checkJavaImports") {
     group = "verification"
@@ -47,7 +84,7 @@ tasks.register("checkJavaImports") {
             include "*/java/pro/sketchware/**/*.java"
             exclude "main/java/pro/sketchware/third_party/**"
         }.files.each { sourceFile ->
-            def code = nonCode.matcher(sourceFile.getText("UTF-8")).replaceAll(" ")
+            def code = maskCommentsAndLiterals(sourceFile.getText("UTF-8"), true)
             def packageMatch = code =~ /\bpackage\s+(${qualifiedName})\s*;/
             if (!packageMatch.find()) return
             def declaredPackage = packageMatch.group(1).replaceAll(/\s+/, "")
@@ -125,7 +162,7 @@ tasks.register("checkPackageBoundaries") {
             include "pro/sketchware/**/*.kt"
             exclude "pro/sketchware/third_party/**"
         }.files.each { sourceFile ->
-            def code = nonCode.matcher(sourceFile.getText("UTF-8")).replaceAll(" ")
+            def code = maskCommentsAndLiterals(sourceFile.getText("UTF-8"), sourceFile.name.endsWith(".java"))
             def path = sourceRoot.toPath().relativize(sourceFile.toPath()).toString().replace('\\', '/')
             if (retiredTypes.any { type -> type.matcher(code).find() }) {
                 violations.add(sourceFile)
