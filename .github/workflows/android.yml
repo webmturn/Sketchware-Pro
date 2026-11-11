@@ -7,6 +7,7 @@ on:
       - '.gitattributes'
       - '.gitignore'
       - '.github/workflows/android.yml'
+      - '.github/scripts/format-baseline*.sh'
       - 'app/**'
       - 'resolver/**'
       - 'vendor-dx/**'
@@ -33,6 +34,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Test format baseline selection
+        run: bash .github/scripts/format-baseline-test.sh
+
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
@@ -46,23 +50,13 @@ jobs:
         id: format-baseline
         env:
           FORMAT_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
-        run: |
-          set -euo pipefail
-          base="${FORMAT_BASE:-}"
-          if [[ -n "$base" && ! "$base" =~ ^0+$ ]] && git cat-file -e "${base}^{commit}" 2>/dev/null; then
-            base="$(git merge-base "$base" HEAD || true)"
-          else
-            base=""
-          fi
-          if [[ -z "$base" ]]; then
-            base="$(git rev-parse --verify HEAD^ 2>/dev/null || true)"
-          fi
-          printf 'base=%s\n' "$base" >> "$GITHUB_OUTPUT"
+        run: bash .github/scripts/format-baseline.sh
 
       - name: Check Java formatting
+        if: steps.format-baseline.outputs.base != ''
         env:
-          ORG_GRADLE_PROJECT_spotlessRatchetFrom: ${{ steps.format-baseline.outputs.base }}
-        run: ./gradlew spotlessCheck
+          FORMAT_BASE: ${{ steps.format-baseline.outputs.base }}
+        run: ./gradlew "-PspotlessRatchetFrom=$FORMAT_BASE" spotlessCheck
 
       - name: Check Java imports
         run: ./gradlew checkJavaImports
