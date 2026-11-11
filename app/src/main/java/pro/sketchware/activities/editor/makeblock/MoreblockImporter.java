@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -172,7 +173,13 @@ public class MoreblockImporter {
                 && toBeAddedImages.isEmpty()
                 && toBeAddedSounds.isEmpty()
                 && toBeAddedFonts.isEmpty()) {
-            addMoreBlock(moreBlock, ProjectDataManager.getProjectDataManager(sc_id));
+            try {
+                addMoreBlock(moreBlock, ProjectDataManager.getProjectDataManager(sc_id));
+            } catch (RuntimeException failure) {
+                Log.e("MoreblockImporter", "Could not add MoreBlock", failure);
+                showImportError(resourceErrorMessage(failure));
+                return;
+            }
             notifyImportComplete();
         } else {
             showAutoAddDialog(moreBlock);
@@ -181,8 +188,46 @@ public class MoreblockImporter {
 
     private void addMoreBlock(MoreBlockCollectionBean moreBlock, ProjectDataStore data) {
         String moreBlockName = ReturnMoreblockManager.getMbNameWithTypeFromSpec(moreBlock.spec);
-        data.addMoreBlock(activityJavaName, moreBlockName, moreBlock.spec);
-        data.putBlocks(activityJavaName, moreBlockName + "_moreBlock", moreBlock.blocks);
+        String blockKey = moreBlockName + "_moreBlock";
+        var blockMap = data.blockMap.get(activityJavaName);
+        Runnable restoreDefinition = undoAppend(data.moreBlockMap);
+        Runnable restoreBody =
+                blockMap == null
+                        ? restoreEntry(data.blockMap, activityJavaName)
+                        : restoreEntry(blockMap, blockKey);
+        try {
+            data.addMoreBlock(activityJavaName, moreBlockName, moreBlock.spec);
+            data.putBlocks(activityJavaName, blockKey, moreBlock.blocks);
+        } catch (RuntimeException failure) {
+            undoChanges(failure, restoreDefinition, restoreBody);
+            throw failure;
+        }
+    }
+
+    private <T> Runnable undoAppend(Map<String, ArrayList<T>> entries) {
+        ArrayList<T> existing = entries.get(activityJavaName);
+        return existing == null ? restoreEntry(entries, activityJavaName) : undoAppend(existing);
+    }
+
+    private static Runnable undoAppend(ArrayList<?> entries) {
+        int size = entries.size();
+        return () -> entries.subList(size, entries.size()).clear();
+    }
+
+    private static <T> Runnable restoreEntry(Map<String, T> entries, String key) {
+        if (!entries.containsKey(key)) return () -> entries.remove(key);
+        T previous = entries.get(key);
+        return () -> entries.put(key, previous);
+    }
+
+    private static void undoChanges(RuntimeException failure, Runnable... changes) {
+        for (int i = changes.length - 1; i >= 0; i--) {
+            try {
+                changes[i].run();
+            } catch (RuntimeException undoFailure) {
+                failure.addSuppressed(undoFailure);
+            }
+        }
     }
 
     private void notifyImportComplete() {
@@ -274,6 +319,23 @@ public class MoreblockImporter {
                 return;
             }
             try {
+                addToProject();
+            } catch (RuntimeException failure) {
+                rollback(created, failure);
+                return;
+            }
+            completed = true;
+            popup.dismiss();
+            notifyImportComplete();
+        }
+
+        private void addToProject() {
+            Runnable undoVariables = undoAppend(data.variableMap);
+            Runnable undoLists = undoAppend(data.listMap);
+            Runnable undoImages = undoAppend(resources.images);
+            Runnable undoSounds = undoAppend(resources.sounds);
+            Runnable undoFonts = undoAppend(resources.fonts);
+            try {
                 for (Pair<Integer, String> variable : toBeAddedVariables) {
                     data.addVariable(activityJavaName, variable.first, variable.second);
                 }
@@ -285,12 +347,9 @@ public class MoreblockImporter {
                 resources.fonts.addAll(toBeAddedFonts);
                 addMoreBlock(moreBlock, data);
             } catch (RuntimeException failure) {
-                rollback(created, failure);
-                return;
+                undoChanges(failure, undoVariables, undoLists, undoImages, undoSounds, undoFonts);
+                throw failure;
             }
-            completed = true;
-            popup.dismiss();
-            notifyImportComplete();
         }
 
         private void rollback(List<Path> created, Exception failure) {

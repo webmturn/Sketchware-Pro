@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
@@ -165,6 +167,69 @@ public class MoreblockImportTest {
                                         .anyMatch(pair -> pair.second.equals("added_list")));
                     });
             assertEquals("test_moreblock", block.spec);
+        }
+    }
+
+    @Test
+    public void projectWriteFailureRestoresDependenciesAndThePreviousBlockBody() throws Exception {
+        try (Scope scope = new Scope()) {
+            String image = scope.source("image", ".png", true);
+            String sound = scope.source("sound", ".mp3", true);
+            String font = scope.source("font", ".ttf", true);
+            String activity = FILE.getJavaName();
+            String blockKey = "test_moreblock_moreBlock";
+            var previousBody = new ArrayList<>(List.of(variable()));
+            var failNextWrite = new AtomicBoolean(false);
+            scope.onMain(
+                    () -> {
+                        var blocks =
+                                new HashMap<String, ArrayList<BlockBean>>(
+                                        scope.data().getBlockMap(activity)) {
+                                    @Override
+                                    public ArrayList<BlockBean> put(
+                                            String key, ArrayList<BlockBean> body) {
+                                        var previous = super.put(key, body);
+                                        if (key.equals(blockKey)
+                                                && failNextWrite.getAndSet(false)) {
+                                            throw new IllegalStateException(
+                                                    "Failed after storing the MoreBlock body");
+                                        }
+                                        return previous;
+                                    }
+                                };
+                        blocks.put(blockKey, previousBody);
+                        scope.data().blockMap.put(activity, blocks);
+                    });
+            String before = scope.state();
+            var disk = scope.project.snapshot();
+            scope.start(
+                    favorite(
+                            variable(),
+                            list(),
+                            resource("resource", image),
+                            resource("sound", sound),
+                            resource("font", font)));
+
+            failNextWrite.set(true);
+            scope.click(android.R.id.button1);
+            awaitImports();
+
+            assertFalse(failNextWrite.get());
+            assertEquals(0, scope.completed.get());
+            assertEquals(before, scope.state());
+            scope.onMain(
+                    () ->
+                            assertSame(
+                                    previousBody,
+                                    scope.data().getBlockMap(activity).get(blockKey)));
+            scope.project.assertUnchanged(disk);
+            assertFalse(scope.target("image", image, ".png").exists());
+            assertFalse(scope.target("sound", sound, ".mp3").exists());
+            assertFalse(scope.target("font", font, ".ttf").exists());
+
+            scope.click(android.R.id.button1);
+            scope.awaitCompletion();
+            scope.onMain(() -> assertEquals(1, scope.data().getMoreBlocks(activity).size()));
         }
     }
 
