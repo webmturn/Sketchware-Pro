@@ -1189,6 +1189,7 @@
     <string name="design_library_google_map_title_api_key">API 密钥</string>
     <string name="design_library_google_maps_description_operate_normally">Google Map View 可以正常运行。\n你必须输入 API 密钥才能正常操作地图。</string>
     <string name="design_library_guide_setup_first">使用此组件前，需先在库管理器中设置。</string>
+    <string name="design_library_saved_project_update_failed">库设置已保存，部分项目更改未能应用。请重试。</string>
     <string name="design_library_material_3_description">启用 Material 3 将在应用中启用最新的 Material You 设计原则，提供更现代、视觉吸引力更强的界面，以及可自定义的组件和高级主题选项。</string>
     <string name="design_library_material_3_enable_warning">请注意，启用此库可能会影响应用的整体设计和外观，特别是对于较旧的项目。建议在启用前验证更改并确保与当前设置兼容。</string>
     <string name="design_manager_font_message_not_support_font">如果你的设备不支持上方的字体，括号中的文本可能无法显示</string>

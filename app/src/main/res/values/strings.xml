@@ -2029,6 +2029,7 @@ ex)\"users/username\""</string>
     <string name="design_library_google_maps_description_operate_normally">"Google Map View can be operated.
 You must enter the API key to operate the map normally."</string>
     <string name="design_library_guide_setup_first">In order to use this component, you have to setup the settings in the Library Manager first.</string>
+    <string name="design_library_saved_project_update_failed">Library settings were saved, but some project changes could not be applied. Try again.</string>
     <string name="design_library_material_3_description">Enabling Material 3 will enable the latest Material You design principles in your app, providing a more modern and visually appealing interface with customizable components and advanced theming options.</string>
     <string name="design_library_material_3_enable_warning">Please note that enabling this library may have an impact on the overall design and appearance of the app, particularly if it’s an older project. It’s recommended to verify the changes and ensure compatibility with your current setup before activation.</string>
     <string name="design_library_material_3_theme_mode_description">

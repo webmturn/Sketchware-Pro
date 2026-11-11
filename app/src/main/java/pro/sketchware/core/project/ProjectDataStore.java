@@ -468,20 +468,7 @@ public class ProjectDataStore {
     public void removeAdmobViewsAndComponents(
             ProjectLibraryBean libraryBean, ProjectFileManager fileManager) {
         if (libraryBean.useYn.equals("Y")) return;
-        for (ProjectFileBean projectFileBean : fileManager.getActivities()) {
-            ArrayList<ViewBean> toRemove = new ArrayList<>();
-            for (ViewBean viewBean : getViews(projectFileBean.getXmlName())) {
-                if (viewBean.type == ViewBean.VIEW_TYPE_WIDGET_ADVIEW) toRemove.add(viewBean);
-            }
-            for (ViewBean viewBean : toRemove) removeView(projectFileBean, viewBean);
-        }
-        for (ProjectFileBean projectFileBean : fileManager.getCustomViews()) {
-            ArrayList<ViewBean> toRemove = new ArrayList<>();
-            for (ViewBean viewBean : getViews(projectFileBean.getXmlName())) {
-                if (viewBean.type == ViewBean.VIEW_TYPE_WIDGET_ADVIEW) toRemove.add(viewBean);
-            }
-            for (ViewBean viewBean : toRemove) removeView(projectFileBean, viewBean);
-        }
+        removeLibraryViews(fileManager, ViewBean.VIEW_TYPE_WIDGET_ADVIEW);
         for (String key : new ArrayList<>(componentMap.keySet())) {
             removeComponentsByType(key, ComponentBean.COMPONENT_TYPE_INTERSTITIAL_AD);
             removeComponentsByType(key, ComponentBean.COMPONENT_TYPE_REWARDED_VIDEO_AD);
@@ -869,11 +856,20 @@ public class ProjectDataStore {
     }
 
     public void removeMapViews(ProjectLibraryBean libraryBean, ProjectFileManager fileManager) {
-        if (libraryBean.useYn.equals("Y")) return;
-        for (ProjectFileBean projectFileBean : fileManager.getActivities()) {
-            for (ViewBean viewBean : getViews(projectFileBean.getXmlName())) {
-                if (viewBean.type == ViewBean.VIEW_TYPE_WIDGET_MAPVIEW)
-                    removeView(projectFileBean, viewBean);
+        if (!libraryBean.isEnabled()) {
+            removeLibraryViews(fileManager, ViewBean.VIEW_TYPE_WIDGET_MAPVIEW);
+        }
+    }
+
+    private void removeLibraryViews(ProjectFileManager fileManager, int viewType) {
+        var layouts = new ArrayList<>(fileManager.getActivities());
+        layouts.addAll(fileManager.getCustomViews());
+        for (ProjectFileBean layout : layouts) {
+            var views = new ArrayList<>(getViews(layout.getXmlName()));
+            for (ViewBean view : views) {
+                if (view.type == viewType) {
+                    removeView(layout, view);
+                }
             }
         }
     }

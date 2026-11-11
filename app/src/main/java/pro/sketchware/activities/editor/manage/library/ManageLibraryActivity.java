@@ -1,24 +1,28 @@
 package pro.sketchware.activities.editor.manage.library;
 
-
-import android.util.Log;
 import static android.text.TextUtils.isEmpty;
 
 import android.app.Activity;
 import android.content.Intent;
-import androidx.activity.OnBackPressedCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
-
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
-
-import pro.sketchware.beans.ProjectLibraryBean;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
+import pro.sketchware.R;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
+import pro.sketchware.activities.editor.ManageNativelibsActivity;
 import pro.sketchware.activities.editor.manage.library.admob.AdmobActivity;
 import pro.sketchware.activities.editor.manage.library.admob.ManageAdmobActivity;
 import pro.sketchware.activities.editor.manage.library.compat.ManageCompatActivity;
@@ -26,24 +30,15 @@ import pro.sketchware.activities.editor.manage.library.firebase.ManageFirebaseAc
 import pro.sketchware.activities.editor.manage.library.googlemap.ManageGoogleMapActivity;
 import pro.sketchware.activities.editor.manage.library.material3.Material3LibraryActivity;
 import pro.sketchware.activities.editor.manage.library.material3.Material3LibraryItemView;
-import pro.sketchware.activities.base.BaseAppCompatActivity;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
-
+import pro.sketchware.beans.ProjectLibraryBean;
 import pro.sketchware.core.async.BackgroundTasks;
-import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.async.TaskHost;
-import pro.sketchware.util.UIHelper;
-
-import pro.sketchware.activities.editor.ManageNativelibsActivity;
+import pro.sketchware.core.project.LibraryManager;
+import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.util.Helper;
-
-
-import pro.sketchware.R;
+import pro.sketchware.util.SketchToast;
 import pro.sketchware.util.UI;
+import pro.sketchware.util.UIHelper;
 
 public class ManageLibraryActivity extends BaseAppCompatActivity implements View.OnClickListener {
 
@@ -76,11 +71,15 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
         return libraryCategoryView;
     }
 
-    private void addLibraryItem(@Nullable ProjectLibraryBean libraryBean, LibraryCategoryView parent) {
+    private void addLibraryItem(
+            @Nullable ProjectLibraryBean libraryBean, LibraryCategoryView parent) {
         addLibraryItem(libraryBean, parent, true);
     }
 
-    private void addLibraryItem(@Nullable ProjectLibraryBean libraryBean, LibraryCategoryView parent, boolean addDivider) {
+    private void addLibraryItem(
+            @Nullable ProjectLibraryBean libraryBean,
+            LibraryCategoryView parent,
+            boolean addDivider) {
         LibraryItemView libraryItemView;
         libraryItemView = new LibraryItemView(this);
         libraryItemView.setTag(libraryBean != null ? libraryBean.libType : null);
@@ -88,7 +87,8 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
         libraryItemView.setData(libraryBean);
         libraryItemView.setOnClickListener(this);
 
-        if (libraryBean.libType == ProjectLibraryBean.PROJECT_LIB_TYPE_LOCAL_LIB || libraryBean.libType == ProjectLibraryBean.PROJECT_LIB_TYPE_NATIVE_LIB) {
+        if (libraryBean.libType == ProjectLibraryBean.PROJECT_LIB_TYPE_LOCAL_LIB
+                || libraryBean.libType == ProjectLibraryBean.PROJECT_LIB_TYPE_NATIVE_LIB) {
             libraryItemView.setHideEnabled();
         }
         parent.addLibraryItem(libraryItemView, addDivider);
@@ -115,7 +115,8 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
         libraryItems.add(libraryItemView);
     }
 
-    private void toCompatActivity(ProjectLibraryBean compatLibraryBean, ProjectLibraryBean firebaseLibraryBean) {
+    private void toCompatActivity(
+            ProjectLibraryBean compatLibraryBean, ProjectLibraryBean firebaseLibraryBean) {
         Intent intent = new Intent(getApplicationContext(), ManageCompatActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("sc_id", sc_id);
@@ -142,7 +143,9 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
                 itemView.setData(null);
             } else if (itemView instanceof Material3LibraryItemView) {
                 itemView.setData(compatLibraryBean);
-            } else if (tag instanceof Integer && libraryBean != null && ((Integer) tag) == libraryBean.libType) {
+            } else if (tag instanceof Integer
+                    && libraryBean != null
+                    && ((Integer) tag) == libraryBean.libType) {
                 itemView.setData(libraryBean);
             }
         }
@@ -200,17 +203,41 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
         startActivity(intent);
     }
 
-    private void saveLibraryConfiguration() {
-        ProjectDataManager.getLibraryManager(sc_id).setCompat(compatLibraryBean);
-        ProjectDataManager.getLibraryManager(sc_id).setFirebaseDB(firebaseLibraryBean);
-        ProjectDataManager.getLibraryManager(sc_id).setAdmob(admobLibraryBean);
-        ProjectDataManager.getLibraryManager(sc_id).setGoogleMap(googleMapLibraryBean);
-        ProjectDataManager.getLibraryManager(sc_id).saveToBackup();
-        ProjectDataManager.getFileManager(sc_id).syncWithLibrary(ProjectDataManager.getLibraryManager(sc_id));
-        ProjectDataManager.getProjectDataManager(sc_id).syncWithFileManager(ProjectDataManager.getFileManager(sc_id));
-        ProjectDataManager.getProjectDataManager(sc_id).removeAdmobViewsAndComponents(admobLibraryBean, ProjectDataManager.getFileManager(sc_id));
-        ProjectDataManager.getProjectDataManager(sc_id).removeFirebaseComponents(firebaseLibraryBean);
-        ProjectDataManager.getProjectDataManager(sc_id).removeMapViews(googleMapLibraryBean, ProjectDataManager.getFileManager(sc_id));
+    private LibraryManager saveLibraryConfiguration() throws IOException {
+        var libraries = ProjectDataManager.getLibraryManager(sc_id);
+        var previousCompat = libraries.getCompat();
+        var previousFirebase = libraries.getFirebaseDB();
+        var previousAdmob = libraries.getAdmob();
+        var previousGoogleMap = libraries.getGoogleMap();
+        libraries.setCompat(compatLibraryBean);
+        libraries.setFirebaseDB(firebaseLibraryBean);
+        libraries.setAdmob(admobLibraryBean);
+        libraries.setGoogleMap(googleMapLibraryBean);
+        boolean saved = false;
+        try {
+            saved = libraries.saveToBackup();
+            if (!saved) {
+                throw new IOException("Failed to save library configuration");
+            }
+        } finally {
+            if (!saved) {
+                libraries.setCompat(previousCompat);
+                libraries.setFirebaseDB(previousFirebase);
+                libraries.setAdmob(previousAdmob);
+                libraries.setGoogleMap(previousGoogleMap);
+            }
+        }
+        return libraries;
+    }
+
+    private void updateProjectForLibraries(LibraryManager libraries) {
+        var files = ProjectDataManager.getFileManager(sc_id);
+        var project = ProjectDataManager.getProjectDataManager(sc_id);
+        files.syncWithLibrary(libraries);
+        project.syncWithFileManager(files);
+        project.removeAdmobViewsAndComponents(admobLibraryBean, files);
+        project.removeFirebaseComponents(firebaseLibraryBean);
+        project.removeMapViews(googleMapLibraryBean, files);
     }
 
     @Override
@@ -260,66 +287,94 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
     public void onCreate(Bundle savedInstanceState) {
         enableEdgeToEdgeNoContrast();
         super.onCreate(savedInstanceState);
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                showLoadingDialog();
-                try {
-                    new Handler(Looper.getMainLooper()).postDelayed(() -> new SaveLibraryTask(ManageLibraryActivity.this).execute(), 500L);
-                } catch (Exception e) {
-                    Log.e("ManageLibraryActivity", e.getMessage(), e);
-                    dismissLoadingDialog();
-                }
-            }
-        });
-        compatLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(), result -> {
-                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        ProjectLibraryBean compat = result.getData().getParcelableExtra("compat");
-                        if (compat != null) initializeLibrary(compat);
-                    }
-                });
-        firebaseLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(), result -> {
-                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        ProjectLibraryBean libraryBean = result.getData().getParcelableExtra("firebase");
-                        if (libraryBean == null) return;
-                        initializeLibrary(libraryBean);
-                        if (libraryBean.useYn.equals("Y") && !compatLibraryBean.useYn.equals("Y")) {
-                            libraryBean = compatLibraryBean;
-                            libraryBean.useYn = "Y";
-                            initializeLibrary(libraryBean);
-                            showFirebaseNeedCompatDialog();
-                        }
-                    }
-                });
-        admobLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(), result -> {
-                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        ProjectLibraryBean admob = result.getData().getParcelableExtra("admob");
-                        if (admob != null) initializeLibrary(admob);
-                    }
-                });
-        googleMapLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(), result -> {
-                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        ProjectLibraryBean googleMap = result.getData().getParcelableExtra("google_map");
-                        if (googleMap != null) initializeLibrary(googleMap);
-                    }
-                });
-        material3Launcher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(), result -> {
-                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        ProjectLibraryBean compat = result.getData().getParcelableExtra("compat");
-                        if (compat != null) initializeLibrary(compat);
-                    }
-                });
-        customLibLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(), result -> {
-                    if (result.getResultCode() == RESULT_OK) {
-                        initializeLibrary(null);
-                    }
-                });
+        getOnBackPressedDispatcher()
+                .addCallback(
+                        this,
+                        new OnBackPressedCallback(true) {
+                            @Override
+                            public void handleOnBackPressed() {
+                                showLoadingDialog();
+                                try {
+                                    new Handler(Looper.getMainLooper())
+                                            .postDelayed(
+                                                    () ->
+                                                            new SaveLibraryTask(
+                                                                            ManageLibraryActivity
+                                                                                    .this)
+                                                                    .execute(),
+                                                    500L);
+                                } catch (Exception e) {
+                                    Log.e("ManageLibraryActivity", e.getMessage(), e);
+                                    dismissLoadingDialog();
+                                }
+                            }
+                        });
+        compatLauncher =
+                registerForActivityResult(
+                        new ActivityResultContracts.StartActivityForResult(),
+                        result -> {
+                            if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                                ProjectLibraryBean compat =
+                                        result.getData().getParcelableExtra("compat");
+                                if (compat != null) initializeLibrary(compat);
+                            }
+                        });
+        firebaseLauncher =
+                registerForActivityResult(
+                        new ActivityResultContracts.StartActivityForResult(),
+                        result -> {
+                            if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                                ProjectLibraryBean libraryBean =
+                                        result.getData().getParcelableExtra("firebase");
+                                if (libraryBean == null) return;
+                                initializeLibrary(libraryBean);
+                                if (libraryBean.useYn.equals("Y")
+                                        && !compatLibraryBean.useYn.equals("Y")) {
+                                    libraryBean = compatLibraryBean;
+                                    libraryBean.useYn = "Y";
+                                    initializeLibrary(libraryBean);
+                                    showFirebaseNeedCompatDialog();
+                                }
+                            }
+                        });
+        admobLauncher =
+                registerForActivityResult(
+                        new ActivityResultContracts.StartActivityForResult(),
+                        result -> {
+                            if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                                ProjectLibraryBean admob =
+                                        result.getData().getParcelableExtra("admob");
+                                if (admob != null) initializeLibrary(admob);
+                            }
+                        });
+        googleMapLauncher =
+                registerForActivityResult(
+                        new ActivityResultContracts.StartActivityForResult(),
+                        result -> {
+                            if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                                ProjectLibraryBean googleMap =
+                                        result.getData().getParcelableExtra("google_map");
+                                if (googleMap != null) initializeLibrary(googleMap);
+                            }
+                        });
+        material3Launcher =
+                registerForActivityResult(
+                        new ActivityResultContracts.StartActivityForResult(),
+                        result -> {
+                            if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                                ProjectLibraryBean compat =
+                                        result.getData().getParcelableExtra("compat");
+                                if (compat != null) initializeLibrary(compat);
+                            }
+                        });
+        customLibLauncher =
+                registerForActivityResult(
+                        new ActivityResultContracts.StartActivityForResult(),
+                        result -> {
+                            if (result.getResultCode() == RESULT_OK) {
+                                initializeLibrary(null);
+                            }
+                        });
         if (!super.isStoragePermissionGranted()) {
             finish();
         }
@@ -333,7 +388,8 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
         setContentView(R.layout.manage_library);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(Helper.getResString(R.string.design_actionbar_title_library));
+        getSupportActionBar()
+                .setTitle(Helper.getResString(R.string.design_actionbar_title_library));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
@@ -349,25 +405,29 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
         if (savedInstanceState == null) {
             compatLibraryBean = ProjectDataManager.getLibraryManager(sc_id).getCompat();
             if (compatLibraryBean == null) {
-                compatLibraryBean = new ProjectLibraryBean(ProjectLibraryBean.PROJECT_LIB_TYPE_COMPAT);
+                compatLibraryBean =
+                        new ProjectLibraryBean(ProjectLibraryBean.PROJECT_LIB_TYPE_COMPAT);
             }
             originalCompatUseYn = compatLibraryBean.useYn;
 
             firebaseLibraryBean = ProjectDataManager.getLibraryManager(sc_id).getFirebaseDB();
             if (firebaseLibraryBean == null) {
-                firebaseLibraryBean = new ProjectLibraryBean(ProjectLibraryBean.PROJECT_LIB_TYPE_FIREBASE);
+                firebaseLibraryBean =
+                        new ProjectLibraryBean(ProjectLibraryBean.PROJECT_LIB_TYPE_FIREBASE);
             }
             originalFirebaseUseYn = firebaseLibraryBean.useYn;
 
             admobLibraryBean = ProjectDataManager.getLibraryManager(sc_id).getAdmob();
             if (admobLibraryBean == null) {
-                admobLibraryBean = new ProjectLibraryBean(ProjectLibraryBean.PROJECT_LIB_TYPE_ADMOB);
+                admobLibraryBean =
+                        new ProjectLibraryBean(ProjectLibraryBean.PROJECT_LIB_TYPE_ADMOB);
             }
             originalAdmobUseYn = admobLibraryBean.useYn;
 
             googleMapLibraryBean = ProjectDataManager.getLibraryManager(sc_id).getGoogleMap();
             if (googleMapLibraryBean == null) {
-                googleMapLibraryBean = new ProjectLibraryBean(ProjectLibraryBean.PROJECT_LIB_TYPE_GOOGLE_MAP);
+                googleMapLibraryBean =
+                        new ProjectLibraryBean(ProjectLibraryBean.PROJECT_LIB_TYPE_GOOGLE_MAP);
             }
             originalGoogleMapUseYn = googleMapLibraryBean.useYn;
         } else {
@@ -388,12 +448,22 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
         addLibraryItem(admobLibraryBean, basicCategory);
         addLibraryItem(googleMapLibraryBean, basicCategory, false);
 
-        LibraryCategoryView externalCategory = addCategoryItem(getString(R.string.design_library_category_external));
-        addLibraryItem(new ProjectLibraryBean(ProjectLibraryBean.PROJECT_LIB_TYPE_LOCAL_LIB), externalCategory);
-        addLibraryItem(new ProjectLibraryBean(ProjectLibraryBean.PROJECT_LIB_TYPE_NATIVE_LIB), externalCategory, false);
+        LibraryCategoryView externalCategory =
+                addCategoryItem(getString(R.string.design_library_category_external));
+        addLibraryItem(
+                new ProjectLibraryBean(ProjectLibraryBean.PROJECT_LIB_TYPE_LOCAL_LIB),
+                externalCategory);
+        addLibraryItem(
+                new ProjectLibraryBean(ProjectLibraryBean.PROJECT_LIB_TYPE_NATIVE_LIB),
+                externalCategory,
+                false);
 
-        LibraryCategoryView advancedCategory = addCategoryItem(getString(R.string.design_library_category_advanced));
-        addCustomLibraryItem(ProjectLibraryBean.PROJECT_LIB_TYPE_EXCLUDE_BUILTIN_LIBRARIES, advancedCategory, false);
+        LibraryCategoryView advancedCategory =
+                addCategoryItem(getString(R.string.design_library_category_advanced));
+        addCustomLibraryItem(
+                ProjectLibraryBean.PROJECT_LIB_TYPE_EXCLUDE_BUILTIN_LIBRARIES,
+                advancedCategory,
+                false);
     }
 
     @Override
@@ -422,7 +492,8 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(this);
         dialog.setIcon(R.drawable.ic_mtrl_firebase);
         dialog.setTitle(Helper.getResString(R.string.common_word_warning));
-        dialog.setMessage(Helper.getResString(R.string.design_library_firebase_message_need_compat));
+        dialog.setMessage(
+                Helper.getResString(R.string.design_library_firebase_message_need_compat));
         dialog.setPositiveButton(Helper.getResString(R.string.common_word_ok), null);
         dialog.show();
     }
@@ -430,6 +501,7 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
     private static class SaveLibraryTask {
 
         private final WeakReference<ManageLibraryActivity> activity;
+        private boolean savedConfiguration;
 
         public SaveLibraryTask(ManageLibraryActivity activity) {
             this.activity = new WeakReference<>(activity);
@@ -438,8 +510,12 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
         public void execute() {
             var act = activity.get();
             if (act == null) return;
-            BackgroundTasks.runSerial(TaskHost.of(act), "ManageLibraryActivity$SaveLibraryTask",
-                    this::doWork, this::onSuccess, this::onError);
+            BackgroundTasks.runSerial(
+                    TaskHost.of(act),
+                    "ManageLibraryActivity$SaveLibraryTask",
+                    this::doWork,
+                    this::onSuccess,
+                    this::onError);
         }
 
         private void onSuccess() {
@@ -460,16 +536,21 @@ public class ManageLibraryActivity extends BaseAppCompatActivity implements View
             var act = activity.get();
             if (act == null) return;
             act.dismissLoadingDialog();
+            int message =
+                    savedConfiguration
+                            ? R.string.design_library_saved_project_update_failed
+                            : R.string.common_error_failed_to_save;
+            SketchToast.warning(act, act.getString(message), SketchToast.TOAST_WARNING).show();
         }
 
-        private void doWork() {
+        private void doWork() throws IOException {
             var act = activity.get();
             if (act == null) return;
-            try {
-                act.saveLibraryConfiguration();
-            } catch (Exception e) {
-                Log.e("ManageLibraryActivity", e.getMessage(), e);
-            }
+            // Save first so a write failure leaves the project's views and blocks intact.
+            // Restoring the library backup also reruns the cleanup.
+            LibraryManager libraries = act.saveLibraryConfiguration();
+            savedConfiguration = true;
+            act.updateProjectForLibraries(libraries);
         }
     }
 }
