@@ -113,6 +113,7 @@ tasks.register("checkPackageBoundaries") {
         def violations = [] as Set
 
         def retiredClassNames = [
+                "com.bumptech.glide.signature.StringSignature",
                 "pro.sketchware.core.project.BuiltInLibrary",
                 "pro.sketchware.core.codegen.BlockColorMapper",
                 "pro.sketchware.core.codegen.XmlLayoutParser",

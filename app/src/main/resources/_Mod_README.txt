@@ -48,7 +48,7 @@ The original mod was structured around heavily obfuscated classes (Fx, Jx, Lx, O
   - v1: all contributor namespaces (mod.agus, mod.hey, mod.hilal, mod.jbk, mod.pranav, mod.tyron, mod.bobur, mod.khaled, mod.alucard, mod.remaker, dev.aldi) folded into pro.sketchware.*
   - v2: the entire com.besome.sketch.* tree migrated into pro.sketchware.*; the obfuscated a.a.a package became pro.sketchware.core and every class/method/field was renamed to a readable name.
 
-Today essentially all Sketchware Pro source lives under a single business package: pro.sketchware.*. The only legacy survivor on disk is com/bumptech/glide/signature/StringSignature.java, kept on purpose as a package-private reflection bridge for Glide.
+The app module's main Java and Kotlin sources live under pro.sketchware.*.
 
 Where things live now (high level):
 

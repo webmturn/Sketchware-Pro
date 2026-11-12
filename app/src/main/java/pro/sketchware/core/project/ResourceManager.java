@@ -1,7 +1,8 @@
 package pro.sketchware.core.project;
 
 import android.util.Log;
-import com.bumptech.glide.signature.StringSignature;
+import com.bumptech.glide.load.Key;
+import com.bumptech.glide.signature.ObjectKey;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.BufferedReader;
@@ -27,7 +28,7 @@ public class ResourceManager {
         return loadState.getFailure();
     }
 
-    public static StringSignature cacheSignature;
+    private static Key cacheSignature;
 
     public ArrayList<ProjectResourceBean> images;
 
@@ -73,13 +74,13 @@ public class ResourceManager {
         gson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
     }
 
-    public static StringSignature getCacheSignature() {
+    public static Key getCacheSignature() {
         if (cacheSignature == null) refreshCacheSignature();
         return cacheSignature;
     }
 
     public static void refreshCacheSignature() {
-        cacheSignature = new StringSignature(String.valueOf(System.currentTimeMillis()));
+        cacheSignature = new ObjectKey(String.valueOf(System.currentTimeMillis()));
     }
 
     public void cleanupAllResources() {
