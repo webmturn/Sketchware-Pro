@@ -263,10 +263,6 @@
     <string name="export_apk_sign_dialog_desc">填写密钥库信息以签名 APK。如果没有密钥库，可以使用测试密钥。</string>
 
     <!-- ========== 项目 (Projects) ========== -->
-    <string name="myprojects_list_menu_title_backup">备份</string>
-    <string name="myprojects_list_menu_title_config">配置</string>
-    <string name="myprojects_list_menu_title_delete">删除</string>
-    <string name="myprojects_list_menu_title_settings">设置</string>
     <string name="myprojects_settings_message_contain_dot">需要包含点号</string>
     <string name="myprojects_settings_context_menu_title_choose_gallery">从图库选择</string>
     <string name="myprojects_settings_context_menu_title_choose_gallery_default">从图库选择（默认）</string>
@@ -1058,7 +1054,6 @@
     <string name="design_actionbar_title_manager_sound">音效管理器</string>
     <string name="design_actionbar_title_manager_view">视图管理器</string>
     <string name="design_actionbar_title_show_source_code">显示源代码</string>
-    <string name="design_button_properties">属性</string>
     <string name="design_cancel_build_btn_continue">继续</string>
     <string name="design_cancel_build_btn_stop">停止</string>
     <string name="design_cancel_build_desc">正在构建中，是否取消？</string>
@@ -2559,7 +2554,6 @@
     <string name="main_tab_title_tutorials">教程</string>
 
     <!-- ========== 项目管理 - 精确补充 ========== -->
-    <string name="myprojects_confirm_project_delete">确定要删除此项目吗？</string>
     <string name="myprojects_customize_icon">自定义图标</string>
     <string name="myprojects_export_project_actionbar_title">导出项目</string>
     <string name="myprojects_export_project_button_export_src">导出源代码</string>
@@ -2572,7 +2566,6 @@
     <string name="myprojects_export_src_title_email_body">附件: %s</string>
     <string name="myprojects_export_src_title_email_subject">%s，Android Studio 源代码</string>
     <string name="myprojects_list_menu_title_create_a_new_project">创建新项目</string>
-    <string name="myprojects_list_menu_title_sign_export">签名并导出</string>
     <string name="myprojects_settings_actionbar_title_new_projet">新建项目</string>
     <string name="myprojects_settings_actionbar_title_project_settings">项目设置</string>
     <string name="myprojects_settings_button_create_app">创建应用</string>

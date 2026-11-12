@@ -67,16 +67,6 @@
         <item name="colorPrimaryDark">#ff000000</item>
     </style>
 
-    <!--  bottom sheet style  -->
-    <style name="BottomSheetCardStyle" parent="">
-        <item name="cornerFamilyTopLeft">rounded</item>
-        <item name="cornerFamilyTopRight">rounded</item>
-        <item name="cornerSizeTopLeft">20dp</item>
-        <item name="cornerSizeTopRight">20dp</item>
-        <item name="cornerSizeBottomLeft">0dp</item>
-        <item name="cornerSizeBottomRight">0dp</item>
-    </style>
-
     <style name="ChipStyle.SWPro.Chip.Rounded" parent="">
         <item name="chipCornerRadius">5dp</item>
         <item name="checkedIconEnabled">false</item>
