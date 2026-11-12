@@ -34,7 +34,6 @@ Welcome to Sketchware Pro! Here you'll find the source code of many classes in S
 | --- | --- | --- |
 | `ProjectBuilder` | `pro.sketchware.core.build` | Runs the full project build pipeline (resources, Java, DEX, signing) |
 | `ProjectFilePaths` | `pro.sketchware.core.build` | Resolves generated and build file paths for a project |
-| `CompileQuizManager` | `pro.sketchware.core.build` | Provides the compiling dialog's quizzes |
 | `ManifestGenerator` | `pro.sketchware.core.codegen` | Generates `AndroidManifest.xml` |
 | `ActivityCodeGenerator` | `pro.sketchware.core.codegen` | Generates activity Java source |
 | `ComponentCodeGenerator` | `pro.sketchware.core.codegen` | Generates component and listener source |

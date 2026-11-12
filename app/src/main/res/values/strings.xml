@@ -1511,7 +1511,6 @@ Please click on Settings to allow permission for Storage. Without this permissio
     <string name="message_license_expired">"License expired.
 %s"</string>
     <string name="message_strings_xml_loaded">Your \"strings.xml\" file has been successfully loaded!</string>
-    <string name="quiz_while_you_wait">While you wait…</string>
     <string name="text_subtitle_menu_assets">Import asset files</string>
     <string name="text_subtitle_menu_broadcast">Import Background Service files</string>
     <string name="text_subtitle_menu_java">Import Java/Kotlin files</string>

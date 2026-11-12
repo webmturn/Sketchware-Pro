@@ -1488,7 +1488,6 @@
     <string name="title_sketchware">Sketchware Pro</string>
     <string name="restoring">正在恢复…</string>
     <string name="searching">正在搜索…</string>
-    <string name="quiz_while_you_wait">请稍候…</string>
     <string name="invalid_component">无效组件</string>
     <string name="invalid_icon_id">无效图标 ID</string>
     <string name="invalid_required_fields">部分必填项为空</string>
