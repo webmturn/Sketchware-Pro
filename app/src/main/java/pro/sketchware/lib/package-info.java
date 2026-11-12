@@ -8,9 +8,9 @@
  *
  * <ul>
  *   <li>{@code pro.sketchware.lib} (this package) — editor-feature-internal scaffolding. Examples:
- *       {@code code_editor/CodeEditorEditText}, {@code highlighter/SyntaxScheme}, {@code
- *       iconcreator/PatternBackgroundView}, {@code base/BaseViewBindingAdapter}. Classes here are
- *       typically referenced only by their owning feature.
+ *       {@code code_editor/CodeEditorPreferences}, {@code highlighter/SyntaxScheme}, {@code
+ *       iconcreator/PatternBackgroundView}. Classes here are typically referenced only by their
+ *       owning feature.
  *   <li>{@link pro.sketchware.widgets} — general-purpose widgets that can be referenced directly by
  *       FQN tag in {@code res/layout/*.xml} (e.g. {@code CircleImageView}, {@code
  *       EasyDeleteEditText}). Concrete classes intended to be instantiated.
