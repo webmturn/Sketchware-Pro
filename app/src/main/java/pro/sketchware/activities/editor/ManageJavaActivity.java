@@ -1,13 +1,8 @@
 package pro.sketchware.activities.editor;
 
-import pro.sketchware.core.project.SketchwarePaths;
-
-import androidx.activity.OnBackPressedCallback;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-
-import androidx.core.content.FileProvider;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,37 +13,35 @@ import android.view.WindowManager;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.PopupMenu;
-
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
-
-import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
-
-import org.jetbrains.annotations.NotNull;
-
+import dev.pranav.filepicker.FilePickerCallback;
+import dev.pranav.filepicker.FilePickerDialogFragment;
+import dev.pranav.filepicker.FilePickerOptions;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import dev.pranav.filepicker.FilePickerCallback;
-import dev.pranav.filepicker.FilePickerDialogFragment;
-import dev.pranav.filepicker.FilePickerOptions;
-import pro.sketchware.activities.editor.code.SrcCodeEditor;
-import pro.sketchware.util.Helper;
+import org.jetbrains.annotations.NotNull;
 import pro.sketchware.R;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
+import pro.sketchware.activities.editor.code.SrcCodeEditor;
+import pro.sketchware.core.async.TaskHost;
+import pro.sketchware.core.project.FileResConfig;
+import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.databinding.DialogCreateNewFileLayoutBinding;
 import pro.sketchware.databinding.DialogInputLayoutBinding;
 import pro.sketchware.databinding.ManageFileBinding;
 import pro.sketchware.databinding.ManageJavaItemHsBinding;
-import pro.sketchware.core.project.FileResConfig;
-import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.util.FileUtil;
+import pro.sketchware.util.Helper;
 import pro.sketchware.util.SketchwareUtil;
 
 public class ManageJavaActivity extends BaseAppCompatActivity {
@@ -56,14 +49,15 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
     // Works for both Java and Kotlin files.
     private static final Pattern PACKAGE_DECL_PATTERN = Pattern.compile("package (.*?);?\\n");
 
-    private static final String ACTIVITY_TEMPLATE = """
+    private static final String ACTIVITY_TEMPLATE =
+            """
             package %s;
-            
+
             import android.app.Activity;
             import android.os.Bundle;
-            
+
             public class %s extends Activity {
-            
+
                 @Override
                 protected void onCreate(Bundle savedInstanceState) {
                     super.onCreate(savedInstanceState);
@@ -71,31 +65,34 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
             }
             """;
 
-    private static final String CLASS_TEMPLATE = """
+    private static final String CLASS_TEMPLATE =
+            """
             package %s;
-            
+
             public class %s {
                \s
             }
             """;
 
-    private static final String KT_ACTIVITY_TEMPLATE = """
+    private static final String KT_ACTIVITY_TEMPLATE =
+            """
             package %s
-            
+
             import android.app.Activity
             import android.os.Bundle
-            
+
             class %s : Activity() {
-            
+
                 override fun onCreate(savedInstanceState: Bundle?) {
                     super.onCreate(savedInstanceState)
                 }
             }
             """;
 
-    private static final String KT_CLASS_TEMPLATE = """
+    private static final String KT_CLASS_TEMPLATE =
+            """
             package %s
-            
+
             class %s {
                \s
             }
@@ -113,17 +110,25 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         enableEdgeToEdgeNoContrast();
         super.onCreate(savedInstanceState);
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                if (Objects.equals(Uri.parse(current_path).getPath(), Uri.parse(SketchwarePaths.getProjectJavaPath(sc_id)).getPath())) {
-                    finish();
-                } else {
-                    current_path = current_path.substring(0, current_path.lastIndexOf("/"));
-                    refresh();
-                }
-            }
-        });
+        getOnBackPressedDispatcher()
+                .addCallback(
+                        this,
+                        new OnBackPressedCallback(true) {
+                            @Override
+                            public void handleOnBackPressed() {
+                                if (Objects.equals(
+                                        Uri.parse(current_path).getPath(),
+                                        Uri.parse(SketchwarePaths.getProjectJavaPath(sc_id))
+                                                .getPath())) {
+                                    finish();
+                                } else {
+                                    current_path =
+                                            current_path.substring(
+                                                    0, current_path.lastIndexOf("/"));
+                                    refresh();
+                                }
+                            }
+                        });
         binding = ManageFileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -137,30 +142,40 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
         current_path = Uri.parse(SketchwarePaths.getProjectJavaPath(sc_id)).getPath();
         if (savedInstanceState != null) {
             String restored = savedInstanceState.getString("java_current_path");
-            if (restored != null && new File(restored).isDirectory()
-                    && new File(restored).toPath().normalize().startsWith(new File(current_path).toPath().normalize())) {
+            if (restored != null
+                    && new File(restored).isDirectory()
+                    && new File(restored)
+                            .toPath()
+                            .normalize()
+                            .startsWith(new File(current_path).toPath().normalize())) {
                 current_path = restored;
             }
         }
         refresh();
         importModel = new ViewModelProvider(this).get(JavaImportViewModel.class);
-        importModel.state().observe(this, state -> {
-            boolean running = state != null && state.running();
-            binding.importNewButton.setEnabled(!running);
-            if (running) {
-                showLoadingDialog();
-                return;
-            }
-            dismissLoadingDialog();
-            if (state != null) {
-                importModel.clearCompleted();
-                refresh();
-                if (!state.failedFiles().isEmpty()) {
-                    SketchwareUtil.toastError(Helper.getResString(R.string.error_import_file,
-                            String.join(", ", state.failedFiles())));
-                }
-            }
-        });
+        importModel
+                .state()
+                .observe(
+                        this,
+                        state -> {
+                            boolean running = state != null && state.running();
+                            binding.importNewButton.setEnabled(!running);
+                            if (running) {
+                                showLoadingDialog();
+                                return;
+                            }
+                            dismissLoadingDialog();
+                            if (state != null) {
+                                importModel.clearCompleted();
+                                refresh();
+                                if (!state.failedFiles().isEmpty()) {
+                                    SketchwareUtil.toastError(
+                                            Helper.getResString(
+                                                    R.string.error_import_file,
+                                                    String.join(", ", state.failedFiles())));
+                                }
+                            }
+                        });
     }
 
     @Override
@@ -180,21 +195,30 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
         binding.topAppBar.setTitle(R.string.manager_java_title);
         binding.showOptionsButton.setOnClickListener(view -> hideShowOptionsButton(false));
         binding.closeButton.setOnClickListener(view -> hideShowOptionsButton(true));
-        binding.createNewButton.setOnClickListener(v -> {
-            showCreateDialog();
-            hideShowOptionsButton(true);
-        });
-        binding.importNewButton.setOnClickListener(v -> {
-            showImportDialog();
-            hideShowOptionsButton(true);
-        });
-
+        binding.createNewButton.setOnClickListener(
+                v -> {
+                    showCreateDialog();
+                    hideShowOptionsButton(true);
+                });
+        binding.importNewButton.setOnClickListener(
+                v -> {
+                    showImportDialog();
+                    hideShowOptionsButton(true);
+                });
     }
 
     private void hideShowOptionsButton(boolean isHide) {
-        binding.optionsLayout.animate().translationY(isHide ? 300 : 0).alpha(isHide ? 0 : 1).setInterpolator(new OvershootInterpolator());
+        binding.optionsLayout
+                .animate()
+                .translationY(isHide ? 300 : 0)
+                .alpha(isHide ? 0 : 1)
+                .setInterpolator(new OvershootInterpolator());
 
-        binding.showOptionsButton.animate().translationY(isHide ? 0 : 300).alpha(isHide ? 1 : 0).setInterpolator(new OvershootInterpolator());
+        binding.showOptionsButton
+                .animate()
+                .translationY(isHide ? 0 : 300)
+                .alpha(isHide ? 1 : 0)
+                .setInterpolator(new OvershootInterpolator());
     }
 
     private String getCurrentPkgName() {
@@ -202,7 +226,9 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
 
         try {
             String trimmedPath = Helper.trimPath(SketchwarePaths.getProjectJavaPath(sc_id));
-            String substring = current_path.substring(current_path.indexOf(trimmedPath) + trimmedPath.length());
+            String substring =
+                    current_path.substring(
+                            current_path.indexOf(trimmedPath) + trimmedPath.length());
 
             if (substring.endsWith("/")) {
                 substring = substring.substring(0, substring.length() - 1);
@@ -220,89 +246,113 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
     }
 
     private void showCreateDialog() {
-        DialogCreateNewFileLayoutBinding dialogBinding = DialogCreateNewFileLayoutBinding.inflate(getLayoutInflater());
+        DialogCreateNewFileLayoutBinding dialogBinding =
+                DialogCreateNewFileLayoutBinding.inflate(getLayoutInflater());
         var inputText = dialogBinding.inputText;
 
-        var dialog = new MaterialAlertDialogBuilder(this)
-                .setView(dialogBinding.getRoot())
-                .setTitle(R.string.manager_create_new_title)
-                .setMessage(R.string.manager_create_new_msg)
-                .setNegativeButton(R.string.common_word_cancel, (dialogInterface, i) -> dialogInterface.dismiss())
-                .setPositiveButton(R.string.common_word_create, null)
-                .create();
+        var dialog =
+                new MaterialAlertDialogBuilder(this)
+                        .setView(dialogBinding.getRoot())
+                        .setTitle(R.string.manager_create_new_title)
+                        .setMessage(R.string.manager_create_new_msg)
+                        .setNegativeButton(
+                                R.string.common_word_cancel,
+                                (dialogInterface, i) -> dialogInterface.dismiss())
+                        .setPositiveButton(R.string.common_word_create, null)
+                        .create();
 
-        dialog.setOnShowListener(dialogInterface -> {
-            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-            inputText.requestFocus();
+        dialog.setOnShowListener(
+                dialogInterface -> {
+                    dialog.getWindow()
+                            .setSoftInputMode(
+                                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                    inputText.requestFocus();
 
-            Button positiveButton = ((androidx.appcompat.app.AlertDialog) dialogInterface).getButton(DialogInterface.BUTTON_POSITIVE);
-            positiveButton.setOnClickListener(view -> {
-                String name = Helper.getText(inputText);
-                if (name.isEmpty()) {
-                    SketchwareUtil.toastError(Helper.getResString(R.string.error_invalid_file_name));
-                    return;
-                }
+                    Button positiveButton =
+                            ((androidx.appcompat.app.AlertDialog) dialogInterface)
+                                    .getButton(DialogInterface.BUTTON_POSITIVE);
+                    positiveButton.setOnClickListener(
+                            view -> {
+                                String name = Helper.getText(inputText);
+                                if (name.isEmpty()) {
+                                    SketchwareUtil.toastError(
+                                            Helper.getResString(R.string.error_invalid_file_name));
+                                    return;
+                                }
 
-                String packageName = getCurrentPkgName();
+                                String packageName = getCurrentPkgName();
 
-                String extension;
-                String newFileContent;
-                boolean isFolder = false;
-                int checkedChipId = dialogBinding.chipGroupTypes.getCheckedChipId();
-                if (checkedChipId == R.id.chip_java_class) {
-                    newFileContent = String.format(CLASS_TEMPLATE, packageName, name);
-                    extension = ".java";
-                } else if (checkedChipId == R.id.chip_java_activity) {
-                    newFileContent = String.format(ACTIVITY_TEMPLATE, packageName, name);
-                    extension = ".java";
-                } else if (checkedChipId == R.id.chip_kotlin_class) {
-                    newFileContent = String.format(KT_CLASS_TEMPLATE, packageName, name);
-                    extension = ".kt";
-                } else if (checkedChipId == R.id.chip_kotlin_activity) {
-                    newFileContent = String.format(KT_ACTIVITY_TEMPLATE, packageName, name);
-                    extension = ".kt";
-                } else if (checkedChipId == R.id.chip_folder) {
-                    isFolder = true;
-                    extension = "";
-                    newFileContent = "";
-                } else {
-                    SketchwareUtil.toast(Helper.getResString(R.string.toast_select_file_type));
-                    return;
-                }
+                                String extension;
+                                String newFileContent;
+                                boolean isFolder = false;
+                                int checkedChipId = dialogBinding.chipGroupTypes.getCheckedChipId();
+                                if (checkedChipId == R.id.chip_java_class) {
+                                    newFileContent =
+                                            String.format(CLASS_TEMPLATE, packageName, name);
+                                    extension = ".java";
+                                } else if (checkedChipId == R.id.chip_java_activity) {
+                                    newFileContent =
+                                            String.format(ACTIVITY_TEMPLATE, packageName, name);
+                                    extension = ".java";
+                                } else if (checkedChipId == R.id.chip_kotlin_class) {
+                                    newFileContent =
+                                            String.format(KT_CLASS_TEMPLATE, packageName, name);
+                                    extension = ".kt";
+                                } else if (checkedChipId == R.id.chip_kotlin_activity) {
+                                    newFileContent =
+                                            String.format(KT_ACTIVITY_TEMPLATE, packageName, name);
+                                    extension = ".kt";
+                                } else if (checkedChipId == R.id.chip_folder) {
+                                    isFolder = true;
+                                    extension = "";
+                                    newFileContent = "";
+                                } else {
+                                    SketchwareUtil.toast(
+                                            Helper.getResString(R.string.toast_select_file_type));
+                                    return;
+                                }
 
-                String targetPath = new File(current_path, name + extension).getAbsolutePath();
-                if (FileUtil.isExistFile(targetPath)) {
-                    SketchwareUtil.toastError(Helper.getResString(isFolder
-                            ? R.string.error_folder_already_exists
-                            : R.string.error_file_exists));
-                    return;
-                }
+                                String targetPath =
+                                        new File(current_path, name + extension).getAbsolutePath();
+                                if (FileUtil.isExistFile(targetPath)) {
+                                    SketchwareUtil.toastError(
+                                            Helper.getResString(
+                                                    isFolder
+                                                            ? R.string.error_folder_already_exists
+                                                            : R.string.error_file_exists));
+                                    return;
+                                }
 
-                if (isFolder) {
-                    FileUtil.makeDir(targetPath);
-                } else {
-                    FileUtil.writeFile(targetPath, newFileContent);
-                }
+                                if (isFolder) {
+                                    FileUtil.makeDir(targetPath);
+                                } else {
+                                    FileUtil.writeFile(targetPath, newFileContent);
+                                }
 
-                if (FileUtil.isExistFile(targetPath)) {
-                    refresh();
-                    SketchwareUtil.toast(Helper.getResString(isFolder
-                            ? R.string.toast_folder_created
-                            : R.string.toast_file_created));
-                    dialog.dismiss();
-                } else {
-                    SketchwareUtil.toastError(Helper.getResString(isFolder
-                            ? R.string.toast_failed_to_create_folder
-                            : R.string.toast_failed_to_create_file));
-                }
-            });
+                                if (FileUtil.isExistFile(targetPath)) {
+                                    refresh();
+                                    SketchwareUtil.toast(
+                                            Helper.getResString(
+                                                    isFolder
+                                                            ? R.string.toast_folder_created
+                                                            : R.string.toast_file_created));
+                                    dialog.dismiss();
+                                } else {
+                                    SketchwareUtil.toastError(
+                                            Helper.getResString(
+                                                    isFolder
+                                                            ? R.string.toast_failed_to_create_folder
+                                                            : R.string
+                                                                    .toast_failed_to_create_file));
+                                }
+                            });
 
-             dialogBinding.chipFolder.setVisibility(View.VISIBLE);
-            dialogBinding.chipJavaClass.setVisibility(View.VISIBLE);
-            dialogBinding.chipJavaActivity.setVisibility(View.VISIBLE);
-            dialogBinding.chipKotlinClass.setVisibility(View.VISIBLE);
-            dialogBinding.chipKotlinActivity.setVisibility(View.VISIBLE);
-        });
+                    dialogBinding.chipFolder.setVisibility(View.VISIBLE);
+                    dialogBinding.chipJavaClass.setVisibility(View.VISIBLE);
+                    dialogBinding.chipJavaActivity.setVisibility(View.VISIBLE);
+                    dialogBinding.chipKotlinClass.setVisibility(View.VISIBLE);
+                    dialogBinding.chipKotlinActivity.setVisibility(View.VISIBLE);
+                });
 
         dialog.show();
     }
@@ -310,47 +360,89 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
     private void showImportDialog() {
         FilePickerOptions options = new FilePickerOptions();
         options.setMultipleSelection(true);
-        options.setExtensions(new String[]{"java", "kt"});
+        options.setExtensions(new String[] {"java", "kt"});
         options.setTitle(Helper.getResString(R.string.manager_java_select_files));
 
-        FilePickerCallback callback = new FilePickerCallback() {
-            @Override
-            public void onFilesSelected(@NotNull List<? extends File> files) {
-                if (isFinishing() || isDestroyed()) return;
-                importModel.start(TaskHost.of(ManageJavaActivity.this), files, new File(current_path), getCurrentPkgName());
-            }
-        };
+        FilePickerCallback callback =
+                new FilePickerCallback() {
+                    @Override
+                    public void onFilesSelected(@NotNull List<? extends File> files) {
+                        if (isFinishing() || isDestroyed()) return;
+                        importModel.start(
+                                TaskHost.of(ManageJavaActivity.this),
+                                files,
+                                new File(current_path),
+                                getCurrentPkgName());
+                    }
+                };
 
-        new FilePickerDialogFragment(options, callback).show(getSupportFragmentManager(), "filePicker");
+        new FilePickerDialogFragment(options, callback)
+                .show(getSupportFragmentManager(), "filePicker");
     }
 
     private void showRenameDialog(int position) {
-        DialogInputLayoutBinding dialogBinding = DialogInputLayoutBinding.inflate(getLayoutInflater());
+        DialogInputLayoutBinding dialogBinding =
+                DialogInputLayoutBinding.inflate(getLayoutInflater());
 
         var inputText = dialogBinding.inputText;
         var renameOccurrencesCheckBox = dialogBinding.renameOccurrencesCheckBox;
 
-        var dialog = new MaterialAlertDialogBuilder(this).setTitle(Helper.getResString(R.string.common_word_rename) + " " + filesAdapter.getFileName(position)).setView(dialogBinding.getRoot()).setNegativeButton(R.string.common_word_cancel, (dialogInterface, i) -> dialogInterface.dismiss()).setPositiveButton(R.string.common_word_rename, (dialogInterface, i) -> {
-            if (!Helper.getText(inputText).isEmpty()) {
-                if (!filesAdapter.isFolder(position)) {
-                    if (frc.getJavaManifestList().contains(filesAdapter.getFullName(position))) {
-                        frc.getJavaManifestList().remove(filesAdapter.getFullName(position));
-                        FileUtil.writeFile(SketchwarePaths.getProjectJavaManifestPath(sc_id), new Gson().toJson(frc.listJavaManifest));
-                        SketchwareUtil.toast(Helper.getResString(R.string.toast_removed_activity_manifest));
-                    }
+        var dialog =
+                new MaterialAlertDialogBuilder(this)
+                        .setTitle(
+                                Helper.getResString(R.string.common_word_rename)
+                                        + " "
+                                        + filesAdapter.getFileName(position))
+                        .setView(dialogBinding.getRoot())
+                        .setNegativeButton(
+                                R.string.common_word_cancel,
+                                (dialogInterface, i) -> dialogInterface.dismiss())
+                        .setPositiveButton(
+                                R.string.common_word_rename,
+                                (dialogInterface, i) -> {
+                                    if (!Helper.getText(inputText).isEmpty()) {
+                                        if (!filesAdapter.isFolder(position)) {
+                                            if (frc.getJavaManifestList()
+                                                    .contains(filesAdapter.getFullName(position))) {
+                                                frc.getJavaManifestList()
+                                                        .remove(filesAdapter.getFullName(position));
+                                                FileUtil.writeFile(
+                                                        SketchwarePaths.getProjectJavaManifestPath(
+                                                                sc_id),
+                                                        new Gson().toJson(frc.listJavaManifest));
+                                                SketchwareUtil.toast(
+                                                        Helper.getResString(
+                                                                R.string
+                                                                        .toast_removed_activity_manifest));
+                                            }
 
-                    if (renameOccurrencesCheckBox.isChecked()) {
-                        String fileContent = FileUtil.readFile(filesAdapter.getItem(position));
-                        FileUtil.writeFile(filesAdapter.getItem(position), fileContent.replaceAll(filesAdapter.getFileNameWoExt(position), FileUtil.getFileNameNoExtension(Helper.getText(inputText))));
-                    }
-                }
+                                            if (renameOccurrencesCheckBox.isChecked()) {
+                                                String fileContent =
+                                                        FileUtil.readFile(
+                                                                filesAdapter.getItem(position));
+                                                FileUtil.writeFile(
+                                                        filesAdapter.getItem(position),
+                                                        fileContent.replaceAll(
+                                                                filesAdapter.getFileNameWoExt(
+                                                                        position),
+                                                                FileUtil.getFileNameNoExtension(
+                                                                        Helper.getText(
+                                                                                inputText))));
+                                            }
+                                        }
 
-                FileUtil.renameFile(filesAdapter.getItem(position), new File(current_path, Helper.getText(inputText)).getAbsolutePath());
-                refresh();
-                SketchwareUtil.toast(Helper.getResString(R.string.toast_renamed_successfully));
-            }
-            dialogInterface.dismiss();
-        }).create();
+                                        FileUtil.renameFile(
+                                                filesAdapter.getItem(position),
+                                                new File(current_path, Helper.getText(inputText))
+                                                        .getAbsolutePath());
+                                        refresh();
+                                        SketchwareUtil.toast(
+                                                Helper.getResString(
+                                                        R.string.toast_renamed_successfully));
+                                    }
+                                    dialogInterface.dismiss();
+                                })
+                        .create();
 
         inputText.setText(filesAdapter.getFileName(position));
         boolean isFolder = filesAdapter.isFolder(position);
@@ -359,27 +451,57 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
 
         if (!isFolder) {
             renameOccurrencesCheckBox.setVisibility(View.VISIBLE);
-            renameOccurrencesCheckBox.setText(Helper.getResString(R.string.java_rename_occurrences_format, filesAdapter.getFileNameWoExt(position)));
+            renameOccurrencesCheckBox.setText(
+                    Helper.getResString(
+                            R.string.java_rename_occurrences_format,
+                            filesAdapter.getFileNameWoExt(position)));
         }
         dialog.show();
 
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        dialog.getWindow()
+                .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         inputText.requestFocus();
     }
 
     private void showDeleteDialog(int position) {
-        boolean isInManifest = frc.getJavaManifestList().contains(filesAdapter.getFullName(position));
+        boolean isInManifest =
+                frc.getJavaManifestList().contains(filesAdapter.getFullName(position));
 
-        new MaterialAlertDialogBuilder(this).setTitle(Helper.getResString(R.string.common_word_delete) + " " + filesAdapter.getFileName(position) + "?").setMessage(Helper.getResString(R.string.delete_confirm_format, getString(filesAdapter.isFolder(position) ? R.string.common_word_folder : R.string.common_word_file), isInManifest ? Helper.getResString(R.string.java_delete_manifest_warning) : "")).setPositiveButton(R.string.common_word_delete, (dialog, which) -> {
-            if (!filesAdapter.isFolder(position) && isInManifest) {
-                frc.getJavaManifestList().remove(filesAdapter.getFullName(position));
-                FileUtil.writeFile(SketchwarePaths.getProjectJavaManifestPath(sc_id), new Gson().toJson(frc.listJavaManifest));
-            }
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(
+                        Helper.getResString(R.string.common_word_delete)
+                                + " "
+                                + filesAdapter.getFileName(position)
+                                + "?")
+                .setMessage(
+                        Helper.getResString(
+                                R.string.delete_confirm_format,
+                                getString(
+                                        filesAdapter.isFolder(position)
+                                                ? R.string.common_word_folder
+                                                : R.string.common_word_file),
+                                isInManifest
+                                        ? Helper.getResString(R.string.java_delete_manifest_warning)
+                                        : ""))
+                .setPositiveButton(
+                        R.string.common_word_delete,
+                        (dialog, which) -> {
+                            if (!filesAdapter.isFolder(position) && isInManifest) {
+                                frc.getJavaManifestList()
+                                        .remove(filesAdapter.getFullName(position));
+                                FileUtil.writeFile(
+                                        SketchwarePaths.getProjectJavaManifestPath(sc_id),
+                                        new Gson().toJson(frc.listJavaManifest));
+                            }
 
-            FileUtil.deleteFile(filesAdapter.getItem(position));
-            refresh();
-            SketchwareUtil.toast(Helper.getResString(R.string.toast_deleted_successfully));
-        }).setNegativeButton(R.string.common_word_cancel, null).create().show();
+                            FileUtil.deleteFile(filesAdapter.getItem(position));
+                            refresh();
+                            SketchwareUtil.toast(
+                                    Helper.getResString(R.string.toast_deleted_successfully));
+                        })
+                .setNegativeButton(R.string.common_word_cancel, null)
+                .create()
+                .show();
     }
 
     private void refresh() {
@@ -421,7 +543,9 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            ManageJavaItemHsBinding binding = ManageJavaItemHsBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+            ManageJavaItemHsBinding binding =
+                    ManageJavaItemHsBinding.inflate(
+                            LayoutInflater.from(parent.getContext()), parent, false);
             return new ViewHolder(binding);
         }
 
@@ -432,18 +556,22 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
 
             holder.binding.title.setText(fileName);
 
-            binding.getRoot().setOnClickListener(view -> {
-                if (isFolder(position)) {
-                    current_path = filesAdapter.getItem(position);
-                    refresh();
-                    return;
-                }
-                goEditFile(position);
-            });
-            binding.getRoot().setOnLongClickListener(view -> {
-                itemContextMenu(view, position, Gravity.CENTER);
-                return true;
-            });
+            binding.getRoot()
+                    .setOnClickListener(
+                            view -> {
+                                if (isFolder(position)) {
+                                    current_path = filesAdapter.getItem(position);
+                                    refresh();
+                                    return;
+                                }
+                                goEditFile(position);
+                            });
+            binding.getRoot()
+                    .setOnLongClickListener(
+                            view -> {
+                                itemContextMenu(view, position, Gravity.CENTER);
+                                return true;
+                            });
 
             if (isFolder(position)) {
                 holder.binding.icon.setImageResource(R.drawable.ic_mtrl_folder);
@@ -455,7 +583,8 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
 
             Helper.applyRipple(ManageJavaActivity.this, holder.binding.more);
 
-            holder.binding.more.setOnClickListener(v -> itemContextMenu(v, position, Gravity.RIGHT));
+            holder.binding.more.setOnClickListener(
+                    v -> itemContextMenu(v, position, Gravity.RIGHT));
         }
 
         @Override
@@ -535,73 +664,122 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
                 boolean isActivityInManifest = frc.getJavaManifestList().contains(fullName);
                 boolean isServiceInManifest = frc.getServiceManifestList().contains(fullName);
                 if (isActivityInManifest) {
-                    popupMenuMenu.add(Menu.NONE, MENU_REMOVE_ACTIVITY, Menu.NONE, R.string.java_menu_remove_activity);
+                    popupMenuMenu.add(
+                            Menu.NONE,
+                            MENU_REMOVE_ACTIVITY,
+                            Menu.NONE,
+                            R.string.java_menu_remove_activity);
                 } else if (!isServiceInManifest) {
-                    popupMenuMenu.add(Menu.NONE, MENU_ADD_ACTIVITY, Menu.NONE, R.string.java_menu_add_activity);
+                    popupMenuMenu.add(
+                            Menu.NONE,
+                            MENU_ADD_ACTIVITY,
+                            Menu.NONE,
+                            R.string.java_menu_add_activity);
                 }
 
                 if (isServiceInManifest) {
-                    popupMenuMenu.add(Menu.NONE, MENU_REMOVE_SERVICE, Menu.NONE, R.string.java_menu_remove_service);
+                    popupMenuMenu.add(
+                            Menu.NONE,
+                            MENU_REMOVE_SERVICE,
+                            Menu.NONE,
+                            R.string.java_menu_remove_service);
                 } else if (!isActivityInManifest) {
-                    popupMenuMenu.add(Menu.NONE, MENU_ADD_SERVICE, Menu.NONE, R.string.java_menu_add_service);
+                    popupMenuMenu.add(
+                            Menu.NONE, MENU_ADD_SERVICE, Menu.NONE, R.string.java_menu_add_service);
                 }
 
                 popupMenuMenu.add(Menu.NONE, MENU_EDIT, Menu.NONE, R.string.java_menu_edit);
-                popupMenuMenu.add(Menu.NONE, MENU_EDIT_WITH, Menu.NONE, R.string.java_menu_edit_with);
+                popupMenuMenu.add(
+                        Menu.NONE, MENU_EDIT_WITH, Menu.NONE, R.string.java_menu_edit_with);
             }
 
             popupMenuMenu.add(Menu.NONE, MENU_RENAME, Menu.NONE, R.string.java_menu_rename);
             popupMenuMenu.add(Menu.NONE, MENU_DELETE_ITEM, Menu.NONE, R.string.common_word_delete);
 
-            popupMenu.setOnMenuItemClickListener(item -> {
-                switch (item.getItemId()) {
-                    case MENU_ADD_ACTIVITY -> {
-                        frc.getJavaManifestList().add(getFullName(position));
-                        FileUtil.writeFile(SketchwarePaths.getProjectJavaManifestPath(sc_id), new Gson().toJson(frc.listJavaManifest));
-                        SketchwareUtil.toast(String.format(Helper.getResString(R.string.toast_added_activity_manifest), getFileNameWoExt(position)));
-                    }
-                    case MENU_REMOVE_ACTIVITY -> {
-                        if (frc.getJavaManifestList().remove(getFullName(position))) {
-                            FileUtil.writeFile(SketchwarePaths.getProjectJavaManifestPath(sc_id), new Gson().toJson(frc.listJavaManifest));
-                            SketchwareUtil.toast(String.format(Helper.getResString(R.string.toast_removed_activity_from_manifest), getFileNameWoExt(position)));
-                        } else {
-                            SketchwareUtil.toast(Helper.getResString(R.string.toast_activity_not_in_manifest));
+            popupMenu.setOnMenuItemClickListener(
+                    item -> {
+                        switch (item.getItemId()) {
+                            case MENU_ADD_ACTIVITY -> {
+                                frc.getJavaManifestList().add(getFullName(position));
+                                FileUtil.writeFile(
+                                        SketchwarePaths.getProjectJavaManifestPath(sc_id),
+                                        new Gson().toJson(frc.listJavaManifest));
+                                SketchwareUtil.toast(
+                                        String.format(
+                                                Helper.getResString(
+                                                        R.string.toast_added_activity_manifest),
+                                                getFileNameWoExt(position)));
+                            }
+                            case MENU_REMOVE_ACTIVITY -> {
+                                if (frc.getJavaManifestList().remove(getFullName(position))) {
+                                    FileUtil.writeFile(
+                                            SketchwarePaths.getProjectJavaManifestPath(sc_id),
+                                            new Gson().toJson(frc.listJavaManifest));
+                                    SketchwareUtil.toast(
+                                            String.format(
+                                                    Helper.getResString(
+                                                            R.string
+                                                                    .toast_removed_activity_from_manifest),
+                                                    getFileNameWoExt(position)));
+                                } else {
+                                    SketchwareUtil.toast(
+                                            Helper.getResString(
+                                                    R.string.toast_activity_not_in_manifest));
+                                }
+                            }
+                            case MENU_ADD_SERVICE -> {
+                                frc.getServiceManifestList().add(getFullName(position));
+                                FileUtil.writeFile(
+                                        SketchwarePaths.getProjectServiceManifestPath(sc_id),
+                                        new Gson().toJson(frc.listServiceManifest));
+                                SketchwareUtil.toast(
+                                        String.format(
+                                                Helper.getResString(
+                                                        R.string.toast_added_service_manifest),
+                                                getFileNameWoExt(position)));
+                            }
+                            case MENU_REMOVE_SERVICE -> {
+                                if (frc.getServiceManifestList().remove(getFullName(position))) {
+                                    FileUtil.writeFile(
+                                            SketchwarePaths.getProjectServiceManifestPath(sc_id),
+                                            new Gson().toJson(frc.listServiceManifest));
+                                    SketchwareUtil.toast(
+                                            String.format(
+                                                    Helper.getResString(
+                                                            R.string
+                                                                    .toast_removed_service_from_manifest),
+                                                    getFileNameWoExt(position)));
+                                } else {
+                                    SketchwareUtil.toast(
+                                            Helper.getResString(
+                                                    R.string.toast_service_not_in_manifest));
+                                }
+                            }
+                            case MENU_EDIT -> goEditFile(position);
+                            case MENU_EDIT_WITH -> {
+                                try {
+                                    Intent launchIntent = new Intent(Intent.ACTION_VIEW);
+                                    File file = new File(getItem(position));
+                                    Uri uri =
+                                            FileProvider.getUriForFile(
+                                                    getApplicationContext(),
+                                                    getPackageName() + ".provider",
+                                                    file);
+                                    launchIntent.setDataAndType(uri, "text/plain");
+                                    launchIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                    startActivity(launchIntent);
+                                } catch (android.content.ActivityNotFoundException ignored) {
+                                }
+                            }
+                            case MENU_RENAME -> showRenameDialog(position);
+                            case MENU_DELETE_ITEM -> showDeleteDialog(position);
+                            default -> {
+                                return false;
+                            }
                         }
-                    }
-                    case MENU_ADD_SERVICE -> {
-                        frc.getServiceManifestList().add(getFullName(position));
-                        FileUtil.writeFile(SketchwarePaths.getProjectServiceManifestPath(sc_id), new Gson().toJson(frc.listServiceManifest));
-                        SketchwareUtil.toast(String.format(Helper.getResString(R.string.toast_added_service_manifest), getFileNameWoExt(position)));
-                    }
-                    case MENU_REMOVE_SERVICE -> {
-                        if (frc.getServiceManifestList().remove(getFullName(position))) {
-                            FileUtil.writeFile(SketchwarePaths.getProjectServiceManifestPath(sc_id), new Gson().toJson(frc.listServiceManifest));
-                            SketchwareUtil.toast(String.format(Helper.getResString(R.string.toast_removed_service_from_manifest), getFileNameWoExt(position)));
-                        } else {
-                            SketchwareUtil.toast(Helper.getResString(R.string.toast_service_not_in_manifest));
-                        }
-                    }
-                    case MENU_EDIT -> goEditFile(position);
-                    case MENU_EDIT_WITH -> {
-                        try {
-                            Intent launchIntent = new Intent(Intent.ACTION_VIEW);
-                            File file = new File(getItem(position));
-                            Uri uri = FileProvider.getUriForFile(getApplicationContext(), getPackageName() + ".provider", file);
-                            launchIntent.setDataAndType(uri, "text/plain");
-                            launchIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                            startActivity(launchIntent);
-                        } catch (android.content.ActivityNotFoundException ignored) {
-                        }
-                    }
-                    case MENU_RENAME -> showRenameDialog(position);
-                    case MENU_DELETE_ITEM -> showDeleteDialog(position);
-                    default -> {
-                        return false;
-                    }
-                }
 
-                return true;
-            });
+                        return true;
+                    });
 
             popupMenu.show();
         }

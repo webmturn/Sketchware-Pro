@@ -1,36 +1,30 @@
 package pro.sketchware.activities.settings;
 
-import pro.sketchware.core.settings.ApplicationSettings;
-
-
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceDataStore;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
-
-import pro.sketchware.activities.base.BaseAppCompatActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.topjohnwu.superuser.Shell;
-
-
-import pro.sketchware.util.Helper;
 import pro.sketchware.R;
-import pro.sketchware.util.UI;
-import pro.sketchware.databinding.DialogCreateNewFileLayoutBinding;
-import pro.sketchware.databinding.DialogBackupFilenameBinding;
-import pro.sketchware.util.BackupFilenameFormatter;
+import pro.sketchware.activities.base.BaseAppCompatActivity;
 import pro.sketchware.activities.main.fragments.projects.BackupFactory;
+import pro.sketchware.core.settings.ApplicationSettings;
+import pro.sketchware.databinding.DialogBackupFilenameBinding;
+import pro.sketchware.databinding.DialogCreateNewFileLayoutBinding;
 import pro.sketchware.databinding.PreferenceActivityBinding;
+import pro.sketchware.util.BackupFilenameFormatter;
+import pro.sketchware.util.Helper;
+import pro.sketchware.util.UI;
 
 public class ConfigActivity extends BaseAppCompatActivity {
 
@@ -45,7 +39,8 @@ public class ConfigActivity extends BaseAppCompatActivity {
         binding.topAppBar.setNavigationOnClickListener(Helper.getBackPressedClickListener(this));
         var fragment = new PreferenceFragment();
         fragment.setSnackbarView(binding.getRoot());
-        getSupportFragmentManager().beginTransaction()
+        getSupportFragmentManager()
+                .beginTransaction()
                 .replace(binding.fragmentContainer.getId(), fragment)
                 .commit();
         UI.addSystemWindowInsetToPadding(binding.appBarLayout, true, true, true, false);
@@ -59,85 +54,120 @@ public class ConfigActivity extends BaseAppCompatActivity {
         private final long exampleTimeMillis = System.currentTimeMillis();
 
         @Override
-        public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
+        public void onCreatePreferences(
+                @Nullable Bundle savedInstanceState, @Nullable String rootKey) {
             dataStore = DataStore.getInstance();
             getPreferenceManager().setPreferenceDataStore(dataStore);
             setPreferencesFromResource(R.xml.preferences_config_activity, rootKey);
             Preference backupDir = findPreference("backup-dir");
             assert backupDir != null;
-            backupDir.setOnPreferenceClickListener(preference -> {
-                DialogCreateNewFileLayoutBinding binding = DialogCreateNewFileLayoutBinding.inflate(getLayoutInflater());
-                binding.inputText.setText(ApplicationSettings.getBackupPath());
-                binding.chipGroupTypes.setVisibility(View.GONE);
-                AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
-                        .setView(binding.getRoot())
-                        .setTitle(R.string.settings_backup_directory_title)
-                        .setMessage(R.string.settings_backup_directory_msg)
-                        .setNegativeButton(R.string.common_word_cancel, null)
-                        .setPositiveButton(R.string.common_word_save, null)
-                        .create();
+            backupDir.setOnPreferenceClickListener(
+                    preference -> {
+                        DialogCreateNewFileLayoutBinding binding =
+                                DialogCreateNewFileLayoutBinding.inflate(getLayoutInflater());
+                        binding.inputText.setText(ApplicationSettings.getBackupPath());
+                        binding.chipGroupTypes.setVisibility(View.GONE);
+                        AlertDialog dialog =
+                                new MaterialAlertDialogBuilder(requireContext())
+                                        .setView(binding.getRoot())
+                                        .setTitle(R.string.settings_backup_directory_title)
+                                        .setMessage(R.string.settings_backup_directory_msg)
+                                        .setNegativeButton(R.string.common_word_cancel, null)
+                                        .setPositiveButton(R.string.common_word_save, null)
+                                        .create();
 
-                dialog.setOnShowListener(dialogInterface -> {
-                    dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setOnClickListener(
-                            Helper.getDialogDismissListener(dialogInterface));
-                    Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-                    positiveButton.setOnClickListener(view -> {
-                        getDataStore().putString(ApplicationSettings.SETTING_BACKUP_DIRECTORY, Helper.getText(binding.inputText));
-                        dialog.dismiss();
+                        dialog.setOnShowListener(
+                                dialogInterface -> {
+                                    dialog.getButton(DialogInterface.BUTTON_NEGATIVE)
+                                            .setOnClickListener(
+                                                    Helper.getDialogDismissListener(
+                                                            dialogInterface));
+                                    Button positiveButton =
+                                            dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                                    positiveButton.setOnClickListener(
+                                            view -> {
+                                                getDataStore()
+                                                        .putString(
+                                                                ApplicationSettings
+                                                                        .SETTING_BACKUP_DIRECTORY,
+                                                                Helper.getText(binding.inputText));
+                                                dialog.dismiss();
+                                            });
+
+                                    dialog.getWindow()
+                                            .setSoftInputMode(
+                                                    WindowManager.LayoutParams
+                                                            .SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                                    binding.inputText.requestFocus();
+                                });
+                        dialog.show();
+                        return true;
                     });
-
-                    dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                    binding.inputText.requestFocus();
-                });
-                dialog.show();
-                return true;
-            });
 
             SwitchPreferenceCompat installWithRoot = findPreference("root-auto-install-projects");
             assert installWithRoot != null;
-            installWithRoot.setOnPreferenceClickListener(preference -> {
-                if (installWithRoot.isChecked()) {
-                    Shell.getShell(shell -> {
-                        if (!shell.isRoot()) {
-                            Snackbar.make(snackbarView, Helper.getResString(R.string.config_error_no_root), BaseTransientBottomBar.LENGTH_SHORT).show();
-                            installWithRoot.setChecked(false);
+            installWithRoot.setOnPreferenceClickListener(
+                    preference -> {
+                        if (installWithRoot.isChecked()) {
+                            Shell.getShell(
+                                    shell -> {
+                                        if (!shell.isRoot()) {
+                                            Snackbar.make(
+                                                            snackbarView,
+                                                            Helper.getResString(
+                                                                    R.string.config_error_no_root),
+                                                            BaseTransientBottomBar.LENGTH_SHORT)
+                                                    .show();
+                                            installWithRoot.setChecked(false);
+                                        }
+                                    });
                         }
+                        return true;
                     });
-                }
-                return true;
-            });
 
             backupFilenamePreference = findPreference(ApplicationSettings.SETTING_BACKUP_FILENAME);
             assert backupFilenamePreference != null;
             updateBackupFilenameSummary();
-            backupFilenamePreference.setOnPreferenceClickListener(preference -> {
-                showBackupFilenameDialog();
-                return true;
-            });
+            backupFilenamePreference.setOnPreferenceClickListener(
+                    preference -> {
+                        showBackupFilenameDialog();
+                        return true;
+                    });
         }
 
         private String getExampleFilename(String template) {
-            if (template.isEmpty()) throw new IllegalArgumentException("Empty backup filename template");
-            return BackupFilenameFormatter.format(template,
-                    Helper.getResString(R.string.settings_backup_filename_sample_project),
-                    "1.0", "1", "com.example.app", exampleTimeMillis) + "." + BackupFactory.EXTENSION;
+            if (template.isEmpty())
+                throw new IllegalArgumentException("Empty backup filename template");
+            return BackupFilenameFormatter.format(
+                            template,
+                            Helper.getResString(R.string.settings_backup_filename_sample_project),
+                            "1.0",
+                            "1",
+                            "com.example.app",
+                            exampleTimeMillis)
+                    + "."
+                    + BackupFactory.EXTENSION;
         }
 
         private void updateBackupFilenameSummary() {
             try {
-                backupFilenamePreference.setSummary(String.format(
-                        Helper.getResString(R.string.settings_backup_filename_example),
-                        getExampleFilename(ApplicationSettings.getBackupFileName())));
+                backupFilenamePreference.setSummary(
+                        String.format(
+                                Helper.getResString(R.string.settings_backup_filename_example),
+                                getExampleFilename(ApplicationSettings.getBackupFileName())));
             } catch (IllegalArgumentException e) {
-                backupFilenamePreference.setSummary(Helper.getResString(R.string.settings_backup_filename_invalid_summary));
+                backupFilenamePreference.setSummary(
+                        Helper.getResString(R.string.settings_backup_filename_invalid_summary));
             }
         }
 
         private boolean updateFilenamePreview(DialogBackupFilenameBinding binding) {
             String template = Helper.getText(binding.backupFilenameInput);
             if (template.isEmpty()) {
-                binding.backupFilenameInputLayout.setError(Helper.getResString(R.string.settings_backup_filename_required));
-                binding.backupFilenamePreview.setText(Helper.getResString(R.string.settings_backup_filename_invalid_preview));
+                binding.backupFilenameInputLayout.setError(
+                        Helper.getResString(R.string.settings_backup_filename_required));
+                binding.backupFilenamePreview.setText(
+                        Helper.getResString(R.string.settings_backup_filename_invalid_preview));
                 return false;
             }
             try {
@@ -145,38 +175,60 @@ public class ConfigActivity extends BaseAppCompatActivity {
                 binding.backupFilenameInputLayout.setError(null);
                 return true;
             } catch (IllegalArgumentException e) {
-                binding.backupFilenameInputLayout.setError(Helper.getResString(R.string.settings_backup_filename_date_error));
-                binding.backupFilenamePreview.setText(Helper.getResString(R.string.settings_backup_filename_invalid_preview));
+                binding.backupFilenameInputLayout.setError(
+                        Helper.getResString(R.string.settings_backup_filename_date_error));
+                binding.backupFilenamePreview.setText(
+                        Helper.getResString(R.string.settings_backup_filename_invalid_preview));
                 return false;
             }
         }
 
         private void showBackupFilenameDialog() {
-            DialogBackupFilenameBinding binding = DialogBackupFilenameBinding.inflate(getLayoutInflater());
+            DialogBackupFilenameBinding binding =
+                    DialogBackupFilenameBinding.inflate(getLayoutInflater());
             binding.backupFilenameInput.setText(ApplicationSettings.getBackupFileName());
             updateFilenamePreview(binding);
-            Helper.addBasicTextChangedListener(binding.backupFilenameInput, text -> updateFilenamePreview(binding));
-            AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
-                    .setView(binding.getRoot())
-                    .setTitle(R.string.settings_backup_filename_title)
-                    .setNegativeButton(R.string.common_word_cancel, null)
-                    .setPositiveButton(R.string.common_word_save, null)
-                    .setNeutralButton(R.string.common_word_reset, (dialogInterface, which) -> {
-                        getDataStore().putString(ApplicationSettings.SETTING_BACKUP_FILENAME, null);
-                        updateBackupFilenameSummary();
-                        Snackbar.make(snackbarView, Helper.getResString(R.string.config_toast_reset_default),
-                                BaseTransientBottomBar.LENGTH_SHORT).show();
-                    })
-                    .create();
+            Helper.addBasicTextChangedListener(
+                    binding.backupFilenameInput, text -> updateFilenamePreview(binding));
+            AlertDialog dialog =
+                    new MaterialAlertDialogBuilder(requireContext())
+                            .setView(binding.getRoot())
+                            .setTitle(R.string.settings_backup_filename_title)
+                            .setNegativeButton(R.string.common_word_cancel, null)
+                            .setPositiveButton(R.string.common_word_save, null)
+                            .setNeutralButton(
+                                    R.string.common_word_reset,
+                                    (dialogInterface, which) -> {
+                                        getDataStore()
+                                                .putString(
+                                                        ApplicationSettings.SETTING_BACKUP_FILENAME,
+                                                        null);
+                                        updateBackupFilenameSummary();
+                                        Snackbar.make(
+                                                        snackbarView,
+                                                        Helper.getResString(
+                                                                R.string
+                                                                        .config_toast_reset_default),
+                                                        BaseTransientBottomBar.LENGTH_SHORT)
+                                                .show();
+                                    })
+                            .create();
             dialog.show();
-            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(view -> {
-                if (!updateFilenamePreview(binding)) return;
-                getDataStore().putString(ApplicationSettings.SETTING_BACKUP_FILENAME, Helper.getText(binding.backupFilenameInput));
-                updateBackupFilenameSummary();
-                dialog.dismiss();
-            });
-            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-                    | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE)
+                    .setOnClickListener(
+                            view -> {
+                                if (!updateFilenamePreview(binding)) return;
+                                getDataStore()
+                                        .putString(
+                                                ApplicationSettings.SETTING_BACKUP_FILENAME,
+                                                Helper.getText(binding.backupFilenameInput));
+                                updateBackupFilenameSummary();
+                                dialog.dismiss();
+                            });
+            dialog.getWindow()
+                    .setSoftInputMode(
+                            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+                                    | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         }
 
         public DataStore getDataStore() {
@@ -192,8 +244,7 @@ public class ConfigActivity extends BaseAppCompatActivity {
     public static class DataStore extends PreferenceDataStore {
         private static final DataStore INSTANCE = new DataStore();
 
-        private DataStore() {
-        }
+        private DataStore() {}
 
         public static DataStore getInstance() {
             return INSTANCE;
