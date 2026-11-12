@@ -16,10 +16,13 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import pro.sketchware.activities.main.fragments.projects.BackupFactory;
@@ -170,6 +173,87 @@ public class BackupFailureTest {
             assertNotNull(backup.getError(), duplicate);
             assertEquals(prefix + "_2.swb", duplicate.getName());
             assertTrue(first.isFile());
+        }
+    }
+
+    @Test
+    public void unsafeLibraryNamesAreRejectedWhenBackingUpAndRestoring() throws Exception {
+        try (CustomBlockBackupTest.Scope scope = new CustomBlockBackupTest.Scope();
+                CustomBlockBackupTest.OwnedProject source =
+                        new CustomBlockBackupTest.OwnedProject();
+                CustomBlockBackupTest.OwnedProject destination =
+                        new CustomBlockBackupTest.OwnedProject()) {
+            source.fixture.seed(false, false);
+            Files.write(
+                    new File(source.fixture.data, "local_library").toPath(),
+                    ("[{\"name\":\"../../" + scope.token + "\"}]")
+                            .getBytes(StandardCharsets.UTF_8));
+            BackupFactory backup = new BackupFactory(source.id());
+            backup.setBackupLocalLibs(true);
+
+            backup.backup(CONTEXT, "unsafe-library");
+
+            assertNull(backup.getOutFile());
+            assertTrue(backup.getError().contains("Invalid local library name"));
+            assertArrayEquals(
+                    new String[0], backupEntries(new File(scope.backups, "unsafe-library")));
+
+            File archive = backup(source.id());
+            BackupFactory restore = new BackupFactory(destination.id());
+            restore.restore(archive);
+
+            assertFalse(restore.isRestoreSuccess());
+            assertTrue(restore.getError().contains("Invalid local library name"));
+            assertFalse(
+                    new File(SketchwarePaths.getProjectListPath(destination.id()), "project")
+                            .exists());
+            assertArrayEquals(new String[0], backupEntries(destination.fixture.data));
+        }
+    }
+
+    @Test
+    public void failedRestoreDoesNotLeaveSharedLibrariesForTheNextArchive() throws Exception {
+        try (CustomBlockBackupTest.Scope scope = new CustomBlockBackupTest.Scope();
+                CustomBlockBackupTest.OwnedProject source =
+                        new CustomBlockBackupTest.OwnedProject();
+                CustomBlockBackupTest.OwnedProject destination =
+                        new CustomBlockBackupTest.OwnedProject()) {
+            source.fixture.seed(false, false);
+            String name = "BackupRt." + scope.token;
+            Path primary = SketchwarePaths.getLocalLibsDir().toPath().resolve(name);
+            Path fallback = SketchwarePaths.getLocalLibsFallbackDir().toPath().resolve(name);
+            assertFalse(Files.exists(primary));
+            assertFalse(Files.exists(fallback));
+            File first = archiveWithLibrary(scope.backups, "first.swb", source.id(), name, 1);
+            File second = archiveWithLibrary(scope.backups, "second.swb", source.id(), name, 2);
+            Path project = new File(SketchwarePaths.getProjectListPath(destination.id())).toPath();
+            Files.createDirectories(project);
+            Path blocker = Files.write(project.resolve("keep"), new byte[] {9});
+            BackupFactory restore = new BackupFactory(destination.id());
+            restore.setBackupLocalLibs(true);
+            try {
+                restore.restore(first);
+                assertFalse(restore.isRestoreSuccess());
+                assertTrue(
+                        restore.getError(),
+                        restore.getError().contains("Restore target is not empty"));
+                assertFalse(Files.exists(primary));
+                assertFalse(Files.exists(fallback));
+                assertArrayEquals(new byte[] {9}, Files.readAllBytes(blocker));
+
+                Files.delete(blocker);
+                restore.restore(second);
+                assertTrue(restore.getError(), restore.isRestoreSuccess());
+                assertTrue(Files.isRegularFile(project.resolve("project")));
+                Path library = Files.isDirectory(primary) ? primary : fallback;
+                assertArrayEquals(
+                        new byte[] {2}, Files.readAllBytes(library.resolve("classes.jar")));
+            } finally {
+                for (Path library : List.of(primary, fallback)) {
+                    Files.deleteIfExists(library.resolve("classes.jar"));
+                    Files.deleteIfExists(library);
+                }
+            }
         }
     }
 
@@ -388,6 +472,25 @@ public class BackupFailureTest {
             assertArrayEquals(bytes, Files.readAllBytes(archive.toPath()));
             destination.fixture.assertUnchanged(original);
         }
+    }
+
+    private static File archiveWithLibrary(
+            File directory, String filename, String sourceId, String library, int contents)
+            throws IOException {
+        File archive = new File(directory, filename);
+        try (var zip = new ZipOutputStream(Files.newOutputStream(archive.toPath()))) {
+            zip.putNextEntry(new ZipEntry("project"));
+            Files.copy(
+                    new File(SketchwarePaths.getProjectListPath(sourceId), "project").toPath(),
+                    zip);
+            zip.closeEntry();
+            zip.putNextEntry(new ZipEntry("data/.nomedia"));
+            zip.closeEntry();
+            zip.putNextEntry(new ZipEntry("local_libs/" + library + "/classes.jar"));
+            zip.write(contents);
+            zip.closeEntry();
+        }
+        return archive;
     }
 
     private static String[] backupEntries(File directory) {

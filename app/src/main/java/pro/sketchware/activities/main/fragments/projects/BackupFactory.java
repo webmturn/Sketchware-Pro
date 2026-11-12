@@ -475,15 +475,16 @@ public class BackupFactory {
                             JSONObject jo = ja.getJSONObject(i);
                             String libName = jo.optString("name", "");
                             if (libName.isEmpty()) continue;
+                            requireLocalLibraryName(libName);
 
-                            File libDir = new File(getAllLocalLibsDir(), libName);
+                            File libDir = localLibraryChild(getAllLocalLibsDir(), libName);
                             if (!libDir.exists()) {
                                 libDir =
-                                        new File(
+                                        localLibraryChild(
                                                 SketchwarePaths.getLocalLibsFallbackDir(), libName);
                             }
                             if (libDir.isDirectory()) {
-                                copy(libDir, new File(libsF, libName));
+                                copy(libDir, localLibraryChild(libsF, libName));
                             }
                         }
 
@@ -637,41 +638,7 @@ public class BackupFactory {
 
         // Copy local libs if they do not exist
         if (backupLocalLibs) {
-            File local_libs = new File(outFolder, "local_libs");
-
-            if (local_libs.exists()) {
-                File[] local_libs_content = local_libs.listFiles();
-                if (local_libs_content != null) {
-
-                    for (File local_lib : local_libs_content) {
-
-                        File primaryPath = new File(getAllLocalLibsDir(), local_lib.getName());
-                        File fallbackPath =
-                                new File(
-                                        SketchwarePaths.getLocalLibsFallbackDir(),
-                                        local_lib.getName());
-
-                        if (!primaryPath.exists() && !fallbackPath.exists()) {
-                            try {
-                                Files.createDirectories(primaryPath.toPath());
-                                copy(local_lib, primaryPath);
-                            } catch (IOException primaryFailure) {
-                                // Primary path blocked by FUSE, clean up empty dir
-                                // and use app-specific fallback
-                                FileUtil.deleteFile(primaryPath.getAbsolutePath());
-                                try {
-                                    Files.createDirectories(fallbackPath.toPath());
-                                    copy(local_lib, fallbackPath);
-                                } catch (IOException fallbackFailure) {
-                                    FileUtil.deleteFile(fallbackPath.getAbsolutePath());
-                                    fallbackFailure.addSuppressed(primaryFailure);
-                                    throw fallbackFailure;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            restoreLocalLibraries(new File(outFolder, "local_libs"), restoreDirectories);
         }
 
         // Rebuild local_library paths to use current device's storage layout
@@ -682,6 +649,52 @@ public class BackupFactory {
         copy(project, getProjectPath());
 
         return true;
+    }
+
+    private static void restoreLocalLibraries(
+            File source, Map<Path, RestoreTarget> restoreDirectories) throws IOException {
+        if (!source.exists()) return;
+        File[] libraries = source.listFiles();
+        if (libraries == null) throw new IOException("Cannot list backup libraries: " + source);
+        for (File library : libraries) {
+            String name = library.getName();
+            requireLocalLibraryName(name);
+            Path primary = getAllLocalLibsDir().toPath().resolve(name);
+            Path fallback = SketchwarePaths.getLocalLibsFallbackDir().toPath().resolve(name);
+            if (Files.exists(primary, LinkOption.NOFOLLOW_LINKS)
+                    || Files.exists(fallback, LinkOption.NOFOLLOW_LINKS)) continue;
+            if (!library.isDirectory()) throw new IOException("Invalid backup library: " + name);
+            try {
+                restoreLocalLibrary(library, primary, restoreDirectories);
+            } catch (IOException primaryFailure) {
+                try {
+                    restoreLocalLibrary(library, fallback, restoreDirectories);
+                } catch (IOException fallbackFailure) {
+                    fallbackFailure.addSuppressed(primaryFailure);
+                    throw fallbackFailure;
+                }
+            }
+        }
+    }
+
+    private static void restoreLocalLibrary(
+            File source, Path target, Map<Path, RestoreTarget> restoreDirectories)
+            throws IOException {
+        Path libraries = target.getParent();
+        Files.createDirectories(libraries);
+        // Keep incomplete copies outside the shared library listing.
+        Path staging = Files.createTempDirectory(libraries.getParent(), ".restore-lib-");
+        try {
+            copy(source, staging.toFile());
+            try {
+                Files.move(staging, target);
+            } catch (FileAlreadyExistsException existing) {
+                return;
+            }
+            restoreDirectories.put(target, RestoreTarget.CREATED);
+        } finally {
+            FileUtil.deleteFile(staging.toString());
+        }
     }
 
     @VisibleForTesting
@@ -734,6 +747,7 @@ public class BackupFactory {
         for (HashMap<String, Object> lib : libs) {
             String name = MapValueHelper.getString(lib, "name");
             if (name == null || name.isEmpty()) continue;
+            requireLocalLibraryName(name);
             String dependency = MapValueHelper.getString(lib, "dependency");
             rebuilt.add(
                     LocalLibrariesUtil.createLibraryMap(
@@ -742,6 +756,21 @@ public class BackupFactory {
         Files.write(
                 LocalLibrariesUtil.getLocalLibFile(sc_id).toPath(),
                 new Gson().toJson(rebuilt).getBytes(StandardCharsets.UTF_8));
+    }
+
+    private static void requireLocalLibraryName(String name) throws IOException {
+        if (!BackupFilenameFormatter.isValidFilenameStem(name)) {
+            throw new IOException("Invalid local library name: " + name);
+        }
+    }
+
+    private static File localLibraryChild(File directory, String name) throws IOException {
+        File root = directory.getCanonicalFile();
+        File child = new File(root, name).getCanonicalFile();
+        if (!root.equals(child.getParentFile())) {
+            throw new IOException("Local library path is outside its directory: " + name);
+        }
+        return child;
     }
 
     public String getError() {
