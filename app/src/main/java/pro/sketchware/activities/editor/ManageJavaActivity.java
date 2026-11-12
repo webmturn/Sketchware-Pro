@@ -27,14 +27,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.jetbrains.annotations.NotNull;
 import pro.sketchware.R;
 import pro.sketchware.activities.base.BaseAppCompatActivity;
 import pro.sketchware.activities.editor.code.SrcCodeEditor;
 import pro.sketchware.core.async.TaskHost;
 import pro.sketchware.core.project.FileResConfig;
+import pro.sketchware.core.project.JavaSourceImporter;
 import pro.sketchware.core.project.SketchwarePaths;
 import pro.sketchware.databinding.DialogCreateNewFileLayoutBinding;
 import pro.sketchware.databinding.DialogInputLayoutBinding;
@@ -45,9 +44,6 @@ import pro.sketchware.util.Helper;
 import pro.sketchware.util.SketchwareUtil;
 
 public class ManageJavaActivity extends BaseAppCompatActivity {
-
-    // Works for both Java and Kotlin files.
-    private static final Pattern PACKAGE_DECL_PATTERN = Pattern.compile("package (.*?);?\\n");
 
     private static final String ACTIVITY_TEMPLATE =
             """
@@ -603,18 +599,12 @@ public class ManageJavaActivity extends BaseAppCompatActivity {
          * @return The full package name of the Java/Kotlin file
          */
         public String getFullName(int position) {
-            String readFile = FileUtil.readFile(getItem(position));
-
-            if (!readFile.contains("package ")) {
-                return getFileNameWoExt(position);
-            }
-
-            Matcher m = PACKAGE_DECL_PATTERN.matcher(readFile);
-            if (m.find()) {
-                return m.group(1) + "." + getFileNameWoExt(position);
-            }
-
-            return getFileNameWoExt(position);
+            String path = getItem(position);
+            String packageName =
+                    JavaSourceImporter.getPackageName(
+                            FileUtil.readFile(path), path.endsWith(".kt"));
+            String name = getFileNameWoExt(position);
+            return packageName.isEmpty() ? name : packageName + "." + name;
         }
 
         /**
