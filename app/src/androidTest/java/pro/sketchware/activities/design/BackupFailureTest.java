@@ -26,6 +26,7 @@ import pro.sketchware.activities.main.fragments.projects.BackupFactory;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.ProjectListManager;
 import pro.sketchware.core.project.SketchwarePaths;
+import pro.sketchware.core.settings.ApplicationSettings;
 
 @RunWith(AndroidJUnit4.class)
 public class BackupFailureTest {
@@ -96,6 +97,79 @@ public class BackupFailureTest {
                         paths.anyMatch(
                                 path -> path.getFileName().toString().startsWith(".backup-")));
             }
+        }
+    }
+
+    @Test
+    public void backupsKeepProjectNamesAndUseDefaultForPathTemplates() throws Exception {
+        try (CustomBlockBackupTest.Scope scope = new CustomBlockBackupTest.Scope();
+                CustomBlockBackupTest.OwnedProject source =
+                        new CustomBlockBackupTest.OwnedProject()) {
+            source.fixture.seed(false, false);
+            BackupFactory backup = new BackupFactory(source.id());
+            backup.backup(CONTEXT, "my_demo");
+            File original = backup.getOutFile();
+            assertNotNull(backup.getError(), original);
+            assertEquals("my_demo", original.getParentFile().getName());
+            assertEquals("my_demo.swb", original.getName());
+            byte[] originalBytes = Files.readAllBytes(original.toPath());
+
+            backup.backup(CONTEXT, "my_demo");
+            File duplicate = backup.getOutFile();
+            assertNotNull(backup.getError(), duplicate);
+            assertEquals(original.getParentFile(), duplicate.getParentFile());
+            assertEquals("my_demo_2.swb", duplicate.getName());
+            assertArrayEquals(originalBytes, Files.readAllBytes(original.toPath()));
+
+            // Keep even a regressed write inside the fixture's owned backup directory.
+            scope.settings.put(
+                    ApplicationSettings.SETTING_BACKUP_DIRECTORY,
+                    new File(scope.backups, "nested").getAbsolutePath());
+            scope.settings.put(
+                    ApplicationSettings.SETTING_BACKUP_FILENAME, "../../outside/$projectName");
+            backup.backup(CONTEXT, "my_demo");
+            File fallback = backup.getOutFile();
+            assertNotNull(backup.getError(), fallback);
+            assertEquals(
+                    new File(scope.backups, "nested/my_demo").getCanonicalFile(),
+                    fallback.getParentFile().getCanonicalFile());
+            assertTrue(fallback.getName().startsWith("my_demo v"));
+            assertFalse(new File(scope.backups, "outside").exists());
+
+            backup.backup(CONTEXT, "a/b");
+            assertNull(backup.getOutFile());
+            assertFalse(backup.getError().isEmpty());
+            assertFalse(backup.getError().contains("\n"));
+            assertFalse(new File(scope.backups, "nested/ab").exists());
+        }
+    }
+
+    @Test
+    public void longBackupNamesFallBackAndDuplicateSuffixesFit() throws Exception {
+        try (CustomBlockBackupTest.Scope scope = new CustomBlockBackupTest.Scope();
+                CustomBlockBackupTest.OwnedProject source =
+                        new CustomBlockBackupTest.OwnedProject()) {
+            source.fixture.seed(false, false);
+            BackupFactory backup = new BackupFactory(source.id());
+            scope.settings.put(ApplicationSettings.SETTING_BACKUP_FILENAME, "界".repeat(100));
+            backup.backup(CONTEXT, "my_demo");
+            File fallback = backup.getOutFile();
+            assertNotNull(backup.getError(), fallback);
+            assertTrue(fallback.getName().startsWith("my_demo v"));
+
+            String prefix = "a".repeat(248);
+            String stem = prefix + "界";
+            scope.settings.put(ApplicationSettings.SETTING_BACKUP_FILENAME, stem);
+            backup.backup(CONTEXT, "my_demo");
+            File first = backup.getOutFile();
+            assertNotNull(backup.getError(), first);
+            assertEquals(stem + ".swb", first.getName());
+
+            backup.backup(CONTEXT, "my_demo");
+            File duplicate = backup.getOutFile();
+            assertNotNull(backup.getError(), duplicate);
+            assertEquals(prefix + "_2.swb", duplicate.getName());
+            assertTrue(first.isFile());
         }
     }
 
@@ -264,7 +338,7 @@ public class BackupFailureTest {
     }
 
     @Test
-    public void runtimeBackupFailureClearsPreviousSuccessAndReportsTheError() throws Exception {
+    public void missingProjectNameClearsPreviousSuccessAndReportsTheError() throws Exception {
         try (CustomBlockBackupTest.Scope scope = new CustomBlockBackupTest.Scope();
                 CustomBlockBackupTest.OwnedProject source =
                         new CustomBlockBackupTest.OwnedProject()) {

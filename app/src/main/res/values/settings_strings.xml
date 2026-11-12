@@ -6,5 +6,7 @@
     <string name="settings_backup_filename_invalid_summary">Invalid filename format. Tap to edit.</string>
     <string name="settings_backup_filename_invalid_preview">Unable to generate an example</string>
     <string name="settings_backup_filename_date_error">Check the date format inside $time(…).</string>
+    <string name="settings_backup_filename_path_error">Enter a filename without path separators or control characters.</string>
+    <string name="settings_backup_filename_too_long">The backup filename is too long.</string>
     <string name="settings_backup_filename_required">Enter a filename template.</string>
 </resources>

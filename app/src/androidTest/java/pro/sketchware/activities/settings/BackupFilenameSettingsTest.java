@@ -136,7 +136,7 @@ public class BackupFilenameSettingsTest {
     }
 
     @Test
-    public void invalidDateOrEmptyTemplateKeepsDialogOpenAndDoesNotSave() {
+    public void invalidTemplateKeepsDialogOpenAndDoesNotSave() {
         launch();
         String original = ApplicationSettings.getBackupFileName();
         openDialog();
@@ -152,6 +152,18 @@ public class BackupFilenameSettingsTest {
                     assertNotNull(
                             ((TextInputLayout) dialogView(R.id.backup_filename_input_layout))
                                     .getError());
+                    setTemplate("../../outside/$projectName");
+                    dialogView(android.R.id.button1).performClick();
+                    assertNotNull(
+                            ((TextInputLayout) dialogView(R.id.backup_filename_input_layout))
+                                    .getError());
+                    setTemplate("界".repeat(100));
+                    dialogView(android.R.id.button1).performClick();
+                    assertEquals(
+                            context.getString(R.string.settings_backup_filename_too_long),
+                            ((TextInputLayout) dialogView(R.id.backup_filename_input_layout))
+                                    .getError());
+                    assertEquals(original, ApplicationSettings.getBackupFileName());
                     setTemplate("$projectName_$time(yyyy)");
                     assertNull(
                             ((TextInputLayout) dialogView(R.id.backup_filename_input_layout))

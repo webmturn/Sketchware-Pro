@@ -6,5 +6,7 @@
     <string name="settings_backup_filename_invalid_summary">命名格式无效，点击编辑</string>
     <string name="settings_backup_filename_invalid_preview">无法生成文件名示例</string>
     <string name="settings_backup_filename_date_error">请检查 $time(…) 中的日期格式</string>
+    <string name="settings_backup_filename_path_error">文件名不能包含路径分隔符或控制字符。</string>
+    <string name="settings_backup_filename_too_long">备份文件名过长。</string>
     <string name="settings_backup_filename_required">请输入命名模板</string>
 </resources>

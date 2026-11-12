@@ -17,7 +17,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.topjohnwu.superuser.Shell;
 import pro.sketchware.R;
 import pro.sketchware.activities.base.BaseAppCompatActivity;
-import pro.sketchware.activities.main.fragments.projects.BackupFactory;
 import pro.sketchware.core.settings.ApplicationSettings;
 import pro.sketchware.databinding.DialogBackupFilenameBinding;
 import pro.sketchware.databinding.DialogCreateNewFileLayoutBinding;
@@ -135,52 +134,62 @@ public class ConfigActivity extends BaseAppCompatActivity {
                     });
         }
 
-        private String getExampleFilename(String template) {
-            if (template.isEmpty())
-                throw new IllegalArgumentException("Empty backup filename template");
+        private String getExampleFilenameStem(String template) {
             return BackupFilenameFormatter.format(
-                            template,
-                            Helper.getResString(R.string.settings_backup_filename_sample_project),
-                            "1.0",
-                            "1",
-                            "com.example.app",
-                            exampleTimeMillis)
-                    + "."
-                    + BackupFactory.EXTENSION;
+                    template,
+                    Helper.getResString(R.string.settings_backup_filename_sample_project),
+                    "1.0",
+                    "1",
+                    "com.example.app",
+                    exampleTimeMillis);
         }
 
         private void updateBackupFilenameSummary() {
+            String example;
             try {
-                backupFilenamePreference.setSummary(
-                        String.format(
-                                Helper.getResString(R.string.settings_backup_filename_example),
-                                getExampleFilename(ApplicationSettings.getBackupFileName())));
-            } catch (IllegalArgumentException e) {
-                backupFilenamePreference.setSummary(
-                        Helper.getResString(R.string.settings_backup_filename_invalid_summary));
+                String stem = getExampleFilenameStem(ApplicationSettings.getBackupFileName());
+                example =
+                        BackupFilenameFormatter.isValidFilenameStem(stem)
+                                        && !BackupFilenameFormatter.isArchiveFilenameTooLong(stem)
+                                ? BackupFilenameFormatter.archiveFilename(stem, 1)
+                                : null;
+            } catch (IllegalArgumentException ignored) {
+                example = null;
             }
+            backupFilenamePreference.setSummary(
+                    example == null
+                            ? Helper.getResString(R.string.settings_backup_filename_invalid_summary)
+                            : Helper.getResString(
+                                    R.string.settings_backup_filename_example, example));
         }
 
         private boolean updateFilenamePreview(DialogBackupFilenameBinding binding) {
             String template = Helper.getText(binding.backupFilenameInput);
             if (template.isEmpty()) {
-                binding.backupFilenameInputLayout.setError(
-                        Helper.getResString(R.string.settings_backup_filename_required));
-                binding.backupFilenamePreview.setText(
-                        Helper.getResString(R.string.settings_backup_filename_invalid_preview));
-                return false;
+                return showFilenameError(binding, R.string.settings_backup_filename_required);
             }
             try {
-                binding.backupFilenamePreview.setText(getExampleFilename(template));
+                String stem = getExampleFilenameStem(template);
+                if (!BackupFilenameFormatter.isValidFilenameStem(stem)) {
+                    return showFilenameError(binding, R.string.settings_backup_filename_path_error);
+                }
+                if (BackupFilenameFormatter.isArchiveFilenameTooLong(stem)) {
+                    return showFilenameError(binding, R.string.settings_backup_filename_too_long);
+                }
+                binding.backupFilenamePreview.setText(
+                        BackupFilenameFormatter.archiveFilename(stem, 1));
                 binding.backupFilenameInputLayout.setError(null);
                 return true;
             } catch (IllegalArgumentException e) {
-                binding.backupFilenameInputLayout.setError(
-                        Helper.getResString(R.string.settings_backup_filename_date_error));
-                binding.backupFilenamePreview.setText(
-                        Helper.getResString(R.string.settings_backup_filename_invalid_preview));
-                return false;
+                return showFilenameError(binding, R.string.settings_backup_filename_date_error);
             }
+        }
+
+        private boolean showFilenameError(DialogBackupFilenameBinding binding, int error) {
+            binding.backupFilenameInputLayout.setError(Helper.getResString(error));
+            binding.backupFilenamePreview.setText(
+                    Helper.getResString(R.string.settings_backup_filename_invalid_preview));
+            return false;
         }
 
         private void showBackupFilenameDialog() {

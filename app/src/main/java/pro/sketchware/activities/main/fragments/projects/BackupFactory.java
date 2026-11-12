@@ -21,9 +21,9 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -57,7 +57,7 @@ import pro.sketchware.util.MapValueHelper;
 import pro.sketchware.util.SketchwareUtil;
 
 public class BackupFactory {
-    public static final String EXTENSION = "swb";
+    public static final String EXTENSION = BackupFilenameFormatter.EXTENSION;
     public static final String DEF_PATH = SketchwarePaths.BACKUPS_PATH + File.separator;
 
     // WARNING: These crypto constants are part of the original Sketchware project file format.
@@ -361,45 +361,53 @@ public class BackupFactory {
 
     /************************ BACKUP ************************/
 
-    public void backup(Context context, String project_name) {
+    public void backup(Context context, String projectName) {
         outPath = null;
         error = "";
         try {
-            backupProject(context, project_name);
+            backupProject(context, projectName);
         } catch (IOException | RuntimeException e) {
             outPath = null;
-            error = Log.getStackTraceString(e);
+            String message = e.getMessage();
+            error = message == null || message.isEmpty() ? e.getClass().getSimpleName() : message;
             Log.e("BackupFactory", "Failed to back up project " + sc_id, e);
         }
     }
 
-    private void backupProject(Context context, String project_name) throws IOException {
+    private void backupProject(Context context, String projectName) throws IOException {
+        if (projectName == null || !BackupFilenameFormatter.isValidFilenameStem(projectName)) {
+            throw new IOException(
+                    Helper.getResString(R.string.settings_backup_filename_path_error));
+        }
         String customFileName = ApplicationSettings.getBackupFileName();
 
-        String versionName =
-                MapValueHelper.getString(ProjectListManager.getProjectById(sc_id), "sc_ver_name");
-        String versionCode =
-                MapValueHelper.getString(ProjectListManager.getProjectById(sc_id), "sc_ver_code");
-        String pkgName =
-                MapValueHelper.getString(
-                        ProjectListManager.getProjectById(sc_id), "my_sc_pkg_name");
-        String projectNameOnly = project_name.replace("_d", "").replace(File.separator, "");
+        var metadata = ProjectListManager.getProjectById(sc_id);
+        String versionName = MapValueHelper.getString(metadata, "sc_ver_name");
+        String versionCode = MapValueHelper.getString(metadata, "sc_ver_code");
+        String pkgName = MapValueHelper.getString(metadata, "my_sc_pkg_name");
+        long backupTime = System.currentTimeMillis();
         String finalFileName;
 
         try {
             finalFileName =
                     BackupFilenameFormatter.format(
                             customFileName,
-                            projectNameOnly,
+                            projectName,
                             versionName,
                             versionCode,
                             pkgName,
-                            System.currentTimeMillis());
-        } catch (Exception ignored) {
+                            backupTime);
+            if (!BackupFilenameFormatter.isValidFilenameStem(finalFileName)
+                    || BackupFilenameFormatter.isArchiveFilenameTooLong(finalFileName)) {
+                throw new IllegalArgumentException("Invalid backup filename");
+            }
+        } catch (IllegalArgumentException ignored) {
             SketchwareUtil.toastError(Helper.getResString(R.string.error_parse_backup_filename));
-            // Example name: InternalDemo v1.0 (com.jbk.internal.demo, 1) 2021-12-31T125827
+            String timestamp =
+                    new SimpleDateFormat("yyyy-MM-dd'T'HHmmss", Locale.ENGLISH)
+                            .format(new Date(backupTime));
             finalFileName =
-                    projectNameOnly
+                    projectName
                             + " v"
                             + versionName
                             + " ("
@@ -407,35 +415,23 @@ public class BackupFactory {
                             + ", "
                             + versionCode
                             + ") "
-                            + getFormattedDateFrom("yyyy-M-dd'T'HHmmss");
+                            + timestamp;
+            if (!BackupFilenameFormatter.isValidFilenameStem(finalFileName)
+                    || BackupFilenameFormatter.isArchiveFilenameTooLong(finalFileName)) {
+                finalFileName = projectName + " " + timestamp;
+            }
         }
-        createBackupsFolder();
-
-        // Init output zip file
-        File outZip =
-                new File(
-                        getBackupDir() + File.separator + projectNameOnly,
-                        finalFileName
-                                +
-                                // Adds all the _d if exists. Otherwise its possible that there'll
-                                // be an infinite loop
-                                (project_name.contains("_d")
-                                        ? project_name.replace(projectNameOnly, "")
-                                        : "")
-                                + "."
-                                + EXTENSION);
-
-        // Create a duplicate if already exists (impossible now :3)
-        if (outZip.exists()) {
-            backupProject(context, project_name + "_d");
-            return;
+        Path backupRoot = new File(getBackupDir()).getCanonicalFile().toPath();
+        Path projectDirectory =
+                backupRoot.resolve(projectName).toFile().getCanonicalFile().toPath();
+        if (!projectDirectory.startsWith(backupRoot) || projectDirectory.equals(backupRoot)) {
+            throw new IOException(
+                    "Backup project directory is outside the backup folder: " + projectName);
         }
-        File outFolder =
-                Files.createTempDirectory(new File(getBackupDir()).toPath(), ".backup-").toFile();
+        Files.createDirectories(projectDirectory);
+        File outFolder = Files.createTempDirectory(backupRoot, ".backup-").toFile();
         Path pendingArchive = null;
         try {
-            Files.createDirectories(outZip.toPath().getParent());
-
             // Copy data
             File dataF = new File(outFolder, "data");
             copySafe(getDataDir(), dataF);
@@ -526,10 +522,9 @@ public class BackupFactory {
                 Files.write(customBlocksF.toPath(), json.getBytes(StandardCharsets.UTF_8));
             }
 
-            pendingArchive = Files.createTempFile(outZip.toPath().getParent(), ".backup-", ".tmp");
+            pendingArchive = Files.createTempFile(projectDirectory, ".backup-", ".tmp");
             zipFolder(outFolder, pendingArchive.toFile());
-            Files.move(pendingArchive, outZip.toPath());
-            outPath = outZip;
+            outPath = publishBackup(pendingArchive, projectDirectory, finalFileName);
         } finally {
             FileUtil.deleteFile(outFolder.getAbsolutePath());
             if (pendingArchive != null) {
@@ -538,9 +533,18 @@ public class BackupFactory {
         }
     }
 
-    private String getFormattedDateFrom(String format) {
-        return new SimpleDateFormat(format, Locale.ENGLISH)
-                .format(Calendar.getInstance().getTime());
+    private static File publishBackup(Path pendingArchive, Path directory, String filename)
+            throws IOException {
+        for (int copy = 1; ; copy++) {
+            Path target =
+                    directory.resolve(BackupFilenameFormatter.archiveFilename(filename, copy));
+            if (Files.exists(target, LinkOption.NOFOLLOW_LINKS)) continue;
+            try {
+                return Files.move(pendingArchive, target).toFile();
+            } catch (FileAlreadyExistsException occupied) {
+                // Another backup may have taken the name after the existence check.
+            }
+        }
     }
 
     public File getOutFile() {
