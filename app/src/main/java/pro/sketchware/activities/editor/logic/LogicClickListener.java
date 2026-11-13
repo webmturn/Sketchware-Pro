@@ -24,9 +24,11 @@ import java.util.List;
 import java.util.Map;
 import pro.sketchware.R;
 import pro.sketchware.activities.editor.LogicEditorActivity;
+import pro.sketchware.activities.editor.makeblock.ReturnMoreblockManager;
 import pro.sketchware.beans.EventBean;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.core.block.view.BlockView;
+import pro.sketchware.core.codegen.EventRegistry;
 import pro.sketchware.core.project.BlockConstants;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.ProjectDataStore;
@@ -37,6 +39,7 @@ import pro.sketchware.databinding.AddCustomListBinding;
 import pro.sketchware.databinding.AddCustomVariableBinding;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.SketchwareUtil;
+import pro.sketchware.util.format.FormatUtil;
 
 public class LogicClickListener implements View.OnClickListener {
 
@@ -513,7 +516,9 @@ public class LogicClickListener implements View.OnClickListener {
                                     List.of(ExtraMenuBean.VARIABLE_TYPE_MAP),
                                     Helper.getResString(R.string.logic_group_map)),
                             new Pair<>(
-                                    List.of(5, 6),
+                                    List.of(
+                                            ExtraMenuBean.VARIABLE_TYPE_CUSTOM_LEGACY,
+                                            ExtraMenuBean.VARIABLE_TYPE_CUSTOM_DECLARATION),
                                     Helper.getResString(R.string.logic_group_custom)));
             for (Pair<List<Integer>, String> variableType : variableTypes) {
                 List<String> instances = new LinkedList<>();
@@ -548,16 +553,24 @@ public class LogicClickListener implements View.OnClickListener {
         builder.setNegativeButton(R.string.common_word_cancel, null);
         androidx.appcompat.app.AlertDialog dialog = builder.show();
         adapter.setOnItemClickListener(
-                name -> {
+                selection -> {
                     dialog.dismiss();
-                    showVariableReferencesResult(name, isList);
+                    String name = CustomVariableUtil.getVariableName(selection);
+                    String customType =
+                            name == null || isList
+                                    ? null
+                                    : CustomVariableUtil.getVariableType(selection);
+                    showVariableReferencesResult(
+                            name == null ? selection : name, isList, customType);
                 });
     }
 
-    private void showVariableReferencesResult(String variableName, boolean isList) {
+    private void showVariableReferencesResult(
+            String variableName, boolean isList, String customType) {
         logicEditor.saveBlocks();
         ArrayList<ProjectDataStore.VariableReference> references =
-                projectDataManager.findVariableReferences(javaName, variableName, isList);
+                projectDataManager.findVariableReferences(
+                        javaName, variableName, isList, customType);
 
         if (references.isEmpty()) {
             SketchwareUtil.toast(Helper.getResString(R.string.logic_editor_message_no_refs_found));
@@ -580,13 +593,15 @@ public class LogicClickListener implements View.OnClickListener {
         for (Map.Entry<String, List<ProjectDataStore.VariableReference>> entry :
                 grouped.entrySet()) {
             String blockEntryKey = entry.getKey();
+            EventBean event = referenceEvent(blockEntryKey);
+            String title = event == null ? blockEntryKey : referenceEventTitle(event);
             List<ProjectDataStore.VariableReference> refs = entry.getValue();
             boolean isCurrentEntry = blockEntryKey.equals(currentBlockEntryKey);
             String suffix = isCurrentEntry ? " \u2605" : "";
-            data.add(new Item(blockEntryKey + " (" + refs.size() + ")" + suffix));
+            data.add(new Item(title + " (" + refs.size() + ")" + suffix));
             refByPosition.add(null);
             for (ProjectDataStore.VariableReference ref : refs) {
-                data.add(new Item(ref.opCode, true));
+                data.add(new Item(referenceBlockLabel(ref), true));
                 refByPosition.add(ref);
             }
         }
@@ -627,16 +642,65 @@ public class LogicClickListener implements View.OnClickListener {
                 });
     }
 
-    private void navigateToEventByKey(String blockEntryKey, String blockId) {
-        ArrayList<EventBean> events = projectDataManager.getEvents(javaName);
-        for (EventBean event : events) {
-            String eventBlockEntryKey = event.targetId + "_" + event.eventName;
-            if (eventBlockEntryKey.equals(blockEntryKey)) {
-                logicEditor.navigateToEvent(event.targetId, event.eventName, blockId);
-                return;
+    private EventBean referenceEvent(String blockEntryKey) {
+        if ("onCreate_initializeLogic".equals(blockEntryKey)) {
+            return new EventBean(EventBean.EVENT_TYPE_ACTIVITY, -1, "onCreate", "initializeLogic");
+        }
+        for (Pair<String, String> moreBlock : projectDataManager.getMoreBlocks(javaName)) {
+            if ((moreBlock.first + "_moreBlock").equals(blockEntryKey)) {
+                return new EventBean(EventBean.EVENT_TYPE_ETC, -1, moreBlock.first, "moreBlock");
             }
         }
-        SketchwareUtil.toast(blockEntryKey);
+        for (EventBean event : projectDataManager.getEvents(javaName)) {
+            String eventBlockEntryKey = event.targetId + "_" + event.eventName;
+            if (eventBlockEntryKey.equals(blockEntryKey)) return event;
+        }
+        return null;
+    }
+
+    private static String referenceEventTitle(EventBean event) {
+        if ("moreBlock".equals(event.eventName))
+            return ReturnMoreblockManager.getMbName(event.targetId);
+        String name = EventRegistry.getEventName(event.eventName);
+        return event.eventType == EventBean.EVENT_TYPE_ACTIVITY
+                ? name
+                : event.targetId + " · " + name;
+    }
+
+    private static String referenceBlockLabel(ProjectDataStore.VariableReference reference) {
+        if (reference.sourceLine != null) {
+            String code = reference.sourceLine;
+            if (code.length() > 100) code = code.substring(0, 100) + "…";
+            return Helper.getResString(R.string.block_add_source_directly_head) + " · " + code;
+        }
+        if (isEmpty(reference.blockSpec)) return reference.opCode;
+        List<String> parts = FormatUtil.parseBlockSpec(reference.blockSpec);
+        int parameter = 0;
+        for (int i = 0; i < parts.size(); i++) {
+            String part = parts.get(i);
+            if (part.length() >= 2
+                    && part.charAt(0) == '%'
+                    && "bdsm".indexOf(part.charAt(1)) >= 0) {
+                String value =
+                        parameter < reference.parameters.size()
+                                ? reference.parameters.get(parameter)
+                                : null;
+                parts.set(i, isEmpty(value) || value.startsWith("@") ? "…" : value);
+                parameter++;
+            } else {
+                parts.set(i, FormatUtil.unescapeString(part));
+            }
+        }
+        return String.join(" ", parts);
+    }
+
+    private void navigateToEventByKey(String blockEntryKey, String blockId) {
+        EventBean event = referenceEvent(blockEntryKey);
+        if (event != null) {
+            logicEditor.navigateToEvent(event.targetId, event.eventName, blockId);
+        } else {
+            SketchwareUtil.toast(Helper.getResString(R.string.logic_editor_reference_unavailable));
+        }
     }
 
     private static class RenameAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

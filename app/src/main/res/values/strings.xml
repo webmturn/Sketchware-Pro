@@ -2410,6 +2410,7 @@ Please try again after removing the blocks with this variable"</string>
     <string name="logic_editor_panel_button_find_refs_list">Find references</string>
     <string name="logic_editor_title_find_refs">References to "%s"</string>
     <string name="logic_editor_message_no_refs_found">No references found</string>
+    <string name="logic_editor_reference_unavailable">The event for this reference is unavailable</string>
     <string name="logic_editor_find_refs_count">%d references found</string>
     <string name="logic_editor_find_refs_select_variable">Select a variable to find references</string>
     <string name="logic_editor_find_refs_select_list">Select a list to find references</string>

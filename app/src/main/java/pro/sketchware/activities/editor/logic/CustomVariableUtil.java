@@ -7,7 +7,7 @@ public class CustomVariableUtil {
     public static final Pattern PATTERN_CUSTOM_VARIABLE =
             Pattern.compile(
                     "\\b((private|public|protected|static|final|transient|volatile)\\s+)*"
-                            + "([\\w$]+(?:\\s*,\\s*[\\w$]+)*"
+                            + "([\\w$.]+(?:\\s*,\\s*[\\w$.]+)*"
                             + "(?:\\s*<[a-zA-Z0-9.,_ ?<>\\[\\]]*>)?"
                             + "(?:\\[\\])*)?\\s+"
                             + "([\\w$]+)"
@@ -35,7 +35,8 @@ public class CustomVariableUtil {
     public static String getVariableType(String input) {
         Matcher matcher = getMatcher(input);
         if (matcher.find()) {
-            return removeSpaces(matcher.group(VARIABLE_TYPE));
+            String type = matcher.group(VARIABLE_TYPE);
+            return type == null ? null : removeSpaces(type);
         }
         return null;
     }

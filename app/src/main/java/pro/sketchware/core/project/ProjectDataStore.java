@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -26,6 +27,7 @@ import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ProjectLibraryBean;
 import pro.sketchware.beans.ViewBean;
 import pro.sketchware.beans.ViewBeans;
+import pro.sketchware.core.block.BlockSpecParser;
 import pro.sketchware.core.settings.ApplicationSettings;
 import pro.sketchware.util.io.EncryptedFileUtil;
 
@@ -1060,43 +1062,79 @@ public class ProjectDataStore {
     }
 
     public ArrayList<VariableReference> findVariableReferences(
-            String fileName, String variableName, boolean isList) {
+            String fileName, String variableName, boolean isList, String customType) {
         ArrayList<VariableReference> references = new ArrayList<>();
         HashMap<String, ArrayList<BlockBean>> blockEntryMap = blockMap.get(fileName);
         if (blockEntryMap == null) return references;
+        String className =
+                fileName.endsWith(".java")
+                        ? fileName.substring(0, fileName.length() - 5)
+                        : fileName;
+        SourceBlockReferences sourceBlocks = new SourceBlockReferences(className, variableName);
         for (Map.Entry<String, ArrayList<BlockBean>> entry : blockEntryMap.entrySet()) {
             String blockEntryKey = entry.getKey();
-            for (BlockBean blockBean : entry.getValue()) {
-                ClassInfo blockClassInfo = blockBean.getClassInfo();
-                if (blockClassInfo != null
-                        && (isList ? blockClassInfo.isList() : blockClassInfo.isVariable())
-                        && blockBean.spec.equals(variableName)) {
-                    references.add(
-                            new VariableReference(
-                                    blockEntryKey, blockBean.opCode, blockBean.spec, blockBean.id));
+            List<BlockBean> blocks = entry.getValue();
+            Map<String, String> sourceMatches = sourceBlocks.find(blocks);
+            for (BlockBean blockBean : blocks) {
+                String sourceLine = sourceMatches.get(blockBean.id);
+                if ("addSourceDirectly".equals(blockBean.opCode)) {
+                    if (sourceLine == null) continue;
+                } else if (!referencesVariable(blockBean, variableName, isList, customType)) {
                     continue;
                 }
-                ArrayList<ClassInfo> paramClassInfos = blockBean.getParamClassInfo();
-                if (paramClassInfos != null && !paramClassInfos.isEmpty()) {
-                    for (int b = 0; b < paramClassInfos.size(); b++) {
-                        ClassInfo paramClassInfo = paramClassInfos.get(b);
-                        if (paramClassInfo != null
-                                && (isList ? paramClassInfo.isList() : paramClassInfo.isVariable())
-                                && b < blockBean.parameters.size()
-                                && blockBean.parameters.get(b).equals(variableName)) {
-                            references.add(
-                                    new VariableReference(
-                                            blockEntryKey,
-                                            blockBean.opCode,
-                                            blockBean.spec,
-                                            blockBean.id));
-                            break;
-                        }
-                    }
-                }
+                references.add(
+                        new VariableReference(
+                                blockEntryKey,
+                                blockBean.opCode,
+                                blockBean.spec,
+                                blockBean.id,
+                                new ArrayList<>(blockBean.parameters),
+                                sourceLine));
             }
         }
         return references;
+    }
+
+    private static boolean referencesVariable(
+            BlockBean block, String name, boolean isList, String customType) {
+        if ("getVar".equals(block.opCode) && name.equals(block.spec)) {
+            if (isList) return "l".equals(block.type);
+            return switch (block.type) {
+                case "b", "d", "n", "s", "a" -> true;
+                case "v" -> matchesCustomVariableType(customType, block.typeName);
+                default -> false;
+            };
+        }
+
+        // Plain value fields hold literals. Variable names are stored in selector fields.
+        var fields = BlockSpecParser.parseParameters(block.spec);
+        for (int i = 0; i < fields.size() && i < block.parameters.size(); i++) {
+            String field = fields.get(i);
+            if (!field.startsWith("%m.") || !name.equals(block.parameters.get(i))) continue;
+            String selector = field.substring(3);
+            int suffix = selector.indexOf('.');
+            String menu = suffix < 0 ? selector : selector.substring(0, suffix);
+            boolean matches =
+                    switch (menu) {
+                        case "list", "listInt", "listStr", "listMap" -> isList;
+                        case "varBool", "varInt", "varStr", "varMap" -> !isList;
+                        default ->
+                                !isList
+                                        && customType != null
+                                        && (selector.equals(customType)
+                                                || selector.startsWith(customType + "."));
+                    };
+            if (matches) return true;
+        }
+        return false;
+    }
+
+    private static boolean matchesCustomVariableType(String declaredType, String storedType) {
+        if (declaredType == null) return false;
+        if (declaredType.equals(storedType)) return true;
+        // BlockView stores the part before the first dot as its component type.
+        int dot = declaredType.indexOf('.');
+        return dot > 0 && declaredType.substring(0, dot).equals(storedType);
     }
 
     public static class VariableReference {
@@ -1104,13 +1142,22 @@ public class ProjectDataStore {
         public final String opCode;
         public final String blockSpec;
         public final String blockId;
+        public final ArrayList<String> parameters;
+        public final String sourceLine;
 
         public VariableReference(
-                String blockEntryKey, String opCode, String blockSpec, String blockId) {
+                String blockEntryKey,
+                String opCode,
+                String blockSpec,
+                String blockId,
+                ArrayList<String> parameters,
+                String sourceLine) {
             this.blockEntryKey = blockEntryKey;
             this.opCode = opCode;
             this.blockSpec = blockSpec;
             this.blockId = blockId;
+            this.parameters = parameters;
+            this.sourceLine = sourceLine;
         }
     }
 
