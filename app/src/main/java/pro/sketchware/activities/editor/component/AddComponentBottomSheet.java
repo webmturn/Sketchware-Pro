@@ -6,15 +6,11 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import pro.sketchware.beans.ComponentBean;
-import pro.sketchware.beans.ProjectFileBean;
 import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexWrap;
@@ -23,15 +19,15 @@ import com.google.android.flexbox.JustifyContent;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-
 import java.util.ArrayList;
-
-import pro.sketchware.util.Helper;
-import pro.sketchware.core.project.ComponentsHandler;
 import pro.sketchware.R;
+import pro.sketchware.beans.ComponentBean;
+import pro.sketchware.beans.ProjectFileBean;
+import pro.sketchware.core.project.ComponentsHandler;
 import pro.sketchware.databinding.ComponentAddItemBinding;
 import pro.sketchware.databinding.LogicAddComponentBinding;
 import pro.sketchware.dialogs.InnerAddComponentBottomSheet;
+import pro.sketchware.util.Helper;
 
 public class AddComponentBottomSheet extends BottomSheetDialogFragment {
     public static final String RESULT_JAVA_FILE = "java_file";
@@ -42,7 +38,8 @@ public class AddComponentBottomSheet extends BottomSheetDialogFragment {
     private LogicAddComponentBinding binding;
     private int sheetOrientation;
 
-    public static AddComponentBottomSheet newInstance(String scId, ProjectFileBean projectFileBean) {
+    public static AddComponentBottomSheet newInstance(
+            String scId, ProjectFileBean projectFileBean) {
         AddComponentBottomSheet addComponentBottomSheet = new AddComponentBottomSheet();
         Bundle args = new Bundle();
         args.putString("sc_id", scId);
@@ -62,7 +59,8 @@ public class AddComponentBottomSheet extends BottomSheetDialogFragment {
         manager.setFragmentResult(resultKey(projectId), result);
         for (Fragment fragment : manager.getFragments()) {
             if (fragment instanceof AddComponentBottomSheet selector
-                    && projectId.equals(selector.sc_id) && selector.projectFileBean != null
+                    && projectId.equals(selector.sc_id)
+                    && selector.projectFileBean != null
                     && javaFile.equals(selector.projectFileBean.getJavaName())) {
                 selector.dismiss();
             }
@@ -93,7 +91,9 @@ public class AddComponentBottomSheet extends BottomSheetDialogFragment {
         super.onStart();
         sheetOrientation = getResources().getConfiguration().orientation;
         if (sheetOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-            ((BottomSheetDialog) requireDialog()).getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
+            ((BottomSheetDialog) requireDialog())
+                    .getBehavior()
+                    .setState(BottomSheetBehavior.STATE_EXPANDED);
         }
     }
 
@@ -103,8 +103,11 @@ public class AddComponentBottomSheet extends BottomSheetDialogFragment {
         if (sheetOrientation != newConfig.orientation) {
             sheetOrientation = newConfig.orientation;
             if (getDialog() instanceof BottomSheetDialog dialog) {
-                dialog.getBehavior().setState(sheetOrientation == Configuration.ORIENTATION_LANDSCAPE
-                        ? BottomSheetBehavior.STATE_EXPANDED : BottomSheetBehavior.STATE_COLLAPSED);
+                dialog.getBehavior()
+                        .setState(
+                                sheetOrientation == Configuration.ORIENTATION_LANDSCAPE
+                                        ? BottomSheetBehavior.STATE_EXPANDED
+                                        : BottomSheetBehavior.STATE_COLLAPSED);
             }
         }
     }
@@ -145,14 +148,18 @@ public class AddComponentBottomSheet extends BottomSheetDialogFragment {
         componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_FIREBASE_STORAGE));
         componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_PHONE));
         componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN));
+        componentList.add(
+                new ComponentBean(ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN));
 
         ComponentsHandler.addCustomComponents(componentList);
     }
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         binding = LogicAddComponentBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
@@ -162,7 +169,8 @@ public class AddComponentBottomSheet extends BottomSheetDialogFragment {
         super.onViewCreated(view, savedInstanceState);
         if (sc_id == null || projectFileBean == null) return;
 
-        FlexboxLayoutManager flexboxLayoutManager = new FlexboxLayoutManager(getContext(), FlexDirection.ROW, FlexWrap.WRAP);
+        FlexboxLayoutManager flexboxLayoutManager =
+                new FlexboxLayoutManager(getContext(), FlexDirection.ROW, FlexWrap.WRAP);
         flexboxLayoutManager.setJustifyContent(JustifyContent.SPACE_BETWEEN);
         flexboxLayoutManager.setAlignItems(AlignItems.CENTER);
 
@@ -173,29 +181,37 @@ public class AddComponentBottomSheet extends BottomSheetDialogFragment {
 
         // Keep list gestures in the list, even after scrolling to an edge.
         BottomSheetBehavior<?> behavior = ((BottomSheetDialog) requireDialog()).getBehavior();
-        binding.componentList.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent event) {
-                int action = event.getActionMasked();
-                behavior.setDraggable(action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL);
-                return false;
-            }
-        });
+        binding.componentList.addOnItemTouchListener(
+                new RecyclerView.SimpleOnItemTouchListener() {
+                    @Override
+                    public boolean onInterceptTouchEvent(
+                            @NonNull RecyclerView recyclerView, @NonNull MotionEvent event) {
+                        int action = event.getActionMasked();
+                        behavior.setDraggable(
+                                action == MotionEvent.ACTION_UP
+                                        || action == MotionEvent.ACTION_CANCEL);
+                        return false;
+                    }
+                });
 
-        binding.componentList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                if (binding == null || recyclerView != binding.componentList
-                        || recyclerView.getAdapter() == null) return;
-                FlexboxLayoutManager lm = (FlexboxLayoutManager) recyclerView.getLayoutManager();
-                if (lm == null) return;
-                int first = lm.findFirstCompletelyVisibleItemPosition();
-                int last = lm.findLastCompletelyVisibleItemPosition();
-                int total = binding.componentList.getAdapter().getItemCount();
-                binding.dividerTop.setVisibility(first > 0 ? View.VISIBLE : View.GONE);
-                binding.dividerBottom.setVisibility(last < total - 1 ? View.VISIBLE : View.GONE);
-            }
-        });
+        binding.componentList.addOnScrollListener(
+                new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                        if (binding == null
+                                || recyclerView != binding.componentList
+                                || recyclerView.getAdapter() == null) return;
+                        FlexboxLayoutManager lm =
+                                (FlexboxLayoutManager) recyclerView.getLayoutManager();
+                        if (lm == null) return;
+                        int first = lm.findFirstCompletelyVisibleItemPosition();
+                        int last = lm.findLastCompletelyVisibleItemPosition();
+                        int total = binding.componentList.getAdapter().getItemCount();
+                        binding.dividerTop.setVisibility(first > 0 ? View.VISIBLE : View.GONE);
+                        binding.dividerBottom.setVisibility(
+                                last < total - 1 ? View.VISIBLE : View.GONE);
+                    }
+                });
     }
 
     @Override
@@ -219,7 +235,8 @@ public class AddComponentBottomSheet extends BottomSheetDialogFragment {
                 .showNow(getParentFragmentManager(), tag);
     }
 
-    private class ComponentsAdapter extends RecyclerView.Adapter<ComponentsAdapter.ComponentBeanViewHolder> {
+    private class ComponentsAdapter
+            extends RecyclerView.Adapter<ComponentsAdapter.ComponentBeanViewHolder> {
         @Override
         public long getItemId(int position) {
             return position;
@@ -234,7 +251,9 @@ public class AddComponentBottomSheet extends BottomSheetDialogFragment {
         @Override
         @NonNull
         public ComponentBeanViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            ComponentAddItemBinding binding = ComponentAddItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+            ComponentAddItemBinding binding =
+                    ComponentAddItemBinding.inflate(
+                            LayoutInflater.from(parent.getContext()), parent, false);
             return new ComponentBeanViewHolder(binding);
         }
 
@@ -252,7 +271,8 @@ public class AddComponentBottomSheet extends BottomSheetDialogFragment {
             }
 
             public void bind(ComponentBean componentBean) {
-                String componentName = ComponentBean.getComponentName(itemView.getContext(), componentBean.type);
+                String componentName =
+                        ComponentBean.getComponentName(itemView.getContext(), componentBean.type);
                 binding.name.setText(componentName);
                 binding.icon.setImageResource(ComponentBean.getIconResource(componentBean.type));
                 binding.getRoot().setOnClickListener(v -> showAddComponentDialog(componentBean));
