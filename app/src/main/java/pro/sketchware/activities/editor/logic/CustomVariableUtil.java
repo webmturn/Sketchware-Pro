@@ -4,14 +4,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CustomVariableUtil {
-    public static final Pattern PATTERN_CUSTOM_VARIABLE = Pattern.compile(
-            "\\b((private|public|protected|static|final|transient|volatile)\\s+)*"
-                    + "([\\w$]+(?:\\s*,\\s*[\\w$]+)*"
-                    + "(?:\\s*<[a-zA-Z0-9.,_ ?<>\\[\\]]*>)?"
-                    + "(?:\\[\\])*)?\\s+"
-                    + "([\\w$]+)"
-                    + "(?:\\s*=\\s*([^;]+))?\\s*"
-    );
+    public static final Pattern PATTERN_CUSTOM_VARIABLE =
+            Pattern.compile(
+                    "\\b((private|public|protected|static|final|transient|volatile)\\s+)*"
+                            + "([\\w$]+(?:\\s*,\\s*[\\w$]+)*"
+                            + "(?:\\s*<[a-zA-Z0-9.,_ ?<>\\[\\]]*>)?"
+                            + "(?:\\[\\])*)?\\s+"
+                            + "([\\w$]+)"
+                            + "(?:\\s*=\\s*([^;]+))?\\s*");
 
     private static final int VARIABLE_TYPE = 3;
     private static final int VARIABLE_NAME = 4;

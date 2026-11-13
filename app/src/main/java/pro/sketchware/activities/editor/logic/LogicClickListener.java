@@ -11,34 +11,31 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import pro.sketchware.beans.EventBean;
-import pro.sketchware.beans.ProjectFileBean;
-import pro.sketchware.activities.editor.LogicEditorActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import pro.sketchware.core.validation.IdentifierValidator;
-import pro.sketchware.core.project.ProjectDataStore;
-import pro.sketchware.core.project.ProjectDataManager;
-import pro.sketchware.core.project.BlockConstants;
-import pro.sketchware.core.block.view.BlockView;
-import pro.sketchware.util.Helper;
 import pro.sketchware.R;
-import pro.sketchware.databinding.AddCustomListBinding;
-import pro.sketchware.databinding.AddCustomVariableBinding;
+import pro.sketchware.activities.editor.LogicEditorActivity;
+import pro.sketchware.beans.EventBean;
+import pro.sketchware.beans.ProjectFileBean;
+import pro.sketchware.core.block.view.BlockView;
+import pro.sketchware.core.project.BlockConstants;
+import pro.sketchware.core.project.ProjectDataManager;
+import pro.sketchware.core.project.ProjectDataStore;
+import pro.sketchware.core.validation.IdentifierValidator;
 import pro.sketchware.core.validation.VariableModifierValidator;
 import pro.sketchware.core.validation.VariableTypeValidator;
+import pro.sketchware.databinding.AddCustomListBinding;
+import pro.sketchware.databinding.AddCustomVariableBinding;
+import pro.sketchware.util.Helper;
 import pro.sketchware.util.SketchwareUtil;
 
 public class LogicClickListener implements View.OnClickListener {
@@ -101,66 +98,81 @@ public class LogicClickListener implements View.OnClickListener {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(logicEditor);
         dialog.setTitle(R.string.logic_add_custom_variable);
 
-        AddCustomVariableBinding binding = AddCustomVariableBinding.inflate(logicEditor.getLayoutInflater());
+        AddCustomVariableBinding binding =
+                AddCustomVariableBinding.inflate(logicEditor.getLayoutInflater());
 
-        binding.modifierLayout.setHelperText(Helper.getResString(R.string.logic_editor_helper_modifier));
+        binding.modifierLayout.setHelperText(
+                Helper.getResString(R.string.logic_editor_helper_modifier));
 
-        VariableModifierValidator modifiersValidator = new VariableModifierValidator(getContext(), binding.modifierLayout);
+        VariableModifierValidator modifiersValidator =
+                new VariableModifierValidator(getContext(), binding.modifierLayout);
         binding.modifier.addTextChangedListener(modifiersValidator);
 
-        VariableTypeValidator varTypeValidator = new VariableTypeValidator(getContext(), binding.typeLayout);
+        VariableTypeValidator varTypeValidator =
+                new VariableTypeValidator(getContext(), binding.typeLayout);
         binding.type.addTextChangedListener(varTypeValidator);
 
-        IdentifierValidator validator = new IdentifierValidator(getContext(), binding.nameLayout, BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, projectDataManager.getAllIdentifiers(projectFile));
+        IdentifierValidator validator =
+                new IdentifierValidator(
+                        getContext(),
+                        binding.nameLayout,
+                        BlockConstants.RESERVED_KEYWORDS,
+                        BlockConstants.COMPONENT_TYPES,
+                        projectDataManager.getAllIdentifiers(projectFile));
 
         dialog.setView(binding.getRoot());
-        dialog.setPositiveButton(Helper.getResString(R.string.common_word_add), (v, which) -> {
-            String variableModifier = Helper.getText(binding.modifier).trim();
-            String variableType = Helper.getText(binding.type).trim();
-            String variableName = Helper.getText(binding.name).trim();
-            String variableInitializer = Helper.getText(binding.initializer).trim();
+        dialog.setPositiveButton(
+                Helper.getResString(R.string.common_word_add),
+                (v, which) -> {
+                    String variableModifier = Helper.getText(binding.modifier).trim();
+                    String variableType = Helper.getText(binding.type).trim();
+                    String variableName = Helper.getText(binding.name).trim();
+                    String variableInitializer = Helper.getText(binding.initializer).trim();
 
-            boolean isValidModifier = modifiersValidator.isValid() || variableModifier.isEmpty();
-            boolean isValidType = varTypeValidator.isValid();
-            boolean isValidName = validator.isValid();
+                    boolean isValidModifier =
+                            modifiersValidator.isValid() || variableModifier.isEmpty();
+                    boolean isValidType = varTypeValidator.isValid();
+                    boolean isValidName = validator.isValid();
 
-            if (!isValidModifier) {
-                binding.modifierLayout.requestFocus();
-                return;
-            }
+                    if (!isValidModifier) {
+                        binding.modifierLayout.requestFocus();
+                        return;
+                    }
 
-            if (isValidType) {
-                binding.typeLayout.setError(null);
-                binding.typeLayout.setErrorEnabled(false);
-            } else {
-                binding.typeLayout.requestFocus();
-                if (variableType.isEmpty()) {
-                    binding.typeLayout.setError(Helper.getResString(R.string.error_type_empty));
-                    binding.typeLayout.setErrorEnabled(true);
-                }
-                return;
-            }
+                    if (isValidType) {
+                        binding.typeLayout.setError(null);
+                        binding.typeLayout.setErrorEnabled(false);
+                    } else {
+                        binding.typeLayout.requestFocus();
+                        if (variableType.isEmpty()) {
+                            binding.typeLayout.setError(
+                                    Helper.getResString(R.string.error_type_empty));
+                            binding.typeLayout.setErrorEnabled(true);
+                        }
+                        return;
+                    }
 
-            if (isValidName) {
-                binding.nameLayout.setError(null);
-                binding.nameLayout.setErrorEnabled(false);
-            } else {
-                binding.nameLayout.requestFocus();
-                if (variableName.isEmpty()) {
-                    binding.nameLayout.setError(Helper.getResString(R.string.error_name_empty));
-                    binding.nameLayout.setErrorEnabled(true);
-                }
-                return;
-            }
+                    if (isValidName) {
+                        binding.nameLayout.setError(null);
+                        binding.nameLayout.setErrorEnabled(false);
+                    } else {
+                        binding.nameLayout.requestFocus();
+                        if (variableName.isEmpty()) {
+                            binding.nameLayout.setError(
+                                    Helper.getResString(R.string.error_name_empty));
+                            binding.nameLayout.setErrorEnabled(true);
+                        }
+                        return;
+                    }
 
-            String variable = !variableModifier.isEmpty() ? variableModifier + " " : "";
-            variable += variableType + " " + variableName;
-            if (!variableInitializer.isEmpty()) {
-                variable += " = " + variableInitializer;
-            }
-            logicEditor.addVariable(6, variable.trim());
-            v.dismiss();
-        });
+                    String variable = !variableModifier.isEmpty() ? variableModifier + " " : "";
+                    variable += variableType + " " + variableName;
+                    if (!variableInitializer.isEmpty()) {
+                        variable += " = " + variableInitializer;
+                    }
+                    logicEditor.addVariable(6, variable.trim());
+                    v.dismiss();
+                });
         dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
         dialog.show();
 
@@ -175,13 +187,22 @@ public class LogicClickListener implements View.OnClickListener {
         recyclerView.setLayoutManager(new LinearLayoutManager(logicEditor));
 
         List<Item> data = new LinkedList<>();
-        List<Pair<List<Integer>, String>> variableTypes = List.of(
-                new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_BOOLEAN), Helper.getResString(R.string.logic_group_boolean)),
-                new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_NUMBER), Helper.getResString(R.string.logic_group_number)),
-                new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_STRING), Helper.getResString(R.string.logic_group_string)),
-                new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_MAP), Helper.getResString(R.string.logic_group_map)),
-                new Pair<>(List.of(5, 6), Helper.getResString(R.string.logic_group_custom))
-        );
+        List<Pair<List<Integer>, String>> variableTypes =
+                List.of(
+                        new Pair<>(
+                                List.of(ExtraMenuBean.VARIABLE_TYPE_BOOLEAN),
+                                Helper.getResString(R.string.logic_group_boolean)),
+                        new Pair<>(
+                                List.of(ExtraMenuBean.VARIABLE_TYPE_NUMBER),
+                                Helper.getResString(R.string.logic_group_number)),
+                        new Pair<>(
+                                List.of(ExtraMenuBean.VARIABLE_TYPE_STRING),
+                                Helper.getResString(R.string.logic_group_string)),
+                        new Pair<>(
+                                List.of(ExtraMenuBean.VARIABLE_TYPE_MAP),
+                                Helper.getResString(R.string.logic_group_map)),
+                        new Pair<>(
+                                List.of(5, 6), Helper.getResString(R.string.logic_group_custom)));
         for (Pair<List<Integer>, String> variableType : variableTypes) {
             List<String> instances = new LinkedList<>();
             for (Integer type : variableType.first) {
@@ -193,7 +214,8 @@ public class LogicClickListener implements View.OnClickListener {
             }
         }
         if (data.isEmpty()) {
-            SketchwareUtil.toastError(Helper.getResString(R.string.logic_editor_message_no_variables));
+            SketchwareUtil.toastError(
+                    Helper.getResString(R.string.logic_editor_message_no_variables));
             return;
         }
 
@@ -205,54 +227,69 @@ public class LogicClickListener implements View.OnClickListener {
         builder.setView(recyclerView);
         builder.setNegativeButton(R.string.common_word_cancel, null);
         androidx.appcompat.app.AlertDialog dialog = builder.show();
-        adapter.setOnItemClickListener(name -> {
-            dialog.dismiss();
-            showManageActionDialog(name, false);
-        });
+        adapter.setOnItemClickListener(
+                name -> {
+                    dialog.dismiss();
+                    showManageActionDialog(name, false);
+                });
     }
 
     private void addCustomList() {
         MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(logicEditor);
         dialog.setTitle(R.string.logic_add_custom_list);
 
-        AddCustomListBinding listBinding = AddCustomListBinding.inflate(logicEditor.getLayoutInflater());
+        AddCustomListBinding listBinding =
+                AddCustomListBinding.inflate(logicEditor.getLayoutInflater());
 
-        IdentifierValidator validator = new IdentifierValidator(getContext(), listBinding.nameLayout, BlockConstants.RESERVED_KEYWORDS, BlockConstants.COMPONENT_TYPES, projectDataManager.getAllIdentifiers(projectFile));
+        IdentifierValidator validator =
+                new IdentifierValidator(
+                        getContext(),
+                        listBinding.nameLayout,
+                        BlockConstants.RESERVED_KEYWORDS,
+                        BlockConstants.COMPONENT_TYPES,
+                        projectDataManager.getAllIdentifiers(projectFile));
 
         dialog.setView(listBinding.getRoot());
-        dialog.setPositiveButton(Helper.getResString(R.string.common_word_add), (v, which) -> {
-            String variableType = Helper.getText(listBinding.type);
-            String variableName = Helper.getText(listBinding.name);
+        dialog.setPositiveButton(
+                Helper.getResString(R.string.common_word_add),
+                (v, which) -> {
+                    String variableType = Helper.getText(listBinding.type);
+                    String variableName = Helper.getText(listBinding.name);
 
-            boolean validType = !isEmpty(variableType);
-            boolean validName = !isEmpty(variableName);
+                    boolean validType = !isEmpty(variableType);
+                    boolean validName = !isEmpty(variableName);
 
-            if (validType) {
-                listBinding.typeLayout.setError(null);
-                listBinding.typeLayout.setErrorEnabled(false);
-            } else {
-                if (validName) listBinding.typeLayout.requestFocus();
-                listBinding.typeLayout.setError(Helper.getResString(R.string.error_type_empty));
-                listBinding.typeLayout.setErrorEnabled(true);
-            }
+                    if (validType) {
+                        listBinding.typeLayout.setError(null);
+                        listBinding.typeLayout.setErrorEnabled(false);
+                    } else {
+                        if (validName) listBinding.typeLayout.requestFocus();
+                        listBinding.typeLayout.setError(
+                                Helper.getResString(R.string.error_type_empty));
+                        listBinding.typeLayout.setErrorEnabled(true);
+                    }
 
-            CharSequence nameError = listBinding.nameLayout.getError();
-            if (nameError == null || Helper.getResString(R.string.error_name_empty).contentEquals(nameError)) {
-                if (validName) {
-                    listBinding.nameLayout.setError(null);
-                    listBinding.nameLayout.setErrorEnabled(false);
-                } else {
-                    listBinding.nameLayout.requestFocus();
-                    listBinding.nameLayout.setError(Helper.getResString(R.string.error_name_empty));
-                    listBinding.nameLayout.setErrorEnabled(true);
-                }
-            }
+                    CharSequence nameError = listBinding.nameLayout.getError();
+                    if (nameError == null
+                            || Helper.getResString(R.string.error_name_empty)
+                                    .contentEquals(nameError)) {
+                        if (validName) {
+                            listBinding.nameLayout.setError(null);
+                            listBinding.nameLayout.setErrorEnabled(false);
+                        } else {
+                            listBinding.nameLayout.requestFocus();
+                            listBinding.nameLayout.setError(
+                                    Helper.getResString(R.string.error_name_empty));
+                            listBinding.nameLayout.setErrorEnabled(true);
+                        }
+                    }
 
-            if (validType && validName && validator.isValid()) {
-                logicEditor.addListVariable(4, variableType + " " + variableName + " = new ArrayList<>()");
-                v.dismiss();
-            }
-        });
+                    if (validType && validName && validator.isValid()) {
+                        logicEditor.addListVariable(
+                                4, variableType + " " + variableName + " = new ArrayList<>()");
+                        v.dismiss();
+                    }
+                });
         dialog.setNegativeButton(Helper.getResString(R.string.common_word_cancel), null);
         dialog.show();
 
@@ -267,12 +304,18 @@ public class LogicClickListener implements View.OnClickListener {
         recyclerView.setLayoutManager(new LinearLayoutManager(logicEditor));
 
         List<Item> data = new LinkedList<>();
-        List<Pair<Integer, String>> listTypes = List.of(
-                new Pair<>(ExtraMenuBean.LIST_TYPE_NUMBER, Helper.getResString(R.string.logic_group_list_integer)),
-                new Pair<>(ExtraMenuBean.LIST_TYPE_STRING, Helper.getResString(R.string.logic_group_list_string)),
-                new Pair<>(ExtraMenuBean.LIST_TYPE_MAP, Helper.getResString(R.string.logic_group_list_map)),
-                new Pair<>(4, Helper.getResString(R.string.logic_group_list_custom))
-        );
+        List<Pair<Integer, String>> listTypes =
+                List.of(
+                        new Pair<>(
+                                ExtraMenuBean.LIST_TYPE_NUMBER,
+                                Helper.getResString(R.string.logic_group_list_integer)),
+                        new Pair<>(
+                                ExtraMenuBean.LIST_TYPE_STRING,
+                                Helper.getResString(R.string.logic_group_list_string)),
+                        new Pair<>(
+                                ExtraMenuBean.LIST_TYPE_MAP,
+                                Helper.getResString(R.string.logic_group_list_map)),
+                        new Pair<>(4, Helper.getResString(R.string.logic_group_list_custom)));
         for (Pair<Integer, String> listType : listTypes) {
             ArrayList<String> lists = getUsedList(listType.first);
             for (int i = 0, size = lists.size(); i < size; i++) {
@@ -293,39 +336,53 @@ public class LogicClickListener implements View.OnClickListener {
         builder.setView(recyclerView);
         builder.setNegativeButton(R.string.common_word_cancel, null);
         androidx.appcompat.app.AlertDialog dialog = builder.show();
-        adapter.setOnItemClickListener(name -> {
-            dialog.dismiss();
-            showManageActionDialog(name, true);
-        });
+        adapter.setOnItemClickListener(
+                name -> {
+                    dialog.dismiss();
+                    showManageActionDialog(name, true);
+                });
     }
 
     private void showManageActionDialog(String name, boolean isList) {
         new MaterialAlertDialogBuilder(logicEditor)
                 .setTitle(name)
-                .setItems(new CharSequence[]{
-                        Helper.getResString(R.string.common_word_rename),
-                        Helper.getResString(R.string.common_word_remove)
-                }, (d, which) -> {
-                    if (which == 0) {
-                        showRenameInputDialog(name, isList, isList ? this::manageList : this::manageVariables);
-                    } else {
-                        boolean inUse;
-                        if (isList) {
-                            inUse = logicEditor.blockPane.hasListReference(name)
-                                    || projectDataManager.isListUsedInBlocks(javaName, name, currentBlockEntryKey);
-                        } else {
-                            inUse = logicEditor.blockPane.hasMapReference(name)
-                                    || projectDataManager.isVariableUsedInBlocks(javaName, name, currentBlockEntryKey);
-                        }
-                        if (inUse) {
-                            SketchwareUtil.toastError(Helper.getResString(isList
-                                    ? R.string.logic_editor_message_currently_used_list
-                                    : R.string.logic_editor_message_currently_used_variable));
-                        } else {
-                            confirmRemoveItem(name, isList);
-                        }
-                    }
-                })
+                .setItems(
+                        new CharSequence[] {
+                            Helper.getResString(R.string.common_word_rename),
+                            Helper.getResString(R.string.common_word_remove)
+                        },
+                        (d, which) -> {
+                            if (which == 0) {
+                                showRenameInputDialog(
+                                        name,
+                                        isList,
+                                        isList ? this::manageList : this::manageVariables);
+                            } else {
+                                boolean inUse;
+                                if (isList) {
+                                    inUse =
+                                            logicEditor.blockPane.hasListReference(name)
+                                                    || projectDataManager.isListUsedInBlocks(
+                                                            javaName, name, currentBlockEntryKey);
+                                } else {
+                                    inUse =
+                                            logicEditor.blockPane.hasMapReference(name)
+                                                    || projectDataManager.isVariableUsedInBlocks(
+                                                            javaName, name, currentBlockEntryKey);
+                                }
+                                if (inUse) {
+                                    SketchwareUtil.toastError(
+                                            Helper.getResString(
+                                                    isList
+                                                            ? R.string
+                                                                    .logic_editor_message_currently_used_list
+                                                            : R.string
+                                                                    .logic_editor_message_currently_used_variable));
+                                } else {
+                                    confirmRemoveItem(name, isList);
+                                }
+                            }
+                        })
                 .setNegativeButton(R.string.common_word_cancel, null)
                 .show();
     }
@@ -334,20 +391,25 @@ public class LogicClickListener implements View.OnClickListener {
         new MaterialAlertDialogBuilder(logicEditor)
                 .setTitle(name)
                 .setMessage(R.string.common_word_delete_confirm)
-                .setPositiveButton(R.string.common_word_remove, (dialog, which) -> {
-                    if (isList) {
-                        logicEditor.removeListVariable(name);
-                    } else {
-                        logicEditor.removeVariable(name);
-                    }
-                })
+                .setPositiveButton(
+                        R.string.common_word_remove,
+                        (dialog, which) -> {
+                            if (isList) {
+                                logicEditor.removeListVariable(name);
+                            } else {
+                                logicEditor.removeVariable(name);
+                            }
+                        })
                 .setNegativeButton(R.string.common_word_cancel, null)
                 .show();
     }
 
     private void showRenameInputDialog(String oldName, boolean isList, Runnable onCancel) {
-        TextInputLayout inputLayout = new TextInputLayout(logicEditor,
-                null, com.google.android.material.R.attr.textInputOutlinedStyle);
+        TextInputLayout inputLayout =
+                new TextInputLayout(
+                        logicEditor,
+                        null,
+                        com.google.android.material.R.attr.textInputOutlinedStyle);
         inputLayout.setPadding(dpToPx(20), dpToPx(8), dpToPx(20), 0);
         inputLayout.setHint(Helper.getResString(R.string.logic_editor_hint_new_name));
         TextInputEditText editText = new TextInputEditText(inputLayout.getContext());
@@ -357,35 +419,55 @@ public class LogicClickListener implements View.OnClickListener {
 
         ArrayList<String> existingIds = projectDataManager.getAllIdentifiers(projectFile);
         existingIds.remove(oldName);
-        IdentifierValidator validator = new IdentifierValidator(
-                getContext(), inputLayout, BlockConstants.RESERVED_KEYWORDS,
-                BlockConstants.COMPONENT_TYPES, existingIds);
+        IdentifierValidator validator =
+                new IdentifierValidator(
+                        getContext(),
+                        inputLayout,
+                        BlockConstants.RESERVED_KEYWORDS,
+                        BlockConstants.COMPONENT_TYPES,
+                        existingIds);
         editText.addTextChangedListener(validator);
 
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(logicEditor);
-        builder.setTitle(String.format(Helper.getResString(R.string.logic_editor_title_enter_new_name), oldName));
+        builder.setTitle(
+                String.format(
+                        Helper.getResString(R.string.logic_editor_title_enter_new_name), oldName));
         builder.setView(inputLayout);
         builder.setPositiveButton(R.string.common_word_save, null);
         builder.setNegativeButton(R.string.common_word_cancel, (d, w) -> onCancel.run());
         androidx.appcompat.app.AlertDialog dialog = builder.show();
-        dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
-            String newName = editText.getText() != null ? editText.getText().toString().trim() : "";
-            if (newName.isEmpty() || newName.equals(oldName)) {
-                dialog.dismiss();
-                return;
-            }
-            if (!validator.isValid()) return;
-            if (isList) {
-                logicEditor.renameListVariable(oldName, newName);
-                SketchwareUtil.toast(String.format(
-                        Helper.getResString(R.string.logic_editor_message_list_renamed), oldName, newName));
-            } else {
-                logicEditor.renameVariable(oldName, newName);
-                SketchwareUtil.toast(String.format(
-                        Helper.getResString(R.string.logic_editor_message_variable_renamed), oldName, newName));
-            }
-            dialog.dismiss();
-        });
+        dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)
+                .setOnClickListener(
+                        v -> {
+                            String newName =
+                                    editText.getText() != null
+                                            ? editText.getText().toString().trim()
+                                            : "";
+                            if (newName.isEmpty() || newName.equals(oldName)) {
+                                dialog.dismiss();
+                                return;
+                            }
+                            if (!validator.isValid()) return;
+                            if (isList) {
+                                logicEditor.renameListVariable(oldName, newName);
+                                SketchwareUtil.toast(
+                                        String.format(
+                                                Helper.getResString(
+                                                        R.string.logic_editor_message_list_renamed),
+                                                oldName,
+                                                newName));
+                            } else {
+                                logicEditor.renameVariable(oldName, newName);
+                                SketchwareUtil.toast(
+                                        String.format(
+                                                Helper.getResString(
+                                                        R.string
+                                                                .logic_editor_message_variable_renamed),
+                                                oldName,
+                                                newName));
+                            }
+                            dialog.dismiss();
+                        });
     }
 
     private void findVariableReferences(boolean isList) {
@@ -396,12 +478,18 @@ public class LogicClickListener implements View.OnClickListener {
 
         List<Item> data = new LinkedList<>();
         if (isList) {
-            List<Pair<Integer, String>> listTypes = List.of(
-                    new Pair<>(ExtraMenuBean.LIST_TYPE_NUMBER, Helper.getResString(R.string.logic_group_list_integer)),
-                    new Pair<>(ExtraMenuBean.LIST_TYPE_STRING, Helper.getResString(R.string.logic_group_list_string)),
-                    new Pair<>(ExtraMenuBean.LIST_TYPE_MAP, Helper.getResString(R.string.logic_group_list_map)),
-                    new Pair<>(4, Helper.getResString(R.string.logic_group_list_custom))
-            );
+            List<Pair<Integer, String>> listTypes =
+                    List.of(
+                            new Pair<>(
+                                    ExtraMenuBean.LIST_TYPE_NUMBER,
+                                    Helper.getResString(R.string.logic_group_list_integer)),
+                            new Pair<>(
+                                    ExtraMenuBean.LIST_TYPE_STRING,
+                                    Helper.getResString(R.string.logic_group_list_string)),
+                            new Pair<>(
+                                    ExtraMenuBean.LIST_TYPE_MAP,
+                                    Helper.getResString(R.string.logic_group_list_map)),
+                            new Pair<>(4, Helper.getResString(R.string.logic_group_list_custom)));
             for (Pair<Integer, String> listType : listTypes) {
                 ArrayList<String> lists = getUsedList(listType.first);
                 for (int i = 0, size = lists.size(); i < size; i++) {
@@ -410,13 +498,23 @@ public class LogicClickListener implements View.OnClickListener {
                 }
             }
         } else {
-            List<Pair<List<Integer>, String>> variableTypes = List.of(
-                    new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_BOOLEAN), Helper.getResString(R.string.logic_group_boolean)),
-                    new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_NUMBER), Helper.getResString(R.string.logic_group_number)),
-                    new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_STRING), Helper.getResString(R.string.logic_group_string)),
-                    new Pair<>(List.of(ExtraMenuBean.VARIABLE_TYPE_MAP), Helper.getResString(R.string.logic_group_map)),
-                    new Pair<>(List.of(5, 6), Helper.getResString(R.string.logic_group_custom))
-            );
+            List<Pair<List<Integer>, String>> variableTypes =
+                    List.of(
+                            new Pair<>(
+                                    List.of(ExtraMenuBean.VARIABLE_TYPE_BOOLEAN),
+                                    Helper.getResString(R.string.logic_group_boolean)),
+                            new Pair<>(
+                                    List.of(ExtraMenuBean.VARIABLE_TYPE_NUMBER),
+                                    Helper.getResString(R.string.logic_group_number)),
+                            new Pair<>(
+                                    List.of(ExtraMenuBean.VARIABLE_TYPE_STRING),
+                                    Helper.getResString(R.string.logic_group_string)),
+                            new Pair<>(
+                                    List.of(ExtraMenuBean.VARIABLE_TYPE_MAP),
+                                    Helper.getResString(R.string.logic_group_map)),
+                            new Pair<>(
+                                    List.of(5, 6),
+                                    Helper.getResString(R.string.logic_group_custom)));
             for (Pair<List<Integer>, String> variableType : variableTypes) {
                 List<String> instances = new LinkedList<>();
                 for (Integer type : variableType.first) {
@@ -430,9 +528,11 @@ public class LogicClickListener implements View.OnClickListener {
         }
 
         if (data.isEmpty()) {
-            SketchwareUtil.toastError(Helper.getResString(isList
-                    ? R.string.logic_editor_message_no_lists
-                    : R.string.logic_editor_message_no_variables));
+            SketchwareUtil.toastError(
+                    Helper.getResString(
+                            isList
+                                    ? R.string.logic_editor_message_no_lists
+                                    : R.string.logic_editor_message_no_variables));
             return;
         }
 
@@ -440,16 +540,18 @@ public class LogicClickListener implements View.OnClickListener {
         recyclerView.setAdapter(adapter);
 
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(logicEditor);
-        builder.setTitle(isList
-                ? R.string.logic_editor_find_refs_select_list
-                : R.string.logic_editor_find_refs_select_variable);
+        builder.setTitle(
+                isList
+                        ? R.string.logic_editor_find_refs_select_list
+                        : R.string.logic_editor_find_refs_select_variable);
         builder.setView(recyclerView);
         builder.setNegativeButton(R.string.common_word_cancel, null);
         androidx.appcompat.app.AlertDialog dialog = builder.show();
-        adapter.setOnItemClickListener(name -> {
-            dialog.dismiss();
-            showVariableReferencesResult(name, isList);
-        });
+        adapter.setOnItemClickListener(
+                name -> {
+                    dialog.dismiss();
+                    showVariableReferencesResult(name, isList);
+                });
     }
 
     private void showVariableReferencesResult(String variableName, boolean isList) {
@@ -462,7 +564,8 @@ public class LogicClickListener implements View.OnClickListener {
             return;
         }
 
-        LinkedHashMap<String, List<ProjectDataStore.VariableReference>> grouped = new LinkedHashMap<>();
+        LinkedHashMap<String, List<ProjectDataStore.VariableReference>> grouped =
+                new LinkedHashMap<>();
         for (ProjectDataStore.VariableReference ref : references) {
             grouped.computeIfAbsent(ref.blockEntryKey, k -> new LinkedList<>()).add(ref);
         }
@@ -474,7 +577,8 @@ public class LogicClickListener implements View.OnClickListener {
 
         List<Item> data = new ArrayList<>();
         ArrayList<ProjectDataStore.VariableReference> refByPosition = new ArrayList<>();
-        for (Map.Entry<String, List<ProjectDataStore.VariableReference>> entry : grouped.entrySet()) {
+        for (Map.Entry<String, List<ProjectDataStore.VariableReference>> entry :
+                grouped.entrySet()) {
             String blockEntryKey = entry.getKey();
             List<ProjectDataStore.VariableReference> refs = entry.getValue();
             boolean isCurrentEntry = blockEntryKey.equals(currentBlockEntryKey);
@@ -491,30 +595,36 @@ public class LogicClickListener implements View.OnClickListener {
         recyclerView.setAdapter(adapter);
 
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(logicEditor);
-        builder.setTitle(String.format(Helper.getResString(R.string.logic_editor_title_find_refs), variableName));
-        builder.setMessage(String.format(Helper.getResString(R.string.logic_editor_find_refs_count), references.size()));
+        builder.setTitle(
+                String.format(
+                        Helper.getResString(R.string.logic_editor_title_find_refs), variableName));
+        builder.setMessage(
+                String.format(
+                        Helper.getResString(R.string.logic_editor_find_refs_count),
+                        references.size()));
         builder.setView(recyclerView);
         builder.setNegativeButton(R.string.common_word_cancel, null);
         androidx.appcompat.app.AlertDialog dialog = builder.show();
 
-        adapter.setOnItemClickByPositionListener(position -> {
-            if (position < 0 || position >= refByPosition.size()) return;
-            ProjectDataStore.VariableReference ref = refByPosition.get(position);
-            if (ref == null) return;
-            dialog.dismiss();
-            if (ref.blockEntryKey.equals(currentBlockEntryKey)) {
-                BlockView blockView = logicEditor.blockPane.findBlockByString(ref.blockId);
-                if (blockView != null) {
-                    logicEditor.blockPane.clearSearchHighlight();
-                    ArrayList<BlockView> single = new ArrayList<>();
-                    single.add(blockView);
-                    logicEditor.blockPane.highlightSearchResults(single, blockView);
-                    logicEditor.scrollToBlock(blockView);
-                }
-            } else {
-                navigateToEventByKey(ref.blockEntryKey, ref.blockId);
-            }
-        });
+        adapter.setOnItemClickByPositionListener(
+                position -> {
+                    if (position < 0 || position >= refByPosition.size()) return;
+                    ProjectDataStore.VariableReference ref = refByPosition.get(position);
+                    if (ref == null) return;
+                    dialog.dismiss();
+                    if (ref.blockEntryKey.equals(currentBlockEntryKey)) {
+                        BlockView blockView = logicEditor.blockPane.findBlockByString(ref.blockId);
+                        if (blockView != null) {
+                            logicEditor.blockPane.clearSearchHighlight();
+                            ArrayList<BlockView> single = new ArrayList<>();
+                            single.add(blockView);
+                            logicEditor.blockPane.highlightSearchResults(single, blockView);
+                            logicEditor.scrollToBlock(blockView);
+                        }
+                    } else {
+                        navigateToEventByKey(ref.blockEntryKey, ref.blockId);
+                    }
+                });
     }
 
     private void navigateToEventByKey(String blockEntryKey, String blockId) {
@@ -558,22 +668,23 @@ public class LogicClickListener implements View.OnClickListener {
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             if (viewType == Item.TYPE_TITLE) {
                 TextView textView = new TextView(context);
-                textView.setLayoutParams(new LinearLayout.LayoutParams(
-                        LayoutParams.WRAP_CONTENT,
-                        LayoutParams.WRAP_CONTENT));
+                textView.setLayoutParams(
+                        new LinearLayout.LayoutParams(
+                                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
                 textView.setPadding(dpToPx(4), dpToPx(12), dpToPx(4), dpToPx(4));
                 textView.setTextSize(12);
                 textView.setAlpha(0.7f);
                 return new TitleHolder(textView);
             } else {
                 TextView textView = new TextView(context);
-                textView.setLayoutParams(new LinearLayout.LayoutParams(
-                        LayoutParams.MATCH_PARENT,
-                        LayoutParams.WRAP_CONTENT));
+                textView.setLayoutParams(
+                        new LinearLayout.LayoutParams(
+                                LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
                 textView.setPadding(dpToPx(8), dpToPx(12), dpToPx(8), dpToPx(12));
                 textView.setTextSize(16);
                 android.util.TypedValue outValue = new android.util.TypedValue();
-                context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+                context.getTheme()
+                        .resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
                 textView.setBackgroundResource(outValue.resourceId);
                 textView.setClickable(true);
                 textView.setFocusable(true);
@@ -588,14 +699,16 @@ public class LogicClickListener implements View.OnClickListener {
                 titleHolder.title.setText(item.text);
             } else if (holder instanceof ItemHolder itemHolder) {
                 itemHolder.textView.setText(item.text);
-                itemHolder.textView.setOnClickListener(v -> {
-                    int adapterPos = holder.getAdapterPosition();
-                    if (adapterPos != RecyclerView.NO_POSITION && onItemClickByPositionListener != null) {
-                        onItemClickByPositionListener.accept(adapterPos);
-                    } else if (onItemClickListener != null) {
-                        onItemClickListener.accept(item.text);
-                    }
-                });
+                itemHolder.textView.setOnClickListener(
+                        v -> {
+                            int adapterPos = holder.getAdapterPosition();
+                            if (adapterPos != RecyclerView.NO_POSITION
+                                    && onItemClickByPositionListener != null) {
+                                onItemClickByPositionListener.accept(adapterPos);
+                            } else if (onItemClickListener != null) {
+                                onItemClickListener.accept(item.text);
+                            }
+                        });
             }
         }
 
