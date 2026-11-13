@@ -1844,6 +1844,14 @@ ex)\"*/*\", \"image/*\", \"audio/*\", \"text/*\""</string>
     <string name="component_select_json">Select json file</string>
     <string name="component_select_json_selector">Select .json selector file</string>
     <string name="component_title_add_component">Add component</string>
+    <string name="component_group_app_tools">App tools</string>
+    <string name="component_group_dialogs">Dialogs</string>
+    <string name="component_group_storage_files">Storage and files</string>
+    <string name="component_group_media_voice">Media and voice</string>
+    <string name="component_group_network_device">Network and device</string>
+    <string name="component_group_firebase">Firebase</string>
+    <string name="component_group_ads">Ads</string>
+    <string name="component_group_custom">Custom</string>
     <string name="custom_component_add_title">Add new component</string>
     <string name="developer_tools_component_add_var">Additional Variables</string>
     <string name="developer_tools_component_build_class">Build Class</string>

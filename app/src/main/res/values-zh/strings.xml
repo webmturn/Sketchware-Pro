@@ -934,6 +934,14 @@
     <string name="component_select_json">选择 json 文件</string>
     <string name="component_select_json_selector">选择 .json 选择器文件</string>
     <string name="component_title_add_component">添加组件</string>
+    <string name="component_group_app_tools">应用工具</string>
+    <string name="component_group_dialogs">对话框</string>
+    <string name="component_group_storage_files">存储与文件</string>
+    <string name="component_group_media_voice">媒体与语音</string>
+    <string name="component_group_network_device">网络与设备</string>
+    <string name="component_group_firebase">Firebase</string>
+    <string name="component_group_ads">广告</string>
+    <string name="component_group_custom">自定义</string>
     <string name="custom_component_add_title">添加新组件</string>
     <string name="developer_tools_component_add_var">附加变量</string>
     <string name="developer_tools_component_build_class">构建类</string>

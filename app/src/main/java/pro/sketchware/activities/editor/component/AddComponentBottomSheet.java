@@ -6,16 +6,14 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.flexbox.AlignItems;
-import com.google.android.flexbox.FlexDirection;
-import com.google.android.flexbox.FlexWrap;
-import com.google.android.flexbox.FlexboxLayoutManager;
-import com.google.android.flexbox.JustifyContent;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -31,10 +29,11 @@ import pro.sketchware.util.Helper;
 
 public class AddComponentBottomSheet extends BottomSheetDialogFragment {
     public static final String RESULT_JAVA_FILE = "java_file";
+    private static final int MIN_COMPONENT_WIDTH_DP = 100;
     private String sc_id;
     private ProjectFileBean projectFileBean;
 
-    private ArrayList<ComponentBean> componentList;
+    private final ArrayList<ComponentOption> options = new ArrayList<>();
     private LogicAddComponentBinding binding;
     private int sheetOrientation;
 
@@ -83,7 +82,7 @@ public class AddComponentBottomSheet extends BottomSheetDialogFragment {
             return;
         }
 
-        initializeComponentBeans();
+        populateComponents();
     }
 
     @Override
@@ -112,46 +111,69 @@ public class AddComponentBottomSheet extends BottomSheetDialogFragment {
         }
     }
 
-    private void initializeComponentBeans() {
-        componentList = new ArrayList<>();
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_INTENT));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_SHAREDPREF));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_FILE_PICKER));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_CALENDAR));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_VIBRATOR));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_TIMERTASK));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_DIALOG));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_MEDIAPLAYER));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_SOUNDPOOL));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_OBJECTANIMATOR));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_CAMERA));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_GYROSCOPE));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_TEXT_TO_SPEECH));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_SPEECH_TO_TEXT));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_REQUEST_NETWORK));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_BLUETOOTH_CONNECT));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_LOCATION_MANAGER));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_PROGRESS_DIALOG));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_DATE_PICKER_DIALOG));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_TIME_PICKER_DIALOG));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_NOTIFICATION));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_SQLITE));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_FRAGMENT_ADAPTER));
+    private void populateComponents() {
+        addSection(
+                R.string.component_group_app_tools,
+                ComponentBean.COMPONENT_TYPE_INTENT,
+                ComponentBean.COMPONENT_TYPE_CALENDAR,
+                ComponentBean.COMPONENT_TYPE_TIMERTASK,
+                ComponentBean.COMPONENT_TYPE_OBJECTANIMATOR,
+                ComponentBean.COMPONENT_TYPE_NOTIFICATION,
+                ComponentBean.COMPONENT_TYPE_FRAGMENT_ADAPTER,
+                ComponentBean.COMPONENT_TYPE_ASYNC_TASK);
+        addSection(
+                R.string.component_group_dialogs,
+                ComponentBean.COMPONENT_TYPE_DIALOG,
+                ComponentBean.COMPONENT_TYPE_PROGRESS_DIALOG,
+                ComponentBean.COMPONENT_TYPE_DATE_PICKER_DIALOG,
+                ComponentBean.COMPONENT_TYPE_TIME_PICKER_DIALOG);
+        addSection(
+                R.string.component_group_storage_files,
+                ComponentBean.COMPONENT_TYPE_SHAREDPREF,
+                ComponentBean.COMPONENT_TYPE_SQLITE,
+                ComponentBean.COMPONENT_TYPE_FILE_PICKER);
+        addSection(
+                R.string.component_group_media_voice,
+                ComponentBean.COMPONENT_TYPE_CAMERA,
+                ComponentBean.COMPONENT_TYPE_MEDIAPLAYER,
+                ComponentBean.COMPONENT_TYPE_SOUNDPOOL,
+                ComponentBean.COMPONENT_TYPE_TEXT_TO_SPEECH,
+                ComponentBean.COMPONENT_TYPE_SPEECH_TO_TEXT);
+        addSection(
+                R.string.component_group_network_device,
+                ComponentBean.COMPONENT_TYPE_REQUEST_NETWORK,
+                ComponentBean.COMPONENT_TYPE_BLUETOOTH_CONNECT,
+                ComponentBean.COMPONENT_TYPE_LOCATION_MANAGER,
+                ComponentBean.COMPONENT_TYPE_GYROSCOPE,
+                ComponentBean.COMPONENT_TYPE_VIBRATOR);
+        addSection(
+                R.string.component_group_firebase,
+                ComponentBean.COMPONENT_TYPE_FIREBASE,
+                ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH,
+                ComponentBean.COMPONENT_TYPE_FIREBASE_STORAGE,
+                ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_PHONE,
+                ComponentBean.COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE,
+                ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN);
+        addSection(
+                R.string.component_group_ads,
+                ComponentBean.COMPONENT_TYPE_INTERSTITIAL_AD,
+                ComponentBean.COMPONENT_TYPE_REWARDED_VIDEO_AD);
 
-        // Ads
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_INTERSTITIAL_AD));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_REWARDED_VIDEO_AD));
+        var customComponents = new ArrayList<ComponentBean>();
+        ComponentsHandler.addCustomComponents(customComponents);
+        if (!customComponents.isEmpty()) {
+            options.add(new ComponentOption(R.string.component_group_custom, null));
+            for (ComponentBean component : customComponents) {
+                options.add(new ComponentOption(0, component));
+            }
+        }
+    }
 
-        // Firebase
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_FIREBASE));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_FIREBASE_STORAGE));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_PHONE));
-        componentList.add(new ComponentBean(ComponentBean.COMPONENT_TYPE_FIREBASE_CLOUD_MESSAGE));
-        componentList.add(
-                new ComponentBean(ComponentBean.COMPONENT_TYPE_FIREBASE_AUTH_GOOGLE_LOGIN));
-
-        ComponentsHandler.addCustomComponents(componentList);
+    private void addSection(@StringRes int title, int... types) {
+        options.add(new ComponentOption(title, null));
+        for (int type : types) {
+            options.add(new ComponentOption(0, new ComponentBean(type)));
+        }
     }
 
     @Nullable
@@ -169,18 +191,46 @@ public class AddComponentBottomSheet extends BottomSheetDialogFragment {
         super.onViewCreated(view, savedInstanceState);
         if (sc_id == null || projectFileBean == null) return;
 
-        FlexboxLayoutManager flexboxLayoutManager =
-                new FlexboxLayoutManager(getContext(), FlexDirection.ROW, FlexWrap.WRAP);
-        flexboxLayoutManager.setJustifyContent(JustifyContent.SPACE_BETWEEN);
-        flexboxLayoutManager.setAlignItems(AlignItems.CENTER);
-
         binding.title.setText(Helper.getResString(R.string.component_title_add_component));
+        GridLayoutManager grid =
+                new GridLayoutManager(requireContext(), 3) {
+                    @Override
+                    public void onMeasure(
+                            @NonNull RecyclerView.Recycler recycler,
+                            @NonNull RecyclerView.State state,
+                            int widthSpec,
+                            int heightSpec) {
+                        int contentWidth =
+                                View.MeasureSpec.getSize(widthSpec)
+                                        - getPaddingLeft()
+                                        - getPaddingRight();
+                        if (contentWidth > 0) {
+                            float density = getResources().getDisplayMetrics().density;
+                            float fontScale =
+                                    Math.max(1f, getResources().getConfiguration().fontScale);
+                            float cellWidth = MIN_COMPONENT_WIDTH_DP * density * fontScale;
+                            setSpanCount(Math.max(1, (int) (contentWidth / cellWidth)));
+                        }
+                        super.onMeasure(recycler, state, widthSpec, heightSpec);
+                    }
+                };
+        grid.setSpanSizeLookup(
+                new GridLayoutManager.SpanSizeLookup() {
+                    @Override
+                    public int getSpanSize(int position) {
+                        return options.get(position).title() != 0 ? grid.getSpanCount() : 1;
+                    }
+                });
         binding.componentList.setHasFixedSize(true);
         binding.componentList.setAdapter(new ComponentsAdapter());
-        binding.componentList.setLayoutManager(flexboxLayoutManager);
+        binding.componentList.setLayoutManager(grid);
+
+        BottomSheetDialog dialog = (BottomSheetDialog) requireDialog();
+        BottomSheetBehavior<?> behavior = dialog.getBehavior();
+        behavior.setDraggableOnNestedScroll(false);
+        fitListToVisibleSheet(dialog, binding.componentList);
 
         // Keep list gestures in the list, even after scrolling to an edge.
-        BottomSheetBehavior<?> behavior = ((BottomSheetDialog) requireDialog()).getBehavior();
         binding.componentList.addOnItemTouchListener(
                 new RecyclerView.SimpleOnItemTouchListener() {
                     @Override
@@ -198,20 +248,50 @@ public class AddComponentBottomSheet extends BottomSheetDialogFragment {
                 new RecyclerView.OnScrollListener() {
                     @Override
                     public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                        if (binding == null
-                                || recyclerView != binding.componentList
-                                || recyclerView.getAdapter() == null) return;
-                        FlexboxLayoutManager lm =
-                                (FlexboxLayoutManager) recyclerView.getLayoutManager();
-                        if (lm == null) return;
-                        int first = lm.findFirstCompletelyVisibleItemPosition();
-                        int last = lm.findLastCompletelyVisibleItemPosition();
-                        int total = binding.componentList.getAdapter().getItemCount();
-                        binding.dividerTop.setVisibility(first > 0 ? View.VISIBLE : View.GONE);
+                        if (binding == null || recyclerView != binding.componentList) return;
+                        binding.dividerTop.setVisibility(
+                                recyclerView.canScrollVertically(-1) ? View.VISIBLE : View.GONE);
                         binding.dividerBottom.setVisibility(
-                                last < total - 1 ? View.VISIBLE : View.GONE);
+                                recyclerView.canScrollVertically(1) ? View.VISIBLE : View.GONE);
                     }
                 });
+    }
+
+    private static void fitListToVisibleSheet(BottomSheetDialog dialog, RecyclerView list) {
+        View sheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+        View container = (View) sheet.getParent();
+        int bottomPadding = list.getPaddingBottom();
+        Runnable updatePadding =
+                () -> {
+                    int hiddenHeight = Math.max(0, sheet.getBottom() - container.getHeight());
+                    int padding = bottomPadding + hiddenHeight;
+                    if (list.getPaddingBottom() != padding) {
+                        list.setPaddingRelative(
+                                list.getPaddingStart(),
+                                list.getPaddingTop(),
+                                list.getPaddingEnd(),
+                                padding);
+                    }
+                };
+        container.addOnLayoutChangeListener(
+                (view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) ->
+                        updatePadding.run());
+        dialog.getBehavior()
+                .addBottomSheetCallback(
+                        new BottomSheetBehavior.BottomSheetCallback() {
+                            @Override
+                            public void onStateChanged(@NonNull View sheet, int state) {
+                                // The sheet keeps its full height when collapsed. Apply the inset
+                                // once it settles.
+                                if (state == BottomSheetBehavior.STATE_COLLAPSED
+                                        || state == BottomSheetBehavior.STATE_EXPANDED) {
+                                    updatePadding.run();
+                                }
+                            }
+
+                            @Override
+                            public void onSlide(@NonNull View sheet, float slideOffset) {}
+                        });
     }
 
     @Override
@@ -235,31 +315,49 @@ public class AddComponentBottomSheet extends BottomSheetDialogFragment {
                 .showNow(getParentFragmentManager(), tag);
     }
 
-    private class ComponentsAdapter
-            extends RecyclerView.Adapter<ComponentsAdapter.ComponentBeanViewHolder> {
+    private record ComponentOption(@StringRes int title, @Nullable ComponentBean component) {}
+
+    private static class HeadingViewHolder extends RecyclerView.ViewHolder {
+        private final TextView title;
+
+        HeadingViewHolder(TextView title) {
+            super(title);
+            this.title = title;
+        }
+    }
+
+    private class ComponentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         @Override
-        public long getItemId(int position) {
-            return position;
+        public int getItemViewType(int position) {
+            return options.get(position).title() != 0
+                    ? R.layout.component_add_section_header
+                    : R.layout.component_add_item;
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ComponentBeanViewHolder holder, int position) {
-            var componentBean = componentList.get(position);
-            holder.bind(componentBean);
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+            ComponentOption option = options.get(position);
+            if (holder instanceof HeadingViewHolder heading) {
+                heading.title.setText(Helper.getResString(option.title()));
+            } else if (holder instanceof ComponentBeanViewHolder card) {
+                card.bind(option.component());
+            }
         }
 
         @Override
         @NonNull
-        public ComponentBeanViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            ComponentAddItemBinding binding =
-                    ComponentAddItemBinding.inflate(
-                            LayoutInflater.from(parent.getContext()), parent, false);
-            return new ComponentBeanViewHolder(binding);
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            if (viewType == R.layout.component_add_section_header) {
+                return new HeadingViewHolder((TextView) inflater.inflate(viewType, parent, false));
+            }
+            return new ComponentBeanViewHolder(
+                    ComponentAddItemBinding.inflate(inflater, parent, false));
         }
 
         @Override
         public int getItemCount() {
-            return componentList.size();
+            return options.size();
         }
 
         private class ComponentBeanViewHolder extends RecyclerView.ViewHolder {

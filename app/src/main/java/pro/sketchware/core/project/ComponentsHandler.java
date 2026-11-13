@@ -223,8 +223,6 @@ public class ComponentsHandler {
      * pro.sketchware.activities.editor.component.AddComponentBottomSheet#onCreate(Bundle)}.
      */
     public static void addCustomComponents(ArrayList<ComponentBean> list) {
-        list.add(new ComponentBean(ASYNC_TASK_COMPONENT_ID));
-
         for (int i = 0; i < cachedCustomComponents.size(); i++) {
             CustomComponent component = cachedCustomComponents.get(i);
             if (component == null) {

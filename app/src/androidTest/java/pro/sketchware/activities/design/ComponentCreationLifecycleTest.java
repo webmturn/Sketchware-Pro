@@ -2,6 +2,7 @@ package pro.sketchware.activities.design;
 
 import static org.junit.Assert.*;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -25,6 +27,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Map;
 import java.util.function.Consumer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,6 +41,7 @@ import pro.sketchware.beans.ProjectLibraryBean;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.dialogs.InnerAddComponentBottomSheet;
+import pro.sketchware.util.locale.LanguageOverrideManager;
 
 @RunWith(AndroidJUnit4.class)
 public class ComponentCreationLifecycleTest {
@@ -50,6 +54,98 @@ public class ComponentCreationLifecycleTest {
             host.openInput();
             host.save(NAME);
             host.assertCreatedAndClosed();
+        }
+    }
+
+    @Test(timeout = 30000)
+    public void selectorUsesImportedTranslationsForItsTitleAndHeadings() throws Exception {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        var preferences = context.getSharedPreferences("language_override", Context.MODE_PRIVATE);
+        var originalOverrides = preferences.getAll();
+        var translations = LanguageOverrideManager.getInstance();
+        try (Host host = new Host(false)) {
+            assertEquals(
+                    2,
+                    translations.applyOverrides(
+                            context,
+                            Map.of(
+                                    "component_title_add_component", "Fixture component title",
+                                    "component_group_app_tools", "Fixture component heading")));
+            host.openSelector();
+            host.onActivity(
+                    activity -> {
+                        View selector = find(activity, AddComponentBottomSheet.class).requireView();
+                        TextView title = selector.findViewById(R.id.title);
+                        TextView heading =
+                                (TextView)
+                                        selectorList(activity)
+                                                .findViewHolderForAdapterPosition(0)
+                                                .itemView;
+                        assertEquals("Fixture component title", title.getText().toString());
+                        assertEquals("Fixture component heading", heading.getText().toString());
+                    });
+        } finally {
+            var editor = preferences.edit().clear();
+            for (var entry : originalOverrides.entrySet()) {
+                if (entry.getValue() instanceof String value)
+                    editor.putString(entry.getKey(), value);
+                else if (entry.getValue() instanceof Integer value)
+                    editor.putInt(entry.getKey(), value);
+            }
+            editor.apply();
+            translations.reload(context);
+        }
+    }
+
+    @Test(timeout = 30000)
+    public void narrowSelectorUsesTwoColumnsWithFullWidthHeadings() throws Exception {
+        try (Host host = new Host(false)) {
+            host.openSelector();
+            host.onActivity(
+                    activity -> {
+                        RecyclerView list = selectorList(activity);
+                        var resources = list.getResources();
+                        float fontScale = Math.max(1f, resources.getConfiguration().fontScale);
+                        int width =
+                                Math.round(250 * resources.getDisplayMetrics().density * fontScale);
+                        var params = list.getLayoutParams();
+                        params.width = width + list.getPaddingLeft() + list.getPaddingRight();
+                        list.setLayoutParams(params);
+                    });
+            ProjectEditorPersistenceTest.waitUntil(
+                    () -> {
+                        boolean[] laidOut = {false};
+                        host.onActivity(
+                                activity -> {
+                                    RecyclerView list = selectorList(activity);
+                                    laidOut[0] =
+                                            list.getWidth() == list.getLayoutParams().width
+                                                    && !list.isLayoutRequested();
+                                });
+                        return laidOut[0];
+                    });
+            host.onActivity(
+                    activity -> {
+                        RecyclerView list = selectorList(activity);
+                        GridLayoutManager grid = (GridLayoutManager) list.getLayoutManager();
+                        assertEquals(2, grid.getSpanCount());
+                        TextView heading =
+                                (TextView) list.findViewHolderForAdapterPosition(0).itemView;
+                        assertEquals(
+                                activity.getString(R.string.component_group_app_tools),
+                                heading.getText().toString());
+                        assertEquals(
+                                grid.getSpanCount(),
+                                ((GridLayoutManager.LayoutParams) heading.getLayoutParams())
+                                        .getSpanSize());
+                        View intent = intentCard(list);
+                        assertNotNull(intent);
+                        GridLayoutManager.LayoutParams card =
+                                (GridLayoutManager.LayoutParams) intent.getLayoutParams();
+                        assertEquals(0, card.getSpanIndex());
+                        assertEquals(1, card.getSpanSize());
+                        assertTrue(intent.getTop() >= heading.getBottom());
+                    });
         }
     }
 
@@ -148,6 +244,76 @@ public class ComponentCreationLifecycleTest {
                         type,
                         host.store().getComponents(ProjectFileBean.DEFAULT_JAVA_NAME).get(0).type);
             }
+        }
+    }
+
+    @Test(timeout = 30000)
+    public void fastSwipeFlingsTheListWhileTheSelectorIsCollapsed() throws Exception {
+        try (Host host = new Host(false)) {
+            host.openSelector();
+            assertSelectorCollapsed(host);
+            Rect area = new Rect();
+            boolean[] flung = {false};
+            host.onActivity(
+                    activity -> {
+                        RecyclerView list = selectorList(activity);
+                        assertTrue(list.getGlobalVisibleRect(area));
+                        list.addOnScrollListener(
+                                new RecyclerView.OnScrollListener() {
+                                    @Override
+                                    public void onScrollStateChanged(RecyclerView list, int state) {
+                                        if (state == RecyclerView.SCROLL_STATE_SETTLING)
+                                            flung[0] = true;
+                                    }
+                                });
+                    });
+            swipe(
+                    area.centerX(),
+                    area.top + area.height() * 0.8f,
+                    area.top + area.height() * 0.3f,
+                    100);
+            assertSelectorCollapsed(host);
+            host.onActivity(
+                    activity -> assertTrue("The list must keep scrolling after release", flung[0]));
+        }
+    }
+
+    @Test(timeout = 30000)
+    public void collapsedSelectorCanScrollTheLastComponentFullyIntoView() throws Exception {
+        try (Host host = new Host(false)) {
+            host.openSelector();
+            assertSelectorCollapsed(host);
+            host.onActivity(
+                    activity -> {
+                        RecyclerView list = selectorList(activity);
+                        list.scrollToPosition(list.getAdapter().getItemCount() - 1);
+                    });
+            ProjectEditorPersistenceTest.waitUntil(
+                    () -> {
+                        boolean[] laidOut = {false};
+                        host.onActivity(
+                                activity -> {
+                                    RecyclerView list = selectorList(activity);
+                                    int last = list.getAdapter().getItemCount() - 1;
+                                    laidOut[0] =
+                                            list.findViewHolderForAdapterPosition(last) != null;
+                                });
+                        return laidOut[0];
+                    });
+            host.onActivity(
+                    activity -> {
+                        RecyclerView list = selectorList(activity);
+                        int last = list.getAdapter().getItemCount() - 1;
+                        View card = list.findViewHolderForAdapterPosition(last).itemView;
+                        Rect visible = new Rect();
+                        assertTrue(
+                                "The last component must be visible",
+                                card.getGlobalVisibleRect(visible));
+                        assertEquals(
+                                "The last component must fit inside the collapsed sheet",
+                                card.getHeight(),
+                                visible.height());
+                    });
         }
     }
 
@@ -345,11 +511,34 @@ public class ComponentCreationLifecycleTest {
                     assertTrue(
                             "The component list must be visible",
                             list.getGlobalVisibleRect(visible));
-                    assertTrue(list.getChildCount() > 0);
-                    assertTrue(
-                            "The list must show at least one full row",
-                            visible.height() >= list.getChildAt(0).getHeight());
+                    for (int i = 0; i < list.getChildCount(); i++) {
+                        View card = list.getChildAt(i);
+                        if (card.findViewById(R.id.name) != null
+                                && card.getGlobalVisibleRect(visible)
+                                && visible.height() == card.getHeight()) {
+                            return;
+                        }
+                    }
+                    fail("The list must show at least one full row of components");
                 });
+    }
+
+    private static RecyclerView selectorList(FragmentActivity activity) {
+        return find(activity, AddComponentBottomSheet.class)
+                .requireView()
+                .findViewById(R.id.component_list);
+    }
+
+    private static View intentCard(RecyclerView list) {
+        String name =
+                ComponentBean.getComponentName(
+                        list.getContext(), ComponentBean.COMPONENT_TYPE_INTENT);
+        for (int i = 0; i < list.getChildCount(); i++) {
+            View card = list.getChildAt(i);
+            TextView label = card.findViewById(R.id.name);
+            if (label != null && name.contentEquals(label.getText())) return card;
+        }
+        return null;
     }
 
     private static Rect screenBounds(View view) {
@@ -363,6 +552,10 @@ public class ComponentCreationLifecycleTest {
     }
 
     private static void swipe(float x, float fromY, float toY) throws IOException {
+        swipe(x, fromY, toY, 400);
+    }
+
+    private static void swipe(float x, float fromY, float toY, int durationMs) throws IOException {
         // Avoid the extra window-transaction waits around sendPointerSync on some devices.
         String command =
                 "input touchscreen swipe "
@@ -373,7 +566,8 @@ public class ComponentCreationLifecycleTest {
                         + Math.round(x)
                         + " "
                         + Math.round(toY)
-                        + " 400";
+                        + " "
+                        + durationMs;
         try (var output =
                 new ParcelFileDescriptor.AutoCloseInputStream(
                         InstrumentationRegistry.getInstrumentation()
@@ -390,6 +584,15 @@ public class ComponentCreationLifecycleTest {
         try (Host host = new Host(false)) {
             var before = host.fixture.snapshot();
             host.openSelector();
+            int[] cardTop = {0};
+            host.onActivity(
+                    activity -> {
+                        RecyclerView list = selectorList(activity);
+                        list.scrollBy(
+                                0, list.findViewHolderForAdapterPosition(0).itemView.getHeight());
+                        cardTop[0] = intentCard(list).getTop();
+                        assertTrue(list.canScrollVertically(-1));
+                    });
             host.openInput();
             host.onActivity(
                     activity ->
@@ -402,6 +605,7 @@ public class ComponentCreationLifecycleTest {
                     activity -> {
                         assertNull(find(activity, InnerAddComponentBottomSheet.class));
                         assertNotNull(find(activity, AddComponentBottomSheet.class));
+                        assertEquals(cardTop[0], intentCard(selectorList(activity)).getTop());
                         assertEquals(0, componentList(activity).getAdapter().getItemCount());
                     });
             assertEquals(0, host.store().getComponents(ProjectFileBean.DEFAULT_JAVA_NAME).size());
@@ -686,7 +890,7 @@ public class ComponentCreationLifecycleTest {
                                         RecyclerView list =
                                                 sheet.requireView()
                                                         .findViewById(R.id.component_list);
-                                        ready[0] = list.findViewHolderForAdapterPosition(0) != null;
+                                        ready[0] = intentCard(list) != null;
                                     }
                                 });
                         return ready[0];
@@ -700,7 +904,9 @@ public class ComponentCreationLifecycleTest {
                                 find(activity, AddComponentBottomSheet.class)
                                         .requireView()
                                         .findViewById(R.id.component_list);
-                        list.findViewHolderForAdapterPosition(0).itemView.performClick();
+                        View intent = intentCard(list);
+                        assertNotNull(intent);
+                        intent.performClick();
                     });
             idle();
         }
