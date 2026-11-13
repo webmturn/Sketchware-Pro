@@ -22,7 +22,6 @@ dependencyresolver = "05ec26af0b"
 ecj = "3.26.0"
 exifinterface = "1.4.1"
 filepicker = "74526bea66"
-flexbox = "3.0.0"
 glide = "5.0.4"
 gson = "2.13.1"
 insetter = "0.6.1"
@@ -69,7 +68,6 @@ firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 
-flexbox = { module = "com.google.android.flexbox:flexbox", version.ref = "flexbox" }
 lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
 
@@ -125,7 +123,7 @@ zipalign-java = { module = "com.github.Iyxan23:zipalign-java", version.ref = "zi
 [bundles]
 ui = ["androidx-activity", "androidx-appcompat", "androidx-lifecycle-livedata", "androidx-lifecycle-viewmodel", "androidx-splashscreen", "androidx-recyclerview",
     "androidx-cardview", "androidx-viewpager", "androidx-swiperefreshlayout", "material", "lottie",
-    "flexbox", "androidx-exifinterface", "androidx-preference"]
+    "androidx-exifinterface", "androidx-preference"]
 image = ["glide", "circleimageview"]
 coil = ["coil", "coil-kt-coil-svg"]
 networking = ["okhttp", "okio"]
