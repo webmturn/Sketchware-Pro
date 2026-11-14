@@ -19,3 +19,8 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Translation packs use resource field names and are stored as JSON.
+-keep class pro.sketchware.R$string { public static int *; }
+-keep class pro.sketchware.util.locale.LanguageOverrideManager$Pack { *; }
+-keep class pro.sketchware.util.locale.TranslationViewInflater { public <init>(); }

@@ -1,27 +1,24 @@
 package pro.sketchware.activities.base;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-
 import android.view.View;
-
 import androidx.activity.EdgeToEdge;
 import androidx.activity.SystemBarStyle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.WindowInsetsCompat;
-
-import pro.sketchware.widgets.LoadingDialog;
 import com.google.firebase.analytics.FirebaseAnalytics;
-
-import pro.sketchware.widgets.ProgressDialog;
-import pro.sketchware.util.locale.LanguageOverrideContextWrapper;
 import pro.sketchware.util.UI;
+import pro.sketchware.util.locale.LanguageOverrideManager;
+import pro.sketchware.util.locale.LanguageOverrideResources;
+import pro.sketchware.widgets.LoadingDialog;
+import pro.sketchware.widgets.ProgressDialog;
 
 public abstract class BaseAppCompatActivity extends AppCompatActivity {
 
@@ -29,10 +26,18 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
 
     protected ProgressDialog progressDialog;
     private LoadingDialog lottieDialog;
+    private LanguageOverrideResources translatedResources;
+    private long translationRevision;
 
     @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LanguageOverrideContextWrapper.wrap(newBase));
+    public Resources getResources() {
+        Resources resources = super.getResources();
+        if (LanguageOverrideManager.getInstance().getActivePack(resources) == null)
+            return resources;
+        if (translatedResources == null || !translatedResources.wraps(resources)) {
+            translatedResources = new LanguageOverrideResources(resources);
+        }
+        return translatedResources;
     }
 
     public void showProgressDialogWithCancel(OnCancelListener cancelListener) {
@@ -71,8 +76,11 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
     }
 
     public boolean isStoragePermissionGranted() {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(
+                                this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                        == PackageManager.PERMISSION_GRANTED;
     }
 
     public void showLoadingDialog() {
@@ -84,6 +92,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        translationRevision = LanguageOverrideManager.getInstance().getRevision();
         lottieDialog = new LoadingDialog(this);
         progressDialog = new ProgressDialog(this);
         mAnalytics = null;
@@ -108,13 +117,20 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        long revision = LanguageOverrideManager.getInstance().getRevision();
+        if (translationRevision != revision && !isFinishing()) {
+            translationRevision = revision;
+            recreate();
+            return;
+        }
         if (lottieDialog != null && lottieDialog.isShowing()) {
             lottieDialog.resumeAnimation();
         }
     }
 
     public void handleInsets(View root) {
-        UI.addWindowInsetToPadding(root, WindowInsetsCompat.Type.navigationBars(), false, false, false, true);
+        UI.addWindowInsetToPadding(
+                root, WindowInsetsCompat.Type.navigationBars(), false, false, false, true);
     }
 
     protected void enableEdgeToEdgeNoContrast() {

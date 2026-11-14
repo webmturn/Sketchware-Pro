@@ -40,7 +40,11 @@ import pro.sketchware.R;
 import pro.sketchware.activities.editor.LogicEditorActivity;
 import pro.sketchware.activities.editor.makeblock.ReturnMoreblockManager;
 import pro.sketchware.beans.EventBean;
+import pro.sketchware.core.block.BlockSpecParser;
+import pro.sketchware.core.block.view.BlockColorMapper;
+import pro.sketchware.core.codegen.BuiltinBlockLocalization;
 import pro.sketchware.core.codegen.EventRegistry;
+import pro.sketchware.core.codegen.StringResource;
 import pro.sketchware.core.project.ProjectDataStore;
 import pro.sketchware.core.project.ProjectDataStore.VariableReference;
 import pro.sketchware.core.project.ProjectListManager;
@@ -379,9 +383,23 @@ final class VariableReferencesSheet {
                 : event.targetId + " · " + name;
     }
 
-    private static String blockLabel(VariableReference reference) {
-        if (reference.blockSpec == null || reference.blockSpec.isEmpty()) return reference.opCode;
-        List<String> parts = FormatUtil.parseBlockSpec(reference.blockSpec);
+    private String blockLabel(VariableReference reference) {
+        String source = reference.blockSpec;
+        if (source == null || source.isEmpty()) return reference.opCode;
+        if (!"getVar".equals(reference.opCode)
+                && BlockColorMapper.getBlockColor(editor, reference.opCode, reference.blockType)
+                        != BlockColorMapper.CUSTOM_BLOCK_FALLBACK_COLOR) {
+            String localized =
+                    StringResource.getInstance().getEventTranslation(editor, reference.opCode);
+            if (!localized.isEmpty()
+                    && BlockSpecParser.parseParameters(source)
+                            .equals(BlockSpecParser.parseParameters(localized))) {
+                source = localized;
+            }
+        } else {
+            source = BuiltinBlockLocalization.getSpec(editor, reference.opCode, source, false);
+        }
+        List<String> parts = FormatUtil.parseBlockSpec(source);
         int parameter = 0;
         for (int i = 0; i < parts.size(); i++) {
             String part = parts.get(i);

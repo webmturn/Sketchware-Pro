@@ -110,8 +110,19 @@ public class VariableReferenceNavigationTest {
                         });
                 openSearch(editor, true);
                 clickRow("rows");
-                followReference("clear rows", "onCreate", "initializeLogic", "11");
-                followReference("delete 1 from rows", "refresh_data", "moreBlock", "21");
+                followReference(
+                        editorString(editor, R.string.block_clear_list_head) + " rows",
+                        "onCreate",
+                        "initializeLogic",
+                        "11");
+                followReference(
+                        editorString(editor, R.string.block_delete_list_head)
+                                + " 1 "
+                                + editorString(editor, R.string.block_delete_list_body_1)
+                                + " rows",
+                        "refresh_data",
+                        "moreBlock",
+                        "21");
                 clickView(R.id.reference_back);
                 waitForView(R.id.reference_search);
                 instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_BACK);
@@ -124,19 +135,13 @@ public class VariableReferenceNavigationTest {
                         R.id.reference_list, AccessibilityNodeInfo.ACTION_SCROLL_FORWARD, null);
                 clickView(R.id.reference_search);
                 setFilter("nothing_matches");
-                waitForText(
-                        instrumentation
-                                .getTargetContext()
-                                .getString(R.string.search_canvas_no_results));
+                waitForText(editorString(editor, R.string.search_canvas_no_results));
                 clickView(R.id.reference_clear_query);
                 waitForView(R.id.reference_row_title);
                 waitUntil(() -> activeNodes(R.id.reference_clear_query).isEmpty());
                 setFilter("unused_39");
                 clickRow("unused_39");
-                waitForText(
-                        instrumentation
-                                .getTargetContext()
-                                .getString(R.string.logic_editor_message_no_refs_found));
+                waitForText(editorString(editor, R.string.logic_editor_message_no_refs_found));
                 if (Build.VERSION.SDK_INT >= 30) {
                     waitForKeyboardToHide();
                     instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_BACK);
@@ -168,6 +173,12 @@ public class VariableReferenceNavigationTest {
                         });
             }
         }
+    }
+
+    private static String editorString(ActivityScenario<LogicEditorActivity> editor, int resId) {
+        String[] text = new String[1];
+        editor.onActivity(activity -> text[0] = activity.getString(resId));
+        return text[0];
     }
 
     private static void followReference(String label, String target, String event, String blockId)

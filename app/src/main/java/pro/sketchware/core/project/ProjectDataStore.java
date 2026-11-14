@@ -1098,6 +1098,7 @@ public class ProjectDataStore {
                                 blockEntryKey,
                                 blockBean.opCode,
                                 blockBean.spec,
+                                blockBean.type,
                                 blockBean.id,
                                 new ArrayList<>(blockBean.parameters),
                                 sourceLine));
@@ -1152,6 +1153,7 @@ public class ProjectDataStore {
         public final String blockEntryKey;
         public final String opCode;
         public final String blockSpec;
+        public final String blockType;
         public final String blockId;
         public final ArrayList<String> parameters;
         public final String sourceLine;
@@ -1160,12 +1162,14 @@ public class ProjectDataStore {
                 String blockEntryKey,
                 String opCode,
                 String blockSpec,
+                String blockType,
                 String blockId,
                 ArrayList<String> parameters,
                 String sourceLine) {
             this.blockEntryKey = blockEntryKey;
             this.opCode = opCode;
             this.blockSpec = blockSpec;
+            this.blockType = blockType;
             this.blockId = blockId;
             this.parameters = parameters;
             this.sourceLine = sourceLine;

@@ -1,12 +1,10 @@
 package pro.sketchware.util.locale;
 
-import android.content.res.Resources;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.util.DisplayMetrics;
-
 import androidx.annotation.NonNull;
 import androidx.core.os.ConfigurationCompat;
-
 import java.util.Locale;
 
 public final class LanguageOverrideResources extends Resources {
@@ -14,8 +12,26 @@ public final class LanguageOverrideResources extends Resources {
     private final Resources baseResources;
 
     public LanguageOverrideResources(@NonNull Resources baseResources) {
-        super(baseResources.getAssets(), baseResources.getDisplayMetrics(), baseResources.getConfiguration());
+        super(
+                baseResources.getAssets(),
+                baseResources.getDisplayMetrics(),
+                baseResources.getConfiguration());
         this.baseResources = baseResources;
+    }
+
+    Resources baseResources() {
+        return baseResources;
+    }
+
+    public boolean wraps(Resources resources) {
+        return baseResources == resources;
+    }
+
+    @Override
+    public void updateConfiguration(Configuration configuration, DisplayMetrics metrics) {
+        // AppCompat applies some configuration changes through the Activity's resources.
+        if (baseResources != null) baseResources.updateConfiguration(configuration, metrics);
+        super.updateConfiguration(configuration, metrics);
     }
 
     // This Resources instance is not registered with Android's configuration updates.
@@ -35,21 +51,21 @@ public final class LanguageOverrideResources extends Resources {
     @NonNull
     @Override
     public CharSequence getText(int id) throws NotFoundException {
-        String override = LanguageOverrideManager.getInstance().getOverride(id);
+        String override = LanguageOverrideManager.getInstance().getOverride(baseResources, id);
         return override != null ? override : baseResources.getText(id);
     }
 
     @NonNull
     @Override
     public CharSequence getText(int id, CharSequence def) {
-        String override = LanguageOverrideManager.getInstance().getOverride(id);
+        String override = LanguageOverrideManager.getInstance().getOverride(baseResources, id);
         return override != null ? override : baseResources.getText(id, def);
     }
 
     @NonNull
     @Override
     public String getString(int id) throws NotFoundException {
-        String override = LanguageOverrideManager.getInstance().getOverride(id);
+        String override = LanguageOverrideManager.getInstance().getOverride(baseResources, id);
         return override != null ? override : baseResources.getString(id);
     }
 
@@ -67,7 +83,8 @@ public final class LanguageOverrideResources extends Resources {
 
     @NonNull
     @Override
-    public String getQuantityString(int id, int quantity, Object... formatArgs) throws NotFoundException {
+    public String getQuantityString(int id, int quantity, Object... formatArgs)
+            throws NotFoundException {
         return baseResources.getQuantityString(id, quantity, formatArgs);
     }
 

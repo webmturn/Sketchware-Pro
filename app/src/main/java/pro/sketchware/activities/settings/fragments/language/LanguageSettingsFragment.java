@@ -1,357 +1,381 @@
 package pro.sketchware.activities.settings.fragments.language;
 
-import pro.sketchware.util.locale.LanguageOverrideManager;
-
 import android.content.res.Resources;
-import android.util.Log;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
+import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.core.os.LocaleListCompat;
-
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.StringReader;
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.regex.Pattern;
-
-import pro.sketchware.activities.base.BaseFragment;
-import pro.sketchware.core.project.SketchwarePaths;
 import dev.pranav.filepicker.FilePickerCallback;
 import dev.pranav.filepicker.FilePickerDialogFragment;
 import dev.pranav.filepicker.FilePickerOptions;
-import pro.sketchware.util.Helper;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.List;
+import java.util.Locale;
+import java.util.TreeMap;
+import org.xmlpull.v1.XmlPullParserException;
 import pro.sketchware.R;
+import pro.sketchware.activities.base.BaseFragment;
+import pro.sketchware.core.project.SketchwarePaths;
+import pro.sketchware.databinding.DialogImportTranslationBinding;
 import pro.sketchware.databinding.FragmentSettingsLanguageBinding;
-import pro.sketchware.util.FileUtil;
+import pro.sketchware.databinding.TranslationPackRowBinding;
+import pro.sketchware.util.DefinitionFiles;
 import pro.sketchware.util.SketchwareUtil;
 import pro.sketchware.util.UI;
 import pro.sketchware.util.locale.AppLanguages;
+import pro.sketchware.util.locale.LanguageOverrideManager;
+import pro.sketchware.util.locale.LanguageOverrideManager.Pack;
 
 public class LanguageSettingsFragment extends BaseFragment {
-
-    private static final String EXPORT_DIR = SketchwarePaths.getSystemI18nPath();
-
+    private final LanguageOverrideManager translations = LanguageOverrideManager.getInstance();
     private FragmentSettingsLanguageBinding binding;
-    private AlertDialog languagePickerDialog;
+    private AlertDialog openDialog;
+    private PopupMenu packMenu;
+    private List<Locale> supported;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle state) {
         binding = FragmentSettingsLanguageBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onViewCreated(@NonNull View view, Bundle state) {
+        super.onViewCreated(view, state);
         configureToolbar(binding.toolbar);
-
-        setupInsets();
-        setupLanguagePicker();
-        binding.btnImportStrings.setOnClickListener(v -> showImportDialog());
-        binding.btnExportStrings.setOnClickListener(v -> exportStrings());
-        binding.btnClearOverride.setOnClickListener(v -> clearOverride());
-        setupOverrideStatus();
-    }
-
-    private void setupInsets() {
         UI.addSystemWindowInsetToPadding(binding.appBarLayout, true, true, true, false);
         UI.addSystemWindowInsetToPadding(binding.content, true, false, true, true);
+        supported = AppLanguages.read(requireContext());
+        binding.cardLanguagePicker.setOnClickListener(v -> showLanguagePicker());
+        binding.btnImportStrings.setOnClickListener(v -> showImportDialog());
+        binding.btnExportStrings.setOnClickListener(v -> exportTemplate());
     }
 
-    private void setupLanguagePicker() {
-        List<Locale> supported = AppLanguages.read(requireContext());
-        LocaleListCompat currentLocales = AppCompatDelegate.getApplicationLocales();
-        String display;
-        if (currentLocales.isEmpty()) {
-            display = Helper.getResString(R.string.language_settings_follow_system);
-        } else {
-            Locale current = currentLocales.get(0);
-            int index = AppLanguages.findSelection(supported, current);
-            Locale displayed = index < 0 ? current : supported.get(index);
-            display = displayed.getDisplayName(displayed);
-        }
-        binding.currentLocaleDisplay.setText(display);
-
-        Locale systemLocale = Resources.getSystem().getConfiguration().getLocales().get(0);
-        binding.systemLocaleDisplay.setText(String.format(
-                Helper.getResString(R.string.language_settings_system_locale),
-                systemLocale.getDisplayLanguage(systemLocale)));
-
-        binding.cardLanguagePicker.setOnClickListener(v -> showLanguagePicker(supported));
-    }
-
-    private void showLanguagePicker(List<Locale> supported) {
-        if (languagePickerDialog != null && languagePickerDialog.isShowing()) return;
-        String[] names = new String[supported.size() + 1];
-        names[0] = Helper.getResString(R.string.language_settings_follow_system);
+    private void showLanguagePicker() {
+        if (openDialog != null && openDialog.isShowing()) return;
+        List<Pack> packs = translations.getPacks();
+        int packStart = supported.size() + 1;
+        String[] names = new String[packStart + packs.size()];
+        names[0] = getString(R.string.language_settings_follow_system);
+        Locale chosen = AppCompatDelegate.getApplicationLocales().get(0);
+        int checked = chosen == null ? 0 : builtinSelection(chosen);
         for (int i = 0; i < supported.size(); i++) {
-            Locale locale = supported.get(i);
-            names[i + 1] = locale.getDisplayName(locale);
+            names[i + 1] = localeName(supported.get(i));
         }
-        LocaleListCompat currentLocales = AppCompatDelegate.getApplicationLocales();
-        int selected = 0;
-        if (!currentLocales.isEmpty()) {
-            int index = AppLanguages.findSelection(supported, currentLocales.get(0));
-            selected = index < 0 ? -1 : index + 1;
+        Pack active = translations.getActivePack(getResources());
+        for (int i = 0; i < packs.size(); i++) {
+            Pack pack = packs.get(i);
+            names[packStart + i] = getString(R.string.language_settings_pack_choice, pack.name());
+            if (active != null && active.id().equals(pack.id())) checked = packStart + i;
         }
-        final int currentIndex = selected;
-        languagePickerDialog = new MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.language_settings_select_language)
-                .setSingleChoiceItems(names, selected, (dialog, which) -> {
-                    dialog.dismiss();
-                    if (which == currentIndex) return;
-                    LocaleListCompat locales = which == 0
-                            ? LocaleListCompat.getEmptyLocaleList()
-                            : LocaleListCompat.forLanguageTags(supported.get(which - 1).toLanguageTag());
-                    AppCompatDelegate.setApplicationLocales(locales);
-                })
-                .setNegativeButton(R.string.common_word_cancel, null)
-                .show();
-        languagePickerDialog.setOnDismissListener(dialog -> languagePickerDialog = null);
+        int current = checked;
+        show(
+                new MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(getString(R.string.language_settings_select_language))
+                        .setSingleChoiceItems(
+                                names,
+                                checked,
+                                (dialog, which) -> {
+                                    dialog.dismiss();
+                                    if (which == current) return;
+                                    if (which >= packStart) {
+                                        Pack pack = packs.get(which - packStart);
+                                        select(pack, pack.fallback());
+                                    } else {
+                                        select(null, which == 0 ? null : supported.get(which - 1));
+                                    }
+                                })
+                        .setNegativeButton(getString(R.string.common_word_cancel), null));
     }
 
-    private void setupOverrideStatus() {
-        LanguageOverrideManager mgr = LanguageOverrideManager.getInstance();
+    private int builtinSelection(Locale locale) {
+        int index = AppLanguages.findSelection(supported, locale);
+        return index < 0 ? -1 : index + 1;
+    }
 
-        if (mgr.isActive()) {
-            binding.overrideInfo.setText(
-                    String.format(Helper.getResString(R.string.language_settings_override_info),
-                            mgr.getOverrideCount()));
-            binding.btnClearOverride.setVisibility(View.VISIBLE);
+    @Override
+    public void onStart() {
+        super.onStart();
+        binding.toolbar.setTitle(getString(R.string.language_settings_title));
+        renderLanguages();
+    }
+
+    private void renderLanguages() {
+        Pack active = translations.getActivePack(getResources());
+        Locale chosen = AppCompatDelegate.getApplicationLocales().get(0);
+        Locale display = getResources().getConfiguration().getLocales().get(0);
+        String name;
+        if (active != null) {
+            name = active.name();
+        } else if (chosen == null) {
+            name = getString(R.string.language_settings_follow_system);
         } else {
-            binding.overrideInfo.setText(Helper.getResString(R.string.language_settings_no_override));
-            binding.btnClearOverride.setVisibility(View.GONE);
+            int index = AppLanguages.findSelection(supported, chosen);
+            name = localeName(index >= 0 ? supported.get(index) : chosen);
         }
-    }
+        binding.currentLocaleDisplay.setText(name);
+        Locale systemLocale = Resources.getSystem().getConfiguration().getLocales().get(0);
+        binding.systemLocaleDisplay.setText(
+                getString(
+                        R.string.language_settings_system_locale,
+                        systemLocale.getDisplayLanguage(systemLocale)));
 
-    private void clearOverride() {
-        new MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.language_settings_clear_confirm_title)
-                .setMessage(R.string.language_settings_clear_confirm_msg)
-                .setPositiveButton(R.string.common_word_yes, (dialog, which) -> {
-                    LanguageOverrideManager.getInstance().clearOverrides(requireContext());
-                    SketchwareUtil.toast(Helper.getResString(R.string.language_settings_cleared));
-                    recreateHostActivity();
-                })
-                .setNegativeButton(R.string.common_word_no, null)
-                .show();
-    }
-
-    private void refreshUI() {
-        setupOverrideStatus();
-    }
-
-    private void recreateHostActivity() {
-        if (getActivity() != null) {
-            getActivity().recreate();
-        }
-    }
-
-    private static final Pattern NON_TRANSLATABLE_PATTERN = Pattern.compile(
-            "^(appbar_scrolling_view_behavior|bottom_sheet_behavior|" +
-            "besome_blog_url|docs_url|firebase_database_url|facebook_url|" +
-            "ideas_url|medium_url|slack_url_.*|ga_trackingId|" +
-            "google_.*|default_web_client_id|project_id|gcm_.*|storage_.*|" +
-            "root_spec_.*|block_(?!move_to_|type_).*|" +
-            "s[1-7])$"
-    );
-
-    private boolean isTranslatable(String name, String value) {
-        if (NON_TRANSLATABLE_PATTERN.matcher(name).matches()) return false;
-        if (value.startsWith("http://") || value.startsWith("https://")) return false;
-        if (value.startsWith("com.google.") || value.startsWith("com.besome.")) return false;
-        if (value.isEmpty()) return false;
-        return true;
-    }
-
-    private void exportStrings() {
-        try {
-            TreeMap<String, String> allStrings = getAllStringResources();
-            TreeMap<String, String> translatable = new TreeMap<>();
-            for (Map.Entry<String, String> entry : allStrings.entrySet()) {
-                if (isTranslatable(entry.getKey(), entry.getValue())) {
-                    translatable.put(entry.getKey(), entry.getValue());
-                }
+        List<Pack> packs = translations.getPacks();
+        binding.overrideInfo.setVisibility(
+                active != null || packs.isEmpty() ? View.VISIBLE : View.GONE);
+        binding.overrideInfo.setText(
+                active == null
+                        ? getString(R.string.language_settings_no_override)
+                        : getString(
+                                R.string.language_settings_override_info, active.strings().size()));
+        binding.translationPacks.removeAllViews();
+        binding.translationPacks.setVisibility(packs.isEmpty() ? View.GONE : View.VISIBLE);
+        for (Pack pack : packs) {
+            var row =
+                    TranslationPackRowBinding.inflate(
+                            getLayoutInflater(), binding.translationPacks, false);
+            row.languageName.setText(pack.name());
+            String fallback =
+                    getString(
+                            R.string.language_settings_fallback_value,
+                            pack.fallback().getDisplayName(display));
+            if (!pack.rejectedStrings().isEmpty()) {
+                fallback +=
+                        "\n"
+                                + getResources()
+                                        .getQuantityString(
+                                                R.plurals.language_settings_inactive_entries,
+                                                pack.rejectedStrings().size(),
+                                                pack.rejectedStrings().size());
             }
-
-            File dir = new File(EXPORT_DIR);
-            if (!dir.exists()) dir.mkdirs();
-
-            String fileName = "strings_export.xml";
-            File outFile = new File(dir, fileName);
-
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(outFile))) {
-                writer.write("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
-                writer.write("<!-- Sketchware Pro translatable strings (" + translatable.size() + " entries) -->\n");
-                writer.write("<resources>\n");
-                for (Map.Entry<String, String> entry : translatable.entrySet()) {
-                    String name = entry.getKey();
-                    String value = escapeXml(entry.getValue());
-                    writer.write("    <string name=\"" + name + "\">" + value + "</string>\n");
-                }
-                writer.write("</resources>\n");
-            }
-
-            SketchwareUtil.toast(
-                    String.format(Helper.getResString(R.string.language_settings_exported), outFile.getAbsolutePath()),
-                    Toast.LENGTH_LONG);
-        } catch (Exception e) {
-            SketchwareUtil.toastError(
-                    String.format(Helper.getResString(R.string.language_settings_export_error), e.getMessage()));
+            row.languageSummary.setText(fallback);
+            row.languagePackActions.setContentDescription(
+                    getString(R.string.language_settings_pack_actions, pack.name()));
+            row.languagePackActions.setOnClickListener(v -> showPackActions(v, pack));
+            binding.translationPacks.addView(row.getRoot());
         }
     }
 
-    private TreeMap<String, String> getAllStringResources() {
-        TreeMap<String, String> result = new TreeMap<>();
-        try {
-            Field[] fields = R.string.class.getDeclaredFields();
-            Resources res = requireContext().getResources();
-            for (Field field : fields) {
-                if (java.lang.reflect.Modifier.isStatic(field.getModifiers())
-                        && field.getType() == int.class) {
-                    try {
-                        int id = field.getInt(null);
-                        String value = res.getString(id);
-                        result.put(field.getName(), value);
-                    } catch (Exception ignored) {
-                        Log.w("LanguageSettingsFragment", "Failed to read string resource field", ignored);
-                    }
-                }
-            }
-        } catch (Exception ignored) {
-            Log.w("LanguageSettingsFragment", "Failed to collect all string resources", ignored);
-        }
-        return result;
+    private static String localeName(Locale locale) {
+        return locale.getDisplayName(locale);
     }
 
-    private String escapeXml(String s) {
-        if (s == null) return "";
-        return s.replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace("'", "\\'")
-                .replace("\"", "&quot;")
-                .replace("\n", "\\n");
+    private void select(Pack pack, Locale fallback) {
+        translations.select(requireContext(), pack);
+        LocaleListCompat locales =
+                fallback == null
+                        ? LocaleListCompat.getEmptyLocaleList()
+                        : LocaleListCompat.forLanguageTags(fallback.toLanguageTag());
+        if (locales.equals(AppCompatDelegate.getApplicationLocales())) {
+            requireActivity().recreate();
+        } else {
+            AppCompatDelegate.setApplicationLocales(locales);
+        }
     }
 
     private void showImportDialog() {
-        FilePickerOptions options = new FilePickerOptions();
-        options.setTitle(Helper.getResString(R.string.language_settings_select_xml));
-        options.setExtensions(new String[]{"xml"});
-
-        FilePickerCallback callback = new FilePickerCallback() {
-            @Override
-            public void onFileSelected(@NonNull File file) {
-                importStringsFile(file);
-            }
-        };
-
-        FilePickerDialogFragment pickerDialog = new FilePickerDialogFragment(options, callback);
-        pickerDialog.show(getChildFragmentManager(), "filePickerDialog");
+        var options = new FilePickerOptions();
+        options.setTitle(getString(R.string.language_settings_select_xml));
+        options.setExtensions(new String[] {"xml"});
+        var picker =
+                new FilePickerDialogFragment(
+                        options,
+                        new FilePickerCallback() {
+                            @Override
+                            public void onFileSelected(@NonNull File file) {
+                                importFile(file);
+                            }
+                        });
+        picker.show(getChildFragmentManager(), "filePickerDialog");
     }
 
-    private void importStringsFile(File file) {
-        try {
-            String content = FileUtil.readFile(file.getAbsolutePath());
-            if (content == null || content.isEmpty()) {
-                SketchwareUtil.toastError(Helper.getResString(R.string.error_file_empty));
+    private void importFile(File file) {
+        try (var input = Files.newInputStream(file.toPath())) {
+            TranslationXml.Document document = TranslationXml.read(input);
+            if (document.strings().isEmpty()) {
+                SketchwareUtil.toastError(getString(R.string.language_settings_import_empty));
                 return;
             }
-
-            TreeMap<String, String> parsed = parseStringsXml(content);
-            if (parsed.isEmpty()) {
-                SketchwareUtil.toastError(Helper.getResString(R.string.language_settings_import_empty));
-                return;
-            }
-
-            new MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(R.string.language_settings_import_confirm_title)
-                    .setMessage(String.format(
-                            Helper.getResString(R.string.language_settings_import_confirm_msg),
-                            parsed.size()))
-                    .setPositiveButton(R.string.common_word_import, (dialog, which) -> {
-                        applyImportedStrings(parsed);
-                    })
-                    .setNegativeButton(R.string.common_word_cancel, null)
-                    .show();
-        } catch (Exception e) {
+            chooseFallback(document, file.getName().replaceFirst("(?i)\\.xml$", ""));
+        } catch (IOException | XmlPullParserException e) {
             SketchwareUtil.toastError(
-                    String.format(Helper.getResString(R.string.language_settings_import_error), e.getMessage()));
+                    getString(R.string.language_settings_import_error, e.getMessage()));
         }
     }
 
-    private TreeMap<String, String> parseStringsXml(String xml) throws Exception {
-        TreeMap<String, String> result = new TreeMap<>();
-
-        XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-        XmlPullParser parser = factory.newPullParser();
-        parser.setInput(new StringReader(xml));
-
-        String currentName = null;
-        StringBuilder currentValue = null;
-
-        int eventType = parser.getEventType();
-        while (eventType != XmlPullParser.END_DOCUMENT) {
-            switch (eventType) {
-                case XmlPullParser.START_TAG:
-                    if ("string".equals(parser.getName())) {
-                        currentName = parser.getAttributeValue(null, "name");
-                        currentValue = new StringBuilder();
-                    }
-                    break;
-                case XmlPullParser.TEXT:
-                    if (currentValue != null) {
-                        currentValue.append(parser.getText());
-                    }
-                    break;
-                case XmlPullParser.END_TAG:
-                    if ("string".equals(parser.getName()) && currentName != null && currentValue != null) {
-                        result.put(currentName, currentValue.toString());
-                        currentName = null;
-                        currentValue = null;
-                    }
-                    break;
-            }
-            eventType = parser.next();
-        }
-
-        return result;
+    private void chooseFallback(TranslationXml.Document document, String filename) {
+        String[] names =
+                supported.stream().map(LanguageSettingsFragment::localeName).toArray(String[]::new);
+        Locale preferred =
+                document.fallbackTag() == null
+                        ? getResources().getConfiguration().getLocales().get(0)
+                        : Locale.forLanguageTag(document.fallbackTag());
+        int[] fallbackIndex = {Math.max(0, AppLanguages.findSelection(supported, preferred))};
+        var fields = DialogImportTranslationBinding.inflate(getLayoutInflater());
+        fields.packNameField.setHint(getString(R.string.language_settings_pack_name));
+        fields.fallbackLanguageField.setHint(
+                getString(R.string.language_settings_fallback_language));
+        fields.fallbackLanguageField.setHelperText(
+                getString(R.string.language_settings_fallback_hint));
+        fields.packName.setText(document.name() == null ? filename : document.name());
+        fields.fallbackLanguage.setAdapter(
+                new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, names));
+        fields.fallbackLanguage.setText(names[fallbackIndex[0]], false);
+        fields.fallbackLanguage.setOnItemClickListener(
+                (parent, row, position, id) -> {
+                    fallbackIndex[0] = position;
+                });
+        var dialog =
+                show(
+                        new MaterialAlertDialogBuilder(requireContext())
+                                .setTitle(getString(R.string.language_settings_import_pack))
+                                .setView(fields.getRoot())
+                                .setNegativeButton(R.string.common_word_cancel, null)
+                                .setPositiveButton(R.string.common_word_import, null));
+        dialog.getWindow()
+                .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setOnClickListener(
+                        v -> {
+                            String label = fields.packName.getText().toString().trim();
+                            if (label.isEmpty()) {
+                                fields.packNameField.setError(
+                                        getString(R.string.language_settings_pack_name_required));
+                                return;
+                            }
+                            Pack pack =
+                                    translations.addPack(
+                                            requireContext(),
+                                            label,
+                                            supported.get(fallbackIndex[0]),
+                                            document.strings());
+                            if (pack == null) {
+                                SketchwareUtil.toastError(
+                                        getString(R.string.language_settings_no_matching_entries));
+                                return;
+                            }
+                            dialog.dismiss();
+                            int skipped = document.strings().size() - pack.strings().size();
+                            SketchwareUtil.toast(
+                                    getString(
+                                            R.string.language_settings_pack_imported,
+                                            pack.strings().size(),
+                                            skipped));
+                            select(pack, pack.fallback());
+                        });
     }
 
-    private void applyImportedStrings(TreeMap<String, String> strings) {
-        int totalCount = strings.size();
-        int matchedCount = LanguageOverrideManager.getInstance().applyOverrides(requireContext(), strings);
-        int failedCount = Math.max(0, totalCount - matchedCount);
-        refreshUI();
-        new MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.language_settings_import_success_title)
-                .setMessage(String.format(
-                        Helper.getResString(R.string.language_settings_import_success_msg),
-                        totalCount, matchedCount, failedCount))
-                .setPositiveButton(R.string.common_word_ok, (dialog, which) -> recreateHostActivity())
-                .show();
+    private void showPackActions(View anchor, Pack pack) {
+        if (packMenu != null) packMenu.dismiss();
+        var menu = new PopupMenu(requireContext(), anchor);
+        menu.inflate(R.menu.language_pack_actions);
+        menu.getMenu()
+                .findItem(R.id.language_pack_export)
+                .setTitle(getString(R.string.language_settings_export_file));
+        menu.getMenu()
+                .findItem(R.id.language_pack_remove)
+                .setTitle(getString(R.string.language_settings_clear));
+        menu.setOnMenuItemClickListener(
+                item -> {
+                    Pack current = translations.getPack(pack.id());
+                    if (current == null) return false;
+                    if (item.getItemId() == R.id.language_pack_export) exportPack(current);
+                    else confirmRemove(current);
+                    return true;
+                });
+        menu.setOnDismissListener(
+                ignored -> {
+                    if (packMenu == menu) packMenu = null;
+                });
+        packMenu = menu;
+        menu.show();
+    }
+
+    private void confirmRemove(Pack pack) {
+        show(
+                new MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(R.string.language_settings_clear)
+                        .setMessage(getString(R.string.language_settings_remove_pack, pack.name()))
+                        .setPositiveButton(
+                                R.string.common_word_yes,
+                                (dialog, which) -> {
+                                    Pack active = translations.getActivePack(getResources());
+                                    translations.remove(requireContext(), pack);
+                                    if (active != null && pack.id().equals(active.id())) {
+                                        requireActivity().recreate();
+                                    } else {
+                                        renderLanguages();
+                                    }
+                                })
+                        .setNegativeButton(R.string.common_word_cancel, null));
+    }
+
+    private void exportTemplate() {
+        Locale locale = getResources().getConfiguration().getLocales().get(0);
+        int index = AppLanguages.findSelection(supported, locale);
+        Locale fallback = index < 0 ? supported.get(0) : supported.get(index);
+        export(
+                new TranslationXml.Document(
+                        null,
+                        fallback.toLanguageTag(),
+                        LanguageOverrideManager.sourceStrings(requireContext(), fallback)),
+                "strings_export.xml");
+    }
+
+    private void exportPack(Pack pack) {
+        var entries = new TreeMap<>(pack.rejectedStrings());
+        entries.putAll(pack.strings());
+        String name = pack.name().replaceAll("[^\\p{L}\\p{M}\\p{N}_-]", "_");
+        int length =
+                name.offsetByCodePoints(0, Math.min(32, name.codePointCount(0, name.length())));
+        export(
+                new TranslationXml.Document(pack.name(), pack.fallbackTag(), entries),
+                name.substring(0, length)
+                        + "-"
+                        + pack.fallback().toLanguageTag()
+                        + "-"
+                        + pack.id()
+                        + ".xml");
+    }
+
+    private void export(TranslationXml.Document document, String filename) {
+        try {
+            File directory = new File(SketchwarePaths.getSystemI18nPath());
+            Files.createDirectories(directory.toPath());
+            File file = new File(directory, filename);
+            DefinitionFiles.writeText(file, TranslationXml.write(document));
+            SketchwareUtil.toast(
+                    getString(R.string.language_settings_exported, file.getAbsolutePath()));
+        } catch (IOException e) {
+            SketchwareUtil.toastError(
+                    getString(R.string.language_settings_export_error, e.getMessage()));
+        }
+    }
+
+    private AlertDialog show(MaterialAlertDialogBuilder builder) {
+        AlertDialog dialog = builder.show();
+        openDialog = dialog;
+        dialog.setOnDismissListener(
+                ignored -> {
+                    if (openDialog == dialog) openDialog = null;
+                });
+        return dialog;
     }
 
     @Override
     public void onDestroyView() {
-        if (languagePickerDialog != null) languagePickerDialog.dismiss();
+        if (packMenu != null) packMenu.dismiss();
+        if (openDialog != null) openDialog.dismiss();
         super.onDestroyView();
         binding = null;
     }

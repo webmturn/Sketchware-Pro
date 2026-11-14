@@ -146,6 +146,14 @@
                         android:textColor="?attr/colorOnSurfaceVariant" />
 
                     <LinearLayout
+                        android:id="@+id/translation_packs"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="vertical"
+                        android:visibility="gone" />
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
@@ -172,16 +180,6 @@
                             android:singleLine="false"
                             android:text="@string/language_settings_export_file" />
                     </LinearLayout>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_clear_override"
-                        style="@style/Widget.Material3.Button.TextButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:minHeight="48dp"
-                        android:singleLine="false"
-                        android:text="@string/language_settings_clear"
-                        android:visibility="gone" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>

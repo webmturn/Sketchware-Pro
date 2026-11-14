@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import pro.sketchware.R;
+import pro.sketchware.util.locale.LanguageOverrideManager;
 
 /** Localizes only the displayed built-in spec; serialized block data keeps its original spec. */
 public final class BuiltinBlockLocalization {
@@ -17,19 +18,23 @@ public final class BuiltinBlockLocalization {
             ArrayList<HashMap<String, Object>> blocks = new ArrayList<>();
             BuiltInBlockDefinitions.builtInBlocks(blocks);
             Map<String, HashMap<String, Object>> result = new HashMap<>();
-            for (HashMap<String, Object> block : blocks) result.put((String) block.get("name"), block);
+            for (HashMap<String, Object> block : blocks)
+                result.put((String) block.get("name"), block);
             return result;
         }
     }
 
-    public static String getSpec(Context context, String opcode, String original, boolean secondary) {
+    public static String getSpec(
+            Context context, String opcode, String original, boolean secondary) {
         HashMap<String, Object> block = Originals.BLOCKS.get(opcode);
-        if (block == null || original == null || !original.equals(block.get(secondary ? "spec2" : "spec"))) {
+        if (block == null
+                || original == null
+                || !original.equals(block.get(secondary ? "spec2" : "spec"))) {
             return original;
         }
         int resource = secondary ? secondaryResource(opcode) : primaryResource(opcode);
         if (resource == 0) return original;
-        String display = context.getString(resource);
+        String display = LanguageOverrideManager.getInstance().getString(context, resource);
         // Android trims surrounding whitespace in resources. Keep the exact stored
         // spec when the resource contains the same display text (e.g. English).
         return display.trim().equals(original.trim()) ? original : display;
@@ -39,7 +44,8 @@ public final class BuiltinBlockLocalization {
         return switch (opcode) {
             case "CommandBlockJava" -> R.string.builtin_block_commandblockjava;
             case "CommandBlockXML" -> R.string.builtin_block_commandblockxml;
-            case "setRecyclerViewLayoutParams" -> R.string.builtin_block_setrecyclerviewlayoutparams;
+            case "setRecyclerViewLayoutParams" ->
+                    R.string.builtin_block_setrecyclerviewlayoutparams;
             case "refreshingList" -> R.string.builtin_block_refreshinglist;
             case "ListViewAddHeader" -> R.string.builtin_block_listviewaddheader;
             case "ListViewAddFooter" -> R.string.builtin_block_listviewaddfooter;
@@ -59,7 +65,8 @@ public final class BuiltinBlockLocalization {
             case "performClick" -> R.string.builtin_block_performclick;
             case "AsyncTaskExecute" -> R.string.builtin_block_asynctaskexecute;
             case "AsyncTaskPublishProgress" -> R.string.builtin_block_asynctaskpublishprogress;
-            case "progressdialogSetCanceledOutside" -> R.string.builtin_block_progressdialogsetcanceledoutside;
+            case "progressdialogSetCanceledOutside" ->
+                    R.string.builtin_block_progressdialogsetcanceledoutside;
             case "datePickerDialogShow" -> R.string.builtin_block_datepickerdialogshow;
             case "timePickerDialogShow" -> R.string.builtin_block_timepickerdialogshow;
             case "imageCrop" -> R.string.builtin_block_imagecrop;
@@ -76,7 +83,8 @@ public final class BuiltinBlockLocalization {
             case "progressdialogSetMessage" -> R.string.builtin_block_progressdialogsetmessage;
             case "progressdialogSetMax" -> R.string.builtin_block_progressdialogsetmax;
             case "progressdialogSetProgress" -> R.string.builtin_block_progressdialogsetprogress;
-            case "progressdialogSetCancelable" -> R.string.builtin_block_progressdialogsetcancelable;
+            case "progressdialogSetCancelable" ->
+                    R.string.builtin_block_progressdialogsetcancelable;
             case "progressdialogSetCanceled" -> R.string.builtin_block_progressdialogsetcanceled;
             case "progressdialogSetStyle" -> R.string.builtin_block_progressdialogsetstyle;
             case "progressdialogDismiss" -> R.string.builtin_block_progressdialogdismiss;
@@ -148,7 +156,8 @@ public final class BuiltinBlockLocalization {
             case "videoviewCanSeekForward" -> R.string.builtin_block_videoviewcanseekforward;
             case "videoviewCanSeekBackward" -> R.string.builtin_block_videoviewcanseekbackward;
             case "videoviewGetDuration" -> R.string.builtin_block_videoviewgetduration;
-            case "videoviewGetCurrentPosition" -> R.string.builtin_block_videoviewgetcurrentposition;
+            case "videoviewGetCurrentPosition" ->
+                    R.string.builtin_block_videoviewgetcurrentposition;
             case "listSetTranscriptMode" -> R.string.builtin_block_listsettranscriptmode;
             case "listSetStackFromBottom" -> R.string.builtin_block_listsetstackfrombottom;
             case "setElevation" -> R.string.builtin_block_setelevation;
@@ -164,8 +173,10 @@ public final class BuiltinBlockLocalization {
             case "setInlineLabel" -> R.string.builtin_block_setinlinelabel;
             case "setTabTextColors" -> R.string.builtin_block_settabtextcolors;
             case "setTabRippleColor" -> R.string.builtin_block_settabripplecolor;
-            case "setSelectedTabIndicatorColor" -> R.string.builtin_block_setselectedtabindicatorcolor;
-            case "setSelectedTabIndicatorHeight" -> R.string.builtin_block_setselectedtabindicatorheight;
+            case "setSelectedTabIndicatorColor" ->
+                    R.string.builtin_block_setselectedtabindicatorcolor;
+            case "setSelectedTabIndicatorHeight" ->
+                    R.string.builtin_block_setselectedtabindicatorheight;
             case "returnTitle" -> R.string.builtin_block_returntitle;
             case "returnFragment" -> R.string.builtin_block_returnfragment;
             case "bottomMenuAddItem" -> R.string.builtin_block_bottommenuadditem;
@@ -183,17 +194,21 @@ public final class BuiltinBlockLocalization {
             case "setPreventCornerOverlap" -> R.string.builtin_block_setpreventcorneroverlap;
             case "setUseCompatPadding" -> R.string.builtin_block_setusecompatpadding;
             case "spnSetCustomViewData" -> R.string.builtin_block_spnsetcustomviewdata;
-            case "lottieSetAnimationFromAsset" -> R.string.builtin_block_lottiesetanimationfromasset;
+            case "lottieSetAnimationFromAsset" ->
+                    R.string.builtin_block_lottiesetanimationfromasset;
             case "lottieSetAnimationFromJson" -> R.string.builtin_block_lottiesetanimationfromjson;
             case "lottieSetAnimationFromUrl" -> R.string.builtin_block_lottiesetanimationfromurl;
             case "lottieSetRepeatCount" -> R.string.builtin_block_lottiesetrepeatcount;
             case "lottieSetSpeed" -> R.string.builtin_block_lottiesetspeed;
             case "recyclerSetCustomViewData" -> R.string.builtin_block_recyclersetcustomviewdata;
             case "recyclerSetLayoutManager" -> R.string.builtin_block_recyclersetlayoutmanager;
-            case "recyclerSetLayoutManagerHorizontal" -> R.string.builtin_block_recyclersetlayoutmanagerhorizontal;
+            case "recyclerSetLayoutManagerHorizontal" ->
+                    R.string.builtin_block_recyclersetlayoutmanagerhorizontal;
             case "recyclerSetHasFixedSize" -> R.string.builtin_block_recyclersethasfixedsize;
-            case "recyclerSmoothScrollToPosition" -> R.string.builtin_block_recyclersmoothscrolltoposition;
-            case "recyclerScrollToPositionWithOffset" -> R.string.builtin_block_recyclerscrolltopositionwithoffset;
+            case "recyclerSmoothScrollToPosition" ->
+                    R.string.builtin_block_recyclersmoothscrolltoposition;
+            case "recyclerScrollToPositionWithOffset" ->
+                    R.string.builtin_block_recyclerscrolltopositionwithoffset;
             case "recyclerscrollparam" -> R.string.builtin_block_recyclerscrollparam;
             case "pagerscrollparam" -> R.string.builtin_block_pagerscrollparam;
             case "pagerSetCustomViewData" -> R.string.builtin_block_pagersetcustomviewdata;
@@ -227,7 +242,8 @@ public final class BuiltinBlockLocalization {
             case "patternToSha1" -> R.string.builtin_block_patterntosha1;
             case "patternSetDotCount" -> R.string.builtin_block_patternsetdotcount;
             case "patternSetNormalStateColor" -> R.string.builtin_block_patternsetnormalstatecolor;
-            case "patternSetCorrectStateColor" -> R.string.builtin_block_patternsetcorrectstatecolor;
+            case "patternSetCorrectStateColor" ->
+                    R.string.builtin_block_patternsetcorrectstatecolor;
             case "patternSetWrongStateColor" -> R.string.builtin_block_patternsetwrongstatecolor;
             case "patternSetViewMode" -> R.string.builtin_block_patternsetviewmode;
             case "patternLockClear" -> R.string.builtin_block_patternlockclear;
@@ -245,7 +261,8 @@ public final class BuiltinBlockLocalization {
             case "launchApp" -> R.string.builtin_block_launchapp;
             case "changeStatebarColour" -> R.string.builtin_block_changestatebarcolour;
             case "Dialog SetIcon" -> R.string.builtin_block_dialog_seticon;
-            case "ViewPagerNotifyOnDtatChange" -> R.string.builtin_block_viewpagernotifyondtatchange;
+            case "ViewPagerNotifyOnDtatChange" ->
+                    R.string.builtin_block_viewpagernotifyondtatchange;
             case "returnMap" -> R.string.builtin_block_returnmap;
             case "returnListStr" -> R.string.builtin_block_returnliststr;
             case "returnListMap" -> R.string.builtin_block_returnlistmap;
@@ -301,8 +318,10 @@ public final class BuiltinBlockLocalization {
             case "interstitialAdLoad" -> R.string.builtin_block_interstitialadload;
             case "interstitialAdShow" -> R.string.builtin_block_interstitialadshow;
             case "interstitialAdIsLoaded" -> R.string.builtin_block_interstitialadisloaded;
-            case "interstitialAdRegisterFullScreenContentCallback" -> R.string.builtin_block_interstitialadregisterfullscreencontentcallback;
-            case "rewardedAdRegisterFullScreenContentCallback" -> R.string.builtin_block_rewardedadregisterfullscreencontentcallback;
+            case "interstitialAdRegisterFullScreenContentCallback" ->
+                    R.string.builtin_block_interstitialadregisterfullscreencontentcallback;
+            case "rewardedAdRegisterFullScreenContentCallback" ->
+                    R.string.builtin_block_rewardedadregisterfullscreencontentcallback;
             case "getResString" -> R.string.builtin_block_getresstring;
             case "caseStrAnd" -> R.string.builtin_block_casestrand;
             case "caseNumAnd" -> R.string.builtin_block_casenumand;

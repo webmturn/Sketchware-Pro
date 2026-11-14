@@ -58,10 +58,8 @@ public class Helper {
     }
 
     public static String getResString(@StringRes int resId) {
-        String override =
-                pro.sketchware.util.locale.LanguageOverrideManager.getInstance().getOverride(resId);
-        if (override != null) return override;
-        return getContext().getString(resId);
+        return pro.sketchware.util.locale.LanguageOverrideManager.getInstance()
+                .getString(getContext(), resId);
     }
 
     public static String getResString(@StringRes int resId, Object... formatArgs) {

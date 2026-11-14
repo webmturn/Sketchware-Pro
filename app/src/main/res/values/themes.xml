@@ -1,6 +1,7 @@
 <resources>
     <style name="Base.Theme.SketchwarePro" parent="Scheme.SketchwarePro.DayNight" />
     <style name="Theme.SketchwarePro" parent="Platform.Theme.SketchwarePro">
+        <item name="viewInflaterClass">pro.sketchware.util.locale.TranslationViewInflater</item>
         <item name="bottomNavigationStyle">@style/Widget.SketchwarePro.BottomNavigationView</item>
         <item name="chipStyle">@style/Widget.SketchwarePro.Chip</item>
         <item name="collapsingToolbarLayoutStyle">?attr/collapsingToolbarLayoutLargeStyle</item>

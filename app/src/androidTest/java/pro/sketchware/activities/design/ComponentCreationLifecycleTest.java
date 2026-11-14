@@ -64,13 +64,23 @@ public class ComponentCreationLifecycleTest {
         var originalOverrides = preferences.getAll();
         var translations = LanguageOverrideManager.getInstance();
         try (Host host = new Host(false)) {
-            assertEquals(
-                    2,
-                    translations.applyOverrides(
-                            context,
-                            Map.of(
-                                    "component_title_add_component", "Fixture component title",
-                                    "component_group_app_tools", "Fixture component heading")));
+            host.onActivity(
+                    activity -> {
+                        var locale = activity.getResources().getConfiguration().getLocales().get(0);
+                        var pack =
+                                translations.addPack(
+                                        context,
+                                        "Fixture",
+                                        locale,
+                                        Map.of(
+                                                "component_title_add_component",
+                                                        "Fixture component title",
+                                                "component_group_app_tools",
+                                                        "Fixture component heading"));
+                        assertNotNull(pack);
+                        assertEquals(2, pack.strings().size());
+                        translations.select(context, pack);
+                    });
             host.openSelector();
             host.onActivity(
                     activity -> {
@@ -93,7 +103,7 @@ public class ComponentCreationLifecycleTest {
                     editor.putInt(entry.getKey(), value);
             }
             editor.apply();
-            translations.reload(context);
+            translations.init(context);
         }
     }
 
