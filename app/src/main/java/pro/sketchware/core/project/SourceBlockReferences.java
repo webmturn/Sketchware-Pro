@@ -13,11 +13,16 @@ import com.github.javaparser.Token;
 import com.github.javaparser.TokenMgrException;
 import com.github.javaparser.UnicodeEscapeProcessingProvider;
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
+import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.FieldAccessExpr;
 import com.github.javaparser.ast.expr.NameExpr;
+import com.github.javaparser.ast.expr.ObjectCreationExpr;
 import com.github.javaparser.ast.expr.SimpleName;
 import com.github.javaparser.ast.stmt.BlockStmt;
+import com.github.javaparser.resolution.UnsolvedSymbolException;
 import com.github.javaparser.resolution.declarations.ResolvedValueDeclaration;
 import com.github.javaparser.symbolsolver.JavaSymbolSolver;
 import com.github.javaparser.symbolsolver.javaparsermodel.declarations.JavaParserFieldDeclaration;
@@ -41,10 +46,14 @@ final class SourceBlockReferences {
                             .setPreprocessUnicodeEscapes(true)
                             .setAttributeComments(false));
     private final String className;
+    private final String packageName;
+    private final String[] classNameParts;
     private final String name;
 
-    SourceBlockReferences(String className, String name) {
+    SourceBlockReferences(String className, String packageName, String name) {
         this.className = className;
+        this.packageName = packageName;
+        this.classNameParts = (packageName + "." + className).split("\\.");
         this.name = name;
     }
 
@@ -62,23 +71,15 @@ final class SourceBlockReferences {
 
         var matches = new HashMap<String, String>();
         var visited = new HashSet<String>();
-        var deferred = new ArrayList<BlockBean>();
         for (BlockBean block : blocks) {
             if (children.contains(block.id)) continue;
             var lines = new ArrayList<SourceLine>();
-            appendStack(block, byId, visited, lines, deferred);
-            findReferences(lines, matches);
-        }
-        // Disabled code can still contain references that reappear when enabled.
-        for (int i = 0; i < deferred.size(); i++) {
-            BlockBean block = deferred.get(i);
-            if (block.disabled && "addSourceDirectly".equals(block.opCode)) {
-                findReferences(sourceLines(block), matches);
-                continue;
+            appendStack(block, byId, visited, lines, false);
+            findReferences(lines, false, matches);
+            if (lines.stream().anyMatch(line -> line.disabled() && line.blockId() != null)) {
+                // Search disabled code in its original scope without affecting enabled results.
+                findReferences(lines, true, matches);
             }
-            var lines = new ArrayList<SourceLine>();
-            appendStack(block, byId, visited, lines, deferred);
-            findReferences(lines, matches);
         }
         return matches;
     }
@@ -94,43 +95,36 @@ final class SourceBlockReferences {
             Map<String, BlockBean> byId,
             Set<String> visited,
             List<SourceLine> lines,
-            List<BlockBean> deferred) {
+            boolean disabledParent) {
         while (block != null && visited.add(block.id)) {
+            boolean disabled = disabledParent || block.disabled;
             if ("addSourceDirectly".equals(block.opCode)) {
-                if (block.disabled) deferred.add(block);
-                else lines.addAll(sourceLines(block));
+                if (!block.parameters.isEmpty() && block.parameters.get(0) != null) {
+                    for (String line : block.parameters.get(0).split("\\r\\n|\\r|\\n", -1)) {
+                        lines.add(new SourceLine(block.id, line, disabled));
+                    }
+                }
             } else {
                 // Preserve statement and substack boundaries for the source snippets.
-                if (!block.disabled) lines.add(new SourceLine(null, ";"));
+                lines.add(new SourceLine(null, ";", disabled));
                 for (int id : new int[] {block.subStack1, block.subStack2}) {
                     BlockBean child = byId.get(Integer.toString(id));
                     if (child == null) continue;
-                    if (block.disabled) deferred.add(child);
-                    else {
-                        lines.add(new SourceLine(null, "{"));
-                        appendStack(child, byId, visited, lines, deferred);
-                        lines.add(new SourceLine(null, "}"));
-                    }
+                    lines.add(new SourceLine(null, "{", disabled));
+                    appendStack(child, byId, visited, lines, disabled);
+                    lines.add(new SourceLine(null, "}", disabled));
                 }
             }
             block = byId.get(Integer.toString(block.nextBlock));
         }
     }
 
-    private static List<SourceLine> sourceLines(BlockBean block) {
-        var lines = new ArrayList<SourceLine>();
-        if (!block.parameters.isEmpty() && block.parameters.get(0) != null) {
-            for (String line : block.parameters.get(0).split("\\r\\n|\\r|\\n", -1)) {
-                lines.add(new SourceLine(block.id, line));
-            }
-        }
-        return lines;
-    }
-
-    private void findReferences(List<SourceLine> lines, Map<String, String> matches) {
+    private void findReferences(
+            List<SourceLine> lines, boolean includeDisabled, Map<String, String> matches) {
         var source = new StringBuilder("{\n");
         for (SourceLine line : lines) {
-            source.append(line.text()).append('\n');
+            if (includeDisabled || !line.disabled()) source.append(line.text());
+            source.append('\n');
         }
         String code = source.toString();
         if (!code.contains(name) && !code.contains("\\u")) return;
@@ -138,6 +132,7 @@ final class SourceBlockReferences {
         BlockStmt body = parseBody(code);
         if (body == null) return;
         var unit = new CompilationUnit();
+        if (!packageName.isEmpty()) unit.setPackageDeclaration(packageName);
         var owner = unit.addClass(className);
         // Bind names to the page field while resolving the snippet's own locals and parameters.
         var field = owner.addField("Object", name).getVariable(0);
@@ -149,7 +144,9 @@ final class SourceBlockReferences {
             int index = identifier.getBegin().orElseThrow().line - 2;
             if (index < 0 || index >= lines.size()) continue;
             SourceLine line = lines.get(index);
-            if (line.blockId() != null) matches.putIfAbsent(line.blockId(), line.text().trim());
+            if (line.blockId() != null && line.disabled() == includeDisabled) {
+                matches.putIfAbsent(line.blockId(), line.text().trim());
+            }
         }
     }
 
@@ -183,16 +180,57 @@ final class SourceBlockReferences {
         return depth;
     }
 
-    private static boolean refersToField(SimpleName identifier, VariableDeclarator field) {
+    private boolean refersToField(SimpleName identifier, VariableDeclarator field) {
         var access = identifier.getParentNode().orElseThrow();
         try {
             if (access instanceof NameExpr variable) return isField(variable.resolve(), field);
-            if (access instanceof FieldAccessExpr member) return isField(member.resolve(), field);
+            if (access instanceof FieldAccessExpr member) {
+                return isField(member.resolve(), field);
+            }
             return false;
+        } catch (UnsolvedSymbolException unresolved) {
+            return access instanceof FieldAccessExpr member && isQualifiedPageField(member);
         } catch (RuntimeException unresolved) {
             // Other project classes and libraries are unavailable in a snippet.
             return false;
         }
+    }
+
+    private boolean isQualifiedPageField(FieldAccessExpr member) {
+        if (packageName.isEmpty()) return false;
+        Expression scope = member.getScope();
+        for (int i = classNameParts.length - 1; i > 0; i--) {
+            if (!(scope instanceof FieldAccessExpr part)
+                    || !part.getNameAsString().equals(classNameParts[i])) return false;
+            scope = part.getScope();
+        }
+        if (!(scope instanceof NameExpr prefix)
+                || !prefix.getNameAsString().equals(classNameParts[0])) return false;
+
+        try {
+            // A local or parameter with this name takes precedence over the package.
+            prefix.resolve();
+            return false;
+        } catch (UnsolvedSymbolException noValue) {
+            return anonymousBasesAreKnown(prefix);
+        } catch (RuntimeException unresolved) {
+            return false;
+        }
+    }
+
+    private static boolean anonymousBasesAreKnown(Node node) {
+        // An unavailable superclass may declare a field that shadows the package.
+        for (Node child = node; child != null; child = child.getParentNode().orElse(null)) {
+            if (child instanceof BodyDeclaration<?>
+                    && child.getParentNode().orElse(null) instanceof ObjectCreationExpr callback) {
+                try {
+                    callback.getType().resolve();
+                } catch (RuntimeException unavailableType) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private static boolean isField(ResolvedValueDeclaration declaration, VariableDeclarator field) {
@@ -200,5 +238,5 @@ final class SourceBlockReferences {
                 && resolved.getVariableDeclarator() == field;
     }
 
-    private record SourceLine(String blockId, String text) {}
+    private record SourceLine(String blockId, String text, boolean disabled) {}
 }

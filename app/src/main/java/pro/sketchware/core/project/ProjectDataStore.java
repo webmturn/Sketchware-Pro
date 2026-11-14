@@ -1063,6 +1063,16 @@ public class ProjectDataStore {
 
     public ArrayList<VariableReference> findVariableReferences(
             String fileName, String variableName, boolean isList, String customType) {
+        return findVariableReferences(
+                fileName, variableName, isList, customType, buildConfig.packageName);
+    }
+
+    public ArrayList<VariableReference> findVariableReferences(
+            String fileName,
+            String variableName,
+            boolean isList,
+            String customType,
+            String packageName) {
         ArrayList<VariableReference> references = new ArrayList<>();
         HashMap<String, ArrayList<BlockBean>> blockEntryMap = blockMap.get(fileName);
         if (blockEntryMap == null) return references;
@@ -1070,7 +1080,8 @@ public class ProjectDataStore {
                 fileName.endsWith(".java")
                         ? fileName.substring(0, fileName.length() - 5)
                         : fileName;
-        SourceBlockReferences sourceBlocks = new SourceBlockReferences(className, variableName);
+        SourceBlockReferences sourceBlocks =
+                new SourceBlockReferences(className, packageName, variableName);
         for (Map.Entry<String, ArrayList<BlockBean>> entry : blockEntryMap.entrySet()) {
             String blockEntryKey = entry.getKey();
             List<BlockBean> blocks = entry.getValue();

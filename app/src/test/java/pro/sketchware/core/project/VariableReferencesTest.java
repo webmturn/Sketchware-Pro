@@ -90,6 +90,7 @@ public class VariableReferencesTest {
     @Test
     public void sourceReferencesResolveToThePageField() {
         var project = new ProjectDataStore("test");
+        project.buildConfig.packageName = "com.example.app";
         put(
                 project,
                 PAGE,
@@ -104,9 +105,55 @@ public class VariableReferencesTest {
                         "6",
                         "var holder = new Object() { void reset() { MainActivity.this.deadline++; } };"),
                 source("7", "if (MainActivity.deadline > 0) {"),
-                source("8", "try { test(); } catch (Exception deadline) { consume(deadline); }"));
+                source("8", "try { test(); } catch (Exception deadline) { consume(deadline); }"),
+                source("9", "new Runnable() { public void run() { deadline++; } };"));
 
-        assertEquals(List.of("1", "5", "6", "7"), references(project, "deadline", false, null));
+        assertEquals(
+                List.of("1", "5", "6", "7", "9"), references(project, "deadline", false, null));
+    }
+
+    @Test
+    public void packagePrefixMustNotResolveToAVariable() {
+        var project = new ProjectDataStore("test");
+        project.buildConfig.packageName = "com.example.app";
+        put(
+                project,
+                PAGE,
+                source("1", "com.example.app.MainActivity.deadline++;"),
+                source("2", "com.example.other.MainActivity.deadline++;"),
+                source(
+                        "3",
+                        "ForeignReceiver com = receiver(); com.example.app.MainActivity.deadline++;"),
+                source("4", "run(com -> com.example.app.MainActivity.deadline++);"),
+                source(
+                        "5",
+                        "if (receiver instanceof ForeignReceiver com) com.example.app.MainActivity.deadline++;"));
+
+        assertEquals(List.of("1"), references(project, "deadline", false, null));
+    }
+
+    @Test
+    public void unknownCallbackCanShadowPageFields() {
+        var project = new ProjectDataStore("test");
+        project.buildConfig.packageName = "com.example.app";
+        put(
+                project,
+                PAGE,
+                source("1", "new ForeignCallback() { public void run() { deadline++; } };"),
+                source(
+                        "2",
+                        "new ForeignCallback() { int deadline; public void run() { deadline++; } };"),
+                source(
+                        "3",
+                        "new ForeignCallback() { public void run(int deadline) { deadline++; } };"),
+                source(
+                        "4",
+                        "new ForeignCallback() { public void run() { com.example.app.MainActivity.deadline++; } };"),
+                source(
+                        "5",
+                        "new ForeignCallback() { public void run() { MainActivity.this.deadline++; } };"));
+
+        assertEquals(List.of("5"), references(project, "deadline", false, null));
     }
 
     @Test
@@ -123,6 +170,8 @@ public class VariableReferencesTest {
         commentEnd.nextBlock = 4;
         declareLocal.nextBlock = 5;
         localUse.nextBlock = 6;
+        commentedOut.disabled = true;
+        localUse.disabled = true;
         put(
                 project,
                 PAGE,
@@ -134,6 +183,17 @@ public class VariableReferencesTest {
                 declareLocal);
 
         assertEquals(List.of("6"), references(project, "deadline", false, null));
+    }
+
+    @Test
+    public void disabledDeclarationDoesNotMaskAnEnabledReference() {
+        var project = new ProjectDataStore("test");
+        BlockBean declaration = source("1", "int deadline = 0;");
+        declaration.disabled = true;
+        declaration.nextBlock = 2;
+        put(project, PAGE, declaration, source("2", "deadline++;"));
+
+        assertEquals(List.of("2"), references(project, "deadline", false, null));
     }
 
     @Test
