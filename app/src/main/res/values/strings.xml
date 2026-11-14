@@ -2410,10 +2410,13 @@ Please try again after removing the blocks with this variable"</string>
     <string name="logic_editor_panel_button_find_refs_list">Find references</string>
     <string name="logic_editor_title_find_refs">References to "%s"</string>
     <string name="logic_editor_message_no_refs_found">No references found</string>
-    <string name="logic_editor_reference_unavailable">The event for this reference is unavailable</string>
+    <string name="logic_editor_reference_unavailable">This reference is unavailable</string>
     <string name="logic_editor_find_refs_count">%d references found</string>
-    <string name="logic_editor_find_refs_select_variable">Select a variable to find references</string>
-    <string name="logic_editor_find_refs_select_list">Select a list to find references</string>
+    <string name="logic_editor_find_refs_select_variable">Select variable</string>
+    <string name="logic_editor_find_refs_select_list">Select list</string>
+    <string name="logic_editor_filter_reference_name">Filter by name</string>
+    <string name="logic_editor_clear_reference_filter">Clear filter</string>
+    <string name="logic_editor_reference_current_event">%1$s · Current event</string>
     <string name="logic_editor_title_enter_new_name">Enter new name for "%s"</string>
     <string name="logic_editor_hint_new_name">New name</string>
     <string name="logic_editor_message_variable_renamed">Variable renamed: %1$s → %2$s</string>

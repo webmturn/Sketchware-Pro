@@ -18,17 +18,11 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import pro.sketchware.R;
 import pro.sketchware.activities.editor.LogicEditorActivity;
-import pro.sketchware.activities.editor.makeblock.ReturnMoreblockManager;
-import pro.sketchware.beans.EventBean;
 import pro.sketchware.beans.ProjectFileBean;
-import pro.sketchware.core.block.view.BlockView;
-import pro.sketchware.core.codegen.EventRegistry;
 import pro.sketchware.core.project.BlockConstants;
 import pro.sketchware.core.project.ProjectDataManager;
 import pro.sketchware.core.project.ProjectDataStore;
@@ -39,7 +33,6 @@ import pro.sketchware.databinding.AddCustomListBinding;
 import pro.sketchware.databinding.AddCustomVariableBinding;
 import pro.sketchware.util.Helper;
 import pro.sketchware.util.SketchwareUtil;
-import pro.sketchware.util.format.FormatUtil;
 
 public class LogicClickListener implements View.OnClickListener {
 
@@ -474,240 +467,13 @@ public class LogicClickListener implements View.OnClickListener {
     }
 
     private void findVariableReferences(boolean isList) {
-        int horizontalPadding = dpToPx(20);
-        RecyclerView recyclerView = new RecyclerView(logicEditor);
-        recyclerView.setPadding(horizontalPadding, dpToPx(8), horizontalPadding, 0);
-        recyclerView.setLayoutManager(new LinearLayoutManager(logicEditor));
-
-        List<Item> data = new LinkedList<>();
-        if (isList) {
-            List<Pair<Integer, String>> listTypes =
-                    List.of(
-                            new Pair<>(
-                                    ExtraMenuBean.LIST_TYPE_NUMBER,
-                                    Helper.getResString(R.string.logic_group_list_integer)),
-                            new Pair<>(
-                                    ExtraMenuBean.LIST_TYPE_STRING,
-                                    Helper.getResString(R.string.logic_group_list_string)),
-                            new Pair<>(
-                                    ExtraMenuBean.LIST_TYPE_MAP,
-                                    Helper.getResString(R.string.logic_group_list_map)),
-                            new Pair<>(4, Helper.getResString(R.string.logic_group_list_custom)));
-            for (Pair<Integer, String> listType : listTypes) {
-                ArrayList<String> lists = getUsedList(listType.first);
-                for (int i = 0, size = lists.size(); i < size; i++) {
-                    if (i == 0) data.add(new Item(String.format(listType.second, size)));
-                    data.add(new Item(lists.get(i), true));
-                }
-            }
-        } else {
-            List<Pair<List<Integer>, String>> variableTypes =
-                    List.of(
-                            new Pair<>(
-                                    List.of(ExtraMenuBean.VARIABLE_TYPE_BOOLEAN),
-                                    Helper.getResString(R.string.logic_group_boolean)),
-                            new Pair<>(
-                                    List.of(ExtraMenuBean.VARIABLE_TYPE_NUMBER),
-                                    Helper.getResString(R.string.logic_group_number)),
-                            new Pair<>(
-                                    List.of(ExtraMenuBean.VARIABLE_TYPE_STRING),
-                                    Helper.getResString(R.string.logic_group_string)),
-                            new Pair<>(
-                                    List.of(ExtraMenuBean.VARIABLE_TYPE_MAP),
-                                    Helper.getResString(R.string.logic_group_map)),
-                            new Pair<>(
-                                    List.of(
-                                            ExtraMenuBean.VARIABLE_TYPE_CUSTOM_LEGACY,
-                                            ExtraMenuBean.VARIABLE_TYPE_CUSTOM_DECLARATION),
-                                    Helper.getResString(R.string.logic_group_custom)));
-            for (Pair<List<Integer>, String> variableType : variableTypes) {
-                List<String> instances = new LinkedList<>();
-                for (Integer type : variableType.first) {
-                    instances.addAll(getUsedVariable(type));
-                }
-                for (int i = 0, size = instances.size(); i < size; i++) {
-                    if (i == 0) data.add(new Item(String.format(variableType.second, size)));
-                    data.add(new Item(instances.get(i), true));
-                }
-            }
-        }
-
-        if (data.isEmpty()) {
-            SketchwareUtil.toastError(
-                    Helper.getResString(
-                            isList
-                                    ? R.string.logic_editor_message_no_lists
-                                    : R.string.logic_editor_message_no_variables));
-            return;
-        }
-
-        RenameAdapter adapter = new RenameAdapter(logicEditor, data);
-        recyclerView.setAdapter(adapter);
-
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(logicEditor);
-        builder.setTitle(
-                isList
-                        ? R.string.logic_editor_find_refs_select_list
-                        : R.string.logic_editor_find_refs_select_variable);
-        builder.setView(recyclerView);
-        builder.setNegativeButton(R.string.common_word_cancel, null);
-        androidx.appcompat.app.AlertDialog dialog = builder.show();
-        adapter.setOnItemClickListener(
-                selection -> {
-                    dialog.dismiss();
-                    String name = CustomVariableUtil.getVariableName(selection);
-                    String customType =
-                            name == null || isList
-                                    ? null
-                                    : CustomVariableUtil.getVariableType(selection);
-                    showVariableReferencesResult(
-                            name == null ? selection : name, isList, customType);
-                });
-    }
-
-    private void showVariableReferencesResult(
-            String variableName, boolean isList, String customType) {
-        logicEditor.saveBlocks();
-        ArrayList<ProjectDataStore.VariableReference> references =
-                projectDataManager.findVariableReferences(
-                        javaName, variableName, isList, customType);
-
-        if (references.isEmpty()) {
-            SketchwareUtil.toast(Helper.getResString(R.string.logic_editor_message_no_refs_found));
-            return;
-        }
-
-        LinkedHashMap<String, List<ProjectDataStore.VariableReference>> grouped =
-                new LinkedHashMap<>();
-        for (ProjectDataStore.VariableReference ref : references) {
-            grouped.computeIfAbsent(ref.blockEntryKey, k -> new LinkedList<>()).add(ref);
-        }
-
-        int horizontalPadding = dpToPx(20);
-        RecyclerView recyclerView = new RecyclerView(logicEditor);
-        recyclerView.setPadding(horizontalPadding, dpToPx(8), horizontalPadding, 0);
-        recyclerView.setLayoutManager(new LinearLayoutManager(logicEditor));
-
-        List<Item> data = new ArrayList<>();
-        ArrayList<ProjectDataStore.VariableReference> refByPosition = new ArrayList<>();
-        for (Map.Entry<String, List<ProjectDataStore.VariableReference>> entry :
-                grouped.entrySet()) {
-            String blockEntryKey = entry.getKey();
-            EventBean event = referenceEvent(blockEntryKey);
-            String title = event == null ? blockEntryKey : referenceEventTitle(event);
-            List<ProjectDataStore.VariableReference> refs = entry.getValue();
-            boolean isCurrentEntry = blockEntryKey.equals(currentBlockEntryKey);
-            String suffix = isCurrentEntry ? " \u2605" : "";
-            data.add(new Item(title + " (" + refs.size() + ")" + suffix));
-            refByPosition.add(null);
-            for (ProjectDataStore.VariableReference ref : refs) {
-                data.add(new Item(referenceBlockLabel(ref), true));
-                refByPosition.add(ref);
-            }
-        }
-
-        RenameAdapter adapter = new RenameAdapter(logicEditor, data);
-        recyclerView.setAdapter(adapter);
-
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(logicEditor);
-        builder.setTitle(
-                String.format(
-                        Helper.getResString(R.string.logic_editor_title_find_refs), variableName));
-        builder.setMessage(
-                String.format(
-                        Helper.getResString(R.string.logic_editor_find_refs_count),
-                        references.size()));
-        builder.setView(recyclerView);
-        builder.setNegativeButton(R.string.common_word_cancel, null);
-        androidx.appcompat.app.AlertDialog dialog = builder.show();
-
-        adapter.setOnItemClickByPositionListener(
-                position -> {
-                    if (position < 0 || position >= refByPosition.size()) return;
-                    ProjectDataStore.VariableReference ref = refByPosition.get(position);
-                    if (ref == null) return;
-                    dialog.dismiss();
-                    if (ref.blockEntryKey.equals(currentBlockEntryKey)) {
-                        BlockView blockView = logicEditor.blockPane.findBlockByString(ref.blockId);
-                        if (blockView != null) {
-                            logicEditor.blockPane.clearSearchHighlight();
-                            ArrayList<BlockView> single = new ArrayList<>();
-                            single.add(blockView);
-                            logicEditor.blockPane.highlightSearchResults(single, blockView);
-                            logicEditor.scrollToBlock(blockView);
-                        }
-                    } else {
-                        navigateToEventByKey(ref.blockEntryKey, ref.blockId);
-                    }
-                });
-    }
-
-    private EventBean referenceEvent(String blockEntryKey) {
-        if ("onCreate_initializeLogic".equals(blockEntryKey)) {
-            return new EventBean(EventBean.EVENT_TYPE_ACTIVITY, -1, "onCreate", "initializeLogic");
-        }
-        for (Pair<String, String> moreBlock : projectDataManager.getMoreBlocks(javaName)) {
-            if ((moreBlock.first + "_moreBlock").equals(blockEntryKey)) {
-                return new EventBean(EventBean.EVENT_TYPE_ETC, -1, moreBlock.first, "moreBlock");
-            }
-        }
-        for (EventBean event : projectDataManager.getEvents(javaName)) {
-            String eventBlockEntryKey = event.targetId + "_" + event.eventName;
-            if (eventBlockEntryKey.equals(blockEntryKey)) return event;
-        }
-        return null;
-    }
-
-    private static String referenceEventTitle(EventBean event) {
-        if ("moreBlock".equals(event.eventName))
-            return ReturnMoreblockManager.getMbName(event.targetId);
-        String name = EventRegistry.getEventName(event.eventName);
-        return event.eventType == EventBean.EVENT_TYPE_ACTIVITY
-                ? name
-                : event.targetId + " · " + name;
-    }
-
-    private static String referenceBlockLabel(ProjectDataStore.VariableReference reference) {
-        if (reference.sourceLine != null) {
-            String code = reference.sourceLine;
-            if (code.length() > 100) code = code.substring(0, 100) + "…";
-            return Helper.getResString(R.string.block_add_source_directly_head) + " · " + code;
-        }
-        if (isEmpty(reference.blockSpec)) return reference.opCode;
-        List<String> parts = FormatUtil.parseBlockSpec(reference.blockSpec);
-        int parameter = 0;
-        for (int i = 0; i < parts.size(); i++) {
-            String part = parts.get(i);
-            if (part.length() >= 2
-                    && part.charAt(0) == '%'
-                    && "bdsm".indexOf(part.charAt(1)) >= 0) {
-                String value =
-                        parameter < reference.parameters.size()
-                                ? reference.parameters.get(parameter)
-                                : null;
-                parts.set(i, isEmpty(value) || value.startsWith("@") ? "…" : value);
-                parameter++;
-            } else {
-                parts.set(i, FormatUtil.unescapeString(part));
-            }
-        }
-        return String.join(" ", parts);
-    }
-
-    private void navigateToEventByKey(String blockEntryKey, String blockId) {
-        EventBean event = referenceEvent(blockEntryKey);
-        if (event != null) {
-            logicEditor.navigateToEvent(event.targetId, event.eventName, blockId);
-        } else {
-            SketchwareUtil.toast(Helper.getResString(R.string.logic_editor_reference_unavailable));
-        }
+        new VariableReferencesSheet(logicEditor, projectDataManager, isList).show();
     }
 
     private static class RenameAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private final Context context;
         private final List<Item> data;
         private java.util.function.Consumer<String> onItemClickListener;
-        private java.util.function.IntConsumer onItemClickByPositionListener;
 
         private RenameAdapter(Context context, List<Item> data) {
             this.context = context;
@@ -716,10 +482,6 @@ public class LogicClickListener implements View.OnClickListener {
 
         public void setOnItemClickListener(java.util.function.Consumer<String> listener) {
             this.onItemClickListener = listener;
-        }
-
-        public void setOnItemClickByPositionListener(java.util.function.IntConsumer listener) {
-            this.onItemClickByPositionListener = listener;
         }
 
         @Override
@@ -765,11 +527,7 @@ public class LogicClickListener implements View.OnClickListener {
                 itemHolder.textView.setText(item.text);
                 itemHolder.textView.setOnClickListener(
                         v -> {
-                            int adapterPos = holder.getAdapterPosition();
-                            if (adapterPos != RecyclerView.NO_POSITION
-                                    && onItemClickByPositionListener != null) {
-                                onItemClickByPositionListener.accept(adapterPos);
-                            } else if (onItemClickListener != null) {
+                            if (onItemClickListener != null) {
                                 onItemClickListener.accept(item.text);
                             }
                         });

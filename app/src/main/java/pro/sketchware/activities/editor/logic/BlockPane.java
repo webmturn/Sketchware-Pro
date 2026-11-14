@@ -184,6 +184,30 @@ public class BlockPane extends RelativeLayout implements BlockViewContainer {
         this.currentSnapPoint = null;
     }
 
+    public boolean expandParentsOf(BlockView block) {
+        if (block.getVisibility() == View.VISIBLE) return false;
+        ArrayList<BlockView> path = new ArrayList<>();
+        for (BlockView child = block; child.parentBlock != null; child = child.parentBlock) {
+            if (path.contains(child)) return false;
+            path.add(child);
+        }
+        boolean expanded = false;
+        for (int i = path.size() - 1; i >= 0; i--) {
+            BlockView child = path.get(i);
+            BlockView parent = child.parentBlock;
+            int id = (Integer) child.getTag();
+            if (parent.subStack1 == id && parent.collapsed) {
+                parent.setCollapsed(false);
+                expanded = true;
+            } else if (parent.subStack2 == id && parent.collapsed2) {
+                parent.setCollapsed2(false);
+                expanded = true;
+            }
+        }
+        if (expanded) updatePaneSize();
+        return expanded;
+    }
+
     public void setBlockTreeVisibility(BlockView blockView, int position) {
         java.util.HashSet<Integer> visited = new java.util.HashSet<>();
         while (blockView != null) {

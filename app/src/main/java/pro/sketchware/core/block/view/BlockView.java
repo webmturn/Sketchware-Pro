@@ -863,10 +863,10 @@ public class BlockView extends BaseBlockView {
                 }
             }
             if (rs.hasSubstack() && rs.subStack1 > -1) {
-                setChainVisibility(rs.subStack1, visibility);
+                setChainVisibility(rs.subStack1, rs.collapsed ? View.GONE : visibility);
             }
             if (rs.hasDoubleSubstack() && rs.subStack2 > -1) {
-                setChainVisibility(rs.subStack2, visibility);
+                setChainVisibility(rs.subStack2, rs.collapsed2 ? View.GONE : visibility);
             }
             int next = rs.nextBlock;
             if (next == -1) break;

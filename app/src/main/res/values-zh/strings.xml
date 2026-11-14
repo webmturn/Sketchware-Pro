@@ -1224,10 +1224,13 @@
     <string name="logic_editor_panel_button_find_refs_list">查找引用</string>
     <string name="logic_editor_title_find_refs">\"%s\"的引用</string>
     <string name="logic_editor_message_no_refs_found">未找到引用</string>
-    <string name="logic_editor_reference_unavailable">找不到此引用所在的事件</string>
+    <string name="logic_editor_reference_unavailable">无法定位此处引用</string>
     <string name="logic_editor_find_refs_count">找到 %d 个引用</string>
-    <string name="logic_editor_find_refs_select_variable">选择要查找引用的变量</string>
-    <string name="logic_editor_find_refs_select_list">选择要查找引用的列表</string>
+    <string name="logic_editor_find_refs_select_variable">选择变量</string>
+    <string name="logic_editor_find_refs_select_list">选择列表</string>
+    <string name="logic_editor_filter_reference_name">按名称筛选</string>
+    <string name="logic_editor_clear_reference_filter">清空筛选</string>
+    <string name="logic_editor_reference_current_event">%1$s · 当前事件</string>
     <string name="logic_editor_title_enter_new_name">输入\"%s\"的新名称</string>
     <string name="logic_editor_hint_new_name">新名称</string>
     <string name="logic_editor_message_variable_renamed">变量已重命名：%1$s → %2$s</string>

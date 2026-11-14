@@ -50,6 +50,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.core.view.OneShotPreDrawListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
@@ -376,6 +377,13 @@ public class LogicEditorActivity extends BaseAppCompatActivity
                 }
                 block.recalculateToRoot();
             }
+        }
+        // Apply the folds after all of their child stacks have been connected.
+        for (BlockBean blockBean : eventBlocks) {
+            BlockView block = blockIdsAndBlocks.get(Integer.valueOf(blockBean.id));
+            if (block == null) continue;
+            if (blockBean.collapsed) block.setCollapsed(true);
+            if (blockBean.collapsed2) block.setCollapsed2(true);
         }
         Choreographer.getInstance()
                 .postFrameCallback(
@@ -3710,13 +3718,19 @@ public class LogicEditorActivity extends BaseAppCompatActivity
         if (pendingScrollBlockId == null) return;
         String blockIdStr = pendingScrollBlockId;
         pendingScrollBlockId = null;
-        BlockView blockView = blockPane.findBlockByString(blockIdStr);
-        if (blockView != null) {
-            blockPane.clearSearchHighlight();
-            ArrayList<BlockView> single = new ArrayList<>();
-            single.add(blockView);
-            blockPane.highlightSearchResults(single, blockView);
-            scrollToBlock(blockView);
+        BlockView block = blockPane.findBlockByString(blockIdStr);
+        if (block != null) focusBlockReference(block);
+    }
+
+    public void focusBlockReference(BlockView block) {
+        boolean expanded = blockPane.expandParentsOf(block);
+        ArrayList<BlockView> matches = new ArrayList<>();
+        matches.add(block);
+        blockPane.highlightSearchResults(matches, block);
+        if (expanded) {
+            OneShotPreDrawListener.add(blockPane, () -> scrollToBlock(block));
+        } else {
+            scrollToBlock(block);
         }
     }
 
