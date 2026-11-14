@@ -13,6 +13,7 @@ import pro.sketchware.beans.ComponentBean;
 import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ViewBean;
 import pro.sketchware.beans.ViewBeans;
+import pro.sketchware.core.block.BlockTraversal;
 import pro.sketchware.core.block.ExtraBlockInfo;
 import pro.sketchware.core.build.BuildSettings;
 import pro.sketchware.core.build.ViewBindingBuilder;
@@ -1226,9 +1227,9 @@ public class ActivityCodeGenerator {
 
     /** Adds imports for blocks used in the currently generated Activity. */
     private void addImportsForBlocks() {
-        for (Map.Entry<String, ArrayList<BlockBean>> entry :
-                projectDataManager.getBlockMap(projectFileBean.getJavaName()).entrySet()) {
-            for (BlockBean blockBean : entry.getValue()) {
+        for (ArrayList<BlockBean> blocks :
+                projectDataManager.getBlockMap(projectFileBean.getJavaName()).values()) {
+            for (BlockBean blockBean : BlockTraversal.reachableEnabledBlocks(blocks)) {
                 switch (blockBean.opCode) {
                     case "toStringWithDecimal":
                     case "toStringFormat":

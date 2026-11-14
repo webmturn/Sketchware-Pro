@@ -27,6 +27,7 @@ public class BaseBlockView extends RelativeLayout {
 
     private static Paint disabledOverlayPaint;
     private static Paint disabledStripePaint;
+    private Path blockOutline;
 
     public int blockHeight;
 
@@ -371,7 +372,7 @@ public class BaseBlockView extends RelativeLayout {
         path.lineTo((blockWidth - j), 0.0F);
         path.lineTo(blockWidth, f);
         path.lineTo((blockWidth - j), blockHeight);
-        canvas.drawPath(path, fillPaint);
+        drawBlockFill(canvas, path);
         if (drawShadow) canvas.drawLines(getBooleanShadows(), outlinePaint);
         if (drawReflection) canvas.drawLines(getBooleanReflections(), reflectionPaint);
     }
@@ -513,7 +514,7 @@ public class BaseBlockView extends RelativeLayout {
         int i = blockHeight;
         boolean hasBottomNotch = (shapeType != SHAPE_END_CAP);
         drawBottomPath(path, i, hasBottomNotch, 0);
-        canvas.drawPath(path, fillPaint);
+        drawBlockFill(canvas, path);
         if (drawShadow) {
             canvas.drawLines(getRightSideShadowLines(0, blockHeight), outlinePaint);
             canvas.drawLines(
@@ -570,7 +571,7 @@ public class BaseBlockView extends RelativeLayout {
         path.lineTo((blockWidth - notchWidth), connectorWidth);
         path.lineTo(blockWidth, (connectorWidth + notchWidth));
         drawBottomPath(path, blockHeight, true, 0);
-        canvas.drawPath(path, fillPaint);
+        drawBlockFill(canvas, path);
         if (drawShadow) {
             canvas.drawLines(getRightSideShadowLines(connectorWidth, blockHeight), outlinePaint);
             canvas.drawLines(getBottomShadowLines(blockHeight, true, 0), outlinePaint);
@@ -594,7 +595,7 @@ public class BaseBlockView extends RelativeLayout {
         drawBottomPath(path, bottomPadding + i, true, cornerRadius);
         drawSubstackBottomPath(path, k);
         drawBottomPath(path, topPadding + k, true, 0);
-        canvas.drawPath(path, fillPaint);
+        drawBlockFill(canvas, path);
         if (drawShadow) {
             canvas.drawLines(getRightSideShadowLines(0, blockHeight), outlinePaint);
             canvas.drawLines(getBottomShadowLines(blockHeight, true, cornerRadius), outlinePaint);
@@ -625,7 +626,7 @@ public class BaseBlockView extends RelativeLayout {
         drawSubstackBottomPath(path, i);
         boolean hasBottomNotch = (shapeType == SHAPE_SINGLE_SUBSTACK);
         drawBottomPath(path, topPadding + i, hasBottomNotch, 0);
-        canvas.drawPath(path, fillPaint);
+        drawBlockFill(canvas, path);
         if (drawShadow) {
             canvas.drawLines(getRightSideShadowLines(0, blockHeight), outlinePaint);
             canvas.drawLines(getBottomShadowLines(blockHeight, true, cornerRadius), outlinePaint);
@@ -656,7 +657,7 @@ public class BaseBlockView extends RelativeLayout {
         j = blockWidth;
         i = blockHeight;
         path.arcTo(new RectF((j - i), 0.0F, j, i), 270.0F, 180.0F);
-        canvas.drawPath(path, fillPaint);
+        drawBlockFill(canvas, path);
         if (drawShadow) {
             i = blockWidth;
             j = blockHeight;
@@ -728,7 +729,15 @@ public class BaseBlockView extends RelativeLayout {
         if (drawReflection) canvas.drawLines(getRectReflections(), reflectionPaint);
     }
 
+    private void drawBlockFill(Canvas canvas, Path path) {
+        // The disabled overlay uses the same outline after the block's children are drawn.
+        blockOutline = path;
+        canvas.drawPath(path, fillPaint);
+    }
+
+    @Override
     public void onDraw(Canvas canvas) {
+        blockOutline = null;
         fillPaint.setColor(blockColor);
         switch (shapeType) {
             case SHAPE_DOUBLE_SUBSTACK:
@@ -765,6 +774,8 @@ public class BaseBlockView extends RelativeLayout {
     protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
         if (this instanceof BlockView && isEffectivelyDisabled((BlockView) this)) {
+            int save = canvas.save();
+            if (blockOutline != null) canvas.clipPath(blockOutline);
             if (disabledOverlayPaint == null) {
                 disabledOverlayPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
                 disabledOverlayPaint.setColor(0x60000000);
@@ -773,14 +784,15 @@ public class BaseBlockView extends RelativeLayout {
             if (disabledStripePaint == null) {
                 disabledStripePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
                 disabledStripePaint.setColor(0x40FFFFFF);
-                disabledStripePaint.setStrokeWidth(density * 2);
             }
-            int step = (int) (density * 8);
+            disabledStripePaint.setStrokeWidth(density * 2);
+            int step = Math.max(1, (int) (density * 8));
             int w = getTotalWidth();
             int h = getTotalHeight();
             for (int i = -h; i < w; i += step) {
                 canvas.drawLine(i, h, i + h, 0, disabledStripePaint);
             }
+            canvas.restoreToCount(save);
         }
     }
 

@@ -31,6 +31,7 @@ import pro.sketchware.beans.ProjectFileBean;
 import pro.sketchware.beans.ProjectLibraryBean;
 import pro.sketchware.beans.SrcCodeBean;
 import pro.sketchware.beans.ViewBean;
+import pro.sketchware.core.block.BlockTraversal;
 import pro.sketchware.core.codegen.ActivityCodeGenerator;
 import pro.sketchware.core.codegen.AndroidManifestInjector;
 import pro.sketchware.core.codegen.BlockLoader;
@@ -853,9 +854,9 @@ public class ProjectFilePaths {
                 }
             }
 
-            for (Map.Entry<String, ArrayList<BlockBean>> entry :
-                    projectDataManager.getBlockMap(activity.getJavaName()).entrySet()) {
-                for (BlockBean block : entry.getValue()) {
+            for (ArrayList<BlockBean> blocks :
+                    projectDataManager.getBlockMap(activity.getJavaName()).values()) {
+                for (BlockBean block : BlockTraversal.reachableEnabledBlocks(blocks)) {
                     switch (block.opCode) {
                         case "intentSetAction":
                             // If an Intent setAction (ACTION_CALL) block is used

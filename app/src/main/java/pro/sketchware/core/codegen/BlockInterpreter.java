@@ -147,10 +147,8 @@ public class BlockInterpreter {
      */
     public final String generateBlock(BlockBean bean, String parentOpcode) {
         if (bean.disabled) {
-            if (bean.nextBlock >= 0) {
-                return resolveBlock(String.valueOf(bean.nextBlock), moreBlock);
-            }
-            return "";
+            BlockBean next = firstEnabledBlock(bean);
+            return next == null ? "" : generateBlock(next, moreBlock);
         }
 
         ArrayList<String> params = getBlockParams(bean);
@@ -170,6 +168,14 @@ public class BlockInterpreter {
         }
 
         return code;
+    }
+
+    BlockBean firstEnabledBlock(BlockBean block) {
+        int remaining = blockMap == null ? 0 : blockMap.size();
+        while (block != null && block.disabled && remaining-- > 0) {
+            block = block.nextBlock < 0 ? null : blockMap.get(Integer.toString(block.nextBlock));
+        }
+        return block == null || block.disabled ? null : block;
     }
 
     private boolean hasEmptySelectorParam(ArrayList<String> params, String spec) {

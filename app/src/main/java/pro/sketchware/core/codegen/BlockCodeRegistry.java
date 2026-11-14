@@ -579,11 +579,14 @@ public class BlockCodeRegistry {
                                     : "";
                     if (bean.subStack2 >= 0) {
                         BlockBean sub2 = ctx.blockMap.get(String.valueOf(bean.subStack2));
-                        if (sub2 != null
-                                && ("catchBlock".equals(sub2.opCode)
-                                        || "finallyBlock".equals(sub2.opCode))) {
+                        if (isExceptionHandler(sub2)) {
+                            String scopedBody = "{\r\n" + tryBody + "\r\n}";
                             String chain = ctx.resolveBlock(String.valueOf(bean.subStack2), "");
-                            return String.format("try {\r\n%s\r\n} %s", tryBody, chain);
+                            if (isExceptionHandler(ctx.firstEnabledBlock(sub2))) {
+                                return "try " + scopedBody + " " + chain;
+                            }
+                            // Keep the try body's local scope when all handlers are disabled.
+                            return chain.isEmpty() ? scopedBody : scopedBody + "\r\n" + chain;
                         }
                         String catchBody = ctx.resolveBlock(String.valueOf(bean.subStack2), "");
                         return String.format(
@@ -614,6 +617,11 @@ public class BlockCodeRegistry {
                 });
         register("break", (bean, params, ctx) -> "break;");
         register("continue", (bean, params, ctx) -> "continue;");
+    }
+
+    private static boolean isExceptionHandler(BlockBean block) {
+        return block != null
+                && ("catchBlock".equals(block.opCode) || "finallyBlock".equals(block.opCode));
     }
 
     private static void registerDrawerBlocks() {
