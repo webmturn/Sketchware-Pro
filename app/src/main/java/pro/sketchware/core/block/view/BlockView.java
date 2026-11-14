@@ -1,10 +1,5 @@
 package pro.sketchware.core.block.view;
 
-import pro.sketchware.core.codegen.BuiltinBlockLocalization;
-import pro.sketchware.util.locale.LocalizedDisplayNames;
-import pro.sketchware.util.format.FormatUtil;
-import pro.sketchware.core.codegen.StringResource;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -13,898 +8,935 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import pro.sketchware.R;
-import pro.sketchware.beans.BlockBean;
 import com.google.gson.Gson;
 import java.util.ArrayList;
+import pro.sketchware.R;
+import pro.sketchware.beans.BlockBean;
 import pro.sketchware.core.block.ExtraBlockInfo;
 import pro.sketchware.core.codegen.BlockLoader;
+import pro.sketchware.core.codegen.BuiltinBlockLocalization;
+import pro.sketchware.core.codegen.StringResource;
 import pro.sketchware.core.project.ProjectTracker;
+import pro.sketchware.util.format.FormatUtil;
+import pro.sketchware.util.locale.LocalizedDisplayNames;
 
 public class BlockView extends BaseBlockView {
-  private static final int CHAIN_TRAVERSAL_LIMIT = 200;
-  private static final int DEPTH_TRAVERSAL_LIMIT = 500;
-  private static final int LAYOUT_CHAIN_TRAVERSAL_LIMIT = 1000;
+    private static final int CHAIN_TRAVERSAL_LIMIT = 200;
+    private static final int DEPTH_TRAVERSAL_LIMIT = 500;
+    private static final int LAYOUT_CHAIN_TRAVERSAL_LIMIT = 1000;
 
-  public String spec;
-  
-  public String opCode;
-  
-  public ArrayList<View> childViews;
-  
-  public int minBlockWidth = 30;
-  
-  public int minSimpleWidth = 50;
-  
-  public int minHatWidth = 90;
-  
-  public int minCWidth = 90;
-  
-  public int spacing = 4;
-  
-  public boolean isDefinitionBlock = false;
-  
-  public boolean disabled = false;
-  
-  public boolean collapsed = false;
-  
-  public boolean collapsed2 = false;
-  
-  public TextView collapsedLabel = null;
-  
-  public TextView collapsedLabel2 = null;
-  
-  public boolean isParameter = false;
-  
-  public boolean hasEndCap = false;
-  
-  public int nextBlock = -1;
-  
-  public int subStack1 = -1;
-  
-  public int subStack2 = -1;
-  
-  public ArrayList<View> specViews = new ArrayList<>();
-  
-  public ArrayList<String> specTypes = new ArrayList<>();
-  
-  public TextView elseLabel = null;
-  
-  public int depth = 0;
-  
-  public int blockTypeInt = 0;
-  
-  public BlockViewContainer blockPane = null;
-  
-  public String blockTypeStr;
-  
-  public String componentTypeStr;
-  
-  private String spec2 = "";
+    public String spec;
 
-  private String paletteSearchTextCache;
-  
-  public BlockView(Context context, int blockId, String spec, String blockType, String opCode) {
-    super(context, blockType, false);
-    setTag(Integer.valueOf(blockId));
-    this.spec = spec;
-    this.opCode = opCode;
-    initBlock();
-  }
-  
-  public BlockView(Context context, int blockId, String spec, String blockType, String typeName, String opCode) {
-    super(context, blockType, typeName, false);
-    setTag(Integer.valueOf(blockId));
-    this.spec = spec;
-    this.opCode = opCode;
-    initBlock();
-  }
-  
-  public final int getTextWidth(TextView textView) {
-    return (int) Math.ceil(textView.getPaint().measureText(textView.getText().toString()));
-  }
-  
-  public final TextView createLabel(String label) {
-    TextView textView = new TextView(context);
-    String text = label;
-    if (opCode.equals("getVar") || opCode.equals("getArg")) {
-      String prefix = componentType;
-      if (prefix != null && prefix.length() > 0) {
-        text = getComponentTypeDisplayName() + " : " + label;
-      }
-    }
-    textView.setText(text);
-    textView.setTextSize(10.0f);
-    textView.setPadding(0, 0, 0, 0);
-    textView.setGravity(Gravity.CENTER_VERTICAL);
-    textView.setTextColor(Color.WHITE);
-    textView.setTypeface(null, Typeface.BOLD);
-    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, textHeight);
-    lp.setMargins(0, 0, 0, 0);
-    textView.setLayoutParams(lp);
-    return textView;
-  }
+    public String opCode;
 
-  protected final String getComponentTypeDisplayName() {
-    // Java class names can collide with labels such as Image, Color, or Default.
-    // Only variable/argument blocks with canonical Map/List metadata use translated prefixes.
-    boolean isBuiltinVariable = "getVar".equals(opCode) || "getArg".equals(opCode);
-    boolean isBuiltinType = "a".equals(blockType) && "Map".equals(componentType)
-        || "l".equals(blockType) && ("List".equals(componentType)
-        || "List Number".equals(componentType) || "List String".equals(componentType)
-        || "List Map".equals(componentType) || "List Boolean".equals(componentType));
-    return isBuiltinVariable && isBuiltinType
-        ? LocalizedDisplayNames.get(getContext(), componentType) : componentType;
-  }
-  
-  public final void appendToChain(BlockView blockView) {
-    if (blockView == this) return;
-    if (hasSubstack() && -1 == subStack1) {
-      setSubstack1Block(blockView);
-    } else {
-      BlockView rs = getLastInChain();
-      if (rs != blockView) {
-        rs.nextBlock = ((Integer)blockView.getTag()).intValue();
-        blockView.parentBlock = rs;
-      }
-    } 
-  }
-  
-  public void replaceParameter(BaseBlockView targetBlock, BlockView blockView) {
-    int index = specViews.indexOf(targetBlock);
-    if (index < 0) return;
-    boolean isRs = targetBlock instanceof BlockView;
-    if (isRs) {
-      BlockView oldRs = (BlockView) targetBlock;
-      blockView.blockTypeStr = oldRs.blockTypeStr;
-      blockView.componentTypeStr = oldRs.componentTypeStr;
-    } else if (targetBlock instanceof FieldBlockView) {
-      blockView.blockTypeStr = targetBlock.blockType;
-      blockView.componentTypeStr = targetBlock.componentType;
-    }
-    if (!isRs) {
-      removeView(targetBlock);
-    }
-    specViews.set(index, blockView);
-    blockView.parentBlock = this;
-    rebuildChildViews();
-    recalculateDepthChain();
-    if (targetBlock != blockView && isRs) {
-      ((BlockView) targetBlock).parentBlock = null;
-      targetBlock.setX(getX() + getWidthSum() + 10.0f);
-      targetBlock.setY(getY() + 5.0f);
-      ((BlockView) targetBlock).layoutChain();
-    }
-  }
-  
-  public final void parseSpec(String spec, int index) {
-    ArrayList<String> specTokens = FormatUtil.parseBlockSpec(spec);
-    specViews = new ArrayList<>();
-    specTypes = new ArrayList<>();
-    for (int b = 0; b < specTokens.size(); b++) {
-      View view = createSpecView(specTokens.get(b), index);
-      if (view instanceof BaseBlockView)
-        ((BaseBlockView)view).parentBlock = this; 
-      specViews.add(view);
-      if (view instanceof FieldBlockView) {
-        spec = specTokens.get(b);
-      } else {
-        spec = "icon";
-      } 
-      if (view instanceof TextView)
-        spec = "label"; 
-      specTypes.add(spec);
-    } 
-  }
-  
-  public final View createSpecView(String spec, int index) {
-    if (spec.length() >= 2 && spec.charAt(0) == '%') {
-      int type = spec.charAt(1);
-      if (type == 98) {
-        return new FieldBlockView(context, "b", "");
-      } else if (type == 100) {
-        return new FieldBlockView(context, "d", "");
-      } else if (type == 109) {
-        return new FieldBlockView(context, "m", spec.substring(3));
-      } else if (type == 115) {
-        String defaultValue = "";
-        if (spec.length() > 2)
-          defaultValue = spec.substring(3);
-        return new FieldBlockView(context, "s", defaultValue);
-      }
-      return createLabel(FormatUtil.unescapeString(spec));
-    }
-    return createLabel(FormatUtil.unescapeString(spec));
-  }
-  
-  public void setNextBlock(BlockView blockView) {
-    if (blockView == this) return;
-    BlockView existing = blockPane.getBlockByTag(nextBlock);
-    if (existing != null)
-      existing.parentBlock = null; 
-    blockView.parentBlock = this;
-    nextBlock = ((Integer)blockView.getTag()).intValue();
-    if (existing != null && existing != blockView)
-      blockView.appendToChain(existing); 
-  }
-  
-  public void positionAbove(BlockView blockView) {
-    blockView.setX(getX());
-    blockView.setY(getY() - blockView.getHeightSum() + borderWidth);
-    blockView.getLastInChain().setNextBlock(this);
-  }
-  
-  public void positionInSubstack1(BlockView blockView) {
-    if (blockView == this) return;
-    blockView.setX(getX() - cornerRadius);
-    blockView.setY(getY() - getBlockHeight());
-    parentBlock = blockView;
-    blockView.subStack1 = ((Integer)getTag()).intValue();
-  }
-  
-  public void setSubstack1Block(BlockView blockView) {
-    if (blockView == this) return;
-    BlockView existing = blockPane.getBlockByTag(subStack1);
-    if (existing != null)
-      existing.parentBlock = null; 
-    blockView.parentBlock = this;
-    subStack1 = ((Integer)blockView.getTag()).intValue();
-    if (existing != null && existing != blockView)
-      blockView.appendToChain(existing); 
-  }
-  
-  public void setSubstack2Block(BlockView blockView) {
-    if (blockView == this) return;
-    BlockView existing = blockPane.getBlockByTag(subStack2);
-    if (existing != null)
-      existing.parentBlock = null; 
-    blockView.parentBlock = this;
-    subStack2 = ((Integer)blockView.getTag()).intValue();
-    if (existing != null && existing != blockView)
-      blockView.appendToChain(existing); 
-  }
-  
-  public void detachBlock(BlockView blockView) {
-    if (nextBlock == ((Integer)blockView.getTag()).intValue())
-      nextBlock = -1; 
-    if (subStack1 == ((Integer)blockView.getTag()).intValue())
-      subStack1 = -1; 
-    if (subStack2 == ((Integer)blockView.getTag()).intValue())
-      subStack2 = -1; 
-    if (blockView.isParameter) {
-      int i = specViews.indexOf(blockView);
-      if (i < 0)
-        return; 
-      blockView.blockTypeStr = "";
-      blockView.componentTypeStr = "";
-      View view = createSpecView(specTypes.get(i), blockColor);
-      if (view instanceof BaseBlockView)
-        ((BaseBlockView)view).parentBlock = this; 
-      specViews.set(i, view);
-      addView(view);
-      rebuildChildViews();
-      recalculateDepthChain();
-    } 
-    getRootBlock().layoutChain();
-  }
-  
-  public ArrayList<BlockView> getAllChildren() {
-    ArrayList<BlockView> children = new ArrayList<>();
-    BlockView current = this;
-    int limit = CHAIN_TRAVERSAL_LIMIT;
-    do {
-      children.add(current);
-      for (View view : current.specViews) {
-        if (view instanceof BlockView)
-          children.addAll(((BlockView)view).getAllChildren()); 
-      } 
-      if (current.hasSubstack()) {
-        int substackId = current.subStack1;
-        if (substackId != -1) {
-          BlockView sub = blockPane.getBlockByTag(substackId);
-          if (sub != null && sub != this)
-            children.addAll(sub.getAllChildren()); 
-        }
-      } 
-      if (current.hasDoubleSubstack()) {
-        int substackId = current.subStack2;
-        if (substackId != -1) {
-          BlockView sub = blockPane.getBlockByTag(substackId);
-          if (sub != null && sub != this)
-            children.addAll(sub.getAllChildren()); 
-        }
-      } 
-      if (current.nextBlock == -1 || --limit <= 0)
-        break;
-      BlockView next = blockPane.getBlockByTag(current.nextBlock);
-      if (next == null || next == this)
-        break;
-      current = next;
-    } while (true);
-    return children;
-  }
-  
-  public BlockBean getBean() {
-    BlockBean blockBean = new BlockBean(getTag().toString(), spec, blockType, componentType, opCode);
-    blockBean.color = blockColor;
-    for (View view : childViews) {
-      if (view instanceof FieldBlockView) {
-        blockBean.parameters.add(((FieldBlockView) view).getArgValue().toString());
-      } else if (view instanceof BlockView) {
-        blockBean.parameters.add("@" + view.getTag().toString());
-      }
-    } 
-    blockBean.subStack1 = subStack1;
-    blockBean.subStack2 = subStack2;
-    blockBean.nextBlock = nextBlock;
-    blockBean.disabled = disabled;
-    blockBean.collapsed = collapsed;
-    blockBean.collapsed2 = collapsed2;
-    return blockBean;
-  }
+    public ArrayList<View> childViews;
 
-  public boolean matchesSearchQuery(String lowerQuery) {
-    if (containsSearchQuery(lowerQuery, opCode)
-        || containsSearchQuery(lowerQuery, spec)
-        || containsSearchQuery(lowerQuery, blockType)
-        || containsSearchQuery(lowerQuery, componentType)
-        || containsSearchQuery(lowerQuery, blockTypeStr)
-        || containsSearchQuery(lowerQuery, componentTypeStr)
-        || containsSearchQuery(lowerQuery, elseLabel != null ? elseLabel.getText() : null)) {
-      return true;
+    public int minBlockWidth = 30;
+
+    public int minSimpleWidth = 50;
+
+    public int minHatWidth = 90;
+
+    public int minCWidth = 90;
+
+    public int spacing = 4;
+
+    public boolean isDefinitionBlock = false;
+
+    public boolean disabled = false;
+
+    public boolean collapsed = false;
+
+    public boolean collapsed2 = false;
+
+    public TextView collapsedLabel = null;
+
+    public TextView collapsedLabel2 = null;
+
+    public boolean isParameter = false;
+
+    public boolean hasEndCap = false;
+
+    public int nextBlock = -1;
+
+    public int subStack1 = -1;
+
+    public int subStack2 = -1;
+
+    public ArrayList<View> specViews = new ArrayList<>();
+
+    public ArrayList<String> specTypes = new ArrayList<>();
+
+    public TextView elseLabel = null;
+
+    public int depth = 0;
+
+    public int blockTypeInt = 0;
+
+    public BlockViewContainer blockPane = null;
+
+    public String blockTypeStr;
+
+    public String componentTypeStr;
+
+    private String spec2 = "";
+
+    private String paletteSearchTextCache;
+
+    public BlockView(Context context, int blockId, String spec, String blockType, String opCode) {
+        super(context, blockType, false);
+        setTag(Integer.valueOf(blockId));
+        this.spec = spec;
+        this.opCode = opCode;
+        initBlock();
     }
 
-    for (View view : specViews) {
-      if (view instanceof FieldBlockView) {
-        if (((FieldBlockView) view).matchesSearchQuery(lowerQuery)) {
-          return true;
-        }
-      } else if (view instanceof TextView) {
-        if (containsSearchQuery(lowerQuery, ((TextView) view).getText())) {
-          return true;
-        }
-      }
+    public BlockView(
+            Context context,
+            int blockId,
+            String spec,
+            String blockType,
+            String typeName,
+            String opCode) {
+        super(context, blockType, typeName, false);
+        setTag(Integer.valueOf(blockId));
+        this.spec = spec;
+        this.opCode = opCode;
+        initBlock();
     }
 
-    return false;
-  }
+    public final int getTextWidth(TextView textView) {
+        return (int) Math.ceil(textView.getPaint().measureText(textView.getText().toString()));
+    }
 
-  public boolean matchesPaletteSearchQuery(String lowerQuery) {
-    return lowerQuery != null && !lowerQuery.isEmpty()
-        && getPaletteSearchText().contains(lowerQuery);
-  }
-
-  public int getBlockType() {
-    return blockTypeInt;
-  }
-  
-  public int getDepth() {
-    int depth = 0;
-    BlockView current = parentBlock;
-    int limit = DEPTH_TRAVERSAL_LIMIT;
-    while (current != null && --limit > 0) {
-      depth++;
-      current = current.parentBlock;
-    }
-    return depth;
-  }
-  public int getHeightSum() {
-    int height = 0;
-    BlockView current = this;
-    int limit = CHAIN_TRAVERSAL_LIMIT;
-    do {
-      if (height != 0)
-        height -= borderWidth;
-      height += current.getTotalHeight();
-      if (current.nextBlock == -1 || --limit <= 0)
-        break;
-      BlockView next = blockPane.getBlockByTag(current.nextBlock);
-      if (next == null || next == this)
-        break;
-      current = next;
-    } while (true);
-    return height;
-  }
-  
-  public int getWidthSum() {
-    int width = 0;
-    BlockView current = this;
-    int limit = CHAIN_TRAVERSAL_LIMIT;
-    do {
-      width = Math.max(width, current.getW());
-      if (current.hasSubstack() && current.subStack1 != -1) {
-        BlockView substack = blockPane.getBlockByTag(current.subStack1);
-        if (substack != null)
-          width = Math.max(width, substack.getWidthSum() + cornerRadius);
-      }
-      if (current.hasDoubleSubstack() && current.subStack2 != -1) {
-        BlockView substack = blockPane.getBlockByTag(current.subStack2);
-        if (substack != null)
-          width = Math.max(width, substack.getWidthSum() + cornerRadius);
-      }
-      if (current.nextBlock == -1 || --limit <= 0)
-        break;
-      BlockView next = blockPane.getBlockByTag(current.nextBlock);
-      if (next == null || next == this)
-        break;
-      current = next;
-    } while (true);
-    return width;
-  }
-  
-  public BlockView getLastInChain() {
-    BlockView current = this;
-    int limit = CHAIN_TRAVERSAL_LIMIT;
-    while (current.nextBlock != -1 && --limit > 0) {
-      BlockView next = blockPane.getBlockByTag(current.nextBlock);
-      if (next == null || next == this)
-        break;
-      current = next;
-    }
-    return current;
-  }
-  
-  public final void rebuildChildViews() {
-    childViews = new ArrayList<>();
-    for (View view : specViews) {
-      if (view instanceof BlockView || view instanceof FieldBlockView)
-        childViews.add(view); 
-    } 
-  }
-  
-  public final void positionElseLabel() {
-    TextView textView = elseLabel;
-    if (textView != null) {
-      textView.bringToFront();
-      elseLabel.setX(leftIndent);
-      elseLabel.setY(getSubstackBottom() - bottomPadding);
-    } 
-  }
-  
-  public void layoutChain() {
-    BlockView current = this;
-    int limit = LAYOUT_CHAIN_TRAVERSAL_LIMIT;
-    while (current != null && --limit > 0) {
-      current.layoutSingle();
-      int next = current.nextBlock;
-      if (next > -1) {
-        BlockView nextRs = current.blockPane.getBlockByTag(next);
-        if (nextRs == null || nextRs == this) break;
-        nextRs.setX(current.getX());
-        nextRs.setY(current.getY() + (float) current.getContentBottom());
-        nextRs.bringToFront();
-        current = nextRs;
-      } else {
-        current = null;
-      }
-    }
-    requestLayout();
-  }
-
-  private void layoutSingle() {
-    bringToFront();
-    int xOffset = leftIndent;
-    for (int idx = 0; idx < specViews.size(); idx++) {
-      View child = specViews.get(idx);
-      child.bringToFront();
-      boolean isRs = child instanceof BlockView;
-      float childX;
-      if (isRs) {
-        childX = getX() + (float) xOffset;
-      } else {
-        childX = (float) xOffset;
-      }
-      child.setX(childX);
-      int childWidth;
-      if (specTypes.get(idx).equals("label")) {
-        childWidth = getTextWidth((TextView) child);
-      } else {
-        childWidth = 0;
-      }
-      if (child instanceof FieldBlockView) {
-        childWidth = ((FieldBlockView) child).getW();
-      }
-      if (isRs) {
-        childWidth = ((BlockView) child).getWidthSum();
-      }
-      xOffset += childWidth + spacing;
-      if (isRs) {
-        BlockView childRs = (BlockView) child;
-        child.setY(getY() + (float) topSpacing + (float) ((depth - childRs.depth - 1) * shadowOffset));
-        childRs.layoutChain();
-      } else {
-        child.setY((float) (topSpacing + depth * shadowOffset));
-      }
-    }
-    int w = xOffset;
-    if (blockType.equals("b") || blockType.equals("d") || blockType.equals("s") || blockType.equals("a")) {
-      w = Math.max(xOffset, minBlockWidth);
-    }
-    int widthWithSimple = w;
-    if (blockType.equals(" ") || blockType.equals("") || blockType.equals("f")) {
-      widthWithSimple = Math.max(w, minSimpleWidth);
-    }
-    int widthWithC = widthWithSimple;
-    if (blockType.equals("c") || blockType.equals("e")) {
-      widthWithC = Math.max(widthWithSimple, minCWidth);
-    }
-    int widthWithHat = widthWithC;
-    if (blockType.equals("h")) {
-      widthWithHat = Math.max(widthWithC, minHatWidth);
-    }
-    setBlockSize((float) (rightIndent + widthWithHat), (float) (topSpacing + textHeight + depth * shadowOffset * 2 + bottomSpacing), false);
-    if (hasSubstack()) {
-      int collapsedHeight = textHeight + topSpacing;
-      if (collapsed) {
-        setSubstack1Height(collapsedHeight);
-        layoutCollapsedLabel(collapsedLabel, getBlockHeight());
-      } else {
-        int ss1Height = minHeight;
-        int sub1 = subStack1;
-        if (sub1 > -1) {
-          BlockView sub1Rs = blockPane.getBlockByTag(sub1);
-          if (sub1Rs != null) {
-            sub1Rs.setX(getX() + (float) cornerRadius);
-            sub1Rs.setY(getY() + (float) getBlockHeight());
-            sub1Rs.bringToFront();
-            sub1Rs.layoutChain();
-            ss1Height = sub1Rs.getHeightSum();
-          }
-        }
-        setSubstack1Height(ss1Height);
-      }
-      if (hasDoubleSubstack()) {
-        positionElseLabel();
-        if (collapsed2) {
-          setSubstack2Height(collapsedHeight);
-          layoutCollapsedLabel(collapsedLabel2, getSubstackBottom());
-        } else {
-          int ss2Height = minHeight;
-          int sub2 = subStack2;
-          if (sub2 > -1) {
-            BlockView sub2Rs = blockPane.getBlockByTag(sub2);
-            if (sub2Rs != null) {
-              sub2Rs.setX(getX() + (float) cornerRadius);
-              sub2Rs.setY(getY() + (float) getSubstackBottom());
-              sub2Rs.bringToFront();
-              sub2Rs.layoutChain();
-              ss2Height = sub2Rs.getHeightSum();
-              if (sub2Rs.getLastInChain().hasEndCap) {
-                ss2Height += borderWidth;
-              }
+    public final TextView createLabel(String label) {
+        TextView textView = new TextView(context);
+        String text = label;
+        if (opCode.equals("getVar") || opCode.equals("getArg")) {
+            String prefix = componentType;
+            if (prefix != null && prefix.length() > 0) {
+                text = getComponentTypeDisplayName() + " : " + label;
             }
-          }
-          setSubstack2Height(ss2Height);
         }
-      }
+        textView.setText(text);
+        textView.setTextSize(10.0f);
+        textView.setPadding(0, 0, 0, 0);
+        textView.setGravity(Gravity.CENTER_VERTICAL);
+        textView.setTextColor(Color.WHITE);
+        textView.setTypeface(null, Typeface.BOLD);
+        RelativeLayout.LayoutParams lp =
+                new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.WRAP_CONTENT, textHeight);
+        lp.setMargins(0, 0, 0, 0);
+        textView.setLayoutParams(lp);
+        return textView;
     }
-  }
-  
-  public void initBlock() {
-    setDrawingCacheEnabled(false);
-    float scale = density;
-    minBlockWidth = (int) (minBlockWidth * scale);
-    minSimpleWidth = (int) (minSimpleWidth * scale);
-    minHatWidth = (int) (minHatWidth * scale);
-    minCWidth = (int) (minCWidth * scale);
-    spacing = (int) (spacing * scale);
-    switch (blockType) {
-      case "b": case "s": case "d": case "v": case "p": case "l": case "a":
-        isParameter = true;
-        break;
-      case "f":
-        hasEndCap = true;
-        break;
-      case "h":
-        isDefinitionBlock = true;
-        break;
-      default:
-        break;
-    }
-    int color = BlockColorMapper.getBlockColor(opCode, blockType);
-    if (!isDefinitionBlock && !opCode.equals("definedFunc") && !opCode.equals("getVar")
-        && !opCode.equals("getResStr") && !opCode.equals("getArg") && color != BlockColorMapper.CUSTOM_BLOCK_FALLBACK_COLOR) {
-      spec = StringResource.getInstance().getEventTranslation(getContext(), opCode);
-    }
-    if (color == BlockColorMapper.CUSTOM_BLOCK_FALLBACK_COLOR) {
-      ExtraBlockInfo info = BlockLoader.getBlockInfo(opCode);
-      ExtraBlockInfo blockInfo = info;
-      if (ProjectTracker.SC_ID != null && info.isMissing
-          && !ProjectTracker.SC_ID.equals("")) {
-        blockInfo = BlockLoader.getBlockFromProject(
-            ProjectTracker.SC_ID, opCode);
-        if (Log.isLoggable("BlockView", Log.DEBUG)) {
-          Log.d("BlockView", "BlockView:returned block: " + new Gson().toJson(blockInfo));
-        }
-      }
-      spec2 = blockInfo.getSpec2();
-      if (spec.equals("")) {
-        spec = blockInfo.getSpec();
-      }
-      if (spec.equals("")) {
-        spec = opCode;
-      }
-      setSpec(spec);
-      int blockColor = blockInfo.getColor();
-      int paletteColor = blockInfo.getPaletteColor();
-      if (!opCode.equals("definedFunc") && !opCode.equals("getVar")
-          && !opCode.equals("getResStr") && !opCode.equals("getArg")) {
-        if (blockColor != 0) {
-          this.blockColor = blockColor;
-          return;
-        }
-        if (paletteColor != 0) {
-          this.blockColor = paletteColor;
-          return;
-        }
-      }
-    } else {
-      if (spec.equals("")) {
-        spec = opCode;
-      }
-      setSpec(spec);
-    }
-    this.blockColor = color;
-  }
-  
-  public void recalculateToRoot() {
-    BlockView parent;
-    BlockView current = this;
-    int count = 0;
-    do {
-      current.recalculateSize();
-      parent = current.parentBlock;
-      count++;
-      if (count > 500) {
-        Log.e("BlockView", "m() infinite loop detected! count=" + count + " tag=" + current.getTag() + " E.tag=" + (parent != null ? parent.getTag() : "null"));
-        break;
-      }
-      current = parent;
-    } while (parent != null);
-  }
-  
-  public void recalculateSize() {
-    int xOffset = leftIndent;
-    for (int idx = 0; idx < specViews.size(); idx++) {
-      View child = specViews.get(idx);
-      int childWidth;
-      if (specTypes.get(idx).equals("label")) {
-        childWidth = getTextWidth((TextView) child);
-      } else {
-        childWidth = 0;
-      }
-      if (child instanceof FieldBlockView) {
-        childWidth = ((FieldBlockView) child).getW();
-      }
-      if (child instanceof BlockView) {
-        childWidth = ((BlockView) child).getWidthSum();
-      }
-      xOffset += childWidth + spacing;
-    }
-    int w = xOffset;
-    if (blockType.equals("b") || blockType.equals("d") || blockType.equals("s") || blockType.equals("a")) {
-      w = Math.max(xOffset, minBlockWidth);
-    }
-    int widthWithSimple = w;
-    if (blockType.equals(" ") || blockType.equals("") || blockType.equals("o")) {
-      widthWithSimple = Math.max(w, minSimpleWidth);
-    }
-    int widthWithC = widthWithSimple;
-    if (blockType.equals("c") || blockType.equals("e")) {
-      widthWithC = Math.max(widthWithSimple, minCWidth);
-    }
-    int widthWithHat = widthWithC;
-    if (blockType.equals("h")) {
-      widthWithHat = Math.max(widthWithC, minHatWidth);
-    }
-    int finalW = widthWithHat;
-    TextView label = elseLabel;
-    if (label != null) {
-      finalW = Math.max(widthWithHat, label.getWidth() + leftIndent + 2);
-    }
-    setBlockSize((float) (rightIndent + finalW), (float) (topSpacing + textHeight + depth * shadowOffset * 2 + bottomSpacing), false);
-  }
-  
-  public void recalculateDepthChain() {
-    BlockView rs = this;
-    int limit = CHAIN_TRAVERSAL_LIMIT;
-    while (rs != null && --limit > 0) {
-      int i = 0;
-      for (View view : rs.childViews) {
-        if (view instanceof BlockView)
-          i = Math.max(i, ((BlockView)view).depth + 1); 
-      } 
-      rs.depth = i;
-      rs.recalculateSize();
-      if (rs.isParameter) {
-        rs = rs.parentBlock;
-        continue;
-      } 
-      break;
-    } 
-  }
-  
-  public BlockView getRootBlock() {
-    BlockView current = this;
-    int limit = CHAIN_TRAVERSAL_LIMIT;
-    while (current.parentBlock != null && --limit > 0)
-      current = current.parentBlock;
-    return current;
-  }
-  
-  public int countBlocksInChain(int tag) {
-    int count = 0;
-    BlockView rs = blockPane.getBlockByTag(tag);
-    int limit = CHAIN_TRAVERSAL_LIMIT;
-    while (rs != null && --limit > 0) {
-      count++;
-      for (View view : rs.specViews) {
-        if (view instanceof BlockView)
-          count += ((BlockView) view).getAllChildren().size();
-      }
-      if (rs.hasSubstack() && rs.subStack1 > -1) {
-        count += countBlocksInChain(rs.subStack1);
-      }
-      if (rs.hasDoubleSubstack() && rs.subStack2 > -1) {
-        count += countBlocksInChain(rs.subStack2);
-      }
-      int next = rs.nextBlock;
-      if (next == -1) break;
-      rs = blockPane.getBlockByTag(next);
-    }
-    return count;
-  }
-  
-  public void setCollapsed(boolean value) {
-    this.collapsed = value;
-    updateCollapsedState(true);
-  }
-  
-  public void setCollapsed2(boolean value) {
-    this.collapsed2 = value;
-    updateCollapsedState(false);
-  }
-  
-  private void updateCollapsedState(boolean isStack1) {
-    if (!hasSubstack()) return;
-    if (isStack1) {
-      collapsedLabel = updateSingleLabel(collapsedLabel, collapsed, subStack1);
-      if (subStack1 > -1) {
-        setChainVisibility(subStack1, collapsed ? View.GONE : View.VISIBLE);
-      }
-    } else {
-      collapsedLabel2 = updateSingleLabel(collapsedLabel2, collapsed2, subStack2);
-      if (subStack2 > -1) {
-        setChainVisibility(subStack2, collapsed2 ? View.GONE : View.VISIBLE);
-      }
-    }
-    if (elseLabel != null) {
-      elseLabel.setVisibility(View.VISIBLE);
-    }
-    recalculateToRoot();
-    getRootBlock().layoutChain();
-  }
-  
-  private TextView updateSingleLabel(TextView label, boolean isCollapsed, int stackTag) {
-    if (isCollapsed) {
-      int count = (stackTag > -1) ? countBlocksInChain(stackTag) : 0;
-      String text = context.getResources().getQuantityString(R.plurals.block_collapsed_count, count, count);
-      if (label == null) {
-        label = createCollapsedLabel();
-        addView(label);
-      }
-      label.setText(text);
-      label.setVisibility(View.VISIBLE);
-    } else {
-      if (label != null) {
-        label.setVisibility(View.GONE);
-      }
-    }
-    return label;
-  }
-  
-  private TextView createCollapsedLabel() {
-    TextView label = new TextView(context);
-    label.setTextSize(9.0f);
-    label.setPadding((int)(density * 4), 0, 0, 0);
-    label.setGravity(Gravity.CENTER_VERTICAL);
-    label.setTextColor(0xAAFFFFFF);
-    label.setTypeface(null, Typeface.ITALIC);
-    return label;
-  }
-  
-  private void layoutCollapsedLabel(TextView label, int yBase) {
-    if (label != null && label.getVisibility() == View.VISIBLE) {
-      label.bringToFront();
-      label.setX((float) (cornerRadius + leftIndent));
-      label.setY((float) (yBase + topSpacing / 2));
-      RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, textHeight);
-      label.setLayoutParams(lp);
-    }
-  }
-  
-  private void setChainVisibility(int tag, int visibility) {
-    BlockView rs = blockPane.getBlockByTag(tag);
-    int limit = CHAIN_TRAVERSAL_LIMIT;
-    while (rs != null && --limit > 0) {
-      rs.setVisibility(visibility);
-      for (View view : rs.specViews) {
-        if (view instanceof BlockView) {
-          BlockView paramBlock = (BlockView) view;
-          paramBlock.setVisibility(visibility);
-          for (BlockView child : paramBlock.getAllChildren()) {
-            child.setVisibility(visibility);
-          }
-        }
-      }
-      if (rs.hasSubstack() && rs.subStack1 > -1) {
-        setChainVisibility(rs.subStack1, visibility);
-      }
-      if (rs.hasDoubleSubstack() && rs.subStack2 > -1) {
-        setChainVisibility(rs.subStack2, visibility);
-      }
-      int next = rs.nextBlock;
-      if (next == -1) break;
-      rs = blockPane.getBlockByTag(next);
-    }
-  }
-  
-  public void setBlockType(int index) {
-    blockTypeInt = index;
-  }
-  
-  public void setSpec(String spec) {
-    this.spec = spec;
-    invalidateSearchCaches();
-    removeAllViews();
-    parseSpec(BuiltinBlockLocalization.getSpec(getContext(), opCode, this.spec, false), blockColor);
-    for (View view : specViews)
-      addView(view);
-    rebuildChildViews();
-    if (blockType.equals("e") && opCode.equals("ifElse")) {
-      elseLabel = createLabel(StringResource.getInstance().getEventTranslation(getContext(), "else"));
-      addView(elseLabel);
-    } 
-    if (blockType.equals("e") && !spec2.equals("")) {
-      elseLabel = createLabel(BuiltinBlockLocalization.getSpec(getContext(), opCode, spec2, true));
-      addView(elseLabel);
-    } 
-    layoutChain();
-  }
 
-  private String getPaletteSearchText() {
-    if (paletteSearchTextCache == null) {
-      StringBuilder searchText = new StringBuilder();
-      appendSearchValue(searchText, spec);
-      appendSearchValue(searchText, BuiltinBlockLocalization.getSpec(getContext(), opCode, spec, false));
-      paletteSearchTextCache = searchText.toString().toLowerCase(java.util.Locale.ROOT);
+    protected final String getComponentTypeDisplayName() {
+        // Java class names can collide with labels such as Image, Color, or Default.
+        // Only variable/argument blocks with canonical Map/List metadata use translated prefixes.
+        boolean isBuiltinVariable = "getVar".equals(opCode) || "getArg".equals(opCode);
+        boolean isBuiltinType =
+                "a".equals(blockType) && "Map".equals(componentType)
+                        || "l".equals(blockType)
+                                && ("List".equals(componentType)
+                                        || "List Number".equals(componentType)
+                                        || "List String".equals(componentType)
+                                        || "List Map".equals(componentType)
+                                        || "List Boolean".equals(componentType));
+        return isBuiltinVariable && isBuiltinType
+                ? LocalizedDisplayNames.get(getContext(), componentType)
+                : componentType;
     }
-    return paletteSearchTextCache;
-  }
 
-  private void appendSearchValue(StringBuilder searchText, Object value) {
-    if (value == null) {
-      return;
+    public final void appendToChain(BlockView blockView) {
+        if (blockView == this) return;
+        if (hasSubstack() && -1 == subStack1) {
+            setSubstack1Block(blockView);
+        } else {
+            BlockView rs = getLastInChain();
+            if (rs != blockView) {
+                rs.nextBlock = ((Integer) blockView.getTag()).intValue();
+                blockView.parentBlock = rs;
+            }
+        }
     }
-    String text = value.toString().trim();
-    if (text.isEmpty()) {
-      return;
-    }
-    if (searchText.length() > 0) {
-      searchText.append('\n');
-    }
-    searchText.append(text);
-  }
 
-  private void invalidateSearchCaches() {
-    paletteSearchTextCache = null;
-  }
-
-  private boolean containsSearchQuery(String lowerQuery, Object value) {
-    if (value == null) {
-      return false;
+    public void replaceParameter(BaseBlockView targetBlock, BlockView blockView) {
+        int index = specViews.indexOf(targetBlock);
+        if (index < 0) return;
+        boolean isRs = targetBlock instanceof BlockView;
+        if (isRs) {
+            BlockView oldRs = (BlockView) targetBlock;
+            blockView.blockTypeStr = oldRs.blockTypeStr;
+            blockView.componentTypeStr = oldRs.componentTypeStr;
+        } else if (targetBlock instanceof FieldBlockView) {
+            blockView.blockTypeStr = targetBlock.blockType;
+            blockView.componentTypeStr = targetBlock.componentType;
+        }
+        if (!isRs) {
+            removeView(targetBlock);
+        }
+        specViews.set(index, blockView);
+        blockView.parentBlock = this;
+        rebuildChildViews();
+        recalculateDepthChain();
+        if (targetBlock != blockView && isRs) {
+            ((BlockView) targetBlock).parentBlock = null;
+            targetBlock.setX(getX() + getWidthSum() + 10.0f);
+            targetBlock.setY(getY() + 5.0f);
+            ((BlockView) targetBlock).layoutChain();
+        }
     }
-    String text = value.toString().trim();
-    return !text.isEmpty() && text.toLowerCase(java.util.Locale.ROOT).contains(lowerQuery);
-  }
+
+    public final void parseSpec(String spec, int index) {
+        ArrayList<String> specTokens = FormatUtil.parseBlockSpec(spec);
+        specViews = new ArrayList<>();
+        specTypes = new ArrayList<>();
+        for (int b = 0; b < specTokens.size(); b++) {
+            View view = createSpecView(specTokens.get(b), index);
+            if (view instanceof BaseBlockView) ((BaseBlockView) view).parentBlock = this;
+            specViews.add(view);
+            if (view instanceof FieldBlockView) {
+                spec = specTokens.get(b);
+            } else {
+                spec = "icon";
+            }
+            if (view instanceof TextView) spec = "label";
+            specTypes.add(spec);
+        }
+    }
+
+    public final View createSpecView(String spec, int index) {
+        if (spec.length() >= 2 && spec.charAt(0) == '%') {
+            int type = spec.charAt(1);
+            if (type == 98) {
+                return new FieldBlockView(context, "b", "");
+            } else if (type == 100) {
+                return new FieldBlockView(context, "d", "");
+            } else if (type == 109) {
+                return new FieldBlockView(context, "m", spec.substring(3));
+            } else if (type == 115) {
+                String defaultValue = "";
+                if (spec.length() > 2) defaultValue = spec.substring(3);
+                return new FieldBlockView(context, "s", defaultValue);
+            }
+            return createLabel(FormatUtil.unescapeString(spec));
+        }
+        return createLabel(FormatUtil.unescapeString(spec));
+    }
+
+    public void setNextBlock(BlockView blockView) {
+        if (blockView == this) return;
+        BlockView existing = blockPane.getBlockByTag(nextBlock);
+        if (existing != null) existing.parentBlock = null;
+        blockView.parentBlock = this;
+        nextBlock = ((Integer) blockView.getTag()).intValue();
+        if (existing != null && existing != blockView) blockView.appendToChain(existing);
+    }
+
+    public void positionAbove(BlockView blockView) {
+        blockView.setX(getX());
+        blockView.setY(getY() - blockView.getHeightSum() + borderWidth);
+        blockView.getLastInChain().setNextBlock(this);
+    }
+
+    public void positionInSubstack1(BlockView blockView) {
+        if (blockView == this) return;
+        blockView.setX(getX() - cornerRadius);
+        blockView.setY(getY() - getBlockHeight());
+        parentBlock = blockView;
+        blockView.subStack1 = ((Integer) getTag()).intValue();
+    }
+
+    public void setSubstack1Block(BlockView blockView) {
+        if (blockView == this) return;
+        BlockView existing = blockPane.getBlockByTag(subStack1);
+        if (existing != null) existing.parentBlock = null;
+        blockView.parentBlock = this;
+        subStack1 = ((Integer) blockView.getTag()).intValue();
+        if (existing != null && existing != blockView) blockView.appendToChain(existing);
+    }
+
+    public void setSubstack2Block(BlockView blockView) {
+        if (blockView == this) return;
+        BlockView existing = blockPane.getBlockByTag(subStack2);
+        if (existing != null) existing.parentBlock = null;
+        blockView.parentBlock = this;
+        subStack2 = ((Integer) blockView.getTag()).intValue();
+        if (existing != null && existing != blockView) blockView.appendToChain(existing);
+    }
+
+    public void detachBlock(BlockView blockView) {
+        if (nextBlock == ((Integer) blockView.getTag()).intValue()) nextBlock = -1;
+        if (subStack1 == ((Integer) blockView.getTag()).intValue()) subStack1 = -1;
+        if (subStack2 == ((Integer) blockView.getTag()).intValue()) subStack2 = -1;
+        if (blockView.isParameter) {
+            int i = specViews.indexOf(blockView);
+            if (i < 0) return;
+            blockView.blockTypeStr = "";
+            blockView.componentTypeStr = "";
+            View view = createSpecView(specTypes.get(i), blockColor);
+            if (view instanceof BaseBlockView) ((BaseBlockView) view).parentBlock = this;
+            specViews.set(i, view);
+            addView(view);
+            rebuildChildViews();
+            recalculateDepthChain();
+        }
+        getRootBlock().layoutChain();
+    }
+
+    public ArrayList<BlockView> getAllChildren() {
+        ArrayList<BlockView> children = new ArrayList<>();
+        BlockView current = this;
+        int limit = CHAIN_TRAVERSAL_LIMIT;
+        do {
+            children.add(current);
+            for (View view : current.specViews) {
+                if (view instanceof BlockView) children.addAll(((BlockView) view).getAllChildren());
+            }
+            if (current.hasSubstack()) {
+                int substackId = current.subStack1;
+                if (substackId != -1) {
+                    BlockView sub = blockPane.getBlockByTag(substackId);
+                    if (sub != null && sub != this) children.addAll(sub.getAllChildren());
+                }
+            }
+            if (current.hasDoubleSubstack()) {
+                int substackId = current.subStack2;
+                if (substackId != -1) {
+                    BlockView sub = blockPane.getBlockByTag(substackId);
+                    if (sub != null && sub != this) children.addAll(sub.getAllChildren());
+                }
+            }
+            if (current.nextBlock == -1 || --limit <= 0) break;
+            BlockView next = blockPane.getBlockByTag(current.nextBlock);
+            if (next == null || next == this) break;
+            current = next;
+        } while (true);
+        return children;
+    }
+
+    public BlockBean getBean() {
+        BlockBean blockBean =
+                new BlockBean(getTag().toString(), spec, blockType, componentType, opCode);
+        blockBean.color = blockColor;
+        for (View view : childViews) {
+            if (view instanceof FieldBlockView) {
+                blockBean.parameters.add(((FieldBlockView) view).getArgValue().toString());
+            } else if (view instanceof BlockView) {
+                blockBean.parameters.add("@" + view.getTag().toString());
+            }
+        }
+        blockBean.subStack1 = subStack1;
+        blockBean.subStack2 = subStack2;
+        blockBean.nextBlock = nextBlock;
+        blockBean.disabled = disabled;
+        blockBean.collapsed = collapsed;
+        blockBean.collapsed2 = collapsed2;
+        return blockBean;
+    }
+
+    public boolean matchesSearchQuery(String lowerQuery) {
+        if (containsSearchQuery(lowerQuery, opCode)
+                || containsSearchQuery(lowerQuery, spec)
+                || containsSearchQuery(lowerQuery, blockType)
+                || containsSearchQuery(lowerQuery, componentType)
+                || containsSearchQuery(lowerQuery, blockTypeStr)
+                || containsSearchQuery(lowerQuery, componentTypeStr)
+                || containsSearchQuery(
+                        lowerQuery, elseLabel != null ? elseLabel.getText() : null)) {
+            return true;
+        }
+
+        for (View view : specViews) {
+            if (view instanceof FieldBlockView) {
+                if (((FieldBlockView) view).matchesSearchQuery(lowerQuery)) {
+                    return true;
+                }
+            } else if (view instanceof TextView) {
+                if (containsSearchQuery(lowerQuery, ((TextView) view).getText())) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public boolean matchesPaletteSearchQuery(String lowerQuery) {
+        return lowerQuery != null
+                && !lowerQuery.isEmpty()
+                && getPaletteSearchText().contains(lowerQuery);
+    }
+
+    public int getBlockType() {
+        return blockTypeInt;
+    }
+
+    public int getDepth() {
+        int depth = 0;
+        BlockView current = parentBlock;
+        int limit = DEPTH_TRAVERSAL_LIMIT;
+        while (current != null && --limit > 0) {
+            depth++;
+            current = current.parentBlock;
+        }
+        return depth;
+    }
+
+    public int getHeightSum() {
+        int height = 0;
+        BlockView current = this;
+        int limit = CHAIN_TRAVERSAL_LIMIT;
+        do {
+            if (height != 0) height -= borderWidth;
+            height += current.getTotalHeight();
+            if (current.nextBlock == -1 || --limit <= 0) break;
+            BlockView next = blockPane.getBlockByTag(current.nextBlock);
+            if (next == null || next == this) break;
+            current = next;
+        } while (true);
+        return height;
+    }
+
+    public int getWidthSum() {
+        int width = 0;
+        BlockView current = this;
+        int limit = CHAIN_TRAVERSAL_LIMIT;
+        do {
+            width = Math.max(width, current.getW());
+            if (current.hasSubstack() && current.subStack1 != -1) {
+                BlockView substack = blockPane.getBlockByTag(current.subStack1);
+                if (substack != null)
+                    width = Math.max(width, substack.getWidthSum() + cornerRadius);
+            }
+            if (current.hasDoubleSubstack() && current.subStack2 != -1) {
+                BlockView substack = blockPane.getBlockByTag(current.subStack2);
+                if (substack != null)
+                    width = Math.max(width, substack.getWidthSum() + cornerRadius);
+            }
+            if (current.nextBlock == -1 || --limit <= 0) break;
+            BlockView next = blockPane.getBlockByTag(current.nextBlock);
+            if (next == null || next == this) break;
+            current = next;
+        } while (true);
+        return width;
+    }
+
+    public BlockView getLastInChain() {
+        BlockView current = this;
+        int limit = CHAIN_TRAVERSAL_LIMIT;
+        while (current.nextBlock != -1 && --limit > 0) {
+            BlockView next = blockPane.getBlockByTag(current.nextBlock);
+            if (next == null || next == this) break;
+            current = next;
+        }
+        return current;
+    }
+
+    public final void rebuildChildViews() {
+        childViews = new ArrayList<>();
+        for (View view : specViews) {
+            if (view instanceof BlockView || view instanceof FieldBlockView) childViews.add(view);
+        }
+    }
+
+    public final void positionElseLabel() {
+        TextView textView = elseLabel;
+        if (textView != null) {
+            textView.bringToFront();
+            elseLabel.setX(leftIndent);
+            elseLabel.setY(getSubstackBottom() - bottomPadding);
+        }
+    }
+
+    public void layoutChain() {
+        BlockView current = this;
+        int limit = LAYOUT_CHAIN_TRAVERSAL_LIMIT;
+        while (current != null && --limit > 0) {
+            current.layoutSingle();
+            int next = current.nextBlock;
+            if (next > -1) {
+                BlockView nextRs = current.blockPane.getBlockByTag(next);
+                if (nextRs == null || nextRs == this) break;
+                nextRs.setX(current.getX());
+                nextRs.setY(current.getY() + (float) current.getContentBottom());
+                nextRs.bringToFront();
+                current = nextRs;
+            } else {
+                current = null;
+            }
+        }
+        requestLayout();
+    }
+
+    private void layoutSingle() {
+        bringToFront();
+        int xOffset = leftIndent;
+        for (int idx = 0; idx < specViews.size(); idx++) {
+            View child = specViews.get(idx);
+            child.bringToFront();
+            boolean isRs = child instanceof BlockView;
+            float childX;
+            if (isRs) {
+                childX = getX() + (float) xOffset;
+            } else {
+                childX = (float) xOffset;
+            }
+            child.setX(childX);
+            int childWidth;
+            if (specTypes.get(idx).equals("label")) {
+                childWidth = getTextWidth((TextView) child);
+            } else {
+                childWidth = 0;
+            }
+            if (child instanceof FieldBlockView) {
+                childWidth = ((FieldBlockView) child).getW();
+            }
+            if (isRs) {
+                childWidth = ((BlockView) child).getWidthSum();
+            }
+            xOffset += childWidth + spacing;
+            if (isRs) {
+                BlockView childRs = (BlockView) child;
+                child.setY(
+                        getY()
+                                + (float) topSpacing
+                                + (float) ((depth - childRs.depth - 1) * shadowOffset));
+                childRs.layoutChain();
+            } else {
+                child.setY((float) (topSpacing + depth * shadowOffset));
+            }
+        }
+        int w = xOffset;
+        if (blockType.equals("b")
+                || blockType.equals("d")
+                || blockType.equals("s")
+                || blockType.equals("a")) {
+            w = Math.max(xOffset, minBlockWidth);
+        }
+        int widthWithSimple = w;
+        if (blockType.equals(" ") || blockType.equals("") || blockType.equals("f")) {
+            widthWithSimple = Math.max(w, minSimpleWidth);
+        }
+        int widthWithC = widthWithSimple;
+        if (blockType.equals("c") || blockType.equals("e")) {
+            widthWithC = Math.max(widthWithSimple, minCWidth);
+        }
+        int widthWithHat = widthWithC;
+        if (blockType.equals("h")) {
+            widthWithHat = Math.max(widthWithC, minHatWidth);
+        }
+        setBlockSize(
+                (float) (rightIndent + widthWithHat),
+                (float) (topSpacing + textHeight + depth * shadowOffset * 2 + bottomSpacing),
+                false);
+        if (hasSubstack()) {
+            int collapsedHeight = textHeight + topSpacing;
+            if (collapsed) {
+                setSubstack1Height(collapsedHeight);
+                layoutCollapsedLabel(collapsedLabel, getBlockHeight());
+            } else {
+                int ss1Height = minHeight;
+                int sub1 = subStack1;
+                if (sub1 > -1) {
+                    BlockView sub1Rs = blockPane.getBlockByTag(sub1);
+                    if (sub1Rs != null) {
+                        sub1Rs.setX(getX() + (float) cornerRadius);
+                        sub1Rs.setY(getY() + (float) getBlockHeight());
+                        sub1Rs.bringToFront();
+                        sub1Rs.layoutChain();
+                        ss1Height = sub1Rs.getHeightSum();
+                    }
+                }
+                setSubstack1Height(ss1Height);
+            }
+            if (hasDoubleSubstack()) {
+                positionElseLabel();
+                if (collapsed2) {
+                    setSubstack2Height(collapsedHeight);
+                    layoutCollapsedLabel(collapsedLabel2, getSubstackBottom());
+                } else {
+                    int ss2Height = minHeight;
+                    int sub2 = subStack2;
+                    if (sub2 > -1) {
+                        BlockView sub2Rs = blockPane.getBlockByTag(sub2);
+                        if (sub2Rs != null) {
+                            sub2Rs.setX(getX() + (float) cornerRadius);
+                            sub2Rs.setY(getY() + (float) getSubstackBottom());
+                            sub2Rs.bringToFront();
+                            sub2Rs.layoutChain();
+                            ss2Height = sub2Rs.getHeightSum();
+                            if (sub2Rs.getLastInChain().hasEndCap) {
+                                ss2Height += borderWidth;
+                            }
+                        }
+                    }
+                    setSubstack2Height(ss2Height);
+                }
+            }
+        }
+    }
+
+    public void initBlock() {
+        setDrawingCacheEnabled(false);
+        float scale = density;
+        minBlockWidth = (int) (minBlockWidth * scale);
+        minSimpleWidth = (int) (minSimpleWidth * scale);
+        minHatWidth = (int) (minHatWidth * scale);
+        minCWidth = (int) (minCWidth * scale);
+        spacing = (int) (spacing * scale);
+        switch (blockType) {
+            case "b":
+            case "s":
+            case "d":
+            case "v":
+            case "p":
+            case "l":
+            case "a":
+                isParameter = true;
+                break;
+            case "f":
+                hasEndCap = true;
+                break;
+            case "h":
+                isDefinitionBlock = true;
+                break;
+            default:
+                break;
+        }
+        int color = BlockColorMapper.getBlockColor(opCode, blockType);
+        if (!isDefinitionBlock
+                && !opCode.equals("definedFunc")
+                && !opCode.equals("getVar")
+                && !opCode.equals("getResStr")
+                && !opCode.equals("getArg")
+                && color != BlockColorMapper.CUSTOM_BLOCK_FALLBACK_COLOR) {
+            spec = StringResource.getInstance().getEventTranslation(getContext(), opCode);
+        }
+        if (color == BlockColorMapper.CUSTOM_BLOCK_FALLBACK_COLOR) {
+            ExtraBlockInfo info = BlockLoader.getBlockInfo(opCode);
+            ExtraBlockInfo blockInfo = info;
+            if (ProjectTracker.SC_ID != null
+                    && info.isMissing
+                    && !ProjectTracker.SC_ID.equals("")) {
+                blockInfo = BlockLoader.getBlockFromProject(ProjectTracker.SC_ID, opCode);
+                if (Log.isLoggable("BlockView", Log.DEBUG)) {
+                    Log.d("BlockView", "BlockView:returned block: " + new Gson().toJson(blockInfo));
+                }
+            }
+            spec2 = blockInfo.getSpec2();
+            if (spec.equals("")) {
+                spec = blockInfo.getSpec();
+            }
+            if (spec.equals("")) {
+                spec = opCode;
+            }
+            setSpec(spec);
+            int blockColor = blockInfo.getColor();
+            int paletteColor = blockInfo.getPaletteColor();
+            if (!opCode.equals("definedFunc")
+                    && !opCode.equals("getVar")
+                    && !opCode.equals("getResStr")
+                    && !opCode.equals("getArg")) {
+                if (blockColor != 0) {
+                    this.blockColor = blockColor;
+                    return;
+                }
+                if (paletteColor != 0) {
+                    this.blockColor = paletteColor;
+                    return;
+                }
+            }
+        } else {
+            if (spec.equals("")) {
+                spec = opCode;
+            }
+            setSpec(spec);
+        }
+        this.blockColor = color;
+    }
+
+    public void recalculateToRoot() {
+        BlockView parent;
+        BlockView current = this;
+        int count = 0;
+        do {
+            current.recalculateSize();
+            parent = current.parentBlock;
+            count++;
+            if (count > 500) {
+                Log.e(
+                        "BlockView",
+                        "m() infinite loop detected! count="
+                                + count
+                                + " tag="
+                                + current.getTag()
+                                + " E.tag="
+                                + (parent != null ? parent.getTag() : "null"));
+                break;
+            }
+            current = parent;
+        } while (parent != null);
+    }
+
+    public void recalculateSize() {
+        int xOffset = leftIndent;
+        for (int idx = 0; idx < specViews.size(); idx++) {
+            View child = specViews.get(idx);
+            int childWidth;
+            if (specTypes.get(idx).equals("label")) {
+                childWidth = getTextWidth((TextView) child);
+            } else {
+                childWidth = 0;
+            }
+            if (child instanceof FieldBlockView) {
+                childWidth = ((FieldBlockView) child).getW();
+            }
+            if (child instanceof BlockView) {
+                childWidth = ((BlockView) child).getWidthSum();
+            }
+            xOffset += childWidth + spacing;
+        }
+        int w = xOffset;
+        if (blockType.equals("b")
+                || blockType.equals("d")
+                || blockType.equals("s")
+                || blockType.equals("a")) {
+            w = Math.max(xOffset, minBlockWidth);
+        }
+        int widthWithSimple = w;
+        if (blockType.equals(" ") || blockType.equals("") || blockType.equals("o")) {
+            widthWithSimple = Math.max(w, minSimpleWidth);
+        }
+        int widthWithC = widthWithSimple;
+        if (blockType.equals("c") || blockType.equals("e")) {
+            widthWithC = Math.max(widthWithSimple, minCWidth);
+        }
+        int widthWithHat = widthWithC;
+        if (blockType.equals("h")) {
+            widthWithHat = Math.max(widthWithC, minHatWidth);
+        }
+        int finalW = widthWithHat;
+        TextView label = elseLabel;
+        if (label != null) {
+            finalW = Math.max(widthWithHat, label.getWidth() + leftIndent + 2);
+        }
+        setBlockSize(
+                (float) (rightIndent + finalW),
+                (float) (topSpacing + textHeight + depth * shadowOffset * 2 + bottomSpacing),
+                false);
+    }
+
+    public void recalculateDepthChain() {
+        BlockView rs = this;
+        int limit = CHAIN_TRAVERSAL_LIMIT;
+        while (rs != null && --limit > 0) {
+            int i = 0;
+            for (View view : rs.childViews) {
+                if (view instanceof BlockView) i = Math.max(i, ((BlockView) view).depth + 1);
+            }
+            rs.depth = i;
+            rs.recalculateSize();
+            if (rs.isParameter) {
+                rs = rs.parentBlock;
+                continue;
+            }
+            break;
+        }
+    }
+
+    public BlockView getRootBlock() {
+        BlockView current = this;
+        int limit = CHAIN_TRAVERSAL_LIMIT;
+        while (current.parentBlock != null && --limit > 0) current = current.parentBlock;
+        return current;
+    }
+
+    public int countBlocksInChain(int tag) {
+        int count = 0;
+        BlockView rs = blockPane.getBlockByTag(tag);
+        int limit = CHAIN_TRAVERSAL_LIMIT;
+        while (rs != null && --limit > 0) {
+            count++;
+            for (View view : rs.specViews) {
+                if (view instanceof BlockView) count += ((BlockView) view).getAllChildren().size();
+            }
+            if (rs.hasSubstack() && rs.subStack1 > -1) {
+                count += countBlocksInChain(rs.subStack1);
+            }
+            if (rs.hasDoubleSubstack() && rs.subStack2 > -1) {
+                count += countBlocksInChain(rs.subStack2);
+            }
+            int next = rs.nextBlock;
+            if (next == -1) break;
+            rs = blockPane.getBlockByTag(next);
+        }
+        return count;
+    }
+
+    public void setCollapsed(boolean value) {
+        this.collapsed = value;
+        updateCollapsedState(true);
+    }
+
+    public void setCollapsed2(boolean value) {
+        this.collapsed2 = value;
+        updateCollapsedState(false);
+    }
+
+    private void updateCollapsedState(boolean isStack1) {
+        if (!hasSubstack()) return;
+        if (isStack1) {
+            collapsedLabel = updateSingleLabel(collapsedLabel, collapsed, subStack1);
+            if (subStack1 > -1) {
+                setChainVisibility(subStack1, collapsed ? View.GONE : View.VISIBLE);
+            }
+        } else {
+            collapsedLabel2 = updateSingleLabel(collapsedLabel2, collapsed2, subStack2);
+            if (subStack2 > -1) {
+                setChainVisibility(subStack2, collapsed2 ? View.GONE : View.VISIBLE);
+            }
+        }
+        if (elseLabel != null) {
+            elseLabel.setVisibility(View.VISIBLE);
+        }
+        recalculateToRoot();
+        getRootBlock().layoutChain();
+    }
+
+    private TextView updateSingleLabel(TextView label, boolean isCollapsed, int stackTag) {
+        if (isCollapsed) {
+            int count = (stackTag > -1) ? countBlocksInChain(stackTag) : 0;
+            String text =
+                    context.getResources()
+                            .getQuantityString(R.plurals.block_collapsed_count, count, count);
+            if (label == null) {
+                label = createCollapsedLabel();
+                addView(label);
+            }
+            label.setText(text);
+            label.setVisibility(View.VISIBLE);
+        } else {
+            if (label != null) {
+                label.setVisibility(View.GONE);
+            }
+        }
+        return label;
+    }
+
+    private TextView createCollapsedLabel() {
+        TextView label = new TextView(context);
+        label.setTextSize(9.0f);
+        label.setPadding((int) (density * 4), 0, 0, 0);
+        label.setGravity(Gravity.CENTER_VERTICAL);
+        label.setTextColor(0xAAFFFFFF);
+        label.setTypeface(null, Typeface.ITALIC);
+        return label;
+    }
+
+    private void layoutCollapsedLabel(TextView label, int yBase) {
+        if (label != null && label.getVisibility() == View.VISIBLE) {
+            label.bringToFront();
+            label.setX((float) (cornerRadius + leftIndent));
+            label.setY((float) (yBase + topSpacing / 2));
+            RelativeLayout.LayoutParams lp =
+                    new RelativeLayout.LayoutParams(
+                            RelativeLayout.LayoutParams.WRAP_CONTENT, textHeight);
+            label.setLayoutParams(lp);
+        }
+    }
+
+    private void setChainVisibility(int tag, int visibility) {
+        BlockView rs = blockPane.getBlockByTag(tag);
+        int limit = CHAIN_TRAVERSAL_LIMIT;
+        while (rs != null && --limit > 0) {
+            rs.setVisibility(visibility);
+            for (View view : rs.specViews) {
+                if (view instanceof BlockView) {
+                    BlockView paramBlock = (BlockView) view;
+                    paramBlock.setVisibility(visibility);
+                    for (BlockView child : paramBlock.getAllChildren()) {
+                        child.setVisibility(visibility);
+                    }
+                }
+            }
+            if (rs.hasSubstack() && rs.subStack1 > -1) {
+                setChainVisibility(rs.subStack1, visibility);
+            }
+            if (rs.hasDoubleSubstack() && rs.subStack2 > -1) {
+                setChainVisibility(rs.subStack2, visibility);
+            }
+            int next = rs.nextBlock;
+            if (next == -1) break;
+            rs = blockPane.getBlockByTag(next);
+        }
+    }
+
+    public void setBlockType(int index) {
+        blockTypeInt = index;
+    }
+
+    public void setSpec(String spec) {
+        this.spec = spec;
+        invalidateSearchCaches();
+        removeAllViews();
+        parseSpec(
+                BuiltinBlockLocalization.getSpec(getContext(), opCode, this.spec, false),
+                blockColor);
+        for (View view : specViews) addView(view);
+        rebuildChildViews();
+        if (blockType.equals("e") && opCode.equals("ifElse")) {
+            elseLabel =
+                    createLabel(
+                            StringResource.getInstance().getEventTranslation(getContext(), "else"));
+            addView(elseLabel);
+        }
+        if (blockType.equals("e") && !spec2.equals("")) {
+            elseLabel =
+                    createLabel(
+                            BuiltinBlockLocalization.getSpec(getContext(), opCode, spec2, true));
+            addView(elseLabel);
+        }
+        layoutChain();
+    }
+
+    private String getPaletteSearchText() {
+        if (paletteSearchTextCache == null) {
+            StringBuilder searchText = new StringBuilder();
+            appendSearchValue(searchText, spec);
+            appendSearchValue(
+                    searchText,
+                    BuiltinBlockLocalization.getSpec(getContext(), opCode, spec, false));
+            paletteSearchTextCache = searchText.toString().toLowerCase(java.util.Locale.ROOT);
+        }
+        return paletteSearchTextCache;
+    }
+
+    private void appendSearchValue(StringBuilder searchText, Object value) {
+        if (value == null) {
+            return;
+        }
+        String text = value.toString().trim();
+        if (text.isEmpty()) {
+            return;
+        }
+        if (searchText.length() > 0) {
+            searchText.append('\n');
+        }
+        searchText.append(text);
+    }
+
+    private void invalidateSearchCaches() {
+        paletteSearchTextCache = null;
+    }
+
+    private boolean containsSearchQuery(String lowerQuery, Object value) {
+        if (value == null) {
+            return false;
+        }
+        String text = value.toString().trim();
+        return !text.isEmpty() && text.toLowerCase(java.util.Locale.ROOT).contains(lowerQuery);
+    }
 }
